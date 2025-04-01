@@ -37,34 +37,39 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: SingleChildScrollView( //Evita o erro de overflow
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 150),
-              Image.asset('assets/logo-softinsa.png'),
-              const SizedBox(height: 100),
-              TextField(
-                //controller -> to store inside a database
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Email',
+        child: SingleChildScrollView(
+          //Evita o erro de overflow
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 60),
+                Image.asset('assets/logo-softinsa.png'),
+                const SizedBox(height: 90),
+                TextField(
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    labelText: 'Email',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 25),
-              TextField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Password',
+                const SizedBox(height: 25),
+                TextField(
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    labelText: 'Password',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 100),
-              ElevatedButton(onPressed: show, child: const Text('Login')),
-              const SizedBox(height: 20),
-              Text(text),
-              Padding(padding: const EdgeInsets.all(100)),
-            ],
+                const SizedBox(height: 100),
+                ElevatedButton(onPressed: show, child: const Text('Login')),
+                Text(text),
+              ],
+            ),
           ),
         ),
       ),
