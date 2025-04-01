@@ -1,25 +1,10 @@
-Objetivo
-Esta plataforma tem como propósito facilitar o acesso à formação interna e promover a partilha de conhecimento entre os colaboradores. Com o aumento do trabalho remoto, torna-se essencial centralizar o percurso formativo de cada colaborador, garantindo que todos possam evoluir, aprender e contribuir ativamente para a comunidade corporativa.
-
-🚀 Funcionalidades Principais
-Gestão do Percurso Formativo: Inscrição em cursos internos, avaliação e acompanhamento do progresso.
-
-Disponibilização de Conteúdos: Upload de materiais didáticos e formativos por formadores.
-
-Estruturação de Áreas Formativas: Organização de conteúdos por categorias e temas.
-
-Módulo de Partilha de Conhecimento: Espaço dedicado à troca de experiências e boas práticas entre colegas.
-
 🏗️ Tecnologias
-A aplicação será desenvolvida nas seguintes vertentes:
+A aplicação será desenvolvida em diferentes vertentes, garantindo acessibilidade, organização e eficiência na gestão da formação interna:
 
-Frontend Web: Interface amigável para acesso via desktop.
+📱 App Mobile/Tablet (plataforma-mobile) – Aplicação otimizada para dispositivos móveis e tablets, permitindo acesso rápido e intuitivo à formação.
 
-BackOffice: Gestão dos conteúdos e formação por administradores.
+💻 Frontend Web (plataforma-web) – Interface responsiva e amigável para acesso via desktop, proporcionando uma experiência fluida na navegação.
 
-App Mobile/Tablet: Acesso facilitado à formação a qualquer momento e lugar.
+🗄️ Banco de Dados e Gestão de Conteúdo (plataforma-sql) – Estrutura robusta para armazenamento e administração de cursos, materiais e progresso dos colaboradores.
 
-🌟 Benefícios
-✅ Acesso facilitado à formação interna.
-✅ Maior colaboração e partilha de conhecimento.
-✅ Melhor acompanhamento do desenvolvimento dos colaboradores.
+📂 Documentação (docs) – Repositório para relatórios, anotações e apresentações destinadas à Softinsa, garantindo a organização e transparência do projeto.
