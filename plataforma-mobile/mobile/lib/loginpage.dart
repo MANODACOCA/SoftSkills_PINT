@@ -106,8 +106,8 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  Container(
-                    width: double.infinity, //Ocupa toda a largura disponível
+                  SizedBox(
+                    width: double.infinity, /*Ocupa toda a largura disponível*/
                     child: Text(
                       'Esqueceste-te da password?',
                       textAlign: TextAlign.right,
