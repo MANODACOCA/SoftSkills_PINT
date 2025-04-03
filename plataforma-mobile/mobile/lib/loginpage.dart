@@ -28,7 +28,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   String text = '';
   bool isPasswordVisible = false;
-  Icon passwordIcon = const Icon(Icons.visibility_off, color: Color(0XFF0D47A1),);
+  Icon passwordIcon = const Icon(
+    Icons.visibility_off,
+    color: Color(0XFF0D47A1),
+  );
 
   void show() {
     setState(() {
@@ -58,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 46,
                     child: TextField(
                       decoration: InputDecoration(
-                        fillColor: const Color(0XFFECEFF1),
+                        fillColor: Color.fromARGB(246, 211, 211, 211),
                         filled: true,
                         border: UnderlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -72,19 +75,43 @@ class _LoginPageState extends State<LoginPage> {
                     width: 374,
                     height: 46,
                     child: TextField(
-                      obscureText: true,
+                      obscureText: isPasswordVisible ? false : true,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
-                          onPressed: (){}, 
-                          icon: icon //FICAMOS NO MINUTO 3:44 NO VIDEO "ADD ICON WITH TEXTFIELD IN FLUTTER" 
-                        )
-                        fillColor: const Color(0XFFECEFF1),
+                          icon: passwordIcon,
+                          onPressed: () {
+                            setState(() {
+                              isPasswordVisible = !isPasswordVisible;
+                              if (isPasswordVisible) {
+                                passwordIcon = Icon(
+                                  Icons.visibility,
+                                  color: Color(0XFF0D47A1),
+                                );
+                              } else {
+                                passwordIcon = Icon(
+                                  Icons.visibility_off,
+                                  color: Color(0XFF0D47A1),
+                                );
+                              }
+                            });
+                          },
+                        ),
+                        fillColor: Color.fromARGB(237, 211, 211, 211),
                         filled: true,
                         border: UnderlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
                         labelText: 'Password',
                       ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Container(
+                    width: double.infinity, //Ocupa toda a largura disponível
+                    child: Text(
+                      'Esqueceste-te da password?',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(color: Colors.blueAccent),
                     ),
                   ),
                   const SizedBox(height: 90),
