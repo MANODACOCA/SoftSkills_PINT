@@ -1,3 +1,5 @@
+import 'package:mobile/verificacao.dart';
+
 import 'main.dart';
 import 'loginpage.dart';
 import 'package:go_router/go_router.dart';
@@ -14,6 +16,11 @@ final rotas = GoRouter(
       name: 'loginpage',
       path: '/login',
       builder: (context, state) => LoginPage(),
+    ),
+    GoRoute(
+      name: 'verificacao',
+      path: '/verificacao',
+      builder: (context, state) => verificar(),
     ),
   ],
 );
