@@ -13,37 +13,35 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Login App', home: const verificar());
+    return MaterialApp(title: 'Login App', home: const confirmacao());
   }
 }
 
-class verificar extends StatefulWidget {
-  const verificar({super.key});
+class confirmacao extends StatefulWidget {
+  const confirmacao({super.key});
 
   @override
-  State<verificar> createState() => verficacao();
+  State<confirmacao> createState() => confirmar();
 }
 
-class verficacao extends State<verificar> {
+class confirmar extends State<confirmacao> {
   final codeController = TextEditingController();
   int code = 0;
 
   void initState() {
     super.initState();
-    randomCode(); // Gera o código aleatório ao iniciar o widget
+    randomCode();
   }
 
   void randomCode() {
     code = Random().nextInt(99999) + 10000;
-    print('O código é : $code'); // Gera um código aleatório de 5 dígitos
+    print('O código é : $code');
   }
 
   void validar() {
     if (codeController.text == code.toString()) {
-      // Código correto, redirecionar para a próxima página
-      context.go("/firstlogin");
+      context.go("/alterarpassword");
     } else {
-      // Código incorreto, mostrar mensagem de erro
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Código incorreto!')));
@@ -63,7 +61,7 @@ class verficacao extends State<verificar> {
         ),
         backgroundColor: Color(0XFF0D47A1),
         title: Text(
-          'Autenticação dois Fatores',
+          'Cofirmação do Email',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white),
         ),

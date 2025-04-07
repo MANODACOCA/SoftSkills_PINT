@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'route.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,33 +10,57 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: rotas,
+    return MaterialApp(
       title: 'Login App',
       theme: ThemeData(primarySwatch: Colors.blue),
+      home: const alterarpassword(),
     );
   }
 }
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class alterarpassword extends StatefulWidget {
+  const alterarpassword({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<alterarpassword> createState() => alterar();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  bool isSwitched = false;
-  String text = '';
+class alterar extends State<alterarpassword> {
   bool isPasswordVisible = false;
+  final newpass = TextEditingController();
+  final pass = TextEditingController();
   Icon passwordIcon = const Icon(
     Icons.visibility_off,
     color: Color(0XFF0D47A1),
   );
 
+  void analisar() {
+    if (newpass.text == pass.text) {
+      context.go("/alterar");
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('As passwords não coincidem!')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Criar Nova Password',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Color(0XFF0D47A1),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.white,
+          onPressed: () {
+            context.go("/login");
+          },
+        ),
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -49,29 +72,20 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 60),
-                  Image.asset('assets/logo-softinsa.png'),
-                  const SizedBox(height: 90.0),
-                  SizedBox(
-                    width: 374,
-                    height: 46,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
-                            color: Color.fromRGBO(211, 211, 211, 100),
-                          ),
-                        ),
-                        labelText: 'Email',
-                      ),
+                  Text(
+                    'Por favor, crie uma nova password. Certifique que esta é diferente da anterior.',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                      color: Color.fromRGBO(128, 127, 127, 1),
                     ),
                   ),
-                  const SizedBox(height: 25),
+                  const SizedBox(height: 50),
                   SizedBox(
                     width: 374,
                     height: 46,
                     child: TextField(
+                      controller: pass,
                       obscureText: isPasswordVisible ? false : true,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
@@ -103,75 +117,44 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: 31),
                   SizedBox(
-                    width: double.infinity,
-                    child: GestureDetector(
-                      onTap: () {
-                        context.go("/forgetpassword");
-                      },
-                      child: Text(
-                        'Esqueceste-te da password?',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          decoration: TextDecoration.underline,
+                    width: 374,
+                    height: 46,
+                    child: TextField(
+                      controller: newpass,
+                      obscureText: isPasswordVisible ? false : true,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: passwordIcon,
+                          onPressed: () {
+                            setState(() {
+                              isPasswordVisible = !isPasswordVisible;
+                              if (isPasswordVisible) {
+                                passwordIcon = Icon(
+                                  Icons.visibility,
+                                  color: Color(0XFF0D47A1),
+                                );
+                              } else {
+                                passwordIcon = Icon(
+                                  Icons.visibility_off,
+                                  color: Color(0XFF0D47A1),
+                                );
+                              }
+                            });
+                          },
                         ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(
+                            color: Color.fromRGBO(211, 211, 211, 100),
+                          ),
+                        ),
+                        labelText: 'Repita Passowrd',
                       ),
                     ),
                   ),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        /*Alinha todos os elementos dentro da mesma*/
-                        children: [
-                          Switch(
-                            activeColor: Color(0XFF0D47A1),
-                            value: isSwitched,
-                            onChanged: (value) {
-                              setState(() {
-                                isSwitched = !isSwitched;
-                              });
-                            },
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            'Manter sessão iniciada',
-                            style: TextStyle(color: Color(0XFF0D47A1)),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/facebook.png"),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/google.png"),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 30.0),
+                  const SizedBox(height: 90),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0XFF0D47A1),
@@ -181,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                       fixedSize: const Size(310, 46),
                     ),
                     onPressed: () {
-                      context.go("/verificacao");
+                      analisar();
                     },
                     child: const Text(
                       'Login',
