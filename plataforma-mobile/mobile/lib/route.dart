@@ -3,7 +3,9 @@ import 'package:mobile/confirmar.dart';
 import 'package:mobile/forgetpassword.dart';
 import 'package:mobile/verificacao.dart';
 import 'primeirologin.dart';
+import 'registar.dart';
 import 'main.dart';
+import 'confirmacao.dart';
 import 'success.dart';
 import 'loginpage.dart';
 import 'package:go_router/go_router.dart';
@@ -51,6 +53,16 @@ final rotas = GoRouter(
       name: 'alterar',
       path: '/alterar',
       builder: (context, state) => CheckmarkScreen(),
+    ),
+     GoRoute(
+      name: 'registo',
+      path: '/registo',
+      builder: (context, state) => registo(),
+    ),
+     GoRoute(
+      name: 'confirmar',
+      path: '/confirmar',
+      builder: (context, state) => ConfirmacaoPage(),
     ),
   ],
 );

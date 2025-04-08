@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Convert to StatefulWidget
 class CheckmarkScreen extends StatefulWidget {
   const CheckmarkScreen({super.key});
 

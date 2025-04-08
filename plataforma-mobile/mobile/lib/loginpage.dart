@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
+                        /*SizedBox(
                           width: 60,
                           height: 60,
                           child: IconButton(
@@ -167,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {},
                             icon: Image.asset("assets/google.png"),
                           ),
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
@@ -185,6 +185,23 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     child: const Text(
                       'Login',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0XFF0D47A1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      fixedSize: const Size(310, 46),
+                    ),
+                    onPressed: () {
+                      context.go("/registo");
+                    },
+                    child: const Text(
+                      'Registo',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

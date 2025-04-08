@@ -167,7 +167,7 @@ class alterar extends State<alterarpassword> {
                       analisar();
                     },
                     child: const Text(
-                      'Login',
+                      'Confirmar',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

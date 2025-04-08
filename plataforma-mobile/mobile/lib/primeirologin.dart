@@ -167,7 +167,7 @@ class firstlogin extends State<primeirologin> {
                       analisar();
                     },
                     child: const Text(
-                      'Login',
+                      'Comfirmar',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

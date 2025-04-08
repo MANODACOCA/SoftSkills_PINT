@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'route.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,37 +14,40 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Login App', home: const verificar());
+    return MaterialApp.router(
+      routerConfig: rotas,
+      title: 'Registo',
+      theme: ThemeData(primarySwatch: Colors.blue),
+    );
   }
 }
 
-class verificar extends StatefulWidget {
-  const verificar({super.key});
+class ConfirmacaoPage extends StatefulWidget {
+  const ConfirmacaoPage({super.key});
 
   @override
-  State<verificar> createState() => verficacao();
+  State<ConfirmacaoPage> createState() => _ConfirmacaoPageState();
 }
 
-class verficacao extends State<verificar> {
+class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
   final codeController = TextEditingController();
   int code = 0;
 
+  @override
   void initState() {
     super.initState();
-    randomCode(); // Gera o código aleatório ao iniciar o widget
+    randoCode();
   }
 
-  void randomCode() {
+  void randoCode() {
     code = Random().nextInt(99999) + 10000;
-    print('O código é : $code'); // Gera um código aleatório de 5 dígitos
+    print('O código é : $code');
   }
 
   void validar() {
     if (codeController.text == code.toString()) {
-      // Código correto, redirecionar para a próxima página
-      context.go("/firstlogin");
+      context.go("/alterarpassword");
     } else {
-      // Código incorreto, mostrar mensagem de erro
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Código incorreto!')));
@@ -56,14 +60,14 @@ class verficacao extends State<verificar> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            context.go("/login");
+            context.go("/");
           },
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
         ),
         backgroundColor: Color(0XFF0D47A1),
         title: Text(
-          'Autenticação dois Fatores',
+          'Cofirmação do Email',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white),
         ),
