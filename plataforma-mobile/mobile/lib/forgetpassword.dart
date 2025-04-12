@@ -52,7 +52,7 @@ class forget extends State<forgetpassword> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset('assets/forget.png', width: 200, height: 200),
+                  Image.asset('assets/forget.png', width: double.infinity, height: 200),
                   SizedBox(height: 15),
                   Text(
                     'Não se preocupe! Acontece. Por favor introduza o e-mail associado na sua conta',
