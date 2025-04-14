@@ -88,7 +88,7 @@ class verficacao extends State<verificar> {
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 45),
-                  //Aqui vem o local para inserir o código de verificação RAFALITO ddddd
+                  //Aqui vem o local para inserir o código de verificação RAFALITO dddddddddd
                   PinCodeTextField(
                     keyboardType: TextInputType.number,
                     appContext: context,
