@@ -28,6 +28,7 @@ class confirmar extends State<confirmacao> {
   final codeController = TextEditingController();
   int code = 0;
 
+  @override
   void initState() {
     super.initState();
     randomCode();

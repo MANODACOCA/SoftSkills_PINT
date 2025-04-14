@@ -28,6 +28,7 @@ class verficacao extends State<verificar> {
   final codeController = TextEditingController();
   int code = 0;
 
+  @override
   void initState() {
     super.initState();
     randomCode(); // Gera o código aleatório ao iniciar o widget
