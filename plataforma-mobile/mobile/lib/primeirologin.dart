@@ -1,31 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Primeirologin extends StatefulWidget {
+  const Primeirologin({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login App',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const primeirologin(),
-    );
-  }
+  State<Primeirologin> createState() => Firstlogin();
 }
 
-class primeirologin extends StatefulWidget {
-  const primeirologin({super.key});
-
-  @override
-  State<primeirologin> createState() => firstlogin();
-}
-
-class firstlogin extends State<primeirologin> {
+class Firstlogin extends State<Primeirologin> {
   bool isPasswordVisible = false;
   final newpass = TextEditingController();
   final pass = TextEditingController();

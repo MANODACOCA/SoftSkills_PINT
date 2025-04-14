@@ -1,31 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Forgetpassword extends StatefulWidget {
+  const Forgetpassword({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login App',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const forgetpassword(),
-    );
-  }
+  State<Forgetpassword> createState() => Forget();
 }
 
-class forgetpassword extends StatefulWidget {
-  const forgetpassword({super.key});
-
-  @override
-  State<forgetpassword> createState() => forget();
-}
-
-class forget extends State<forgetpassword> {
+class Forget extends State<Forgetpassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

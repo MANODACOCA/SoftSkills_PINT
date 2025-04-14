@@ -3,24 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math';
 import 'package:pin_code_fields/pin_code_fields.dart';
-import 'route.dart';
-
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: rotas,
-      title: 'Registo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-    );
-  }
-}
 
 class ConfirmacaoPage extends StatefulWidget {
   const ConfirmacaoPage({super.key});

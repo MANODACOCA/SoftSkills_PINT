@@ -4,27 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'dart:math';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Verificar extends StatefulWidget {
+  const Verificar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(title: 'Login App', home: const verificar());
-  }
+  State<Verificar> createState() => Verificacao();
 }
 
-class verificar extends StatefulWidget {
-  const verificar({super.key});
-
-  @override
-  State<verificar> createState() => verficacao();
-}
-
-class verficacao extends State<verificar> {
+class Verificacao extends State<Verificar> {
   final codeController = TextEditingController();
   int code = 0;
 

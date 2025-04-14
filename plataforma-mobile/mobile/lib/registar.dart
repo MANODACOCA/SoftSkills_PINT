@@ -1,32 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'route.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Registo extends StatefulWidget {
+  const Registo({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: rotas,
-      title: 'Bem-Vindo',
-      theme: ThemeData(primarySwatch: Colors.blue),
-    );
-  }
+  State<Registo> createState() => Registar();
 }
 
-class registo extends StatefulWidget {
-  const registo({super.key});
-
-  @override
-  State<registo> createState() => Registar();
-}
-
-class Registar extends State<registo> {
+class Registar extends State<Registo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
