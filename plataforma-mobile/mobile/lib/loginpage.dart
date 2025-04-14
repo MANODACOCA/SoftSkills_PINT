@@ -5,10 +5,10 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPage();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPage extends State<LoginPage> {
   bool isSwitched = false;
   String text = '';
   bool isPasswordVisible = false;
@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                       fixedSize: const Size(310, 46),
                     ),
                     onPressed: () {
-                      context.go("/verificacao");
+                      context.go("/twofa");
                     },
                     child: const Text(
                       'Login',

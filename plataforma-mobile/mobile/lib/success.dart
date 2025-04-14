@@ -14,7 +14,7 @@ class _CheckmarkScreenState extends State<CheckmarkScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 2), () {
-      context.go("/login");
+      context.go("/homepage");
     });
   }
 

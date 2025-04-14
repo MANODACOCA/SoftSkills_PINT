@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Forgetpassword extends StatefulWidget {
-  const Forgetpassword({super.key});
+class ForgetPassword extends StatefulWidget {
+  const ForgetPassword({super.key});
 
   @override
-  State<Forgetpassword> createState() => Forget();
+  State<ForgetPassword> createState() => _ForgetPassword();
 }
 
-class Forget extends State<Forgetpassword> {
+class _ForgetPassword extends State<ForgetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

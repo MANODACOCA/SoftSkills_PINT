@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Alterarpassword extends StatefulWidget {
-  const Alterarpassword({super.key});
+class ChangePassword extends StatefulWidget {
+  const ChangePassword({super.key});
 
   @override
-  State<Alterarpassword> createState() => Alterar();
+  State<ChangePassword> createState() => _ChangePassword();
 }
 
-class Alterar extends State<Alterarpassword> {
+class _ChangePassword extends State<ChangePassword> {
   bool isPasswordVisible = false;
   final newpass = TextEditingController();
   final pass = TextEditingController();

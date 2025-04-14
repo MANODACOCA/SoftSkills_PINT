@@ -4,14 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'dart:math';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class Confirmacao extends StatefulWidget {
-  const Confirmacao({super.key});
+class TwoFactorAuthentication extends StatefulWidget {
+  const TwoFactorAuthentication({super.key});
 
   @override
-  State<Confirmacao> createState() => Confirmar();
+  State<TwoFactorAuthentication> createState() => _TwoFactorAuthentication();
 }
 
-class Confirmar extends State<Confirmacao> {
+class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
   final codeController = TextEditingController();
   int code = 0;
 
@@ -25,17 +25,17 @@ class Confirmar extends State<Confirmacao> {
     code = Random().nextInt(99999) + 10000;
     print('O código é : $code');
   }
-
+  
   void validar() {
     if (codeController.text == code.toString()) {
-      context.go("/alterarpassword");
+      context.go("/check");
     } else {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Código incorreto!')));
     }
   }
-
+  // Confirmacao do email utilizados
   @override
   Widget build(BuildContext context) {
     return Scaffold(

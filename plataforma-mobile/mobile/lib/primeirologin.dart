@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Primeirologin extends StatefulWidget {
-  const Primeirologin({super.key});
+class FirstLogin extends StatefulWidget {
+  const FirstLogin({super.key});
 
   @override
-  State<Primeirologin> createState() => Firstlogin();
+  State<FirstLogin> createState() => _FirstLogin();
 }
 
-class Firstlogin extends State<Primeirologin> {
+class _FirstLogin extends State<FirstLogin> {
   bool isPasswordVisible = false;
   final newpass = TextEditingController();
   final pass = TextEditingController();

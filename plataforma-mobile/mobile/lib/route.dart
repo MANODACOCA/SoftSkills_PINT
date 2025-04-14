@@ -1,10 +1,10 @@
+import 'homepage.dart';
 import 'alterarpassword.dart';
 import 'confirm_2fa.dart';
 import 'forgetpassword.dart';
-import 'verificacao.dart';
-import 'primeirologin.dart';
+//import 'primeirologin.dart';
 import 'registar.dart';
-import 'confirm_criar_conta.dart';
+//import 'confirm_criar_conta.dart';
 import 'success.dart';
 import 'loginpage.dart';
 import 'package:go_router/go_router.dart';
@@ -14,7 +14,7 @@ final rotas = GoRouter(
   initialLocation: '/',
   routes: [
     GoRoute(
-      name: 'homepage',
+      name: 'initial',
       path: '/',
       builder:
           (context, state) => const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -25,44 +25,44 @@ final rotas = GoRouter(
       builder: (context, state) => LoginPage(),
     ),
     GoRoute(
-      name: 'verificacao',
-      path: '/verificacao',
-      builder: (context, state) => Verificar(),
-    ),
-    GoRoute(
       name: 'firstlogin',
       path: '/firstlogin',
-      builder: (context, state) => Primeirologin(),
+      builder: (context, state) => LoginPage(),
     ),
     GoRoute(
       name: 'forgetpassword',
       path: '/forgetpassword',
-      builder: (context, state) => Forgetpassword(),
+      builder: (context, state) => ForgetPassword(),
     ),
     GoRoute(
       name: 'confirmacao',
       path: '/confirmacao',
-      builder: (context, state) => Confirmacao(),
+      builder: (context, state) => LoginPage(),
     ),
     GoRoute(
       name: 'alterarpassword',
       path: '/alterarpassword',
-      builder: (context, state) => Alterarpassword(),
+      builder: (context, state) => ChangePassword(),
     ),
     GoRoute(
-      name: 'alterar',
-      path: '/alterar',
+      name: 'check',
+      path: '/check',
       builder: (context, state) => CheckmarkScreen(),
     ),
-     GoRoute(
+    GoRoute(
       name: 'registo',
       path: '/registo',
-      builder: (context, state) => Registo(),
+      builder: (context, state) => Register(),
     ),
-     GoRoute(
-      name: 'confirmar',
-      path: '/confirmar',
-      builder: (context, state) => ConfirmacaoPage(),
+    GoRoute(
+      name: 'twofa',
+      path: '/twofa',
+      builder: (context, state) => TwoFactorAuthentication(), 
+    ),
+    GoRoute(
+      name: 'homepage',
+      path: '/homepage',
+      builder: (context, state) => HomePage(),
     ),
   ],
 );

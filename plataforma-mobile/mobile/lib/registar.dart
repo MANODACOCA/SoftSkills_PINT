@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class Registo extends StatefulWidget {
-  const Registo({super.key});
+class Register extends StatefulWidget {
+  const Register({super.key});
 
   @override
-  State<Registo> createState() => Registar();
+  State<Register> createState() => _Register();
 }
 
-class Registar extends State<Registo> {
+class _Register extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

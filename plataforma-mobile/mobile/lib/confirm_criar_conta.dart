@@ -4,14 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'dart:math';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class ConfirmacaoPage extends StatefulWidget {
-  const ConfirmacaoPage({super.key});
+class ConfirmAccountScreen extends StatefulWidget {
+  const ConfirmAccountScreen({super.key});
 
   @override
-  State<ConfirmacaoPage> createState() => _ConfirmacaoPageState();
+  State<ConfirmAccountScreen> createState() => _ConfirmAccountScreen();
 }
 
-class _ConfirmacaoPageState extends State<ConfirmacaoPage> {
+class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
   final codeController = TextEditingController();
   int code = 0;
 
