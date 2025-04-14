@@ -1,11 +1,11 @@
 import 'package:mobile/alterarpassword.dart';
-import 'package:mobile/confirmar.dart';
+import 'package:mobile/confirm_2fa.dart';
 import 'package:mobile/forgetpassword.dart';
 import 'package:mobile/verificacao.dart';
 import 'primeirologin.dart';
 import 'registar.dart';
 import 'main.dart';
-import 'confirmacao.dart';
+import 'confirm_criar_conta.dart';
 import 'success.dart';
 import 'loginpage.dart';
 import 'package:go_router/go_router.dart';
