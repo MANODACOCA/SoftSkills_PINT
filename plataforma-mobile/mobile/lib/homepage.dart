@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../navigationbar_component.dart';
+import 'componentes/navigationbar_component.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
