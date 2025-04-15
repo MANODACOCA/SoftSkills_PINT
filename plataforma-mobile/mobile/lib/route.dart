@@ -17,7 +17,7 @@ final rotas = GoRouter(
       name: 'initial',
       path: '/',
       builder:
-          (context, state) => const MyHomePage(title: 'Flutter Demo Home Page'),
+          (context, state) => const MyHomePage(),
     ),
     GoRoute(
       name: 'loginpage',
