@@ -1,14 +1,14 @@
-import 'homepage.dart';
-import 'alterarpassword.dart';
-import 'confirm_2fa.dart';
-import 'forgetpassword.dart';
+import 'login_page/homepage.dart';
+import 'login_page/alterarpassword.dart';
+import 'login_page/confirm_2fa.dart';
+import 'login_page/forgetpassword.dart';
 //import 'primeirologin.dart';
-import 'registar.dart';
+import 'login_page/registar.dart';
 //import 'confirm_criar_conta.dart';
-import 'success.dart';
-import 'loginpage.dart';
+import 'login_page/success.dart';
+import 'package:mobile/login_page/loginpage.dart';
 import 'package:go_router/go_router.dart';
-import 'page_open_app.dart';
+import 'login_page/page_open_app.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
