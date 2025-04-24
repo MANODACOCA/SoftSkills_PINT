@@ -28,7 +28,7 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
   
   void validar() {
     if (codeController.text == code.toString()) {
-      context.go("/returnLogin");
+      context.go("/homepage");
     } else {
       ScaffoldMessenger.of(
         context,
