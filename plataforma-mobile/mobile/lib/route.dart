@@ -2,6 +2,7 @@ import 'homepage.dart';
 import 'login_page/alterarpassword.dart';
 import 'login_page/confirm_2fa.dart';
 import 'login_page/forgetpassword.dart';
+import 'login_page/returnLogin.dart';
 //import 'primeirologin.dart';
 import 'login_page/registar.dart';
 //import 'confirm_criar_conta.dart';
@@ -37,7 +38,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'confirmacao',
       path: '/confirmacao',
-      builder: (context, state) => LoginPage(),
+      builder: (context, state) => TwoFactorAuthentication(),
     ),
     GoRoute(
       name: 'alterarpassword',
@@ -63,6 +64,11 @@ final rotas = GoRouter(
       name: 'homepage',
       path: '/homepage',
       builder: (context, state) => HomePage(),
+    ),
+    GoRoute(
+      name: 'return',
+      path: '/returnLogin',
+      builder: (context, state) => returnlogin(),
     ),
   ],
 );

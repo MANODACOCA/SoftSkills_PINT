@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
-class CheckmarkScreen extends StatefulWidget {
-  const CheckmarkScreen({super.key});
+class returnlogin extends StatefulWidget {
+  const returnlogin({super.key});
 
   @override
-  State<CheckmarkScreen> createState() => _CheckmarkScreenState();
+  State<returnlogin> createState() => _CheckmarkScreenState();
 }
 
-class _CheckmarkScreenState extends State<CheckmarkScreen> {
+class _CheckmarkScreenState extends State<returnlogin> {
   @override
   void initState() {
     super.initState();
     Timer(Duration(seconds: 2), () {
-      context.go("/homepage");
+      context.go("/login");
     });
   }
 
