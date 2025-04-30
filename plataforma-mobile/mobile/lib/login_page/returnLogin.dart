@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
-class returnlogin extends StatefulWidget {
-  const returnlogin({super.key});
+class ReturnLogin extends StatefulWidget {
+  const ReturnLogin({super.key});
 
   @override
-  State<returnlogin> createState() => _CheckmarkScreenState();
+  State<ReturnLogin> createState() => _ReturnLoginState();
 }
 
-class _CheckmarkScreenState extends State<returnlogin> {
+class _ReturnLoginState extends State<ReturnLogin> {
   @override
   void initState() {
     super.initState();
