@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import '../themes/colors.dart';
 
 class Footer extends StatelessWidget {
   const Footer({super.key});
@@ -7,10 +8,10 @@ class Footer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: Color(0XFF0D47A1),
+      backgroundColor: AppColors.primary,
       type: BottomNavigationBarType.fixed,
       unselectedItemColor: Colors.white,
-      selectedItemColor: Color(0xFF00AEEF),
+      selectedItemColor: AppColors.secondary,
       items: const <BottomNavigationBarItem> [
         BottomNavigationBarItem(
           icon: Icon(Ionicons.home_outline), 
