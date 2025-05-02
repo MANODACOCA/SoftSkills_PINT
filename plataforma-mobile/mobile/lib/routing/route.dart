@@ -2,7 +2,7 @@ import '../ui/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';
 import '../ui/login/widget/forgetpassword.dart';
-import '../ui/login/widget/returnLogin.dart';
+import '../ui/login/widget/return_login.dart';
 //import 'primeirologin.dart';
 import '../ui/login/widget/registar.dart';
 //import 'confirm_criar_conta.dart';
