@@ -1,4 +1,4 @@
-import '../ui/homepage.dart';
+import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';
 import '../ui/login/widget/forgetpassword.dart';

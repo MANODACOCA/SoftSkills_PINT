@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'core/shared/navigationbar_component.dart';
-import 'core/shared/search_bar.dart';
+import '../../core/shared/navigationbar_component.dart';
+import '../../core/shared/search_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

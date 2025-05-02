@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
+import 'dart:math' as math;
 
 class SearchBarCustom extends StatelessWidget {
   const SearchBarCustom({super.key});
@@ -7,14 +9,14 @@ class SearchBarCustom extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 25),
+        SizedBox(width: 15),
         SizedBox(
-          height: 45,
-          width: 250,
+          height: 40,
+          width: 280,
           child: SearchBar(
-            leading: const Icon(Icons.search),
+            leading: const Icon(Icons.search, color:Colors.black38),
             hintText: 'Search',
-            shadowColor: WidgetStateProperty.all(Colors.black),
+            shadowColor: WidgetStateProperty.all(Colors.white),
             elevation: WidgetStateProperty.all(4.0),
             shape: WidgetStateProperty.all(
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -24,13 +26,16 @@ class SearchBarCustom extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 1),
-        IconButton(
-          icon: const Icon(Icons.filter_list),
+        SizedBox(width: 16),
+        Transform.rotate(
+          angle: math.pi * 1.5,
+          child: IconButton(
+          icon: Icon(Ionicons.options, size: 30.0, color: Colors.white),
           onPressed: () {
-            // Implement filter action here
+            //implementar o filtro action depois aqui i guess
           },
         ),
+      ),
       ],
     );
   }
