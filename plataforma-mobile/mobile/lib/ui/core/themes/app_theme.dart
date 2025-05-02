@@ -1,0 +1,1 @@
+//define o tema principal do app (cores, brilho, fontes, ...) e retorna um themedata(tema principal da app);
