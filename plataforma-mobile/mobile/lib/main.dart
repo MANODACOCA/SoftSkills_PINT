@@ -23,3 +23,4 @@ class MyApp extends StatelessWidget {
 }
 //algo triste === Catarina chata === verdade
 //de facto é verdade
+//só fazes asneira
