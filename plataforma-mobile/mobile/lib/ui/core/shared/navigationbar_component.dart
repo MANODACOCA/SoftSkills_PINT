@@ -1,20 +1,19 @@
 import 'package:go_router/go_router.dart';
 import 'export.dart';
 
-class Footer extends StatefulWidget {
+class Footer extends StatelessWidget {
   const Footer({super.key});
 
-  @override
-  State<Footer> createState() => _FooterState();
+int _locationToIndex(String location){
+  if(location.startsWith('/homepage')) return 0;
+  if(location.startsWith('/forum')) return 1;
+  if(location.startsWith('/cursos')) return 2;
+  if(location.startsWith('/notificacoes')) return 3;
+  if(location.startsWith('/profile')) return 4;
+  return 0;
 }
 
-class _FooterState extends State<Footer> {
-  int _currentIndex = 0;
-
-  void _onTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+  void _onTap(BuildContext context, int index) {
     switch (index) {
       case 0:
         context.go("/homepage");
@@ -36,16 +35,19 @@ class _FooterState extends State<Footer> {
 
   @override
   Widget build(BuildContext context) {
+    final location = GoRouterState.of(context).uri.toString();
+    final currentIndex = _locationToIndex(location);
+
     return BottomNavigationBar(
-      currentIndex: _currentIndex,
+      currentIndex: currentIndex,
+      onTap: (index) => _onTap(context, index),
       backgroundColor: AppColors.primary,
       type: BottomNavigationBarType.fixed,
       unselectedItemColor: Colors.white,
       selectedItemColor: AppColors.secondary,
       selectedLabelStyle: AppTextStyles.body,
       unselectedLabelStyle: AppTextStyles.body,
-      onTap: _onTap,
-      items: const <BottomNavigationBarItem>[
+      items: const [
         BottomNavigationBarItem(
           icon: Icon(Ionicons.home_outline),
           label: 'Home',

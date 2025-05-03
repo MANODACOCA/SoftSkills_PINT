@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+//import 'package:flutter/material.dart';
 import 'ui/core/shared/export.dart';
-import 'routing/route.dart';
+//import 'routing/route.dart';
 
 void main() {
   runApp(const MyApp());
