@@ -10,6 +10,7 @@ import '../ui/login/widget/success.dart';
 import 'package:mobile/ui/login/widget/loginpage.dart';
 import 'package:go_router/go_router.dart';
 import '../ui/login/widget/page_open_app.dart';
+import 'package:mobile/ui/profile/home.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -69,6 +70,11 @@ final rotas = GoRouter(
       name: 'return',
       path: '/returnLogin',
       builder: (context, state) => ReturnLogin(),
+    ),
+    GoRoute(
+      name: 'profile',
+      path: '/profile',
+      builder: (context, state) => Profile(),
     ),
   ],
 );

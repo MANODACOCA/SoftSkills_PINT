@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+
 import 'export.dart';
 
 class Footer extends StatelessWidget {
@@ -12,9 +14,25 @@ class Footer extends StatelessWidget {
       selectedItemColor: AppColors.secondary,
       selectedLabelStyle: AppTextStyles.body,
       unselectedLabelStyle: AppTextStyles.body,
-      items: const <BottomNavigationBarItem> [
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            context.go("/homepage");
+            break;
+          case 1:
+            break;
+          case 2:
+            break;
+          case 3:
+            break;
+          case 4:
+            context.go('/profile');
+            break;
+        }
+      },
+      items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Ionicons.home_outline), 
+          icon: Icon(Ionicons.home_outline),
           label: 'Home',
         ),
         BottomNavigationBarItem(
@@ -33,8 +51,7 @@ class Footer extends StatelessWidget {
           icon: Icon(Ionicons.person_outline),
           label: 'Perfil',
         ),
-      ] 
+      ],
     );
   }
-
 }
