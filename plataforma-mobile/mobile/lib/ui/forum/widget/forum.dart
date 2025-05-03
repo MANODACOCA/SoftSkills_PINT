@@ -13,7 +13,7 @@ class _ForumState extends State<Forum> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Text('Forum'),
+      body: Text('Forumm'),
       bottomNavigationBar: Footer(),
     );
   }
