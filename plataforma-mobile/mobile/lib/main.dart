@@ -1,8 +1,11 @@
 //import 'package:flutter/material.dart';
 import 'ui/core/shared/export.dart';
 //import 'routing/route.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('pt_PT', null);
   runApp(const MyApp());
 }
 
@@ -21,6 +24,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-//algo triste === Catarina chata === verdade
-//de facto é verdade
-//só fazes asneira

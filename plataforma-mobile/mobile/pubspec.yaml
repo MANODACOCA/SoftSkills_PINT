@@ -42,6 +42,8 @@ dependencies:
   pin_code_fields: ^8.0.1
   flutter_svg: ^2.0.17
   ionicons: ^0.1.0
+  intl:
+  carousel_slider:
 
 dev_dependencies:
   flutter_test:
@@ -72,7 +74,7 @@ flutter:
     - assets/facebook.png
     - assets/forget.png
     - assets/welcome.png
-
+    - assets/course-flutter.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
