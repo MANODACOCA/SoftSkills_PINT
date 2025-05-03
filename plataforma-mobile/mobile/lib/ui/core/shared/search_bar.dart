@@ -8,8 +8,9 @@ class SearchBarCustom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(width: 15),
+        SizedBox(width: 0),
         SizedBox(
           height: 40,
           width: 280,
@@ -26,7 +27,6 @@ class SearchBarCustom extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 16),
         Transform.rotate(
           angle: math.pi * 1.5,
           child: IconButton(

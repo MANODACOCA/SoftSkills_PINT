@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
-import '../themes/colors.dart';
-import'../themes/text_styles.dart';
+import 'export.dart';
 
 class Footer extends StatelessWidget {
   const Footer({super.key});

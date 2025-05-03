@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
 import '../../core/shared/navigationbar_component.dart';
+import '../../core/shared/card_course.dart';
 import '../../core/shared/search_bar.dart';
+import '../../core/shared/export.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +17,24 @@ class _HomePage extends State<HomePage> {
       appBar: AppBar(
         title: SearchBarCustom(),
         centerTitle: true,
-        backgroundColor: Color.fromRGBO(57, 99, 156, 1.0),
+        backgroundColor: AppColors.primary,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(2),
+        child: GridView.count(
+          crossAxisCount: 2,
+          childAspectRatio: 0.75,
+          children: [
+            CardCourse(title: 'ola', typeCourse: 'assincrono'),
+            /* CardCourse(),
+            CardCourse(),
+            CardCourse(),
+            CardCourse(),
+            CardCourse(),
+            CardCourse(),
+            CardCourse(), */
+          ],
+        ),
       ),
       bottomNavigationBar: Footer(),
     );
