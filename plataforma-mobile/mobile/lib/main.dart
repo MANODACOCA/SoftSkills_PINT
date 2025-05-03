@@ -21,4 +21,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-//Catarina chata
+//algo triste === Catarina chata === verdade
