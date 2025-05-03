@@ -1,3 +1,6 @@
+import 'package:mobile/ui/forum/widget/forum.dart';
+import 'package:mobile/ui/notification/widget/notifications.dart';
+
 import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';
@@ -75,6 +78,16 @@ final rotas = GoRouter(
       name: 'profile',
       path: '/profile',
       builder: (context, state) => Profile(),
+    ),
+    GoRoute(
+      name: 'notificacoes',
+      path: '/notificacoes',
+      builder: (context, state) => Notification(),
+    ),
+    GoRoute(
+      name: 'forum',
+      path: '/forum',
+      builder: (context, state) => Forum(),
     ),
   ],
 );

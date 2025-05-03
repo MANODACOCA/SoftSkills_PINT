@@ -1,35 +1,50 @@
 import 'package:go_router/go_router.dart';
-
 import 'export.dart';
 
-class Footer extends StatelessWidget {
+class Footer extends StatefulWidget {
   const Footer({super.key});
+
+  @override
+  State<Footer> createState() => _FooterState();
+}
+
+class _FooterState extends State<Footer> {
+  int _currentIndex = 0;
+
+  void _onTap(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+    switch (index) {
+      case 0:
+        context.go("/homepage");
+        break;
+      case 1:
+        context.go("/forum");
+        break;
+      case 2:
+        context.go("/cursos");
+        break;
+      case 3:
+        context.go("/notificacoes");
+        break;
+      case 4:
+        context.go('/profile');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
+      currentIndex: _currentIndex,
       backgroundColor: AppColors.primary,
       type: BottomNavigationBarType.fixed,
       unselectedItemColor: Colors.white,
       selectedItemColor: AppColors.secondary,
       selectedLabelStyle: AppTextStyles.body,
       unselectedLabelStyle: AppTextStyles.body,
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            context.go("/homepage");
-            break;
-          case 1:
-            break;
-          case 2:
-            break;
-          case 3:
-            break;
-          case 4:
-            context.go('/profile');
-            break;
-        }
-      },
+      onTap: _onTap,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Ionicons.home_outline),
