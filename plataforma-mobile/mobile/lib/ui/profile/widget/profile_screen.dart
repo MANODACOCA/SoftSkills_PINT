@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 import '../../core/shared/navigationbar_component.dart';
 
-//None of the buttons have a fuction, and i need to insert a right arrow
+//I need to insert a routes
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
