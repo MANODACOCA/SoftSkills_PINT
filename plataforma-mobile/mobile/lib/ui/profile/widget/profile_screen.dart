@@ -21,7 +21,8 @@ class _ProfileState extends State<Profile> {
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () async {
-            context.pop(); // Return to the previous screen no matter the route or the screen we were before
+            context
+                .pop(); // Return to the previous screen no matter the route or the screen we were before
           },
         ),
         title: Text("Perfil", style: TextStyle(color: Colors.white)),
@@ -104,7 +105,7 @@ class _ProfileState extends State<Profile> {
                           Text('Alteração de dados pessoais'),
                           Spacer(),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {context.go('/alterarInformacoes');},
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
                         ],
@@ -303,10 +304,15 @@ class _ProfileState extends State<Profile> {
                         SizedBox(width: 18),
                         Icon(Icons.logout, color: Colors.red),
                         SizedBox(width: 5),
-                        Text('Encerrar sessão', style: TextStyle(color:Colors.red,)),
+                        Text(
+                          'Encerrar sessão',
+                          style: TextStyle(color: Colors.red),
+                        ),
                         Spacer(),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.go('/login');
+                          },
                           icon: Icon(Icons.arrow_forward_ios, size: 15),
                         ),
                       ],
