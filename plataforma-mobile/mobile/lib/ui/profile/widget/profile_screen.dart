@@ -16,13 +16,13 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
+        /* leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () async {
             context.pop(); // Return to the previous screen no matter the route or the screen we were before
           },
-        ),
+        ), */
         title: Text("Perfil", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: AppColors.primary,

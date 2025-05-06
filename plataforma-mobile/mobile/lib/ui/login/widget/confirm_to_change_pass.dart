@@ -4,46 +4,45 @@ import 'package:go_router/go_router.dart';
 import 'dart:math';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class TwoFactorAuthentication extends StatefulWidget {
-  const TwoFactorAuthentication({super.key});
+class ConfirmAccountScreen extends StatefulWidget {
+  const ConfirmAccountScreen({super.key});
 
   @override
-  State<TwoFactorAuthentication> createState() => _TwoFactorAuthentication();
+  State<ConfirmAccountScreen> createState() => _ConfirmAccountScreen();
 }
 
-class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
+class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
   final codeController = TextEditingController();
   int code = 0;
 
   @override
   void initState() {
     super.initState();
-    randomCode();
+    randoCode();
   }
 
-  void randomCode() {
+  void randoCode() {
     code = Random().nextInt(90000) + 10000;
     print('O código é : $code');
   }
-  
+
   void validar() {
     if (codeController.text == code.toString()) {
-      context.go("/homepage");
+      context.go("/alterarpassword");
     } else {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Código incorreto!')));
     }
   }
-  // Confirmacao do email utilizados
+
   @override
   Widget build(BuildContext context) {
-        double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            context.go("/login");
+            context.go("/");
           },
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
@@ -75,33 +74,29 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
                   ),
                   SizedBox(height: 45),
                   //Aqui vem o local para inserir o código de verificação
-                  SizedBox(
-                    width: screenWidth-150,
-                    child: PinCodeTextField(
-                      keyboardType: TextInputType.number,
-                      appContext: context,
-                      controller: codeController,
-                      length: 5,
-                      cursorHeight: 19,
-                      enableActiveFill: true,
-                      textStyle: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                      ),
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      pinTheme: PinTheme(
-                        shape: PinCodeFieldShape.box,
-                        fieldHeight: 50,
-                        fieldWidth: 40,
-                        inactiveColor: Colors.grey,
-                        selectedColor: Colors.blueAccent,
-                        activeFillColor: Colors.white,
-                        inactiveFillColor: Colors.white,
-                        borderWidth: 1,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      onChanged: ((value) {}),
+                  PinCodeTextField(
+                    keyboardType: TextInputType.number,
+                    appContext: context,
+                    controller: codeController,
+                    length: 5,
+                    cursorHeight: 19,
+                    enableActiveFill: true,
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.normal,
                     ),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      fieldHeight: 50,
+                      inactiveColor: Colors.grey,
+                      selectedColor: Colors.blueAccent,
+                      activeFillColor: Colors.white,
+                      inactiveFillColor: Colors.white,
+                      borderWidth: 1,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    onChanged: ((value) {}),
                   ),
                   SizedBox(height: 150),
                   ElevatedButton(
@@ -110,7 +105,7 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      fixedSize: Size(screenWidth, 46),
+                      fixedSize: const Size(310, 46),
                     ),
                     onPressed: () {
                       validar();

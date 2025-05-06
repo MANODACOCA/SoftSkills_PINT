@@ -11,6 +11,7 @@ class ForgetPassword extends StatefulWidget {
 class _ForgetPassword extends State<ForgetPassword> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -47,7 +48,7 @@ class _ForgetPassword extends State<ForgetPassword> {
                   ),
                   SizedBox(height: 23),
                   SizedBox(
-                    width: 374,
+                    width: screenWidth,
                     height: 46,
                     child: TextField(
                       decoration: InputDecoration(
@@ -68,7 +69,7 @@ class _ForgetPassword extends State<ForgetPassword> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      fixedSize: const Size(310, 46),
+                      fixedSize: Size(screenWidth, 46),
                     ),
                     onPressed: () {
                       context.go("/confirmacao");

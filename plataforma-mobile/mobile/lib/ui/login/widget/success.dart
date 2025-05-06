@@ -2,8 +2,18 @@ import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
+class CheckmarkData {
+  final String path;
+  final String message;
+
+  CheckmarkData({required this.path, required this.message});
+}
+
 class CheckmarkScreen extends StatefulWidget {
-  const CheckmarkScreen({super.key});
+  const CheckmarkScreen({super.key, required this.path, required this.message});
+
+  final String message;
+  final String path;
 
   @override
   State<CheckmarkScreen> createState() => _CheckmarkScreenState();
@@ -14,7 +24,7 @@ class _CheckmarkScreenState extends State<CheckmarkScreen> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 2), () {
-      context.go("/homepage");
+      context.go(widget.path);
     });
   }
 
@@ -41,7 +51,7 @@ class _CheckmarkScreenState extends State<CheckmarkScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
-                "Sucesso!",
+                widget.message,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 30,

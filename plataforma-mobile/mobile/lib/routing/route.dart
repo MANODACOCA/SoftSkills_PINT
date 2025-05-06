@@ -53,7 +53,13 @@ final rotas = GoRouter(
     GoRoute(
       name: 'check',
       path: '/check',
-      builder: (context, state) => CheckmarkScreen(),
+      builder: (context, state) {
+        final data = state.extra as CheckmarkData;
+        return CheckmarkScreen(
+          path: data.path,
+          message: data.message,
+        );
+      },
     ),
     GoRoute(
       name: 'registo',

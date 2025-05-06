@@ -1,9 +1,9 @@
 import '../../core/shared/export.dart';
-import 'package:gender_picker/source/enums.dart';
+//import 'package:gender_picker/source/enums.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/shared/navigationbar_component.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:gender_picker/gender_picker.dart';
+//import 'package:gender_picker/gender_picker.dart';
 
 class ChangePersonalInfo extends StatefulWidget {
   const ChangePersonalInfo({super.key});
@@ -15,6 +15,7 @@ class ChangePersonalInfo extends StatefulWidget {
 class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -196,13 +197,15 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                   ),
                   SizedBox(height: 12),
                   SizedBox(
-                    width: 450,
+                    width: screenWidth, //Entire screen width
                     child: Column(
                       children: <Widget>[
                         Center(
                           child: Row(
                             children: <Widget>[
+                              SizedBox(width: 20),
                               SizedBox(
+                                width: screenWidth / 2 - 20,
                                 child: Column(
                                   children: <Widget>[
                                     Text(
@@ -250,8 +253,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                 ),
                               ),
                               SizedBox(width: 10),
+                              /*Gender part*/
                               SizedBox(
-                                width: 225,
+                                width: screenWidth / 2 - 10, 
                                 child: Column(
                                   children: <Widget>[
                                     Text(
@@ -263,22 +267,22 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                       textAlign: TextAlign.left,
                                     ),
                                     SizedBox(height: 5),
-                                    TextButton(
-                                      onPressed: () {},
-                                      child: GenderPickerWithImage(
-                                        onChanged: (Gender? gender) {},
-                                        selectedGender: Gender.Male, //Default
-                                        selectedGenderTextStyle: TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                    /* DropdownButton(
+                                      items: [
+                                        DropdownMenuItem(
+                                          child: Text('Masculino'),
+                                          value: 'Masculino',
                                         ),
-                                        unSelectedGenderTextStyle: TextStyle(
-                                          fontWeight: FontWeight.normal,
+                                        DropdownMenuItem(
+                                          child: Text('Feminino'),
+                                          value: 'Feminino',
                                         ),
-                                      ),
-                                    ),
+                                      ],
+                                    ), */
                                   ],
                                 ),
                               ),
+                              SizedBox(width: 20),
                             ],
                           ),
                         ),
