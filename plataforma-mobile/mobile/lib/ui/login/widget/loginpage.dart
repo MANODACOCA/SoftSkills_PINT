@@ -19,6 +19,7 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -35,7 +36,7 @@ class _LoginPage extends State<LoginPage> {
                   Image.asset('assets/logo-softinsa.png'),
                   const SizedBox(height: 90.0),
                   SizedBox(
-                    width: 374,
+                    width: screenWidth-40,
                     height: 46,
                     child: TextField(
                       decoration: InputDecoration(
@@ -51,7 +52,7 @@ class _LoginPage extends State<LoginPage> {
                   ),
                   const SizedBox(height: 25),
                   SizedBox(
-                    width: 374,
+                    width: screenWidth-40,
                     height: 46,
                     child: TextField(
                       obscureText: isPasswordVisible ? false : true,
@@ -86,9 +87,9 @@ class _LoginPage extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  SizedBox(
-                    width: double.infinity,
-                    child: GestureDetector(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [GestureDetector(
                       onTap: () {
                         context.go("/forgetpassword");
                       },
@@ -100,7 +101,7 @@ class _LoginPage extends State<LoginPage> {
                           decoration: TextDecoration.underline,
                         ),
                       ),
-                    ),
+                    ),]
                   ),
                   const SizedBox(height: 5),
                   SizedBox(
@@ -160,7 +161,7 @@ class _LoginPage extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      fixedSize: const Size(310, 46),
+                      fixedSize: Size(screenWidth-40, 46),
                     ),
                     onPressed: () {
                       context.go("/twofa");
@@ -177,7 +178,7 @@ class _LoginPage extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      fixedSize: const Size(310, 46),
+                      fixedSize: Size(screenWidth-40, 46),
                     ),
                     onPressed: () {
                       context.go("/registo");

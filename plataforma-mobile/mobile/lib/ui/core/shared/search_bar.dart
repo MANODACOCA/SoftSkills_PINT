@@ -7,13 +7,14 @@ class SearchBarCustom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         SizedBox(width: 0),
         SizedBox(
           height: 40,
-          width: 280,
+          width: screenWidth - 92,
           child: SearchBar(
             leading: const Icon(Icons.search, color:Colors.black38),
             hintText: 'Search',
