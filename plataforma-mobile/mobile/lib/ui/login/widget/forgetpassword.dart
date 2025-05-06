@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
 class ForgetPassword extends StatefulWidget {
@@ -17,7 +17,7 @@ class _ForgetPassword extends State<ForgetPassword> {
           'Esqueceu Password',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color(0XFF0D47A1),
+        backgroundColor: AppColors.primary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
@@ -64,7 +64,7 @@ class _ForgetPassword extends State<ForgetPassword> {
                   SizedBox(height: 75),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFF0D47A1),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

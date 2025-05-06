@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math';
@@ -22,7 +22,7 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
   }
 
   void randoCode() {
-    code = Random().nextInt(99999) + 10000;
+    code = Random().nextInt(90000) + 10000;
     print('O código é : $code');
   }
 
@@ -47,7 +47,7 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
         ),
-        backgroundColor: Color(0XFF0D47A1),
+        backgroundColor: AppColors.primary,
         title: Text(
           'Cofirmação do Email',
           textAlign: TextAlign.center,
@@ -101,7 +101,7 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
                   SizedBox(height: 150),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFF0D47A1),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

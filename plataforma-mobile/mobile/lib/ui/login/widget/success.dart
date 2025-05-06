@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
 
@@ -31,10 +31,10 @@ class _CheckmarkScreenState extends State<CheckmarkScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Color(0xFFB3E5FC),
-                border: Border.all(color: Color(0xFF1976D2), width: 2),
+                border: Border.all(color: AppColors.primary, width: 2),
               ),
               child: Center(
-                child: Icon(Icons.check, size: 40, color: Color(0xFF1976D2)),
+                child: Icon(Icons.check, size: 40, color: AppColors.primary),
               ),
             ),
             SizedBox(height: 20),

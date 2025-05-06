@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
 class FirstLogin extends StatefulWidget {
@@ -14,7 +14,7 @@ class _FirstLogin extends State<FirstLogin> {
   final pass = TextEditingController();
   Icon passwordIcon = const Icon(
     Icons.visibility_off,
-    color: Color(0XFF0D47A1),
+    color: AppColors.primary,
   );
 
   void analisar() {
@@ -35,7 +35,7 @@ class _FirstLogin extends State<FirstLogin> {
           'Criar Nova Password',
           style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Color(0XFF0D47A1),
+        backgroundColor: AppColors.primary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
@@ -79,12 +79,12 @@ class _FirstLogin extends State<FirstLogin> {
                               if (isPasswordVisible) {
                                 passwordIcon = Icon(
                                   Icons.visibility,
-                                  color: Color(0XFF0D47A1),
+                                  color: AppColors.primary,
                                 );
                               } else {
                                 passwordIcon = Icon(
                                   Icons.visibility_off,
-                                  color: Color(0XFF0D47A1),
+                                  color: AppColors.primary,
                                 );
                               }
                             });
@@ -116,12 +116,12 @@ class _FirstLogin extends State<FirstLogin> {
                               if (isPasswordVisible) {
                                 passwordIcon = Icon(
                                   Icons.visibility,
-                                  color: Color(0XFF0D47A1),
+                                  color: AppColors.primary,
                                 );
                               } else {
                                 passwordIcon = Icon(
                                   Icons.visibility_off,
-                                  color: Color(0XFF0D47A1),
+                                  color: AppColors.primary,
                                 );
                               }
                             });
@@ -140,7 +140,7 @@ class _FirstLogin extends State<FirstLogin> {
                   const SizedBox(height: 90),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFF0D47A1),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

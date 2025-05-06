@@ -50,8 +50,7 @@ class CardCourse extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-               
+              children: [               
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

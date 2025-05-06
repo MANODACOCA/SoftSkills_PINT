@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/core/themes/colors.dart';
 import '../../core/shared/navigationbar_component.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:gender_picker/gender_picker.dart';
 
 class ChangePersonalInfo extends StatefulWidget {
-  const ChangePersonalInfo({Key? key}) : super(key: key);
+  const ChangePersonalInfo({super.key});
 
   @override
   State<ChangePersonalInfo> createState() => _ChangePersonalInfoState();
@@ -51,16 +50,16 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                   ),
                   SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Alterar foto',
-                      style: TextStyle(color: Colors.white),
-                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      'Alterar foto',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                   Divider(

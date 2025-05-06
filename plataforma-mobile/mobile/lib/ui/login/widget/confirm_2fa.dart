@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math';
@@ -42,12 +42,12 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            context.go("/");
+            context.go("/login");
           },
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
         ),
-        backgroundColor: Color(0XFF0D47A1),
+        backgroundColor: AppColors.primary,
         title: Text(
           'Cofirmação do Email',
           textAlign: TextAlign.center,
@@ -101,7 +101,7 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
                   SizedBox(height: 150),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFF0D47A1),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

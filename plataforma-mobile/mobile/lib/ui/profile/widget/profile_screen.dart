@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/core/themes/colors.dart';
 import '../../core/shared/navigationbar_component.dart';
 
 //I need to insert a routes
@@ -21,8 +20,7 @@ class _ProfileState extends State<Profile> {
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () async {
-            context
-                .pop(); // Return to the previous screen no matter the route or the screen we were before
+            context.pop(); // Return to the previous screen no matter the route or the screen we were before
           },
         ),
         title: Text("Perfil", style: TextStyle(color: Colors.white)),

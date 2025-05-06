@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
 class Register extends StatefulWidget {
@@ -18,7 +18,7 @@ class _Register extends State<Register> {
           style: TextStyle(color: Colors.white),
           textAlign: TextAlign.center,
         ),
-        backgroundColor: Color(0XFF0D47A1),
+        backgroundColor: AppColors.primary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
@@ -73,7 +73,7 @@ class _Register extends State<Register> {
                         SizedBox(height: 30),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0XFF0D47A1),
+                            backgroundColor: AppColors.primary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),

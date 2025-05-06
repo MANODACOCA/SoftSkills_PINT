@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginPage extends StatefulWidget {
@@ -14,7 +14,7 @@ class _LoginPage extends State<LoginPage> {
   bool isPasswordVisible = false;
   Icon passwordIcon = const Icon(
     Icons.visibility_off,
-    color: Color(0XFF0D47A1),
+    color: AppColors.primary,
   );
 
   @override
@@ -64,12 +64,12 @@ class _LoginPage extends State<LoginPage> {
                               if (isPasswordVisible) {
                                 passwordIcon = Icon(
                                   Icons.visibility,
-                                  color: Color(0XFF0D47A1),
+                                  color: AppColors.primary,
                                 );
                               } else {
                                 passwordIcon = Icon(
                                   Icons.visibility_off,
-                                  color: Color(0XFF0D47A1),
+                                  color: AppColors.primary,
                                 );
                               }
                             });
@@ -111,7 +111,7 @@ class _LoginPage extends State<LoginPage> {
                         /*Alinha todos os elementos dentro da mesma*/
                         children: [
                           Switch(
-                            activeColor: Color(0XFF0D47A1),
+                            activeColor: AppColors.primary,
                             value: isSwitched,
                             onChanged: (value) {
                               setState(() {
@@ -122,7 +122,7 @@ class _LoginPage extends State<LoginPage> {
                           const SizedBox(width: 10),
                           Text(
                             'Manter sessão iniciada',
-                            style: TextStyle(color: Color(0XFF0D47A1)),
+                            style: TextStyle(color: AppColors.primary),
                           ),
                         ],
                       ),
@@ -156,7 +156,7 @@ class _LoginPage extends State<LoginPage> {
                   const SizedBox(height: 30.0),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFF0D47A1),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -173,7 +173,7 @@ class _LoginPage extends State<LoginPage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0XFF0D47A1),
+                      backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),

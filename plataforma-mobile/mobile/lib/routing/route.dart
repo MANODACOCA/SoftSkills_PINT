@@ -14,7 +14,7 @@ import 'package:mobile/ui/login/widget/loginpage.dart';
 import 'package:go_router/go_router.dart';
 import '../ui/login/widget/page_open_app.dart';
 import 'package:mobile/ui/profile/widget/profile_screen.dart';
-import 'package:mobile/ui/profile/widget/changePersonalInfo.dart';
+import 'package:mobile/ui/profile/widget/change_personal_info.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
