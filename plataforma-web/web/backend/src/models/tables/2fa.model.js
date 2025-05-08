@@ -1,16 +1,16 @@
 const Sequelize = require('sequelize');
 const db = require('../db.js');
-const Utilizador = require('../tables/utilizador.model.js');
+const Utilizador = require('./utilizador.model.js');
 
 const Twofa = db.define('2FA', {
   ID_2FA: {
-    type: db.INTEGER,
+    type: Sequelize.INTEGER,
     autoIncrement: true,
     primaryKey: true,
     allowNull: false,
   },
   ID_UTILIZADOR: {
-    type: db.INTEGER,
+    type: Sequelize.INTEGER,
     allowNull: false,
     references: {
       model: 'UTILIZADOR',
@@ -18,17 +18,17 @@ const Twofa = db.define('2FA', {
     }
   },
   CODIGO: {
-    type: db.STRING(6),
+    type: Sequelize.STRING(6),
     allowNull: false,
   },
   DATA_FA: {
-    type: db.DATE,
+    type: Sequelize.DATE,
     allowNull: false,
   }
-}, 
-{
-  timestamps: false,
-});
+},
+  {
+    timestamps: false,
+  });
 
-Twofa.belongsTo(Utilizador, {foreignKey: 'ID_UTILIZADOR'});
+Twofa.belongsTo(Utilizador, { foreignKey: 'ID_UTILIZADOR' });
 module.exports = Twofa;
