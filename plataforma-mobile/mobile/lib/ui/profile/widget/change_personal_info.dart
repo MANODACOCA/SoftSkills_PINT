@@ -15,6 +15,7 @@ class ChangePersonalInfo extends StatefulWidget {
 class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   @override
   Widget build(BuildContext context) {
+    String? selectedGender;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
@@ -255,7 +256,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               SizedBox(width: 10),
                               /*Gender part*/
                               SizedBox(
-                                width: screenWidth / 2 - 10, 
+                                width: screenWidth / 2 - 30,
                                 child: Column(
                                   children: <Widget>[
                                     Text(
@@ -267,18 +268,61 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                       textAlign: TextAlign.left,
                                     ),
                                     SizedBox(height: 5),
-                                    /* DropdownButton(
-                                      items: [
-                                        DropdownMenuItem(
-                                          child: Text('Masculino'),
-                                          value: 'Masculino',
+                                    TextButton(
+                                      onPressed: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Container(
+                                              child: ListView(
+                                                children: <Widget>[
+                                                  ListTile(
+                                                    leading: Icon(Icons.male),
+                                                    title: Text('Masculino'),
+                                                    onTap: () {
+                                                      selectedGender =
+                                                          'Masculino';
+                                                      context.pop(context);
+                                                    },
+                                                  ),
+                                                  ListTile(
+                                                    leading: Icon(Icons.female),
+                                                    title: Text('Feminino'),
+                                                    onTap: () {
+                                                      selectedGender =
+                                                          'Feminino';
+                                                      context.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                        print(
+                                          'Selected Gender: $selectedGender',
+                                        );
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black,
+                                            width: 1,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            4,
+                                          ),
                                         ),
-                                        DropdownMenuItem(
-                                          child: Text('Feminino'),
-                                          value: 'Feminino',
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 16,
                                         ),
-                                      ],
-                                    ), */
+                                        child: Text(
+                                          'Selecionar género',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -286,6 +330,28 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                             ],
                           ),
                         ),
+                        SizedBox(height: 25),
+                        SizedBox(
+                          width: 268,
+                          height: 43,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            onPressed: () {
+                              print('Alterações Submetidas com Sucesso');
+                              context.go('/profile');
+                            },
+                            child: Text(
+                              'Confirmar Alterações',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 20),
                       ],
                     ),
                   ),
