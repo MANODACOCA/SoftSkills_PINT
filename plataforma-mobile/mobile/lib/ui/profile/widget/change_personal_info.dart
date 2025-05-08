@@ -3,7 +3,6 @@ import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/shared/navigationbar_component.dart';
 import 'package:country_picker/country_picker.dart';
-//import 'package:gender_picker/gender_picker.dart';
 
 class ChangePersonalInfo extends StatefulWidget {
   const ChangePersonalInfo({super.key});
@@ -342,8 +341,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               ),
                             ),
                             onPressed: () {
-                              print('Alterações Submetidas com Sucesso');
-                              context.go('/profile');
+                              confirm();
                             },
                             child: Text(
                               'Confirmar Alterações',
@@ -362,6 +360,33 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         ),
       ),
       bottomNavigationBar: Footer(),
+    );
+  }
+  confirm() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Aviso'),
+          content: Text('Quer guardar as alterações?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Sim'),
+              onPressed: () {
+                context.go('/profile');
+                print('Alterações guardadas!');
+              },
+            ),
+            TextButton(
+              child: Text('Não'),
+              onPressed: () {
+                context.pop(); // Close the dialog
+                print('Alterações não foram guardadas!');
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

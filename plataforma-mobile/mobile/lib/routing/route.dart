@@ -15,6 +15,7 @@ import 'package:go_router/go_router.dart';
 import '../ui/login/widget/page_open_app.dart';
 import 'package:mobile/ui/profile/widget/profile_screen.dart';
 import 'package:mobile/ui/profile/widget/change_personal_info.dart';
+import 'package:mobile/ui/profile/widget/see_info_profile.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -100,6 +101,11 @@ final rotas = GoRouter(
       name: 'alterarInformacoes',
       path: '/alterarInformacoes',
       builder: (context, state) => ChangePersonalInfo(),
+    ),
+    GoRoute(
+      name: 'seeinfoprofile',
+      path: '/seeinfoprofile',
+      builder: (context, state) => SeeInfoProfile(),
     ),
   ],
 );
