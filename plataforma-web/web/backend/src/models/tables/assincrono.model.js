@@ -11,11 +11,10 @@ const Assincrono = db.define('ASSINCRONO', {
     },
     ID_CURSO: {
         type: Sequelize.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
         allowNull: false,
         references: {
-            model: 'CURSO',
+            model: 'CURSOS',
             key: 'ID_CURSO',
         }
     },
