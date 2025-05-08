@@ -783,7 +783,4 @@ class Basedados {
     ) VALUES ("$idUtilizador", "$idFormando", "$idCurso", "$idCursoSincrono", "$resultado")
   ''');
   }
-
-  
-
 }
