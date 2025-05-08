@@ -362,6 +362,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
       bottomNavigationBar: Footer(),
     );
   }
+
   confirm() {
     return showDialog(
       context: context,
@@ -371,14 +372,18 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
           content: Text('Quer guardar as alterações?'),
           actions: <Widget>[
             TextButton(
-              child: Text('Sim'),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.go('/profile');
                 print('Alterações guardadas!');
               },
             ),
             TextButton(
-              child: Text('Não'),
+              style: TextButton.styleFrom(backgroundColor: Colors.red),
+              child: Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.pop(); // Close the dialog
                 print('Alterações não foram guardadas!');
