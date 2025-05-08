@@ -7,7 +7,7 @@ const Topico = db.define('TOPICO', {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        allowNull: false,
+        allowNull: false
     },
     ID_AREA: {
         type: Sequelize.INTEGER,
@@ -18,11 +18,11 @@ const Topico = db.define('TOPICO', {
         }
     },
     NOME_TOPICO: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false
     },
     DESCRICAO_TOP: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(100),
         allowNull: false
     },
 },

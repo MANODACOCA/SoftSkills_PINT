@@ -9,11 +9,11 @@ const Utilizador = db.define('UTILIZADOR', {
         allowNull: false
     },
     NOME_UTILIZADOR: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(1024),
         allowNull: false
     },
     PASSWORD: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(16),
         allowNull: false
     },
     DATA_CRIACAO_UTILIZ: {
@@ -41,7 +41,7 @@ const Utilizador = db.define('UTILIZADOR', {
         allowNull: false
     },
     EMAIL: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING(50),
         allowNull: false
     },
     DATA_ATIV_UTILI: {
