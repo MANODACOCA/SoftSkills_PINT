@@ -42,30 +42,75 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                       width: double.infinity,
                       child: Text(
                         'Segurança',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: Colors.grey , fontSize: 20),
                         textAlign: TextAlign.left,
                       ),
                     ),
                     SizedBox(height: 8),
                     Padding(
-                      padding: EdgeInsets.only(right: 40),
+                      padding: EdgeInsets.only(left: 0, right: 0),
                       child: Column(
                         children: [
-                          Row(
-                            children: <Widget>[
-                              SizedBox(
-                                child: Row(
+                          Padding(
+                            padding: EdgeInsets.only(left: 10, right: 0),
+                            child: Column(
+                              children: [
+                                Row(
                                   children: [
                                     Icon(Icons.lock),
                                     SizedBox(width: 10),
                                     Text('Alterar Password'),
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: () {
+                                        context.go('');
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 15,
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: 15),
+                                Row(
+                                  children: [
+                                    Icon(Icons.device_unknown),
+                                    SizedBox(width: 10),
+                                    Text('Autenticação de dois fatores'),
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: () {
+                                        context.go('');
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 15),
+                                Row(
+                                  children: [
+                                    Icon(Icons.logout),
+                                    SizedBox(width: 10),
+                                    Text('Encerrar sessão noutro dispositivo'),
+                                    Spacer(),
+                                    IconButton(
+                                      onPressed: () {
+                                        context.go('');
+                                      },
+                                      icon: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 15,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(),
-                          Row(),
                         ],
                       ),
                     ),
