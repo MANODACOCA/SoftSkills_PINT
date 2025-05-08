@@ -495,9 +495,289 @@ class Basedados {
   ''');
   }
 
-  
+  Future<void> inserirCursoAssincrono({
+  required int idCurso,
+  required int idTopico,
+  required int idGestorAdministrador,
+  required int idCategoria,
+  required int idArea,
+  required String nomeCurso,
+  required String descricaoCurso,
+  int? numeroVagas,
+  required String dataInicio,
+  required String dataFim,
+  required int tipoCurso,
+  required int estado,
+  required String idioma,
+  required double horasCurso,
+  required int contadorFormandos,
+  String? imagem,}) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO ASSINCRONO (
+      ID_CURSO, ID_TOPICO, ID_GESTOR_ADMINISTRADOR, ID_CATEGORIA,
+      ID_AREA, NOME_CURSO, DESCRICAO_CURSO, NUMERO_VAGAS, DATA_INICIO_CURSO,
+      DATA_FIM_CURSO, TIPO_CURSO, ESTADO, IDIOMA, HORAS_CURSO,
+      CONTADOR_FORMANDOS, IMAGEM
+    )
+    VALUES ("$idCurso", "$idTopico", "$idGestorAdministrador", "$idCategoria", "$idArea", "$nomeCurso", "$descricaoCurso", "$numeroVagas", "$dataInicio",
+    "$dataFim", "$tipoCurso", "$estado", "$idioma", "$horasCurso", "$contadorFormandos", "$imagem")
+  ''');
+  }
 
+  Future<void> inserirAula({required int idCurso, required String dataAula, required String nomeAula,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO AULAS (ID_CURSO, DATA_AULA, NOME_AULA) VALUES ("$idCurso", "$dataAula", "$nomeAula")
+  ''');
+  }
 
+  Future<void> inserirConteudoPartilhado({required int idArea, required int idTopico, required int idCategoria,
+  String? descricaoCp, required String dataCriacaoCp,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO CONTEUDOS_PARTILHADO (ID_AREA, ID_TOPICO, ID_CATEGORIA, DESCRICAO_CP, DATA_CRIACAO_CP)
+    VALUES ("$idArea", "$idTopico", "$idCategoria", "$descricaoCp", "$dataCriacaoCp")
+  ''');
+  }
 
+  Future<void> inserirPost({required int idUtilizador, required int idAreaConhecimento, required String textoPost,
+  required int contadorLikes,
+  required int contadorComentarios,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO POST (
+      ID_UTILIZADOR, ID_AREA_CONHECIMENTO, TEXTO_POST,
+      CONTADOR_LIKES_POST, CONTADOR_COMENTARIOS
+    ) VALUES ("$idUtilizador", "$idAreaConhecimento", "$textoPost", "$contadorLikes", "$contadorComentarios")
+  ''');
+  }
+
+  Future<void> inserirNotificacaoPost({required int idCurso, required int idPost,
+  required int idUtilizador,
+  required String dataHoraNotificacao,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO NOTIFICACOES_POST (
+      ID_CURSO, ID_POST, ID_UTILIZADOR, DATA_HORA_NOTIFICACAOCP
+    ) VALUES ("$idCurso", "$idPost", "$idUtilizador", "$dataHoraNotificacao")
+  ''');
+  }
+
+  Future<void> inserirAvaliacao({
+  required int idPost,
+  required int idUtilizador,
+  required bool avaliacao,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO AVALIACOES (
+      ID_POST, ID_UTILIZADOR, AVALIACAO
+    ) VALUES ("$idPost", "$idUtilizador", "$avaliacao")
+  ''');
+  }
+
+  Future<void> inserirComentario({
+  required int idPost,
+  required int idUtilizador,
+  required int idAvaliacao,
+  required String textoComentario,
+  required int contadorLikes,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO COMENTARIO (
+      ID_POST, ID_UTILIZADOR, ID_AVALIACAO, TEXTO_COMENTARIO, CONTADOR_LIKES_COM
+    ) VALUES ("$idPost", "$idUtilizador", "$idAvaliacao", "$textoComentario", "$contadorLikes")
+  ''');
+  }
+
+  Future<void> inserirTipoFormato(String formato) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO TIPO_FORMATO (FORMATO) VALUES ("$formato")
+  ''');
+  }
+
+  Future<void> inserirConteudo({
+  required int idAula,
+  required int idFormato,
+  required String conteudo,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO CONTEUDOS (ID_AULA, ID_FORMATO, CONTEUDO) VALUES ("$idAula", "$idFormato", "$conteudo")
+  ''');
+  }
+
+  Future<void> inserirTipoDenuncia(String tipoDenuncia) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO TIPO_DENUNCIA (TIPO_DENUNCIA) VALUES ("$tipoDenuncia")
+  ''');
+  }
+
+  Future<void> inserirDenuncia({
+  required int idComentario,
+  required int idUtilizador,
+  required int idPost,
+  required int idTipoDenuncia,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO DENUNCIA (
+      ID_COMENTARIO, ID_UTILIZADOR, ID_POST, ID_TIPO_DENUNCIA
+    ) VALUES ("$idComentario", "$idUtilizador", "$idPost", "$idTipoDenuncia")
+  ''');
+  }
+
+  Future<void> inserirFormador({
+  required int idUtilizador,
+  required String nomeUtilizador,
+  required String password,
+  required String dataCriacao,
+  int? telemovel,
+  required int genero,
+  required String morada,
+  required String pais,
+  required String dataNasc,
+  required String email,
+  String? dataAtivacao,
+  bool? autent2FAT,
+  String? especialidades,
+  String? experiencia,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO FORMADORES (
+      ID_UTILIZADOR, NOME_UTILIZADOR, PASSWORD_UTIL, DATA_CRIACAO_UTILIZ, 
+      TELEMOVEL, GENERO, MORADA, PAIS, DATA_NASC, EMAIL, 
+      DATA_ATIV_UTILI, AUTEN2FAT, ESPECIALIDADES, EXPERIENCIA
+    ) VALUES ("$idUtilizador", "$nomeUtilizador", "$password", "$dataCriacao", "$telemovel", "$genero", "$morada",
+    "$pais", "$dataNasc", "$email", "$dataAtivacao", "$autent2FAT", "$especialidades", "$experiencia")
+  ''');
+  }
+
+  Future<void> inserirFormando({
+  required int idUtilizador,
+  required String nomeUtilizador,
+  required String password,
+  required String dataCriacao,
+  int? telemovel,
+  required int genero,
+  required String morada,
+  required String pais,
+  required String dataNasc,
+  required String email,
+  String? dataAtivacao,
+  bool? autent2FAT,
+  String? percursoFormativo,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO FORMANDOS (
+      ID_UTILIZADOR, NOME_UTILIZADOR, PASSWORD_UTIL, DATA_CRIACAO_UTILIZ,
+      TELEMOVEL, GENERO, MORADA, PAIS, DATA_NASC, EMAIL,
+      DATA_ATIV_UTILI, AUTEN2FAT, PERCURSO_FORMATIVO
+    ) VALUES ("$idUtilizador", "$nomeUtilizador", "$password", "$dataCriacao", "$telemovel",
+    "$genero", "$morada", "$pais", "$dataNasc", "$email", "$dataAtivacao", "$autent2FAT", "$percursoFormativo")
+  ''');
+  }
+
+  Future<void> inserirInscricao({
+  required int idUtilizador,
+  required int idFormando,
+  required int idCurso,
+  required String dataLimite,
+  required String dataInicio,
+  required int status,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO INSCRICOES (
+      ID_UTILIZADOR, ID_FORMANDO, ID_CURSO, DATA_LIMITE,
+      DATA_INICIO_INSC, STATUS_INSCRICAO
+    ) VALUES ("$idUtilizador", "$idFormando", "$idCurso", "$dataLimite", "$dataInicio", "$status")
+  ''');
+  }
+
+  Future<void> inserirNotificacaoCurso({
+  required int idUtilizador,
+  required int idCurso,
+  required String dataHoraNotificacao,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO NOTIFICACOES_CURSO (
+      ID_UTILIZADOR, ID_CURSO, DATA_HORA_NOTIFICACAOCURSO
+    ) VALUES ("$idUtilizador", "$idCurso", "$dataHoraNotificacao")
+  ''');
+  }
+
+  Future<void> inserirOcorrenciaEdicao({
+  required int nrOcorrencia,
+  required int idCurso,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO OCORRENCIAS_EDICOES (
+      NR_OCORRENCIA, ID_CURSO
+    ) VALUES ("$nrOcorrencia", "$idCurso")
+  ''');
+  }
+
+  Future<void> inserirCursoSincrono({
+  required int idCurso,
+  required int idUtilizador,
+  required int idFormador,
+  required int idTopico,
+  required int idGestorAdministrador,
+  required int idCategoria,
+  required int idArea,
+  required String nomeCurso,
+  required String descricaoCurso,
+  int? numeroVagas,
+  required String dataInicioCurso,
+  required String dataFimCurso,
+  required int tipoCurso,
+  required int estado,
+  required String idioma,
+  required double horasCurso,
+  required int contadorFormandos,
+  String? imagem,
+  required int nMaxForm,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO SINCRONO (
+      ID_CURSO, ID_UTILIZADOR, ID_FORMADOR, ID_TOPICO, ID_GESTOR_ADMINISTRADOR,
+      ID_CATEGORIA, ID_AREA, NOME_CURSO, DESCRICAO_CURSO, NUMERO_VAGAS,
+      DATA_INICIO_CURSO, DATA_FIM_CURSO, TIPO_CURSO, ESTADO, IDIOMA,
+      HORAS_CURSO, CONTADOR_FORMANDOS, IMAGEM, N_MAX_FORM
+    ) VALUES ("$idCurso", "$idUtilizador", "$idFormador", "$idTopico", "$idGestorAdministrador",
+    "$idCategoria", "$idArea", "$nomeCurso", "$descricaoCurso", "$numeroVagas", "$dataInicioCurso",
+    "$dataFimCurso", "$tipoCurso", "$estado, "$idioma", "$horasCurso", "$contadorFormandos", "$imagem",
+    "$nMaxForm")
+  ''',);
+  }
+
+  Future<void> inserirResultado({
+  required int idUtilizador,
+  required int idFormando,
+  required int idCurso,
+  required int idCursoSincrono,
+  required double resultado,
+  }) async {
+  Database db = await basededados;
+  await db.rawInsert('''
+    INSERT INTO RESULTADOS (
+      ID_UTILIZADOR, ID_FORMANDO, ID_CURSO, ID_CURSO_SINCRONO, RESUL
+    ) VALUES ("$idUtilizador", "$idFormando", "$idCurso", "$idCursoSincrono", "$resultado")
+  ''');
+  }
 
 }
