@@ -1,4 +1,5 @@
-var Sequelize = require('sequelize');
+const Sequelize = require('sequelize');
+const db = require('../db.js');var Sequelize = require('sequelize');
 var sequelize = require('../db');
 
 var Categoria = sequelize.define('CATEGORIA', {
