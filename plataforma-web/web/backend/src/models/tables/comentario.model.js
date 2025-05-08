@@ -35,6 +35,14 @@ const Comentario = db.define('COMENTARIO', {
             key: 'ID_AVALIACAO',
         }
     },
+    TEXTO_COMENTARIO: {
+        type: Sequelize.STRING(500),
+        allowNull: false,
+    },
+    CONTADOR_LIKES_COM: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
 },
     {
         timestamps: false,
@@ -42,4 +50,5 @@ const Comentario = db.define('COMENTARIO', {
 
 Comentario.belongsTo(Utilizador, { foreignKey: 'ID_UTILIZADOR' });
 Comentario.belongsTo(Post, { foreignKey: 'ID_POST' });
+Comentario.belongsTo(Avaliacoes, { foreignKey: 'ID_AVALIACAO' });
 module.exports = Comentario;
