@@ -497,6 +497,7 @@ class Basedados {
 
   Future<void> inserirCursoAssincrono({
   required int idCurso,
+  required int idCursoAssincrono,
   required int idTopico,
   required int idGestorAdministrador,
   required int idCategoria,
@@ -515,12 +516,12 @@ class Basedados {
   Database db = await basededados;
   await db.rawInsert('''
     INSERT INTO ASSINCRONO (
-      ID_CURSO, ID_TOPICO, ID_GESTOR_ADMINISTRADOR, ID_CATEGORIA,
+      ID_CURSO, ID_CURSO_ASSINCRONO, ID_TOPICO, ID_GESTOR_ADMINISTRADOR, ID_CATEGORIA,
       ID_AREA, NOME_CURSO, DESCRICAO_CURSO, NUMERO_VAGAS, DATA_INICIO_CURSO,
       DATA_FIM_CURSO, TIPO_CURSO, ESTADO, IDIOMA, HORAS_CURSO,
       CONTADOR_FORMANDOS, IMAGEM
     )
-    VALUES ("$idCurso", "$idTopico", "$idGestorAdministrador", "$idCategoria", "$idArea", "$nomeCurso", "$descricaoCurso", "$numeroVagas", "$dataInicio",
+    VALUES ("$idCurso", "$idCursoAssincrono", "$idTopico", "$idGestorAdministrador", "$idCategoria", "$idArea", "$nomeCurso", "$descricaoCurso", "$numeroVagas", "$dataInicio",
     "$dataFim", "$tipoCurso", "$estado", "$idioma", "$horasCurso", "$contadorFormandos", "$imagem")
   ''');
   }
@@ -637,6 +638,7 @@ class Basedados {
 
   Future<void> inserirFormador({
   required int idUtilizador,
+  required int idFormador,
   required String nomeUtilizador,
   required String password,
   required String dataCriacao,
@@ -654,16 +656,17 @@ class Basedados {
   Database db = await basededados;
   await db.rawInsert('''
     INSERT INTO FORMADORES (
-      ID_UTILIZADOR, NOME_UTILIZADOR, PASSWORD_UTIL, DATA_CRIACAO_UTILIZ, 
+      ID_UTILIZADOR, ID_FORMADOR, NOME_UTILIZADOR, PASSWORD_UTIL, DATA_CRIACAO_UTILIZ, 
       TELEMOVEL, GENERO, MORADA, PAIS, DATA_NASC, EMAIL, 
       DATA_ATIV_UTILI, AUTEN2FAT, ESPECIALIDADES, EXPERIENCIA
-    ) VALUES ("$idUtilizador", "$nomeUtilizador", "$password", "$dataCriacao", "$telemovel", "$genero", "$morada",
+    ) VALUES ("$idUtilizador", "$idFormador", "$nomeUtilizador", "$password", "$dataCriacao", "$telemovel", "$genero", "$morada",
     "$pais", "$dataNasc", "$email", "$dataAtivacao", "$autent2FAT", "$especialidades", "$experiencia")
   ''');
   }
 
   Future<void> inserirFormando({
   required int idUtilizador,
+  required int idFormando,
   required String nomeUtilizador,
   required String password,
   required String dataCriacao,
@@ -680,10 +683,10 @@ class Basedados {
   Database db = await basededados;
   await db.rawInsert('''
     INSERT INTO FORMANDOS (
-      ID_UTILIZADOR, NOME_UTILIZADOR, PASSWORD_UTIL, DATA_CRIACAO_UTILIZ,
+      ID_UTILIZADOR, ID_FORMANDO, NOME_UTILIZADOR, PASSWORD_UTIL, DATA_CRIACAO_UTILIZ,
       TELEMOVEL, GENERO, MORADA, PAIS, DATA_NASC, EMAIL,
       DATA_ATIV_UTILI, AUTEN2FAT, PERCURSO_FORMATIVO
-    ) VALUES ("$idUtilizador", "$nomeUtilizador", "$password", "$dataCriacao", "$telemovel",
+    ) VALUES ("$idUtilizador", "$idFormando","$nomeUtilizador", "$password", "$dataCriacao", "$telemovel",
     "$genero", "$morada", "$pais", "$dataNasc", "$email", "$dataAtivacao", "$autent2FAT", "$percursoFormativo")
   ''');
   }
@@ -732,6 +735,7 @@ class Basedados {
 
   Future<void> inserirCursoSincrono({
   required int idCurso,
+  required int idCursoSincrono,
   required int idUtilizador,
   required int idFormador,
   required int idTopico,
@@ -754,11 +758,11 @@ class Basedados {
   Database db = await basededados;
   await db.rawInsert('''
     INSERT INTO SINCRONO (
-      ID_CURSO, ID_UTILIZADOR, ID_FORMADOR, ID_TOPICO, ID_GESTOR_ADMINISTRADOR,
+      ID_CURSO, ID_CURSO_SINCRONO, ID_UTILIZADOR, ID_FORMADOR, ID_TOPICO, ID_GESTOR_ADMINISTRADOR,
       ID_CATEGORIA, ID_AREA, NOME_CURSO, DESCRICAO_CURSO, NUMERO_VAGAS,
       DATA_INICIO_CURSO, DATA_FIM_CURSO, TIPO_CURSO, ESTADO, IDIOMA,
       HORAS_CURSO, CONTADOR_FORMANDOS, IMAGEM, N_MAX_FORM
-    ) VALUES ("$idCurso", "$idUtilizador", "$idFormador", "$idTopico", "$idGestorAdministrador",
+    ) VALUES ("$idCurso", "$idCursoSincrono", "$idUtilizador", "$idFormador", "$idTopico", "$idGestorAdministrador",
     "$idCategoria", "$idArea", "$nomeCurso", "$descricaoCurso", "$numeroVagas", "$dataInicioCurso",
     "$dataFimCurso", "$tipoCurso", "$estado, "$idioma", "$horasCurso", "$contadorFormandos", "$imagem",
     "$nMaxForm")
@@ -779,5 +783,7 @@ class Basedados {
     ) VALUES ("$idUtilizador", "$idFormando", "$idCurso", "$idCursoSincrono", "$resultado")
   ''');
   }
+
+  
 
 }
