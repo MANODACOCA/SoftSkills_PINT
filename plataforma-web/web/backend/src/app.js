@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
-// Rota principal
+//Main Route
 app.get('/', (req, res) => {
   res.send('Servidor Node.js com Express funcionando!');
 });
@@ -11,7 +11,6 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Servidor a correr: http://localhost:${port}`);
 });
-
 
 
 const areaRouter = require('./routes/area_route.js');
