@@ -7,12 +7,12 @@ app.get('/', (req, res) => {
   res.send('Servidor Node.js com Express funcionando!');
 });
 
-// Inicia o servidor
+// Mensagem para mostrar que o servidor está a correr
 app.listen(port, () => {
   console.log(`Servidor a correr: http://localhost:${port}`);
 });
 
-
+//All Routes 
 const areaRouter = require('./routes/area_route.js');
 app.use('/area',areaRouter);
 
