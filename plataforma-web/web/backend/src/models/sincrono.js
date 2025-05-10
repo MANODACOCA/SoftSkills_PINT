@@ -15,6 +15,14 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_curso'
       }
     },
+    id_utilizador: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'utilizador',
+        key: 'id_utilizador'
+      }
+    },
     id_formador: {
       type: DataTypes.INTEGER,
       allowNull: false,

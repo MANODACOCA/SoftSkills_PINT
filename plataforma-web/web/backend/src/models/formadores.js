@@ -10,6 +10,7 @@ module.exports = function(sequelize, DataTypes) {
     id_utilizador: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
       references: {
         model: 'utilizador',
         key: 'id_utilizador'
@@ -78,6 +79,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         fields: [
           { name: "id_formador" },
+          { name: "id_utilizador"},
         ]
       },
     ]
