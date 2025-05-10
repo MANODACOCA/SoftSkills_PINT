@@ -782,4 +782,136 @@ class Basedados {
     ) VALUES ("$idUtilizador", "$idFormando", "$idCurso", "$idCursoSincrono", "$resultado")
   ''');
   }
+
+  Future<List<Map<String, dynamic>>> obterCategorias() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM CATEGORIA');
+  }
+
+  Future<List<Map<String, dynamic>>> obterAreas() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM AREA');
+  }
+
+  Future<List<Map<String, dynamic>>> obterTopicos() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM TOPICO');
+  }
+
+  Future<List<Map<String, dynamic>>> obterUtilizadores() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM UTILIZADOR');
+  }
+
+  Future<List<Map<String, dynamic>>> obterS_S_O() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM S_S_O');
+  }
+
+  Future<List<Map<String, dynamic>>> obter2FA() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM "2FA"');
+  }
+
+  Future<List<Map<String, dynamic>>> obterAdministrador() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM GESTOR_ADMINISTRADOR');
+  }
+
+  Future<List<Map<String, dynamic>>> obterCursos() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM CURSOS');
+  }
+
+  Future<List<Map<String, dynamic>>> obterAssincrono() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM ASSINCRONO');
+  }
+
+  Future<List<Map<String, dynamic>>> obterAulas() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM AULAS');
+  }
+
+  Future<List<Map<String, dynamic>>> obterConteudoPartilhado() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM CONTEUDOS_PARTILHADO');
+  }
+
+  Future<List<Map<String, dynamic>>> obterPost() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM POST');
+  }
+
+  Future<List<Map<String, dynamic>>> obterNotificacoesPost() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM NOTIFICACOES_POST');
+  }
+
+  Future<List<Map<String, dynamic>>> obterAvaliacoes() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM AVALIACOES');
+  }
+
+  Future<List<Map<String, dynamic>>> obterComentarios() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM COMENTARIO');
+  }
+
+  Future<List<Map<String, dynamic>>> obterTipoFormato() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM TIPO_FORMATO');
+  }
+
+  Future<List<Map<String, dynamic>>> obterConteudos() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM CONTEUDOS');
+  }
+
+  Future<List<Map<String, dynamic>>> obterTipoDenuncia() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM TIPO_DENUNCIA');
+  }
+
+  Future<List<Map<String, dynamic>>> obterDenuncia() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM DENUNCIA');
+  }
+
+  Future<List<Map<String, dynamic>>> obterFormadores() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM FORMADORES');
+  }
+
+  Future<List<Map<String, dynamic>>> obterFormandos() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM FORMANDOS');
+  }
+
+  Future<List<Map<String, dynamic>>> obterInscricoes() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM INSCRICOES');
+  }
+
+  Future<List<Map<String, dynamic>>> obterNotificacoesCurso() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM NOTIFICACOES_CURSO');
+  }
+
+  Future<List<Map<String, dynamic>>> obterOcorrenciasEdicoes() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM OCORRENCIAS_EDICOES');
+  }
+
+  Future<List<Map<String, dynamic>>> obterSincrono() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM SINCRONO');
+  }
+
+  Future<List<Map<String, dynamic>>> obterResultados() async {
+  final db = await basededados;
+  return await db.rawQuery('SELECT * FROM RESULTADOS');
+  }
+
 }
+
