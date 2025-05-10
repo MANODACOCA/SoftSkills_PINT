@@ -106,6 +106,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         fields: [
           { name: "id_curso_sincrono" },
+          { name: "id_curso"}
         ]
       },
     ]
