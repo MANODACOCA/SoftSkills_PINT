@@ -803,7 +803,7 @@ class Basedados {
   return await db.rawQuery('SELECT * FROM UTILIZADOR');
   }
 
-  Future<List<Map<String, dynamic>>> obterS_S_O() async {
+  Future<List<Map<String, dynamic>>> obterSSO() async {
   final db = await basededados;
   return await db.rawQuery('SELECT * FROM S_S_O');
   }

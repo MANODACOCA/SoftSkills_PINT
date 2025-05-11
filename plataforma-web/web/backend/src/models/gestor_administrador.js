@@ -71,7 +71,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         fields: [
           { name: "id_gestor_administrador" },
-          { name: "id_utilizador" }
+          { name: "id_utilizador" },
         ]
       },
     ]

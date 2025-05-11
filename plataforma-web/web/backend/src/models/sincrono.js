@@ -9,6 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_curso: {
       type: DataTypes.INTEGER,
+      primaryKey: true,
       allowNull: false,
       references: {
         model: 'cursos',
