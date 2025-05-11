@@ -9,9 +9,9 @@ class Basedados {
   final bool estado = false;
 
   Future<Database> get basededados async {
-    if(_basededados != null)
+    if(_basededados != null) {
       return _basededados!;
-    
+    }
     _basededados = await _initDatabase();
     return _basededados!;
   } 

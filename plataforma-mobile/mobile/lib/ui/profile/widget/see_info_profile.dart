@@ -2,7 +2,7 @@ import '../../core/shared/export.dart';
 //import 'package:gender_picker/source/enums.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/shared/navigationbar_component.dart';
-import 'package:country_picker/country_picker.dart';
+//import 'package:country_picker/country_picker.dart';
 
 class SeeInfoProfile extends StatefulWidget {
   const SeeInfoProfile({super.key});
@@ -14,7 +14,7 @@ class SeeInfoProfile extends StatefulWidget {
 class _SeeInfoProfileState extends State<SeeInfoProfile> {
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    //double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
