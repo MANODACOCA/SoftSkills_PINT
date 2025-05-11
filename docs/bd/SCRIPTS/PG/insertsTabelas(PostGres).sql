@@ -50,11 +50,11 @@ INSERT INTO UTILIZADOR (
    NOME_UTILIZADOR, PASSWORD_UTIL, DATA_CRIACAO_UTILIZ, 
    TELEMOVEL, GENERO, MORADA, PAIS, DATA_NASC, EMAIL, DATA_ATIV_UTILI, AUTEN2FAT
 ) VALUES
-('Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', 1),
-('Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', 1),
-('Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, 0),
-('Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', 1),
-('Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', 0);
+('Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', true),
+('Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', true),
+('Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, false),
+('Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', true),
+('Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', false);
 
 
 SELECT *FROM UTILIZADOR
@@ -76,8 +76,8 @@ INSERT INTO S_S_O (ID_UTILIZADOR, EMAIL_SSO, TOKEN) VALUES
 SELECT *FROM S_S_O
 /*Tabela S_S_O*/
 
-/*Tabela 2FA*/
-INSERT INTO "2FA" (ID_UTILIZADOR, CODIGO, DATA_FA) VALUES
+/*Tabela twofa*/
+INSERT INTO twofa (ID_UTILIZADOR, CODIGO, DATA_FA) VALUES
 (1, '928374', '2024-04-10 08:30:00'),
 (1, '192837', '2024-04-13 10:45:00'),
 (2, '746291', '2024-04-12 09:20:00'),
@@ -90,8 +90,8 @@ INSERT INTO "2FA" (ID_UTILIZADOR, CODIGO, DATA_FA) VALUES
 (5, '765432', '2024-04-13 19:25:00');
 
 
-SELECT *FROM "2FA"
-/*Tabela 2FA*/
+SELECT *FROM twofa
+/*Tabela twofa*/
 
 /*Tabela GESTOR-ADMNISTRADOR*/
 INSERT INTO GESTOR_ADMINISTRADOR (
@@ -99,16 +99,16 @@ INSERT INTO GESTOR_ADMINISTRADOR (
    DATA_CRIACAO_UTILIZ, TELEMOVEL, GENERO, MORADA, PAIS, 
    DATA_NASC, EMAIL, DATA_ATIV_UTILI, AUTEN2FAT
 ) VALUES
-(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', 1),
-(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', 1),
-(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, 0),
-(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', 1),
-(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', 0),
-(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', 1),
-(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', 1),
-(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, 0),
-(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', 1),
-(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', 0);
+(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', true),
+(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', true),
+(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, false),
+(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', true),
+(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', false),
+(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', true),
+(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', true),
+(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, false),
+(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', true),
+(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', false);
 
 SELECT *FROM GESTOR_ADMINISTRADOR
 /*Tabela GESTOR-ADMNISTRADOR*/
@@ -335,16 +335,16 @@ INSERT INTO FORMADORES (
    TELEMOVEL, GENERO, MORADA, PAIS, DATA_NASC, EMAIL, DATA_ATIV_UTILI, AUTEN2FAT, 
    ESPECIALIDADES, EXPERIENCIA
 ) VALUES
-(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', 1, 'Gest�o de Projetos', 'Mais de 5 anos em gest�o de equipas'),
-(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', 1, 'Marketing Digital', 'Experi�ncia em campanhas online'),
-(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, 0, 'Desenvolvimento Web', 'Frontend e backend em startups'),
-(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', 1, 'Design UX/UI', '4 anos em ag�ncias criativas'),
-(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', 0, 'Infraestruturas TI', 'Administrador de sistemas experiente'),
-(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', 1, 'Gest�o Empresarial', 'Docente universit�rio e consultor'),
-(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', 1, 'E-commerce', 'Gest�o de lojas online'),
-(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, 0, 'Ciberseguran�a', 'Trabalhou em projetos de seguran�a digital'),
-(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', 1, 'Branding Digital', 'Consultora para startups'),
-(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', 0, 'Redes e Seguran�a', 'Formador t�cnico certificado');
+(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', true, 'Gest�o de Projetos', 'Mais de 5 anos em gest�o de equipas'),
+(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', true, 'Marketing Digital', 'Experi�ncia em campanhas online'),
+(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, false, 'Desenvolvimento Web', 'Frontend e backend em startups'),
+(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', true, 'Design UX/UI', '4 anos em ag�ncias criativas'),
+(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', false, 'Infraestruturas TI', 'Administrador de sistemas experiente'),
+(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', true, 'Gest�o Empresarial', 'Docente universit�rio e consultor'),
+(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', true, 'E-commerce', 'Gest�o de lojas online'),
+(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, false, 'Ciberseguran�a', 'Trabalhou em projetos de seguran�a digital'),
+(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', true, 'Branding Digital', 'Consultora para startups'),
+(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', false, 'Redes e Seguran�a', 'Formador t�cnico certificado');
 
 SELECT *FROM FORMADORES
 /*Tabela FORMADORES*/
@@ -354,16 +354,16 @@ INSERT INTO FORMANDOS (
    ID_UTILIZADOR, NOME_UTILIZADOR, PASSWORD_UTIL, DATA_CRIACAO_UTILIZ,
    TELEMOVEL, GENERO, MORADA, PAIS, DATA_NASC, EMAIL, DATA_ATIV_UTILI, AUTEN2FAT, PERCURSO_FORMATIVO
 ) VALUES
-(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', 1, 'Curso de Lideran�a e Gest�o'),
-(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', 1, 'Forma��o em Marketing Avan�ado'),
-(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, 0, 'Especializa��o em Desenvolvimento Web'),
-(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', 1, 'Design e Experi�ncia de Utilizador'),
-(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', 0, 'Curso de Infraestruturas TI'),
-(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', 1, 'An�lise de Dados para Gestores'),
-(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', 1, 'Copywriting e Estrat�gia de Conte�do'),
-(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, 0, 'Curso de Seguran�a Web'),
-(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', 1, 'Workshop de Design Gr�fico'),
-(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', 0, 'Redes e Arquitetura de Sistemas');
+(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', true, 'Curso de Lideran�a e Gest�o'),
+(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', true, 'Forma��o em Marketing Avan�ado'),
+(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, false, 'Especializa��o em Desenvolvimento Web'),
+(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', true, 'Design e Experi�ncia de Utilizador'),
+(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', false, 'Curso de Infraestruturas TI'),
+(1, 'Jo�o Silva', 'jsilva123', '2023-09-15 10:30:00', 912345678, 1, 'Rua das Flores, 45', 'Portugal', '1990-03-12', 'joao.silva@email.pt', '2024-04-01 08:15:00', true, 'An�lise de Dados para Gestores'),
+(2, 'Maria Fernandes', 'mf2023pt', '2023-10-05 14:22:00', 913456789, 2, 'Av. da Liberdade, 102', 'Portugal', '1987-07-19', 'maria.fernandes@email.pt', '2024-03-22 17:00:00', true, 'Copywriting e Estrat�gia de Conte�do'),
+(3, 'Tiago Costa', 'tcosta$$', '2024-01-20 09:05:00', 914567890, 1, 'Rua do Carmo, 12', 'Portugal', '1995-11-02', 'tiago.costa@email.pt', NULL, false, 'Curso de Seguran�a Web'),
+(4, 'Ana Lopes', 'ana2024##', '2024-03-01 11:45:00', NULL, 2, 'Rua Nova, 78', 'Portugal', '1992-06-25', 'ana.lopes@email.pt', '2024-04-10 13:30:00', true, 'Workshop de Design Gr�fico'),
+(5, 'Ricardo Neves', 'rn!tech01', '2023-12-10 16:10:00', 915678901, 1, 'Travessa da Paz, 5', 'Portugal', '1985-01-15', 'ricardo.neves@email.pt', '2024-01-20 09:00:00', false, 'Redes e Arquitetura de Sistemas');
 
 SELECT *FROM FORMANDOS
 /*Tabela FORMANDOS*/
