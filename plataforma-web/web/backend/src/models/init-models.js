@@ -90,10 +90,10 @@ function initModels(sequelize) {
   cursos.hasMany(sincrono, { as: "sincronos", foreignKey: "id_curso"});
   sincrono.belongsTo(formadores, { as: "id_formador_formadore", foreignKey: ["id_utilizador", "id_formador"]});
   formadores.hasMany(sincrono, { as: "sincronos", foreignKey: "id_formador"});
-  inscricoes.belongsTo(formandos, { as: "id_formando_formando", foreignKey: ["id_utilizador" , "id_formando"]});
+  inscricoes.b(elongsToformandos, { as: "id_formando_formando", foreignKey: ["id_utilizador" , "id_formando"]});
   formandos.hasMany(inscricoes, { as: "inscricos", foreignKey: ["id_utilizador", "id_formando"]});
   resultados.belongsTo(formandos, { as: "id_formando_formando", foreignKey: ["id_utilizador", "id_formando"]});
-  formandos.hasMany(resultados, { as: "resultados", foreignKey: "id_formando"});
+  formandos.hasMany(resultados, { as: "resultados", foreignKey: ["id_utilizador", "id_formando"]});
   cursos.belongsTo(gestor_administrador, { as: "id_gestor_administrador_gestor_administrador", foreignKey: ["id_gestor_administrador", "id_utilizador"]});
   gestor_administrador.hasMany(cursos, { as: "cursos", foreignKey: ["id_gestor_administrador", "id_utilizador"]});
   avaliacoes.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
@@ -105,7 +105,7 @@ function initModels(sequelize) {
   notificacoes_post.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
   post.hasMany(notificacoes_post, { as: "notificacoes_posts", foreignKey: "id_post"});
   resultados.belongsTo(sincrono, { as: "id_curso_sincrono_sincrono", foreignKey: ["id_curso", "id_curso_sincrono"]});
-  sincrono.hasMany(resultados, { as: "resultados", foreignKey: "id_curso_sincrono"});
+  sincrono.hasMany(resultados, { as: "resultados", foreignKey: ["id_curso", "id_curso_sincrono"]});
   denuncia.belongsTo(tipo_denuncia, { as: "id_tipo_denuncia_tipo_denuncium", foreignKey: "id_tipo_denuncia"});
   tipo_denuncia.hasMany(denuncia, { as: "denuncia", foreignKey: "id_tipo_denuncia"});
   conteudos.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
