@@ -89,8 +89,8 @@ function initModels(sequelize) {
   sincrono.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
   cursos.hasMany(sincrono, { as: "sincronos", foreignKey: "id_curso"});
   sincrono.belongsTo(formadores, { as: "id_formador_formadore", foreignKey: ["id_utilizador", "id_formador"]});
-  formadores.hasMany(sincrono, { as: "sincronos", foreignKey: "id_formador"});
-  inscricoes.b(elongsToformandos, { as: "id_formando_formando", foreignKey: ["id_utilizador" , "id_formando"]});
+  formadores.hasMany(sincrono, { as: "sincronos", foreignKey: ["id_utilizador", "id_formador"]});
+  inscricoes.belongsTo(formandos, { as: "id_formando_formando", foreignKey: ["id_utilizador" , "id_formando"]});
   formandos.hasMany(inscricoes, { as: "inscricos", foreignKey: ["id_utilizador", "id_formando"]});
   resultados.belongsTo(formandos, { as: "id_formando_formando", foreignKey: ["id_utilizador", "id_formando"]});
   formandos.hasMany(resultados, { as: "resultados", foreignKey: ["id_utilizador", "id_formando"]});
