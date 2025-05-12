@@ -1,0 +1,60 @@
+import React from 'react';
+import { NavLink } from "react-router-dom";
+
+const Sidebar = ({ toggleSidebar, collapsed }) => {
+
+    return (
+        <div className={`bg-light border-end ${collapsed ? 'collapsed' : ''} d-flex flex-column align-items-start p-2 sidebar p-3`}>
+            <button className="btn btn-outline-secondary mb-3 w-100" onClick={toggleSidebar}>
+                <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
+            </button>
+            <div className='d-flex justify-content-between flex-column vh-100 w-100'>
+                <div>
+                    <NavLink to="/" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-house-door fs-4 px-2"></i>
+                        {!collapsed && 'Home'}
+                    </NavLink>
+                    <hr />
+                    <NavLink to="/cursos" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-mortarboard fs-4 px-2"></i>
+                        {!collapsed && 'Cursos'}
+                    </NavLink>
+                    <NavLink to="/cursos/inscritos" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-laptop fs-4 px-2"></i>
+                        {!collapsed && 'Cursos inscritos'}
+                    </NavLink>
+                    <NavLink to="/cursos/favoritos" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-heart fs-4 px-2"></i>
+                        {!collapsed && 'Cursos Favoritos'}
+                    </NavLink>
+                    <NavLink to="/cursos/terminados" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-patch-check fs-4 px-2"></i>
+                        {!collapsed && 'Cursos Terminados'}
+                    </NavLink>
+                    <hr />
+                    <NavLink to="/forum" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-chat-dots fs-4 px-2"></i>
+                        {!collapsed && 'Fórum'}
+                    </NavLink>
+                    <hr />
+                    <NavLink to="/notificacoes" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-bell fs-4 px-2"></i>
+                        {!collapsed && 'Notificações'}
+                    </NavLink>
+                </div>
+                <div>
+                    <NavLink to="/definicoes" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-gear fs-4 px-2"></i>
+                        {!collapsed && 'Definições'}
+                    </NavLink>
+                    <NavLink to="/logout" className="nav-link d-flex align-items-center px-2 py-1">
+                        <i className="bi bi-box-arrow-right fs-4 px-2"></i>
+                        {!collapsed && 'Logout'}
+                    </NavLink>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Sidebar;

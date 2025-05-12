@@ -1,7 +1,8 @@
 import React from 'react';
 import logo from '../../../assets/images/logos/logo.png';
-/* import { Container, Row, Col, Nav } from 'react-bootstrap';
- */import {
+
+//icons
+import {
     BsFacebook,
     BsInstagram,
     BsTwitter,
@@ -12,7 +13,7 @@ import { BiLogoPlayStore } from "react-icons/bi";
 
 const Footer = () => {
     return (
-        <footer className="bg-light border-top pt-5 pb-4">
+        <footer className="app-fotter bg-light border-top pt-5 pb-4">
             <div className="container">
                 <div className="row justify-content-between mb-4">
                     <div className="col-md-3 mb-3 text-center text-md-start">
@@ -23,7 +24,7 @@ const Footer = () => {
                             <img
                                 src={logo}
                                 alt="Flowbite Logo"
-                                height="30"
+                                height="50"
                                 className="me-2"
                             />
                             <span className="fw-bold">SoftSkills</span>
