@@ -46,6 +46,10 @@ dependencies:
   carousel_slider:
   country_picker: ^2.0.27
   gender_picker: ^1.1.0
+  get: ^4.7.2
+  get_storage_pro: ^0.1.9
+  shared_preferences: ^2.5.3
+  device_info_plus: ^11.4.0
   
 
 dev_dependencies:

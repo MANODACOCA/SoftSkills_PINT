@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:async';
@@ -13,11 +15,22 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    _checkRememberMe();
+  }
+
+  Future<void> _checkRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rememberMe = prefs.getBool('remember_me') ?? false;
+
     Timer(const Duration(seconds: 3), () {
-      context.go("/login");
+      if (rememberMe && mounted) {
+        context.go('/homepage');
+      } else {
+        context.go('/login');
+      }
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

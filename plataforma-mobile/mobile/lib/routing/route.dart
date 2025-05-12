@@ -16,6 +16,7 @@ import '../ui/login/widget/page_open_app.dart';
 import 'package:mobile/ui/profile/widget/profile_screen.dart';
 import 'package:mobile/ui/profile/widget/change_personal_info.dart';
 import 'package:mobile/ui/profile/widget/see_info_profile.dart';
+import '../ui/profile/widget/logout_all_devices.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -23,8 +24,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'initial',
       path: '/',
-      builder:
-          (context, state) => const MyHomePage(),
+      builder: (context, state) => const MyHomePage(),
     ),
     GoRoute(
       name: 'loginpage',
@@ -56,10 +56,7 @@ final rotas = GoRouter(
       path: '/check',
       builder: (context, state) {
         final data = state.extra as CheckmarkData;
-        return CheckmarkScreen(
-          path: data.path,
-          message: data.message,
-        );
+        return CheckmarkScreen(path: data.path, message: data.message);
       },
     ),
     GoRoute(
@@ -70,7 +67,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'twofa',
       path: '/twofa',
-      builder: (context, state) => TwoFactorAuthentication(), 
+      builder: (context, state) => TwoFactorAuthentication(),
     ),
     GoRoute(
       name: 'homepage',
@@ -106,6 +103,11 @@ final rotas = GoRouter(
       name: 'seeinfoprofile',
       path: '/seeinfoprofile',
       builder: (context, state) => SeeInfoProfile(),
+    ),
+    GoRoute(
+      name: 'logoutAllDevices',
+      path: '/logoutAllDevices',
+      builder: (context, state) => LogOut(),
     ),
   ],
 );

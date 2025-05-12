@@ -1,6 +1,7 @@
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/shared/navigationbar_component.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 //I need to insert a routes
 
@@ -103,7 +104,9 @@ class _ProfileState extends State<Profile> {
                           Text('Alteração de dados pessoais'),
                           Spacer(),
                           IconButton(
-                            onPressed: () {context.go('/alterarInformacoes');},
+                            onPressed: () {
+                              context.go('/alterarInformacoes');
+                            },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
                         ],
@@ -310,8 +313,10 @@ class _ProfileState extends State<Profile> {
                         ),
                         Spacer(),
                         IconButton(
-                          onPressed: () {
-                            context.go('/login');
+                          onPressed: () async {
+                            final prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool('remember_me', false);
+                            context.go('/');
                           },
                           icon: Icon(Icons.arrow_forward_ios, size: 15),
                         ),

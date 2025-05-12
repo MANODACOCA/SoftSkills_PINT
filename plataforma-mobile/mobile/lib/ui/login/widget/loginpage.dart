@@ -1,5 +1,6 @@
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,12 +11,32 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   bool isSwitched = false;
+  bool isRememberMe = false;
   String text = '';
   bool isPasswordVisible = false;
   Icon passwordIcon = const Icon(
     Icons.visibility_off,
     color: AppColors.primary,
   );
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSwitchState();
+  }
+
+  Future<void> _saveRememberMe(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('remember_me', value);
+  }
+
+   Future<void> _loadSwitchState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final rememberMe = prefs.getBool('remember_me') ?? false;
+    setState(() {
+      isSwitched = rememberMe;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +57,7 @@ class _LoginPage extends State<LoginPage> {
                   Image.asset('assets/logo-softinsa.png'),
                   const SizedBox(height: 90.0),
                   SizedBox(
-                    width: screenWidth-40,
+                    width: screenWidth - 40,
                     height: 46,
                     child: TextField(
                       decoration: InputDecoration(
@@ -52,7 +73,7 @@ class _LoginPage extends State<LoginPage> {
                   ),
                   const SizedBox(height: 25),
                   SizedBox(
-                    width: screenWidth-40,
+                    width: screenWidth - 40,
                     height: 46,
                     child: TextField(
                       obscureText: isPasswordVisible ? false : true,
@@ -89,19 +110,21 @@ class _LoginPage extends State<LoginPage> {
                   const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [GestureDetector(
-                      onTap: () {
-                        context.go("/forgetpassword");
-                      },
-                      child: Text(
-                        'Esqueceste-te da password?',
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          decoration: TextDecoration.underline,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context.go("/forgetpassword");
+                        },
+                        child: Text(
+                          'Esqueceste-te da password?',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: Colors.blueAccent,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
-                    ),]
+                    ],
                   ),
                   const SizedBox(height: 5),
                   SizedBox(
@@ -114,10 +137,12 @@ class _LoginPage extends State<LoginPage> {
                           Switch(
                             activeColor: AppColors.primary,
                             value: isSwitched,
-                            onChanged: (value) {
+                            onChanged: (value) async {
                               setState(() {
-                                isSwitched = !isSwitched;
+                                isSwitched = value;
+                                print('Switch is $isSwitched');
                               });
+                              await _saveRememberMe(value);
                             },
                           ),
                           const SizedBox(width: 10),
@@ -161,9 +186,9 @@ class _LoginPage extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      fixedSize: Size(screenWidth-40, 46),
+                      fixedSize: Size(screenWidth - 40, 46),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       context.go("/twofa");
                     },
                     child: const Text(
@@ -178,7 +203,7 @@ class _LoginPage extends State<LoginPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      fixedSize: Size(screenWidth-40, 46),
+                      fixedSize: Size(screenWidth - 40, 46),
                     ),
                     onPressed: () {
                       context.go("/registo");
