@@ -4,7 +4,7 @@ import logo from '../../../assets/images/logos/logo.png'
 
 function NotFoundPage() {
   return (
- <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+    <div className="d-flex justify-content-center align-items-center min-vh-100 bg-light">
       <div className="text-center w-75 p-4 bg-white shadow rounded">
         <img src={logo} alt="Logo" className="mb-4" height={80}/>
         <h1 className="display-1 text-danger mt-3">404</h1>
