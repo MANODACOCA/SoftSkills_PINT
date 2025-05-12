@@ -1,0 +1,12 @@
+/* #region container */
+.main-container{
+    width: calc(100% - 16.6667%);
+    margin-top: 80px;
+    z-index: 999;
+}
+
+.main-container.collapsed{
+    width: calc(100% - 90px);
+}
+/* #endregion */
+

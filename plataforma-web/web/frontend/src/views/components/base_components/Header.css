@@ -1,0 +1,12 @@
+/* #region header */
+header{
+  height: 80px;
+  position: fixed;
+  z-index: 1001;
+}
+
+.image-border{
+    border-radius: 100%;
+    border: solid 1px var(--cor-principal);
+}
+/* #endregion */

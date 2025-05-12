@@ -1,0 +1,32 @@
+/* #region sidebar */
+.sidebar{
+    width: 16.6667%; /* valor no css equivalente a col-2 no bootstrap */
+    position: fixed;
+    top: 80px;
+    bottom: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar.collapsed{
+    width: 90px;
+}
+
+.sidebar .nav-link {
+    color: black !important;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.sidebar .nav-link:hover {
+  background-color: rgba(59, 91, 132, 0.1);
+  color: black;
+}
+
+.sidebar .nav-link.active{
+    background-color: var(--cor-principal);
+    color: white !important;
+}
+/* #endregion */
+

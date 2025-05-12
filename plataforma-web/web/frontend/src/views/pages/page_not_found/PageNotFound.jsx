@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; 
 import logo from '../../../assets/images/logos/logo.png'
+import './NotFound.css';
 
 function NotFoundPage() {
   return (

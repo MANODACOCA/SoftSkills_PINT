@@ -1,12 +1,16 @@
 import React from "react";
-
 import logo from '../../../assets/images/logos/semfundo3.png';
-
+import './Header.css';
 
 const Header = ({ toggleSidebar, collapsed }) => {
     return (
-        <header className='w-100 bg-light p-3 d-flex justify-content-between align-items-center'>
-            <img src={logo} alt="logo softskills" height={45} />
+        <header className='w-100 bg-light p-3 d-flex justify-content-between align-items-center gap-4'>
+            <div className="d-flex gap-4">
+                <button className="btn btn-outline-secondary mx-2" onClick={toggleSidebar}>
+                    <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
+                </button>
+                <img src={logo} alt="logo softskills" height={45} />     
+            </div>
             <div className="input-group" style={{ maxWidth: '500px' }}>
                 <input
                     className="form-control form-control-md"

@@ -1,13 +1,11 @@
 import React from 'react';
 import { NavLink } from "react-router-dom";
+import './Sidebar.css';
 
 const Sidebar = ({ toggleSidebar, collapsed }) => {
 
     return (
-        <div className={`bg-light border-end ${collapsed ? 'collapsed' : ''} d-flex flex-column align-items-start p-2 sidebar p-3`}>
-            <button className="btn btn-outline-secondary mb-3 w-100" onClick={toggleSidebar}>
-                <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
-            </button>
+        <div className={`bg-light border-end ${collapsed ? 'collapsed' : ''} d-flex flex-column align-items-start p-3 sidebar`}>
             <div className='d-flex justify-content-between flex-column vh-100 w-100'>
                 <div>
                     <NavLink to="/" className="nav-link d-flex align-items-center px-2 py-1">

@@ -1,0 +1,12 @@
+/* #region not_found */
+.btn-primary {
+  background-color:  var(--cor-principal) !important;
+  border-color:  var(--cor-principal) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color:  var(--cor-secundaria) !important; /* cor no hover */
+  border-color: var(--cor-secundaria)!important;
+}
+/* #endregion */
