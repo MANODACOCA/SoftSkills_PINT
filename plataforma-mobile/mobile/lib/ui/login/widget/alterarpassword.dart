@@ -17,8 +17,11 @@ class _ChangePassword extends State<ChangePassword> {
     color: AppColors.primary,
   );
 
-  void analisar() {
+  /*Ir buscar na base de dados a password anterior e compará-la com a nova password*/
+
+  Future<void> analisar() async {
     if (newpass.text == pass.text) {
+      await confirm();
       context.go("/alterar");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -160,6 +163,36 @@ class _ChangePassword extends State<ChangePassword> {
           ),
         ),
       ),
+    );
+  }
+
+  confirm() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Aviso'),
+          content: Text('Quer guardar as alterações?'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.green),
+              child: Text('Sim', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                context.pop();
+                print('Alterações guardadas!');
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.red),
+              child: Text('Não', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                context.pop(); // Close the dialog
+                print('Alterações não foram guardadas!');
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

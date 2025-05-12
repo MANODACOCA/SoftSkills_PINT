@@ -17,6 +17,7 @@ import 'package:mobile/ui/profile/widget/profile_screen.dart';
 import 'package:mobile/ui/profile/widget/change_personal_info.dart';
 import 'package:mobile/ui/profile/widget/see_info_profile.dart';
 import '../ui/profile/widget/logout_all_devices.dart';
+import '../ui/profile/widget/activate_twofa.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -109,5 +110,15 @@ final rotas = GoRouter(
       path: '/logoutAllDevices',
       builder: (context, state) => LogOut(),
     ),
+    GoRoute(
+      name: 'changePassword',
+      path: '/changePassword',
+      builder: (context, state) => ChangePassword(),
+    ),
+    GoRoute(
+      name: 'activateTwofa',
+      path: '/activateTwofa',
+      builder: (context, state) => TwoFactorActivate(),
+    )
   ],
 );

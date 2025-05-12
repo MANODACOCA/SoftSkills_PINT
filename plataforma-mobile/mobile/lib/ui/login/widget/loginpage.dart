@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'package:mobile/data/services/basedados.dart';
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:crypto/crypto.dart';
+import '../../profile/widget/activate_twofa.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,6 +17,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPage extends State<LoginPage> {
   bool isSwitched = false;
   bool isRememberMe = false;
+  bool? twoFactorEnabled;
+  final TextEditingController _passwordController = TextEditingController();
   String text = '';
   bool isPasswordVisible = false;
   Icon passwordIcon = const Icon(
@@ -30,12 +37,18 @@ class _LoginPage extends State<LoginPage> {
     await prefs.setBool('remember_me', value);
   }
 
-   Future<void> _loadSwitchState() async {
+  Future<void> _loadSwitchState() async {
     final prefs = await SharedPreferences.getInstance();
     final rememberMe = prefs.getBool('remember_me') ?? false;
     setState(() {
       isSwitched = rememberMe;
     });
+  }
+
+  String _encryptPassword(String password) {
+    final bytes = utf8.encode(password);
+    final hash = sha256.convert(bytes);
+    return hash.toString();
   }
 
   @override
@@ -76,6 +89,7 @@ class _LoginPage extends State<LoginPage> {
                     width: screenWidth - 40,
                     height: 46,
                     child: TextField(
+                      controller: _passwordController,
                       obscureText: isPasswordVisible ? false : true,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
@@ -189,6 +203,10 @@ class _LoginPage extends State<LoginPage> {
                       fixedSize: Size(screenWidth - 40, 46),
                     ),
                     onPressed: () async {
+                      final encryptedPassword = _encryptPassword(
+                        _passwordController.text,
+                      );
+                      /*Falta fazer o load da info do utilizador na base de dados e verificar o gmail e a password*/
                       context.go("/twofa");
                     },
                     child: const Text(
