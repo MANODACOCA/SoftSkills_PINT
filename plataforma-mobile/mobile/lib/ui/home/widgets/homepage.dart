@@ -41,7 +41,7 @@ class _HomePage extends State<HomePage> {
                   builder: (BuildContext context) {
                     return Container(
                       width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.asset(path, fit: BoxFit.cover),
@@ -51,65 +51,29 @@ class _HomePage extends State<HomePage> {
                 );
               }).toList(),
             ),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(8),
-              child: GridView.count(
-                crossAxisCount: 2,
-                childAspectRatio: 0.65,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
+              child: GridView.builder(
+                itemCount: 6,
                 shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  CardCourse(
+                physics: const NeverScrollableScrollPhysics(), 
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  mainAxisExtent: 280,
+                ),
+                itemBuilder: (context, index) {
+                  return CardCourse(
                     title: 'Curso de C++',
                     typeCourse: 'Assincrono',
                     startDate: DateTime(2025, 5, 10),
                     endDate: DateTime(2025, 6, 15),
                     currentMembers: 12,
                     maxMembers: 80,
-                  ),
-                  CardCourse(
-                    title: 'Curso de C++',
-                    typeCourse: 'Assincrono',
-                    startDate: DateTime(2025, 5, 10),
-                    endDate: DateTime(2025, 6, 15),
-                    currentMembers: 12,
-                    maxMembers: 80,
-                  ),
-                  CardCourse(
-                    title: 'Curso de C++',
-                    typeCourse: 'Assincrono',
-                    startDate: DateTime(2025, 5, 10),
-                    endDate: DateTime(2025, 6, 15),
-                    currentMembers: 12,
-                    maxMembers: 80,
-                  ),
-                  CardCourse(
-                    title: 'Curso de C++',
-                    typeCourse: 'Assincrono',
-                    startDate: DateTime(2025, 5, 10),
-                    endDate: DateTime(2025, 6, 15),
-                    currentMembers: 12,
-                    maxMembers: 80,
-                  ),
-                  CardCourse(
-                    title: 'Curso de C++',
-                    typeCourse: 'Assincrono',
-                    startDate: DateTime(2025, 5, 10),
-                    endDate: DateTime(2025, 6, 15),
-                    currentMembers: 12,
-                    maxMembers: 80,
-                  ),
-                  CardCourse(
-                    title: 'Curso de C++',
-                    typeCourse: 'Assincrono',
-                    startDate: DateTime(2025, 5, 10),
-                    endDate: DateTime(2025, 6, 15),
-                    currentMembers: 12,
-                    maxMembers: 80,
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           ],
