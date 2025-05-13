@@ -1,0 +1,32 @@
+/* #region container */
+/* #endregion */
+.scroll-container {
+  scroll-behavior: smooth;
+  scrollbar-width: none; 
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; 
+}
+
+.scroll-container {
+  scroll-behavior: smooth;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding: 1rem 0;
+}
+
+.scroll-container::-webkit-scrollbar {
+  display: none; 
+}
+
+.card-wrapper {
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+/* #region arrow in the card */
+.arrow-click {
+  border-radius: 50%;
+}
+/* #endregion */

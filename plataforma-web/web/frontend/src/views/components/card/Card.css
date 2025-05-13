@@ -1,5 +1,19 @@
 /* */
 
+/* #region card */
+.card-clickable:hover {
+  transform: scale(1.03);
+  transition: transform 0.2s ease;
+}
 
+.imgage-card {
+    height: 60%;
+    object-fit: cover;
+}
 
+.custom-badge {
+  background-color: var(--cor-principal); 
+  color: white;
+}
+/* #endregion */
 
