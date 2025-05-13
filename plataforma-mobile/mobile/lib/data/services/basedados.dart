@@ -21,41 +21,36 @@ class Basedados {
       version: versao, onCreate: _onCreate);
   }
   Future _onCreate (Database db, int version) async {
-    
-  }
-  
-  Future<void> criartabelas() async {
-  Database db = await basededados;
+    //DDL - Criação das Tabelas da Base de Dados
+    Future<void> criartabelas() async {
+    Database db = await basededados;
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS CATEGORIA (
       ID_CATEGORIA INTEGER PRIMARY KEY AUTOINCREMENT,
       NOME_CAT TEXT NOT NULL,
       DESCRICAO_CAT TEXT
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS AREA (
       ID_AREA INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_CATEGORIA INTEGER NOT NULL,
       NOME_AREA TEXT NOT NULL,
       DESCRICAO_AR TEXT,
       FOREIGN KEY (ID_CATEGORIA) REFERENCES CATEGORIA(ID_CATEGORIA)
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS TOPICO (
       ID_TOPICO INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_AREA INTEGER NOT NULL,
       NOME_TOPICO TEXT NOT NULL,
       DESCRICAO_TOP TEXT,
       FOREIGN KEY (ID_AREA) REFERENCES AREA(ID_AREA)
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS UTILIZADOR (
       ID_UTILIZADOR INTEGER PRIMARY KEY AUTOINCREMENT,
       NOME_UTILIZADOR TEXT NOT NULL,
@@ -69,50 +64,45 @@ class Basedados {
       EMAIL TEXT NOT NULL,
       DATA_ATIV_UTILI TEXT,
       AUTEN2FAT INTEGER
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS S_S_O (
       ID_SSO INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_UTILIZADOR INTEGER NOT NULL,
       EMAIL_SSO TEXT NOT NULL,
       TOKEN TEXT NOT NULL,
       FOREIGN KEY (ID_UTILIZADOR) REFERENCES UTILIZADOR(ID_UTILIZADOR)
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS "2FA" (
       ID_2FA INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_UTILIZADOR INTEGER NOT NULL,
       CODIGO TEXT NOT NULL,
       DATA_FA TEXT NOT NULL,
       FOREIGN KEY (ID_UTILIZADOR) REFERENCES UTILIZADOR(ID_UTILIZADOR)
-    )
-  ''');
+    )''');
 
-  await db.execute('''
-  CREATE TABLE IF NOT EXISTS GESTOR_ADMINISTRADOR (
-    ID_UTILIZADOR INTEGER NOT NULL,
-    ID_GESTOR_ADMINISTRADOR INTEGER NOT NULL,
-    NOME_UTILIZADOR TEXT NOT NULL,
-    PASSWORD_UTIL TEXT NOT NULL,
-    DATA_CRIACAO_UTILIZ TEXT NOT NULL,
-    TELEMOVEL INTEGER,
-    GENERO INTEGER NOT NULL,
-    MORADA TEXT NOT NULL,
-    PAIS TEXT NOT NULL,
-    DATA_NASC TEXT NOT NULL,
-    EMAIL TEXT NOT NULL,
-    DATA_ATIV_UTILI TEXT,
-    AUTEN2FAT INTEGER,
-    PRIMARY KEY (ID_UTILIZADOR, ID_GESTOR_ADMINISTRADOR),
-    FOREIGN KEY (ID_UTILIZADOR) REFERENCES UTILIZADOR(ID_UTILIZADOR)
-  )
-  ''');
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS GESTOR_ADMINISTRADOR (
+      ID_UTILIZADOR INTEGER NOT NULL,
+      ID_GESTOR_ADMINISTRADOR INTEGER NOT NULL,
+      NOME_UTILIZADOR TEXT NOT NULL,
+      PASSWORD_UTIL TEXT NOT NULL,
+      DATA_CRIACAO_UTILIZ TEXT NOT NULL,
+      TELEMOVEL INTEGER,
+      GENERO INTEGER NOT NULL,
+      MORADA TEXT NOT NULL,
+      PAIS TEXT NOT NULL,
+      DATA_NASC TEXT NOT NULL,
+      EMAIL TEXT NOT NULL,
+      DATA_ATIV_UTILI TEXT,
+      AUTEN2FAT INTEGER,
+      PRIMARY KEY (ID_UTILIZADOR, ID_GESTOR_ADMINISTRADOR),
+      FOREIGN KEY (ID_UTILIZADOR) REFERENCES UTILIZADOR(ID_UTILIZADOR))''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS CURSOS (
       ID_CURSO INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_TOPICO INTEGER NOT NULL,
@@ -135,10 +125,9 @@ class Basedados {
       FOREIGN KEY (ID_CATEGORIA) REFERENCES CATEGORIA(ID_CATEGORIA),
       FOREIGN KEY (ID_AREA) REFERENCES AREA(ID_AREA),
       FOREIGN KEY (ID_UTILIZADOR, ID_GESTOR_ADMINISTRADOR) REFERENCES GESTOR_ADMINISTRADOR(ID_UTILIZADOR, ID_GESTOR_ADMINISTRADOR)
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS ASSINCRONO (
       ID_CURSO INTEGER NOT NULL,
       ID_CURSO_ASSINCRONO INTEGER NOT NULL,
@@ -159,20 +148,18 @@ class Basedados {
       IMAGEM TEXT,
       PRIMARY KEY (ID_CURSO, ID_CURSO_ASSINCRONO),
       FOREIGN KEY (ID_CURSO) REFERENCES CURSOS(ID_CURSO)
-    );
-  ''');
+    );''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS AULAS (
       ID_AULA INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_CURSO INTEGER NOT NULL,
       DATA_AULA TEXT NOT NULL,
       NOME_AULA TEXT NOT NULL,
       FOREIGN KEY (ID_CURSO) REFERENCES CURSOS(ID_CURSO)
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS CONTEUDOS_PARTILHADO (
       ID_AREA_CONHECIMENTO INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_AREA INTEGER NOT NULL,
@@ -183,10 +170,9 @@ class Basedados {
       FOREIGN KEY (ID_AREA) REFERENCES AREA(ID_AREA),
       FOREIGN KEY (ID_TOPICO) REFERENCES TOPICO(ID_TOPICO),
       FOREIGN KEY (ID_CATEGORIA) REFERENCES CATEGORIA(ID_CATEGORIA)
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS POST (
       ID_POST INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_UTILIZADOR INTEGER NOT NULL,
@@ -196,10 +182,9 @@ class Basedados {
       CONTADOR_COMENTARIOS INTEGER NOT NULL,
       FOREIGN KEY (ID_UTILIZADOR) REFERENCES UTILIZADOR(ID_UTILIZADOR),
       FOREIGN KEY (ID_AREA_CONHECIMENTO) REFERENCES CONTEUDOS_PARTILHADO(ID_AREA_CONHECIMENTO)
-    )
-  ''');
+    )''');
 
-  await db.execute('''
+    await db.execute('''
     CREATE TABLE IF NOT EXISTS NOTIFICACOES_POST (
       ID_NOTIFICACAO_POST INTEGER PRIMARY KEY AUTOINCREMENT,
       ID_CURSO INTEGER NOT NULL,
@@ -209,8 +194,7 @@ class Basedados {
       FOREIGN KEY (ID_UTILIZADOR) REFERENCES UTILIZADOR(ID_UTILIZADOR),
       FOREIGN KEY (ID_CURSO) REFERENCES CURSOS(ID_CURSO),
       FOREIGN KEY (ID_POST) REFERENCES POST(ID_POST)
-    )
-  ''');
+    )''');
 
   await db.execute('''
     CREATE TABLE IF NOT EXISTS AVALIACOES (
@@ -393,7 +377,12 @@ class Basedados {
     )
   ''');
   }
+}
 
+
+
+
+  // DML - Inserção de Dados
   Future<void> inserirCategoria(String nomeCat, String descricaoCat) async {
   Database db = await basededados;
   await db.rawInsert('''
@@ -783,6 +772,10 @@ class Basedados {
   ''');
   }
 
+
+
+
+  // DML - Listar os Dados
   Future<List<Map<String, dynamic>>> obterCategorias() async {
   final db = await basededados;
   return await db.rawQuery('SELECT * FROM CATEGORIA');
