@@ -14,7 +14,7 @@ const MyCard = () => {
           <p className="card-text">
             Este é um exemplo de texto que descreve o conteúdo do card.
           </p>
-          <a href="#" className="btn btn-primary">
+          <a href="#" className="btn btn-primary rounded-4">
             Ver mais
           </a>
         </div>
