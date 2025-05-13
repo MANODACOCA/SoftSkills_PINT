@@ -1,6 +1,5 @@
 import 'package:mobile/ui/forum/widget/forum.dart';
 import 'package:mobile/ui/notification/widget/notifications.dart';
-
 import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';

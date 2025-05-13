@@ -1,11 +1,10 @@
 import 'dart:convert';
-import 'package:mobile/data/services/basedados.dart';
-
+//import 'package:mobile/data/services/basedados.dart';
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:crypto/crypto.dart';
-import '../../profile/widget/activate_twofa.dart';
+//import '../../profile/widget/activate_twofa.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

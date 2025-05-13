@@ -26,7 +26,9 @@ class CardCourse extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
+    return SizedBox(
+      height: 280,
+      child: Card(
       elevation: 4,
       shadowColor: Colors.black,
       color: AppColors.background,
@@ -41,7 +43,7 @@ class CardCourse extends StatelessWidget {
             ),
             child: const Image(
               image: AssetImage('assets/course-flutter.png'),
-              height: 135,
+              height: 120,
               width: double.infinity,
               fit: BoxFit.cover,
             ),
@@ -96,6 +98,8 @@ class CardCourse extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
+     
   }
 }

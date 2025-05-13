@@ -35,6 +35,7 @@ class _TwoFactorActivate extends State<TwoFactorActivate> {
     return _isTwoFactorEnabled;
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
