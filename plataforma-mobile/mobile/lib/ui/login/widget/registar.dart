@@ -80,7 +80,7 @@ class _Register extends State<Register> {
                             fixedSize: const Size(310, 46),
                           ),
                           onPressed: () {
-                            context.go("/verificacao");
+                            context.go("/createPassword");
                           },
                           child: const Text(
                             'Confirmar email',

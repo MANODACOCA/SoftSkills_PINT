@@ -1,14 +1,14 @@
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
-class ChangePassword extends StatefulWidget {
-  const ChangePassword({super.key});
+class CreatePassword extends StatefulWidget {
+  const CreatePassword({super.key});
 
   @override
-  State<ChangePassword> createState() => _ChangePassword();
+  State<CreatePassword> createState() => _CreatePassword();
 }
 
-class _ChangePassword extends State<ChangePassword> {
+class _CreatePassword extends State<CreatePassword> {
   bool isPasswordVisible = false;
   final newpass = TextEditingController();
   final pass = TextEditingController();
@@ -18,17 +18,6 @@ class _ChangePassword extends State<ChangePassword> {
   );
 
   /*Ir buscar na base de dados a password anterior e compará-la com a nova password*/
-
-  Future<void> analisar() async {
-    if (newpass.text == pass.text) {
-      await confirm();
-      context.go("/alterarInformacoes");
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('As passwords não coincidem!')),
-      );
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +139,7 @@ class _ChangePassword extends State<ChangePassword> {
                       fixedSize: const Size(310, 46),
                     ),
                     onPressed: () {
-                      analisar();
+                      confirm();
                     },
                     child: const Text(
                       'Confirmar',
@@ -166,28 +155,36 @@ class _ChangePassword extends State<ChangePassword> {
     );
   }
 
-  confirm() {
+  Future<void> analisar() async {
+    if (newpass.text == pass.text) {
+      context.go("/login");
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('As passwords não coincidem!')),
+      );
+    }
+  }
+
+  Future<void> confirm() {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Aviso'),
-          content: Text('Quer guardar as alterações?'),
+          title: Text('Confirmação'),
+          content: Text('Tem a certeza da password que escolheu?'),
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.green),
               child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.pop();
-                print('Alterações guardadas!');
+                analisar();
               },
             ),
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.red),
               child: Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.pop(); // Close the dialog
-                print('Alterações não foram guardadas!');
+                context.pop();
               },
             ),
           ],

@@ -56,7 +56,7 @@ class _FirstLogin extends State<FirstLogin> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Por favor, crie uma nova password para aceder à sua conta pela primeira vez',
+                    'Por favor, crie uma nova password',
                     style: TextStyle(
                       fontSize: 16,
                       fontStyle: FontStyle.italic,
