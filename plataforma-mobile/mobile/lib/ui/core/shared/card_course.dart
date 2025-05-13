@@ -90,7 +90,6 @@ class CardCourse extends StatelessWidget {
                   style: AppTextStyles.body.copyWith(color: Colors.grey[600]),
                 ),
                 )
-
               ],
             ),
           ),
