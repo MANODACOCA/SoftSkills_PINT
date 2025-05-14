@@ -1,4 +1,4 @@
-#region card
+/*#region card */
 .card-clickable:hover {
   transform: scale(1.03);
   transition: transform 0.2s ease;
@@ -19,7 +19,7 @@
   height: 20rem;
   cursor: pointer;
   overflow: hidden;
- /* background-color: #e8f0fb; */
+ /*background-color: #e8f0fb;*/ 
 }
 
 .card-title {

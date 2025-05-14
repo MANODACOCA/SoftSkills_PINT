@@ -29,7 +29,7 @@ const FeaturedCourseCard = ({ image, title, description, startDate, endDate, ins
           </div>
         </div>
         <div className="mt-2">
-          <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse} >Detalhes</button>
+          <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse} >Detalhess</button>
         </div>
       </div>
     </div>

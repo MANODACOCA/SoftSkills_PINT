@@ -1,14 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Slide from '../../components/carrousel/Carrousel';
 import Card from '../../components/card/Card';
 import Cardhighlight from '../../components/card_highlight/CardHighlight';
 import './HomePage.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+//import { list_cursos } from '../../../api/cursos_axios';
 
 const HomePage = () => {
   const scrollRef = useRef(null);
   const scrollRef1 = useRef(null);
   const scrollRef2 = useRef(null);
+  const [courses, setCursos] = useState([]);
 
   const scroll = (ref, direction) => {
     if (ref.current) {
@@ -18,6 +20,19 @@ const HomePage = () => {
       });
     }
   };
+
+  const fetchCursos = async () => {
+    try {
+      const data = await list_cursos();
+      setCursos(data);
+    } catch (error){
+      console.error('Erro a encontrar cursos:', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchCursos(setCursos);
+  }, []);
 
   return (
     <div>

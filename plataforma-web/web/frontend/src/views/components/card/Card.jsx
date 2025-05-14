@@ -23,7 +23,7 @@ const Card = ({ image, title, type, startDate, endDate, courseId }) => {
           </span>
         </div>
         <p className="card-text text-muted mb-0">
-          📅 {'10 Dez'} - {'15 Jan'}
+          📅 {'10 Dez'} - {'20 Jan'}
         </p>
       </div>
     </div>
