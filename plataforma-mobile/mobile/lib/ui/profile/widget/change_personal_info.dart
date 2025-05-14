@@ -21,7 +21,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
-          onPressed: () async {
+          onPressed: (){
             context.go('/profile');
           },
         ),

@@ -20,6 +20,7 @@ import '../ui/profile/widget/activate_twofa.dart';
 import '../ui/login/widget/create_password.dart';
 import '../ui/login/widget/confirm_to_change_pass.dart';
 import '../ui/login/widget/change_forgot_pass.dart';
+import '../ui/profile/widget/courser_joined.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -131,6 +132,11 @@ final rotas = GoRouter(
       name:'changeforgotpass',
       path: '/changeforgotpass',
       builder: (context, state) => ChangePasswordForget(),
+    ),
+    GoRoute(
+      name: 'coursejoined',
+      path: '/coursejoined',
+      builder: (context, state) => CourserJoined(),
     )
   ],
 );
