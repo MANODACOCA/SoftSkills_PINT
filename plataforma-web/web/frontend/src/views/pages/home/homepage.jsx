@@ -22,8 +22,6 @@ const HomePage = () => {
   return (
     <div>
       <Slide />
-      <h3 className='mt-2'>Bem vindo à home da nossa amostra de página da softskills</h3>
-
       <h1 className="mt-4 ps-3">Para si</h1>
       <div className="position-relative px-3">
         <button className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click"
