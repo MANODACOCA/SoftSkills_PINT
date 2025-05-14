@@ -36,11 +36,8 @@ const HomePage = () => {
 
   return (
     <div>
-      <div className='px-3'> <Slide /></div>
-
-      <h1 className='mt-3 px-3'>Bem vindo à home da nossa amostra de página da softskills</h1>
-
-      <h1 className="mt-3 ps-3">Para si</h1>
+      <Slide />
+      <h1 className="mt-4 ps-3">Para si</h1>
       <div className="position-relative px-3">
         <button className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click"
           onClick={() => scroll(scrollRef, 'left')}>
@@ -61,7 +58,7 @@ const HomePage = () => {
       </div>
 
 
-      <h1 className="mt-3 ps-3">Cursos mais populares</h1>
+      <h1 className="mt-4 ps-3">Cursos mais populares</h1>
       <div className="position-relative px-3">
         <button className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click"
           onClick={() => scroll(scrollRef1, 'left')}>
@@ -81,10 +78,10 @@ const HomePage = () => {
         </button>
       </div>
 
-      <h1 className="mt-3 ps-3">Curso assíncrono em destaque</h1>
-      <div className='px-3'><Cardhighlight /></div>
+      <h1 className="mt-5 ps-3">Curso assíncrono em destaque</h1>
+      <Cardhighlight />
 
-      <h1 className="mt-3 ps-3">Novidades</h1>
+      <h1 className="mt-4 ps-3">Novidades</h1>
       <div className="position-relative px-3">
         <button className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click"
           onClick={() => scroll(scrollRef2, 'left')}>
@@ -104,8 +101,8 @@ const HomePage = () => {
         </button>
       </div>
 
-      <h1 className="mt-3 ps-3">Curso síncrono em destaque</h1>
-      <div className='px-3'><Cardhighlight /></div>
+      <h1 className="mt-5 ps-3">Curso síncrono em destaque</h1>
+      <Cardhighlight />
     </div>
   );
 };

@@ -12,6 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,29 +53,63 @@ class _HomePage extends State<HomePage> {
                 );
               }).toList(),
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: GridView.builder(
-                itemCount: 6,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(), 
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  mainAxisExtent: 280,
-                ),
-                itemBuilder: (context, index) {
-                  return CardCourse(
-                    title: 'Curso de C++',
-                    typeCourse: 'Assincrono',
-                    startDate: DateTime(2025, 5, 10),
-                    endDate: DateTime(2025, 6, 15),
-                    currentMembers: 12,
-                    maxMembers: 80,
-                  );
-                },
+            SizedBox(height: 10),
+            SizedBox(
+              height: 280,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 6,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: 200,
+                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          child: CardCourse(
+                            title: 'Curso de C++',
+                            typeCourse: 'Assincrono',
+                            startDate: DateTime(2025, 5, 10),
+                            endDate: DateTime(2025, 6, 15),
+                            currentMembers: 12,
+                            maxMembers: 80,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20,),
+            Text('Cursos Assincronos', style: TextStyle(fontSize: 20),),
+            SizedBox(
+              height: 280,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 6,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: 200,
+                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          child: CardCourse(
+                            title: 'Curso de C++',
+                            typeCourse: 'Assincrono',
+                            startDate: DateTime(2025, 5, 10),
+                            endDate: DateTime(2025, 6, 15),
+                            currentMembers: 12,
+                            maxMembers: 80,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

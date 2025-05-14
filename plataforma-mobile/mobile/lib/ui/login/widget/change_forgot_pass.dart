@@ -1,14 +1,14 @@
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
-class ChangePassword extends StatefulWidget {
-  const ChangePassword({super.key});
+class ChangePasswordForget extends StatefulWidget {
+  const ChangePasswordForget({super.key});
 
   @override
-  State<ChangePassword> createState() => _ChangePassword();
+  State<ChangePasswordForget> createState() => _ChangePassword();
 }
 
-class _ChangePassword extends State<ChangePassword> {
+class _ChangePassword extends State<ChangePasswordForget> {
   bool isPasswordVisible = false;
   final newpass = TextEditingController();
   final pass = TextEditingController();
@@ -177,7 +177,7 @@ class _ChangePassword extends State<ChangePassword> {
               style: TextButton.styleFrom(backgroundColor: Colors.green),
               child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.go('/seeinfoprofile');
+                context.go('/login');
                 print('Alterações guardadas!');
               },
             ),

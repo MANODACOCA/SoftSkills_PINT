@@ -172,7 +172,9 @@ class _ProfileState extends State<Profile> {
                           Text('Cursos inscritos'),
                           Spacer(),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.go('/coursejoined');
+                            },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
                         ],

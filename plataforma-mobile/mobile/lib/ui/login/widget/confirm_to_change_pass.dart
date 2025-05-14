@@ -28,7 +28,7 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
 
   void validar() {
     if (codeController.text == code.toString()) {
-      context.go("/alterarpassword");
+      context.go("/changeforgotpass");
     } else {
       ScaffoldMessenger.of(
         context,
@@ -42,14 +42,14 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            context.go("/");
+            context.go("/forgetpassword");
           },
           icon: Icon(Icons.arrow_back),
           color: Colors.white,
         ),
         backgroundColor: AppColors.primary,
         title: Text(
-          'Cofirmação do Email',
+          'Confirmação do Email',
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white),
         ),
