@@ -111,7 +111,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          'Telemovél',
+                          'Telemóvel',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

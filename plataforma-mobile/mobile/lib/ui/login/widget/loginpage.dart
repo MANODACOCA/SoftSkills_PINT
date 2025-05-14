@@ -43,7 +43,7 @@ class _LoginPage extends State<LoginPage> {
       isSwitched = rememberMe;
     });
   }
-
+  // Função para encriptar a password
   String _encryptPassword(String password) {
     final bytes = utf8.encode(password);
     final hash = sha256.convert(bytes);
@@ -202,9 +202,6 @@ class _LoginPage extends State<LoginPage> {
                       fixedSize: Size(screenWidth - 40, 46),
                     ),
                     onPressed: () async {
-                      final encryptedPassword = _encryptPassword(
-                        _passwordController.text,
-                      );
                       /*Falta fazer o load da info do utilizador na base de dados e verificar o gmail e a password*/
                       context.go("/twofa");
                     },

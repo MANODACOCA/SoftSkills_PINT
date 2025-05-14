@@ -25,7 +25,7 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
     code = Random().nextInt(90000) + 10000;
     print('O código é : $code');
   }
-  
+
   void validar() {
     if (codeController.text == code.toString()) {
       context.go("/homepage");
@@ -35,10 +35,11 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
       ).showSnackBar(SnackBar(content: Text('Código incorreto!')));
     }
   }
+
   // Confirmacao do email utilizados
   @override
   Widget build(BuildContext context) {
-        double screenWidth = MediaQuery.of(context).size.width;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -76,7 +77,7 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
                   SizedBox(height: 45),
                   //Aqui vem o local para inserir o código de verificação
                   SizedBox(
-                    width: screenWidth-150,
+                    width: screenWidth - 150,
                     child: PinCodeTextField(
                       keyboardType: TextInputType.number,
                       appContext: context,

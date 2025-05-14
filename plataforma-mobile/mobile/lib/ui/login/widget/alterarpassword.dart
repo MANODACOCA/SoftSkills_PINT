@@ -22,7 +22,6 @@ class _ChangePassword extends State<ChangePassword> {
   Future<void> analisar() async {
     if (newpass.text == pass.text) {
       await confirm();
-      context.go("/alterarInformacoes");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('As passwords não coincidem!')),
@@ -178,7 +177,7 @@ class _ChangePassword extends State<ChangePassword> {
               style: TextButton.styleFrom(backgroundColor: Colors.green),
               child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.pop();
+                context.go('/seeinfoprofile');
                 print('Alterações guardadas!');
               },
             ),
