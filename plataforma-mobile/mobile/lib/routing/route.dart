@@ -19,6 +19,7 @@ import '../ui/profile/widget/logout_all_devices.dart';
 import '../ui/profile/widget/activate_twofa.dart';
 import '../ui/login/widget/create_password.dart';
 import '../ui/login/widget/confirm_to_change_pass.dart';
+import '../ui/login/widget/change_forgot_pass.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -125,6 +126,11 @@ final rotas = GoRouter(
       name: 'createPassword',
       path: '/createPassword',
       builder: (context, state) => CreatePassword(),
+    ),
+    GoRoute(
+      name:'changeforgotpass',
+      path: '/changeforgotpass',
+      builder: (context, state) => ChangePasswordForget(),
     )
   ],
 );

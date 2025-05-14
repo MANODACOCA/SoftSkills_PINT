@@ -28,7 +28,7 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
 
   void validar() {
     if (codeController.text == code.toString()) {
-      context.go("/alterarpassword");
+      context.go("/changeforgotpass");
     } else {
       ScaffoldMessenger.of(
         context,
