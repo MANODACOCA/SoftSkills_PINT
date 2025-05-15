@@ -1,10 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Slide from '../../components/carrousel/Carrousel';
-import Card from '../../components/card/Card';
 import Cardhighlight from '../../components/card_highlight/CardHighlight';
 import './HomePage.css';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-//import { list_cursos } from '../../../api/cursos_axios';
+import { list_cursos } from '../../../api/cursos_axios';
+import ScrollableSection from '../../components/scrollable_section/ScrollableSection';
 
 const HomePage = () => {
   const scrollRef = useRef(null);
@@ -25,81 +24,26 @@ const HomePage = () => {
     try {
       const data = await list_cursos();
       setCursos(data);
-    } catch (error){
+    } catch (error) {
       console.error('Erro a encontrar cursos:', error);
     }
   }
 
   useEffect(() => {
-    fetchCursos(setCursos);
+    fetchCursos();
   }, []);
 
   return (
     <div>
-      <Slide />
-      <h1 className="mt-4 ps-3">Para si</h1>
-      <div className="position-relative px-3">
-        <button className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click"
-          onClick={() => scroll(scrollRef, 'left')}>
-          <FaChevronLeft />
-        </button>
-        <div className="scroll-container" ref={scrollRef}>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-        </div>
-        <button className="btn btn-light position-absolute top-50 end-0 translate-middle-y z-1 arrow-click"
-          onClick={() => scroll(scrollRef, 'right')}>
-          <FaChevronRight />
-        </button>
-      </div>
+      <div className='px-3'><Slide /></div>
 
-
-      <h1 className="mt-4 ps-3">Cursos mais populares</h1>
-      <div className="position-relative px-3">
-        <button className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click"
-          onClick={() => scroll(scrollRef1, 'left')}>
-          <FaChevronLeft />
-        </button>
-        <div className="scroll-container" ref={scrollRef1}>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-        </div>
-        <button className="btn btn-light position-absolute top-50 end-0 translate-middle-y z-1 arrow-click"
-          onClick={() => scroll(scrollRef1, 'right')}>
-          <FaChevronRight />
-        </button>
-      </div>
+      <ScrollableSection title="Para si" courses={courses} scrollRef={scrollRef} onScroll={scroll}></ScrollableSection>
+      <ScrollableSection title="Cursos mais populares" courses={courses} scrollRef={scrollRef1} onScroll={scroll}></ScrollableSection>
 
       <h1 className="mt-5 ps-3">Curso assíncrono em destaque</h1>
-      <Cardhighlight />
+      <div><Cardhighlight /></div>
 
-      <h1 className="mt-4 ps-3">Novidades</h1>
-      <div className="position-relative px-3">
-        <button className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click"
-          onClick={() => scroll(scrollRef2, 'left')}>
-          <FaChevronLeft />
-        </button>
-        <div className="scroll-container" ref={scrollRef2}>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-          <div className="card-wrapper"><Card /></div>
-        </div>
-        <button className="btn btn-light position-absolute top-50 end-0 translate-middle-y z-1 arrow-click"
-          onClick={() => scroll(scrollRef2, 'right')}>
-          <FaChevronRight />
-        </button>
-      </div>
+     <ScrollableSection title="Novidades" courses={courses} scrollRef={scrollRef2} onScroll={scroll}></ScrollableSection>
 
       <h1 className="mt-5 ps-3">Curso síncrono em destaque</h1>
       <Cardhighlight />

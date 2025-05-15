@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
+const cors = require('cors');
 const bodyParser = require('body-parser');
 //Middlewares
 app.use(express.json());
@@ -11,7 +12,7 @@ app.use(bodyParser.json());
 app.get('/', (req, res) => {
   res.send('Servidor Node.js com Express funcionando!');
 });
-
+app.use(cors());
 // Mensagem para mostrar que o servidor está a correr
 app.listen(port, () => {
   console.log(`Servidor a correr: http://localhost:${port}`);
