@@ -15,12 +15,12 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_utilizador'
       }
     },
-    id_area_conhecimento: {
+    id_conteudos_partilhado: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'conteudos_partilhado',
-        key: 'id_area_conhecimento'
+        key: 'id_conteudos_partilhado'
       }
     },
     texto_post: {
@@ -42,7 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "post_pkey",
+        name: "pk_post",
         unique: true,
         fields: [
           { name: "id_post" },

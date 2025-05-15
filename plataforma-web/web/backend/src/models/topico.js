@@ -21,7 +21,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     descricao_top: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     }
   }, {
     sequelize,

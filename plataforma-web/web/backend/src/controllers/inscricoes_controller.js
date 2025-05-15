@@ -19,10 +19,10 @@ controllers.get = async (req,res)=>{
     if(data){
       res.status(200).json(data);
     }else{
-      res.status(404).json({erro: 'inscricoes nao encontrado/a!'});
+      res.status(404).json({erro: 'Inscricoes nao encontrado/a!'});
     }
   }catch (err){
-    res.status(500).json({erro: 'Erro ao procurar inscricoes!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao procurar Inscricoes!',desc: err.message});
   }
 };
 
@@ -32,10 +32,10 @@ controllers.create = async (req,res)=>{
       const data = await model.create(req.body);
       res.status(201).json(data);
     }else{
-      res.status(400).json({erro: 'Erro ao criar inscricoes!',desc: 'Corpo do pedido esta vazio.'});
+      res.status(400).json({erro: 'Erro ao criar Inscricoes!',desc: 'Corpo do pedido esta vazio.'});
     }
   }catch(err){
-    res.status(500).json({erro: 'Erro ao criar inscricoes!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao criar Inscricoes!',desc: err.message});
   }
 };
 
@@ -48,13 +48,13 @@ controllers.update = async (req,res)=>{
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
       }else{
-        res.status(404).json({erro:'inscricoes nao foi atualizado/a!'});
+        res.status(404).json({erro:'Inscricoes nao foi atualizado/a!'});
       }
     }else{
-      res.status(400).json({erro: 'Erro ao atualizar o/a inscricoes!',desc: 'Corpo do pedido esta vazio.'});
+      res.status(400).json({erro: 'Erro ao atualizar o/a Inscricoes!',desc: 'Corpo do pedido esta vazio.'});
     }
   }catch(err){
-    res.status(500).json({erro: 'Erro ao atualizar o/a inscricoes!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao atualizar o/a Inscricoes!',desc: err.message});
   }
 };
 
@@ -63,12 +63,12 @@ controllers.delete = async (req,res)=>{
     const {id} = req.params;
     const deleted = await model.destroy({where:{id:id}});
     if(deleted){
-      res.status(200).json({msg:'inscricoes apagado/a com sucesso!'});
+      res.status(200).json({msg:'Inscricoes apagado/a com sucesso!'});
     }else{
-      res.status(404).json({erro:'inscricoes não foi apagado/a!'});
+      res.status(404).json({erro:'Inscricoes não foi apagado/a!'});
     }
   }catch(err) {
-    res.status(500).json({erro:'Erro ao apagar o/a inscricoes!',desc: err.message});
+    res.status(500).json({erro:'Erro ao apagar o/a Inscricoes!',desc: err.message});
   }
 };
 

@@ -63,7 +63,7 @@ app.use('/inscricoes',inscricoesRouter);
 const notificacoes_cursoRouter = require('./routes/notificacoes_curso_route.js');
 app.use('/notificacoes_curso',notificacoes_cursoRouter);
 
-const notificacoes_postRouter = require('./routes/notificacoes_post_route.js');
+const notificacoes_postRouter = require('./routes/notificacoes_post_route.js'); 
 app.use('/notificacoes_post',notificacoes_postRouter);
 
 const ocorrencias_edicoesRouter = require('./routes/ocorrencias_edicoes_route.js');

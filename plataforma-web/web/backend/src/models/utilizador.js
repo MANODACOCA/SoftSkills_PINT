@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('utilizador', {
     id_utilizador: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -11,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     password_util: {
-      type: DataTypes.STRING(16),
+      type: DataTypes.STRING(256),
       allowNull: false
     },
     data_criacao_utiliz: {
@@ -47,6 +48,18 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     auten2fat: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    isformando: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    isformador: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    isgestor_administrador: {
       type: DataTypes.BOOLEAN,
       allowNull: true
     }

@@ -19,10 +19,10 @@ controllers.get = async (req,res)=>{
     if(data){
       res.status(200).json(data);
     }else{
-      res.status(404).json({erro: 'conteudos nao encontrado/a!'});
+      res.status(404).json({erro: 'Conteudos nao encontrado/a!'});
     }
   }catch (err){
-    res.status(500).json({erro: 'Erro ao procurar conteudos!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao procurar Conteudos!',desc: err.message});
   }
 };
 
@@ -32,10 +32,10 @@ controllers.create = async (req,res)=>{
       const data = await model.create(req.body);
       res.status(201).json(data);
     }else{
-      res.status(400).json({erro: 'Erro ao criar conteudos!',desc: 'Corpo do pedido esta vazio.'});
+      res.status(400).json({erro: 'Erro ao criar Conteudos!',desc: 'Corpo do pedido esta vazio.'});
     }
   }catch(err){
-    res.status(500).json({erro: 'Erro ao criar conteudos!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao criar Conteudos!',desc: err.message});
   }
 };
 
@@ -48,13 +48,13 @@ controllers.update = async (req,res)=>{
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
       }else{
-        res.status(404).json({erro:'conteudos nao foi atualizado/a!'});
+        res.status(404).json({erro:'Conteudos nao foi atualizado/a!'});
       }
     }else{
-      res.status(400).json({erro: 'Erro ao atualizar o/a conteudos!',desc: 'Corpo do pedido esta vazio.'});
+      res.status(400).json({erro: 'Erro ao atualizar o/a Conteudos!',desc: 'Corpo do pedido esta vazio.'});
     }
   }catch(err){
-    res.status(500).json({erro: 'Erro ao atualizar o/a conteudos!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao atualizar o/a Conteudos!',desc: err.message});
   }
 };
 
@@ -63,12 +63,12 @@ controllers.delete = async (req,res)=>{
     const {id} = req.params;
     const deleted = await model.destroy({where:{id:id}});
     if(deleted){
-      res.status(200).json({msg:'conteudos apagado/a com sucesso!'});
+      res.status(200).json({msg:'Conteudos apagado/a com sucesso!'});
     }else{
-      res.status(404).json({erro:'conteudos não foi apagado/a!'});
+      res.status(404).json({erro:'Conteudos não foi apagado/a!'});
     }
   }catch(err) {
-    res.status(500).json({erro:'Erro ao apagar o/a conteudos!',desc: err.message});
+    res.status(500).json({erro:'Erro ao apagar o/a Conteudos!',desc: err.message});
   }
 };
 

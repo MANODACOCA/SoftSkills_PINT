@@ -1,18 +1,23 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('ocorrencias_edicoes', {
+    id_curso: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      references: {
+        model: 'cursos',
+        key: 'id_curso'
+      }
+    },
     nr_ocorrencia: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    id_curso: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'cursos',
-        key: 'id_curso'
-      }
+    data_ult_ocorrencia: {
+      type: DataTypes.DATE,
+      allowNull: false
     }
   }, {
     sequelize,
@@ -21,9 +26,10 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "ocorrencias_edicoes_pkey",
+        name: "pk_ocorrencias_edicoes",
         unique: true,
         fields: [
+          { name: "id_curso" },
           { name: "nr_ocorrencia" },
         ]
       },

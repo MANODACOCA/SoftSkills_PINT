@@ -7,22 +7,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    id_topico: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'topico',
-        key: 'id_topico'
-      }
-    },
-    id_utilizador: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'utilizador',
-        key: 'id_utilizador'
-      }
-    },
     id_gestor_administrador: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -31,28 +15,20 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_gestor_administrador'
       }
     },
-    id_categoria: {
+    id_topico: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'categoria',
-        key: 'id_categoria'
-      }
-    },
-    id_area: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'area',
-        key: 'id_area'
+        model: 'topico',
+        key: 'id_topico'
       }
     },
     nome_curso: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(75),
       allowNull: false
     },
     descricao_curso: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(256),
       allowNull: false
     },
     numero_vagas: {
@@ -65,10 +41,6 @@ module.exports = function(sequelize, DataTypes) {
     },
     data_fim_curso: {
       type: DataTypes.DATE,
-      allowNull: false
-    },
-    tipo_curso: {
-      type: DataTypes.INTEGER,
       allowNull: false
     },
     estado: {
@@ -89,6 +61,14 @@ module.exports = function(sequelize, DataTypes) {
     },
     imagem: {
       type: DataTypes.STRING(200),
+      allowNull: true
+    },
+    isassincrono: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    issincrono: {
+      type: DataTypes.BOOLEAN,
       allowNull: true
     }
   }, {

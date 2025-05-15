@@ -1,19 +1,11 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('conteudos_partilhado', {
-    id_area_conhecimento: {
+    id_conteudos_partilhado: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
-    },
-    id_area: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'area',
-        key: 'id_area'
-      }
     },
     id_topico: {
       type: DataTypes.INTEGER,
@@ -21,14 +13,6 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'topico',
         key: 'id_topico'
-      }
-    },
-    id_categoria: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'categoria',
-        key: 'id_categoria'
       }
     },
     descricao_cp: {
@@ -46,10 +30,10 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "conteudos_partilhado_pkey",
+        name: "pk_conteudos_partilhado",
         unique: true,
         fields: [
-          { name: "id_area_conhecimento" },
+          { name: "id_conteudos_partilhado" },
         ]
       },
     ]

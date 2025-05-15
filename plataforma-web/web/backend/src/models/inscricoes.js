@@ -7,14 +7,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
-    id_utilizador: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'utilizador',
-        key: 'id_utilizador'
-      }
-    },
     id_formando: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -50,7 +42,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "inscricoes_pkey",
+        name: "pk_inscricoes",
         unique: true,
         fields: [
           { name: "id_inscricao" },
