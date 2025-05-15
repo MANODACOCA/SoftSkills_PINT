@@ -3,10 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 
 class CourserJoined extends StatefulWidget {
-  const CourserJoined({Key? key}) : super(key: key);
+  const CourserJoined({super.key});
 
   @override
-  _CourserJoinedWidgetState createState() => _CourserJoinedWidgetState();
+  State<CourserJoined> createState() => _CourserJoinedWidgetState();
 }
 
 class _CourserJoinedWidgetState extends State<CourserJoined> {
