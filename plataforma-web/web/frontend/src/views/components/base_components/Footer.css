@@ -1,0 +1,92 @@
+.app-fotter a {
+    text-decoration: none;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.app-fotter a:hover {
+    color: var(--cor-secundaria);
+}
+
+.app-fotter h6 {
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    color: #222;
+}
+
+.app-fotter .d-flex.flex-column a {
+    padding: 0.25rem 0;
+    font-size: 0.85rem;
+}
+
+.app-fotter .btn-dark {
+    background-color: var(--cor-principal);
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    transition: background-color 0.3s ease;
+}
+
+.app-fotter .btn-dark:hover {
+    background-color: var(--cor-secundaria);
+}
+
+.app-fotter img[alt="QRCODE"] {
+    width: 6vw;
+    height: auto;
+}
+
+.app-fotter .d-flex.gap-3 a {
+    color: #ffffff;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.app-fotter .d-flex.gap-3 a:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.app-fotter small {
+    font-size: 0.9rem;
+    color: #666666;
+}
+
+.app-fotter hr {
+    margin: 1.5rem 0;
+    color: rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 767.98px) {
+    .app-fotter .text-center.text-md-start,
+    .app-fotter .text-center.text-md-end {
+        text-align: center !important;
+    }
+    
+    .app-fotter .justify-content-md-end {
+        justify-content: center !important;
+    }
+    
+    .app-fotter .col-6.col-md-4 {
+        margin-bottom: 1.5rem;
+    }
+    
+    .app-fotter .row.justify-content-between {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .app-fotter .col-md-3.mb-3 {
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
+}
+
+.app-fotter .d-flex.gap-3 a:hover {
+    animation: float 1.5s ease-in-out infinite;
+}
