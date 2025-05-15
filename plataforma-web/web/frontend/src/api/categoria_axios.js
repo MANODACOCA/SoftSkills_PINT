@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/'+ categoria;
+const API_URL = `http://localhost:3000/categoria`;
 
 
 export const list_categoria = async () => {
@@ -12,6 +12,7 @@ export const list_categoria = async () => {
     throw error;
   }
 }
+
 
 export const get_categoria  = async (id) => {
     try{
@@ -33,6 +34,7 @@ export const create_categoria = async (data) => {
     }
 };
 
+//atualiza filme por id
 export const update_categoria = async (id, data) => {
     try{
         const response = await axios.put(`${API_URL}/update/${id}`, data);
@@ -43,7 +45,7 @@ export const update_categoria = async (id, data) => {
     }
 };
 
-
+//elimina filme por id
 export const delete_categoria = async (id) => {
     try{
         const response = await axios.delete(`${API_URL}/delete/${id}`);

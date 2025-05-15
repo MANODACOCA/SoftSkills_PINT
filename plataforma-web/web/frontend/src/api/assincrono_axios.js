@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/'+ assincrono;
+const API_URL = `http://localhost:3000/assincrono`;
 
 
 export const list_assincrono = async () => {
@@ -12,6 +12,7 @@ export const list_assincrono = async () => {
     throw error;
   }
 }
+
 
 export const get_assincrono  = async (id) => {
     try{
@@ -33,6 +34,7 @@ export const create_assincrono = async (data) => {
     }
 };
 
+//atualiza filme por id
 export const update_assincrono = async (id, data) => {
     try{
         const response = await axios.put(`${API_URL}/update/${id}`, data);
@@ -43,7 +45,7 @@ export const update_assincrono = async (id, data) => {
     }
 };
 
-
+//elimina filme por id
 export const delete_assincrono = async (id) => {
     try{
         const response = await axios.delete(`${API_URL}/delete/${id}`);
