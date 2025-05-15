@@ -29,7 +29,7 @@ class _HomePage extends State<HomePage> {
             CarouselSlider(
               options: CarouselOptions(
                 height: 200.0,
-                viewportFraction: 0.90,
+                viewportFraction: 1,
                 autoPlay: true,
               ),
               items: [
@@ -54,6 +54,7 @@ class _HomePage extends State<HomePage> {
               }).toList(),
             ),
             SizedBox(height: 10),
+            Text('Cursos Assincronos', style: TextStyle(fontSize: 20),),
             SizedBox(
               height: 280,
               child: Row(
@@ -66,7 +67,7 @@ class _HomePage extends State<HomePage> {
                       itemBuilder: (context, index) {
                         return Container(
                           width: 200,
-                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.only(left: index == 0 ? 4.0 : 0.0, right: 4.0, ),
                           child: CardCourse(
                             title: 'Curso de C++',
                             typeCourse: 'Assincrono',
@@ -96,7 +97,7 @@ class _HomePage extends State<HomePage> {
                       itemBuilder: (context, index) {
                         return Container(
                           width: 200,
-                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          margin: EdgeInsets.only(left: index == 0 ? 4.0 : 0.0, right: 4.0, ),
                           child: CardCourse(
                             title: 'Curso de C++',
                             typeCourse: 'Assincrono',

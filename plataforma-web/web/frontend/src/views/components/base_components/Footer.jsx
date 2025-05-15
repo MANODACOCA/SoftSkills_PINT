@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../../../assets/images/logos/logo.png';
+import logo from '../../../assets/images/logos/semfundo3.png';
 import './Footer.css'
 
 //icons
@@ -7,10 +7,9 @@ import {
     BsFacebook,
     BsInstagram,
     BsTwitter,
-    BsApple,
     BsLinkedin,
+    BsDownload,
 } from 'react-icons/bs';
-import { BiLogoPlayStore } from "react-icons/bi";
 
 const Footer = () => {
     return (
@@ -28,7 +27,6 @@ const Footer = () => {
                                 height="50"
                                 className="me-2"
                             />
-                            <span className="fw-bold">SoftSkills</span>
                         </a>
                     </div>
 
@@ -49,14 +47,12 @@ const Footer = () => {
                                     <a href="#"><span>Política de Privacidade</span></a>
                                 </div>
                             </div>
-                            <div className="col-6 col-md-4 mb-3">
+                            <div className="col-6 col-md-4 mx-auto text-center">
                                 <h6 className="text-uppercase fw-bold">DOWNLOAD DA NOSSA APP</h6>
-                                <div className="d-flex flex-column gap-2">
-                                    <a href="" className="btn btn-dark d-flex align-items-center gap-2">
-                                        <BiLogoPlayStore /> Download na Play Store
-                                    </a>
-                                    <a href="" className="btn btn-dark d-flex align-items-center gap-2">
-                                        <BsApple /> Download na App Store
+                                <div className="d-flex flex-column gap-3">
+                                    <img src='https://cdn-icons-png.flaticon.com/512/747/747470.png' alt="QRCODE" className="mx-auto"/>
+                                    <a href="https://play.google.com/store/games?hl=pt_PT" className="btn btn-dark rounded-4 gap-2">
+                                        <BsDownload /> Clique para download
                                     </a>
                                 </div>
                             </div>
@@ -71,7 +67,7 @@ const Footer = () => {
                         <small>© 2025 SoftSkills™. Todos os direitos reservados.</small>
                     </div>
                     <div className="col-md-6 text-center text-md-end">
-                        <div className="d-flex justify-content-center justify-content-md-end gap-3">
+                        <div className="d-flex justify-content-center justify-content-md-end gap-4">
                             <a href="#"><BsFacebook size={20} /></a>
                             <a href="#"><BsInstagram size={20} /></a>
                             <a href="#"><BsTwitter size={20} /></a>
