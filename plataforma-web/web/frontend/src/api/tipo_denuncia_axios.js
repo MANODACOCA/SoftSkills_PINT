@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/'+ tipo_denuncia;
+const API_URL = `http://localhost:3000/tipo_denuncia`;
 
 
 export const list_tipo_denuncia = async () => {
@@ -12,6 +12,7 @@ export const list_tipo_denuncia = async () => {
     throw error;
   }
 }
+
 
 export const get_tipo_denuncia  = async (id) => {
     try{
@@ -33,6 +34,7 @@ export const create_tipo_denuncia = async (data) => {
     }
 };
 
+//atualiza filme por id
 export const update_tipo_denuncia = async (id, data) => {
     try{
         const response = await axios.put(`${API_URL}/update/${id}`, data);
@@ -43,7 +45,7 @@ export const update_tipo_denuncia = async (id, data) => {
     }
 };
 
-
+//elimina filme por id
 export const delete_tipo_denuncia = async (id) => {
     try{
         const response = await axios.delete(`${API_URL}/delete/${id}`);

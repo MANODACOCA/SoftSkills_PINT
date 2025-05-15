@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/'+ cursos;
+const API_URL = `http://localhost:3000/cursos`;
 
 
 export const list_cursos = async () => {
@@ -12,6 +12,7 @@ export const list_cursos = async () => {
     throw error;
   }
 }
+
 
 export const get_cursos  = async (id) => {
     try{
@@ -33,6 +34,7 @@ export const create_cursos = async (data) => {
     }
 };
 
+//atualiza filme por id
 export const update_cursos = async (id, data) => {
     try{
         const response = await axios.put(`${API_URL}/update/${id}`, data);
@@ -43,7 +45,7 @@ export const update_cursos = async (id, data) => {
     }
 };
 
-
+//elimina filme por id
 export const delete_cursos = async (id) => {
     try{
         const response = await axios.delete(`${API_URL}/delete/${id}`);
