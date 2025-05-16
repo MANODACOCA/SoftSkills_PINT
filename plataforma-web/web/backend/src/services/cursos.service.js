@@ -1,10 +1,10 @@
 const { Sequelize, Op } = require('sequelize');
-const sequelize = require('../models/database'); 
-const { cursos } = require('../models/init-models')(sequelize); 
+const sequelize = require('../models/database');
+const { cursos } = require('../models/init-models')(sequelize);
 
 // Função para obter o curso síncrono em destaque
 async function getCourseDestaqueSincrono() {
-  
+
   const maxFormandosSubquery = await cursos.findOne({
     attributes: [
       [Sequelize.fn('MAX', Sequelize.col('contador_formandos')), 'max_formandos']
@@ -12,13 +12,13 @@ async function getCourseDestaqueSincrono() {
     where: {
       issincrono: true,
       contador_formandos: {
-        [Op.lt]: Sequelize.col('numero_vagas') 
+        [Op.lt]: Sequelize.col('numero_vagas')
       }
     },
     raw: true
   });
 
- 
+
   if (!maxFormandosSubquery || maxFormandosSubquery.max_formandos === null) {
     return null;
   }
@@ -28,10 +28,10 @@ async function getCourseDestaqueSincrono() {
       issincrono: true,
       contador_formandos: maxFormandosSubquery.max_formandos,
       numero_vagas: {
-        [Op.gt]: Sequelize.col('contador_formandos') 
+        [Op.gt]: Sequelize.col('contador_formandos')
       }
     },
-    order: Sequelize.literal('RANDOM()') 
+    order: Sequelize.literal('RANDOM()')
   });
 
   return featuredCourse;
@@ -39,7 +39,7 @@ async function getCourseDestaqueSincrono() {
 
 // Função para obter o curso assíncrono em destaque
 async function getCourseDestaqueAssincrono() {
- 
+
   const maxFormandosSubquery = await cursos.findOne({
     attributes: [
       [Sequelize.fn('MAX', Sequelize.col('contador_formandos')), 'max_formandos']
@@ -47,13 +47,13 @@ async function getCourseDestaqueAssincrono() {
     where: {
       isassincrono: true,
       contador_formandos: {
-        [Op.lt]: Sequelize.col('numero_vagas') 
-      } 
+        [Op.lt]: Sequelize.col('numero_vagas')
+      }
     },
     raw: true
   });
 
-  
+
   if (!maxFormandosSubquery || maxFormandosSubquery.max_formandos === null) {
     return null;
   }
@@ -64,14 +64,33 @@ async function getCourseDestaqueAssincrono() {
       isassincrono: true,
       contador_formandos: maxFormandosSubquery.max_formandos,
       numero_vagas: {
-        [Op.gt]: Sequelize.col('contador_formandos') 
+        [Op.gt]: Sequelize.col('contador_formandos')
       }
     },
-    order: Sequelize.literal('RANDOM()') 
+    order: Sequelize.literal('RANDOM()')
   });
 
   return featuredCourse;
 }
 
-module.exports = { getCourseDestaqueSincrono, getCourseDestaqueAssincrono };
+async function getCourseWithMoreFormandos() {
+
+  const courseMoreFormandos = await cursos.findOne({
+    attributes: ['nome_curso', 'imagem', 'contador_formandos'],
+    where: {
+      contador_formandos: {
+        [Op.lt]: Sequelize.col('numero_vagas')
+      }
+    },
+    order: [['contador_formandos', 'DESC']]
+  });
+
+  if (!courseMoreFormandos) {
+    return null;
+  }
+
+  return courseMoreFormandos;
+}
+
+module.exports = { getCourseDestaqueSincrono, getCourseDestaqueAssincrono, getCourseWithMoreFormandos };
 

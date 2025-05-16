@@ -23,5 +23,7 @@ router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 router.get('/curso-destaque/sincrono',controller.getDestaqueSincrono);
 router.get('/curso-destaque/assincrono',controller.getDestaqueAssincrono);
+router.get('/curso-destaque/topcurso',controller.getDestaqueCourses);
+
 
 module.exports = router;

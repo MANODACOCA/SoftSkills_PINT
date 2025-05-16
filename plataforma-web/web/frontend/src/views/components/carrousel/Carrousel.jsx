@@ -1,12 +1,15 @@
 import React from 'react';
-import { Carousel, CarouselItem } from 'react-bootstrap';
+import { Carousel } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import cursos from '../../../assets/images/carrousel/courses.svg';
 import forum from '../../../assets/images/carrousel/forum_resized.png';
 import './Carrousel.css';
 
 
-const MyCarousel = ({ image, title }) => {
+const MyCarousel = ({ course }) => {
+
+  if (!course) return null;
+
   return (
     <Carousel>
 
@@ -33,9 +36,9 @@ const MyCarousel = ({ image, title }) => {
       </Carousel.Item>
 
       <Carousel.Item className='bg-dark rounded-4 position-relative overflow-hidden'>
-        <img className="carrousel-img-centered" src={image} alt="Slide" />
+        <img className="carrousel-img-centered" src={course.imagem} alt="Slide" />
         <Carousel.Caption className='carousel-caption overlay-caption text-center'>
-          <h1>title</h1>
+          <h1>{course.nome_curso}</h1>
           <p>🧠 Conhece o curso mais procurado na SoftSkills.</p>
           <a href="#" className="btn btn-primary">
             <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações

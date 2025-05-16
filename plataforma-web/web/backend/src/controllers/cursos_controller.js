@@ -99,4 +99,17 @@ controllers.getDestaqueAssincrono = async (req, res) => {
   }
 };
 
+controllers.getDestaqueCourses = async (req, res) => {
+  try {
+    const curso = await cursosService.getCourseWithMoreFormandos();
+    if (curso) {
+      res.status(200).json(curso);
+    } else {
+      res.status(404).json({ erro: 'Nenhum curso encontrado com formandos inscritos.' });
+    }
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao procurar curso com formandos inscritos', desc: err.message });
+  }
+};
+
 module.exports = controllers;

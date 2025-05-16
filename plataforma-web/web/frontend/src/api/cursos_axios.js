@@ -74,3 +74,13 @@ export const getCourseDestaqueSincrono = async () => {
     }
 };
 
+export const getCousesWithMoreFormandos = async () => {
+    try{
+        const response = await axios.get(`${API_URL}/curso-destaque/topcurso`);
+        return response.data;
+    } catch(error){
+        console.error('Erro ao procurar curso com mais formandos!');
+        throw error;
+    }
+};
+

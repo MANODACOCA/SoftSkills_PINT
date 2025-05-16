@@ -20,7 +20,7 @@ const FeaturedCourseCard = ({ course }) => {
 
   return (
     <div className="card flex-row rounded-4 card-highlight">
-      <img src={course.imagem} className="rounded-4 highlight-image" alt="imagem curso" />
+      <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" />
       <div className="card-body d-flex flex-column justify-content-between">
         <div>
           <h4 className="card-title">{course.nome_curso}</h4>
