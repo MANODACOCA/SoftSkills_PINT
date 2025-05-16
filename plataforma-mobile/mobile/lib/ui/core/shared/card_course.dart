@@ -34,13 +34,13 @@ class CardCourse extends StatelessWidget {
           //if(inscrito){
 
           //} else {
-            context.push('/assync', extra: title,);
+            context.push('/assync', extra: title);
           //}
         } else if (typeCourse == 'Síncrono') {
           //if(inscrito){
 
           //} else {
-            context.push('/sync', extra: title,);
+            context.push('/sync', extra: title);
           //}
         }
       },
