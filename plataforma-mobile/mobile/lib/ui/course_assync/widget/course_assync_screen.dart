@@ -4,16 +4,16 @@ import '../../core/shared/export.dart';
 import '../../core/shared/navigationbar_component.dart';
 
 
-class Sincrono extends StatefulWidget {
-  const Sincrono({super.key , required this.title});
+class Assincrono extends StatefulWidget {
+  const Assincrono({super.key , required this.title});
 
   final String title;
 
   @override
-  State<Sincrono> createState() => _SincronoState();
+  State<Assincrono> createState() => _AssincronoState();
 }
 
-class _SincronoState extends State<Sincrono> {
+class _AssincronoState extends State<Assincrono> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -35,7 +35,7 @@ class _SincronoState extends State<Sincrono> {
                         child: Image.asset('assets/course-flutter.png', fit: BoxFit.cover),
                       ),
                     ),
-                    Text('sincrono'),
+                    Text('assincrono'),
                   ],
                 ),
               ),

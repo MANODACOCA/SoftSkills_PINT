@@ -1,5 +1,8 @@
+import 'package:mobile/ui/course_assync/widget/course_assync_screen.dart';
+import 'package:mobile/ui/course_sync/widget/course_sync_screen.dart';
 import 'package:mobile/ui/forum/widget/forum.dart';
 import 'package:mobile/ui/notification/widget/notifications.dart';
+//import 'package:path/path.dart';
 import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';
@@ -137,6 +140,22 @@ final rotas = GoRouter(
       name: 'coursejoined',
       path: '/coursejoined',
       builder: (context, state) => CourserJoined(),
+    ),
+    GoRoute(
+      name: 'Assync',
+      path: '/assync',
+      builder: (context, state) {
+        final title = state.extra as String;
+        return Assincrono(title: title);
+      },
+    ),
+    GoRoute(
+      name: 'Sync',
+      path: '/sync',
+      builder: (context, state) {
+        final title = state.extra as String;
+        return Sincrono(title: title);
+      },
     )
   ],
 );
