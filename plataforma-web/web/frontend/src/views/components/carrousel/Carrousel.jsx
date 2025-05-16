@@ -1,36 +1,48 @@
 import React from 'react';
-import {Carousel, CarouselItem} from 'react-bootstrap';
+import { Carousel, CarouselItem } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Img1 from '../../../assets/images/logos/comfundo.png';
+import cursos from '../../../assets/images/carrousel/courses.svg';
+import forum from '../../../assets/images/carrousel/forum_resized.png';
 import './Carrousel.css';
 
 
-const MyCarousel = () => {
+const MyCarousel = ({ image, title }) => {
   return (
     <Carousel>
-      <Carousel.Item>
-        <img className="d-block w-100 rounded-4 object-fit-cover carrousel-img" src={Img1} alt="First slide"/>
-        <Carousel.Caption>
-          <h3>First Slide Label</h3>
-          <p>Description for the first slide.</p>
+
+      <Carousel.Item className='bg-dark rounded-4 position-relative overflow-hidden'>
+        <img className="carrousel-img-centered" src={cursos} alt="Slide" />
+        <Carousel.Caption className='carousel-caption overlay-caption text-center'>
+          <h1>Cursos</h1>
+          <p>📚 Descubra nossos cursos e transforme seu futuro hoje!</p>
+          <a href="#" className="btn btn-primary">
+            <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações
+          </a>
         </Carousel.Caption>
       </Carousel.Item>
 
-      <Carousel.Item>
-        <img className="d-block w-100 rounded-4 object-fit-cover carrousel-img" src={Img1} alt="Second slide"/>
-        <Carousel.Caption>
-          <h3>Second Slide Label</h3>
-          <p>Description for the second slide.</p>
+      <Carousel.Item className='bg-dark rounded-4 position-relative overflow-hidden'>
+        <img className="carrousel-img-centered" src={forum} alt="Slide" />
+        <Carousel.Caption className='carousel-caption overlay-caption text-center'>
+          <h1>Forúm</h1>
+          <p>🌐 Vem partilhar o teu conhecimento no nosso forúm!</p>
+          <a href="#" className="btn btn-primary">
+            <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações
+          </a>
         </Carousel.Caption>
       </Carousel.Item>
 
-      <Carousel.Item>
-        <img className="d-block w-100 rounded-4 object-fit-cover carrousel-img" src={Img1} alt="Third slide"/>
-        <Carousel.Caption>
-          <h3>Third Slide Label</h3>
-          <p>Description for the third slide.</p>
+      <Carousel.Item className='bg-dark rounded-4 position-relative overflow-hidden'>
+        <img className="carrousel-img-centered" src={image} alt="Slide" />
+        <Carousel.Caption className='carousel-caption overlay-caption text-center'>
+          <h1>title</h1>
+          <p>🧠 Conhece o curso mais procurado na SoftSkills.</p>
+          <a href="#" className="btn btn-primary">
+            <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações
+          </a>
         </Carousel.Caption>
       </Carousel.Item>
+
     </Carousel>
   );
 };

@@ -1,3 +1,107 @@
-.carrousel-img{
-    max-height: 350px;
+.carrousel-img-centered {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    object-position: center;
+    filter: brightness(0.7);
+}
+
+.overlay-caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 5%;
+}
+
+.carousel-caption {
+    width: 600px;
+    height: 200px;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    color: #fff;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.7);
+}
+
+
+.carousel-caption h1 {
+    color: rgb(255, 255, 255);
+    font-size: 3rem;
+    font-weight: bold;
+}
+
+.carousel-caption p {
+    color: rgb(255, 255, 255);
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.carousel-caption .btn {
+    font-size: 1.1rem;
+    padding: 10px 20px;
+}
+
+/* ======= AJUSTAR TEXTOS A TELAS Médias ======= */
+@media (max-width: 992px) {
+    .carousel-caption {
+        max-width: 60%;
+        bottom: 15%;
+    }
+
+    .carousel-caption h1 {
+        font-size: 2rem;
+    }
+
+    .carousel-caption p {
+        font-size: 1rem;
+    }
+
+    .carousel-caption .btn {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+}
+
+/* ======= AJUSTAR TEXTOS A TELAS pequenas ======= */
+@media (max-width: 768px) {
+    .carousel-caption h1 {
+        font-size: 1.8rem;
+    }
+
+    .carousel-caption p {
+        font-size: 0.9rem;
+    }
+
+    .carousel-caption .btn {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+}
+
+/* ======= AJUSTAR TEXTOS A TELAS muito pequenas ======= */
+@media (max-width: 645px) {
+    .carousel-caption .btn-primary {
+        margin-bottom: 4%;
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-caption h1 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-caption p {
+        font-size: 0.8rem;
+    }
+
+    .carousel-caption .btn {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+    }
 }
