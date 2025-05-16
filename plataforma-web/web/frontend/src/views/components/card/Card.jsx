@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUsers } from 'react-icons/fa';
+import { FaUsers, FaCalendarAlt } from 'react-icons/fa';
 import './Card.css';
 
 const Card = ({ image, title, type, startDate, endDate, courseId, membrosAtual, membrosMax }) => {
@@ -23,11 +23,11 @@ const Card = ({ image, title, type, startDate, endDate, courseId, membrosAtual, 
           </span>
         </div>
         <div className="d-flex justify-content-between align-items-center">
-          <p className="card-text text-muted mb-0">
-            📅 {startDate} - {endDate}
-          </p>
+          <div className="d-flex align-items-center gap-2 text-muted">
+            <FaCalendarAlt /> <span>{startDate} - {endDate}</span>
+          </div>
           {type === 'Síncrono' && (
-            <div className="d-flex align-items-center gap-1 text-muted" >
+            <div className="d-flex align-items-center gap-2 text-muted" >
               <FaUsers />
               <span>{membrosAtual} / {membrosMax}</span>
             </div>

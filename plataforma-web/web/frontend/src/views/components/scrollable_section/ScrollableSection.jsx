@@ -1,13 +1,10 @@
 import React from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Card from '../../components/card/Card';
+import { formatDayMonthYear } from '../shared_functions/FunctionsUtils';
 
 const ScrollableSection = ({ title, courses, scrollRef, onScroll }) => {
     
-    const formatDayMonthYear = (isoDate) => {
-    const date = new Date(isoDate);
-    return date.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' , year: 'numeric'});
-    }
     return (
         <>
             <h1 className="mt-3 ps-3">{title}</h1>

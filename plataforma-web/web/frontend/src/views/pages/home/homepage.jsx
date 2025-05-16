@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import Slide from '../../components/carrousel/Carrousel';
 import Cardhighlight from '../../components/card_highlight/CardHighlight';
 import './HomePage.css';
-import { list_cursos } from '../../../api/cursos_axios';
+import { list_cursos, getCourseDestaqueAssincrono, getCourseDestaqueSincrono } from '../../../api/cursos_axios';
 import ScrollableSection from '../../components/scrollable_section/ScrollableSection';
 
 const HomePage = () => {
@@ -10,6 +10,8 @@ const HomePage = () => {
   const scrollRef1 = useRef(null);
   const scrollRef2 = useRef(null);
   const [courses, setCursos] = useState([]);
+  const [courseSincrono, setCourseSincrono] = useState(null);
+  const [courseAssincrono, setCourseAssincrono] = useState(null);
 
   const scroll = (ref, direction) => {
     if (ref.current) {
@@ -29,8 +31,20 @@ const HomePage = () => {
     }
   }
 
+  const fetchCoursesDestaque = async () => {
+    try{
+      const courseSync = await getCourseDestaqueSincrono();
+      const courseAsync = await getCourseDestaqueAssincrono();
+      setCourseSincrono(courseSync);
+      setCourseAssincrono(courseAsync);
+    } catch(error){
+      console.error('Erro a procurar cursos em destaque:', error);
+    }
+  };
+
   useEffect(() => {
     fetchCursos();
+    fetchCoursesDestaque();
   }, []);
 
   return (
@@ -41,12 +55,12 @@ const HomePage = () => {
       <ScrollableSection title="Cursos mais populares" courses={courses} scrollRef={scrollRef1} onScroll={scroll}></ScrollableSection>
 
       <h1 className="mt-5 ps-3">Curso assíncrono em destaque</h1>
-      <div><Cardhighlight /></div>
+      <div className='px-3'><Cardhighlight course={courseAssincrono}/></div>
 
      <ScrollableSection title="Novidades" courses={courses} scrollRef={scrollRef2} onScroll={scroll}></ScrollableSection>
 
       <h1 className="mt-5 ps-3">Curso síncrono em destaque</h1>
-      <Cardhighlight />
+      <div className='px-3'><Cardhighlight course={courseSincrono}/></div>
     </div>
   );
 };

@@ -31,4 +31,9 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.card-body .text-muted svg {
+  font-size: 20px;
+  vertical-align: middle;
+}
 /* #endregion */

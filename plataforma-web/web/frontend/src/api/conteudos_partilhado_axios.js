@@ -34,7 +34,6 @@ export const create_conteudos_partilhado = async (data) => {
     }
 };
 
-//atualiza filme por id
 export const update_conteudos_partilhado = async (id, data) => {
     try{
         const response = await axios.put(`${API_URL}/update/${id}`, data);
@@ -45,7 +44,6 @@ export const update_conteudos_partilhado = async (id, data) => {
     }
 };
 
-//elimina filme por id
 export const delete_conteudos_partilhado = async (id) => {
     try{
         const response = await axios.delete(`${API_URL}/delete/${id}`);

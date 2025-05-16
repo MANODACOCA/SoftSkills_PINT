@@ -1,35 +1,44 @@
 //Card de destaque que vai ficar na homepage
 import './CardHighlight.css';
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-import Img1 from '../../../assets/images/logos/comfundo.png';
+import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
+import { FaCalendarAlt } from 'react-icons/fa';
 
-const FeaturedCourseCard = ({ image, title, description, startDate, endDate, instructor, instructorImage, courseId }) => {
+
+const FeaturedCourseCard = ({ course }) => {
   const navigate = useNavigate();
 
+  if (!course) return null;
+
   const goToCourse = () => {
-    navigate(`/curso/${courseId}`);
+    navigate(`/curso/${course.id_curso}`);
   };
+
+  const nameFormador = course.nome_formador || "Formador";
+  const imageFormador = course.imagem_utilizador || `https://api.dicebear.com/7.x/initials/svg?seed=${nameFormador}`;
 
   return (
     <div className="card flex-row rounded-4 card-highlight">
-      <img src={Img1} className="rounded-4 highlight-image" alt="imagem curso" />
+      <img src={course.imagem} className="rounded-4 highlight-image" alt="imagem curso" />
       <div className="card-body d-flex flex-column justify-content-between">
         <div>
-          <h4 className="card-title">{'Geração de Videos com Inteligência Artificial'}</h4>
+          <h4 className="card-title">{course.nome_curso}</h4>
           <p className="card-text text-muted fs-4 truncate-text">
-            {'Explore o pontecial da IA generativa para criar videos incriveis! Gere videos em diversos estilos e formatos Explore o pontecial da IA generativa para criar videos incriveis! Gere videos em diversos estilos e formatos Explore o pontecial da IA generativa para criar videos incriveis! Gere videos em diversos estilos e formatos'}</p>
+            {course.descricao_curso || 'Sem descrição'}</p>
           <p className="card-text text-muted mb-0 fs-6">
-            📅 {'10 Dez'} - {'15 Jan'}
+            <FaCalendarAlt className="me-2" />
+            {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
           </p>
-          <div className="d-flex align-items-center mb-2">
-            <img src={Img1} alt="instrutor" className="rounded-circle me-2 avatar" />
-            <span>{'Kevin Gilbert'}</span>
-          </div>
+          {course.tipo === 'sincrono' && (
+            <div className="d-flex align-items-center mb-2">
+              <img src={imageFormador} alt="instrutor" className="rounded-circle me-2 avatar" />
+              <span>{nameFormador}</span>
+            </div>
+          )}
         </div>
         <div className="mt-2">
-          <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse} >Detalhess</button>
+          <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse} >Detalhes</button>
         </div>
       </div>
     </div>

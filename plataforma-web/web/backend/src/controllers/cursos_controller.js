@@ -4,6 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).cursos;
 const controllers = {};
+const cursosService = require('../services/cursos.service');
 
 
 
@@ -69,6 +70,32 @@ controllers.delete = async (req,res)=>{
     }
   }catch(err) {
     res.status(500).json({erro:'Erro ao apagar o/a Curso!',desc: err.message});
+  }
+};
+
+controllers.getDestaqueSincrono = async (req, res) => {
+  try {
+    const curso = await cursosService.getCourseDestaqueSincrono();
+    if (curso) {
+      res.status(200).json(curso);
+    } else {
+      res.status(404).json({ erro: 'Nenhum curso síncrono em destaque encontrado.' });
+    }
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao procurar curso síncrono em destaque', desc: err.message });
+  }
+};
+
+controllers.getDestaqueAssincrono = async (req, res) => {
+  try {
+    const curso = await cursosService.getCourseDestaqueAssincrono();
+    if (curso) {
+      res.status(200).json(curso);
+    } else {
+      res.status(404).json({ erro: 'Nenhum curso assíncrono em destaque encontrado.' });
+    }
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao procurar curso assíncrono em destaque', desc: err.message });
   }
 };
 
