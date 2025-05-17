@@ -18,8 +18,15 @@ sequelize.authenticate()
 
 module.exports = sequelize;*/
 
-const sequelize = new Sequelize('softskills', 'postgres', 'postgres', {
-  host: 'localhost',
-  port: 5432,
-  dialect: 'postgres'
-});
+var Sequelize = require('sequelize');
+const sequelize = new Sequelize(
+'softskills',
+'postgres',
+'postgres',
+{
+host: 'localhost',
+port: '5432',
+dialect: 'postgres'
+}
+);
+module.exports = sequelize;
