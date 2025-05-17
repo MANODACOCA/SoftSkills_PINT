@@ -21,7 +21,7 @@ function App() {
 
  //#region{/*  AQUI COMECA O CONTEUDO DA PAGINA */}
         <Route element={<BaseLayout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
           <Route path="/notificacoes" element={<NotificationPage />} />
           <Route path="/cursos/inscritos" element={<EnrolledCourses />}/>
         </Route>
