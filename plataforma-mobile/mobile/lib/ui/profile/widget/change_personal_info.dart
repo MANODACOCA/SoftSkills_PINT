@@ -272,29 +272,27 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                         showModalBottomSheet(
                                           context: context,
                                           builder: (BuildContext context) {
-                                            return Container(
-                                              child: ListView(
-                                                children: <Widget>[
-                                                  ListTile(
-                                                    leading: Icon(Icons.male),
-                                                    title: Text('Masculino'),
-                                                    onTap: () {
-                                                      selectedGender =
-                                                          'Masculino';
-                                                      context.pop(context);
-                                                    },
-                                                  ),
-                                                  ListTile(
-                                                    leading: Icon(Icons.female),
-                                                    title: Text('Feminino'),
-                                                    onTap: () {
-                                                      selectedGender =
-                                                          'Feminino';
-                                                      context.pop(context);
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
+                                            return ListView(
+                                              children: <Widget>[
+                                                ListTile(
+                                                  leading: Icon(Icons.male),
+                                                  title: Text('Masculino'),
+                                                  onTap: () {
+                                                    selectedGender =
+                                                        'Masculino';
+                                                    context.pop(context);
+                                                  },
+                                                ),
+                                                ListTile(
+                                                  leading: Icon(Icons.female),
+                                                  title: Text('Feminino'),
+                                                  onTap: () {
+                                                    selectedGender =
+                                                        'Feminino';
+                                                    context.pop(context);
+                                                  },
+                                                ),
+                                              ],
                                             );
                                           },
                                         );

@@ -1,0 +1,5 @@
+.img-not{
+    border-radius: 100%;
+    border: solid 1px var(--cor-principal);
+    object-fit: cover;
+}
