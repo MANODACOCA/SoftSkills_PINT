@@ -8,7 +8,7 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
         <div className={`bg-light border-end ${collapsed ? 'collapsed' : ''} d-flex flex-column align-items-start p-3 sidebar`}>
             <div className='d-flex justify-content-between flex-column vh-100 w-100'>
                 <div>
-                    <NavLink to="/" className="nav-link d-flex align-items-center px-2 py-1">
+                    <NavLink to="/home" className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-house-door fs-4 px-2"></i>
                         {!collapsed && 'Home'}
                     </NavLink>

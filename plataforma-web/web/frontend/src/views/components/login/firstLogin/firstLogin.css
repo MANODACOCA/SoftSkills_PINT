@@ -1,0 +1,118 @@
+.login-form-container {
+  width: 100%;
+  padding: 2.5rem;
+  background: #ffffff;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.login-logo {
+  width: 200px;
+  margin-bottom: 1.5rem;
+}
+
+.login-title {
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.login-subtitle {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+}
+
+.login-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.login-button {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+}
+
+.login-button.social {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.login-button.social:hover {
+  background-color: #e4e4e4;
+}
+
+.login-button.primary {
+  background-color: var(--cor-principal);
+  color: #fff;
+  font-weight: 600;
+}
+
+.login-button.primary:hover {
+  background-color:var(--cor-secundaria);
+}
+
+.login-divider {
+  position: relative;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #999;
+  margin: 1.5rem 0;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: "";
+  height: 1px;
+  width: 40%;
+  background: #ddd;
+  position: absolute;
+  top: 50%;
+}
+
+.login-divider::before {
+  left: 0;
+}
+
+.login-divider::after {
+  right: 0;
+}
+
+.login-input {
+  width: 100%;
+  padding: 0.65rem;
+  margin-bottom: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.login-forgot {
+  text-align: right;
+  margin-bottom: 1rem;
+}
+
+.login-forgot a {
+  font-size: 0.85rem;
+  color: var(--cor-principal);
+  text-decoration: none;
+}
+
+.login-forgot a:hover {
+  color: var(--cor-secundaria);
+  text-decoration: underline;
+}
+
+.login-error {
+  color: red;
+  font-size: 0.9rem;
+
+}

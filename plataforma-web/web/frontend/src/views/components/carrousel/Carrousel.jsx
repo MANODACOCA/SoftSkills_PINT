@@ -11,7 +11,7 @@ const MyCarousel = ({ course }) => {
   if (!course) return null;
 
   return (
-    <Carousel>
+    <Carousel fade>
 
       <Carousel.Item className='bg-dark rounded-4 position-relative overflow-hidden'>
         <img className="carrousel-img-centered" src={cursos} alt="Slide" />

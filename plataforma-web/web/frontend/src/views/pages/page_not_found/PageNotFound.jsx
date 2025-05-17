@@ -13,7 +13,7 @@ function NotFoundPage() {
         <p className="text-muted">
           Talvez tenha se perdido, ou o link não esteja a funcionar. Vamos te levar de volta para a página inicial.
         </p>
-        <Link to="/" className="btn btn-primary mt-4">Voltar para Home</Link>
+        <Link to="/home" className="btn btn-primary mt-4">Voltar para Home</Link>
       </div>
     </div>
   );
