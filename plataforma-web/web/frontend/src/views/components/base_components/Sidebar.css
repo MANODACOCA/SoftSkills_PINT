@@ -1,5 +1,6 @@
 /* #region sidebar */
 .sidebar{
+    background-color: #ffff;
     width: 16.6667%; /* valor no css equivalente a col-2 no bootstrap */
     position: fixed;
     top: 80px;

@@ -16,7 +16,7 @@ const BaseLayout = () => {
     };
 
     return (
-        <div className=" d-flex">
+        <div className=" d-flex bg-light">
             
             <Header collapsed={collapsed} toggleSidebar={toggleSidebar} />
             <SideBar collapsed={collapsed} toggleSidebar={toggleSidebar} />

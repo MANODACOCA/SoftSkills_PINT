@@ -10,7 +10,7 @@ const ScrollableSection = ({ title, courses, scrollRef, onScroll }) => {
             <h1 className="mt-3 ps-3">{title}</h1>
             <div className="position-relative px-3">
                 <button
-                    className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click"
+                    className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click border-dark d-flex justify-content-center align-items-center"
                     onClick={() => onScroll(scrollRef, 'left')}>
                     <FaChevronLeft />
                 </button>

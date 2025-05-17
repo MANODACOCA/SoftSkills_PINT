@@ -13,7 +13,7 @@ import {
 
 const Footer = () => {
     return (
-        <footer className="app-fotter bg-light border-top pt-5 pb-4">
+        <footer className="app-fotter border-top pt-5 pb-4">
             <div className="container">
                 <div className="row justify-content-between mb-4">
                     <div className="col-md-3 mb-3 text-center text-md-start">

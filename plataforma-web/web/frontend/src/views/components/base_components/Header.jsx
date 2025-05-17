@@ -27,7 +27,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
     };
 
     return (
-        <header className='w-100 bg-light p-3 d-flex justify-content-between align-items-center gap-4'>
+        <header className='w-100 p-3 d-flex justify-content-between align-items-center gap-4'>
             <div className="d-flex gap-4">
                 <button className="btn btn-outline-secondary mx-2" onClick={toggleSidebar}>
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>

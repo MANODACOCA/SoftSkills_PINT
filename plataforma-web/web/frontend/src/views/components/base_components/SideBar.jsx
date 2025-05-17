@@ -5,7 +5,7 @@ import './Sidebar.css';
 const Sidebar = ({ toggleSidebar, collapsed }) => {
 
     return (
-        <div className={`bg-light border-end ${collapsed ? 'collapsed' : ''} d-flex flex-column align-items-start p-3 sidebar`}>
+        <div className={`border-end ${collapsed ? 'collapsed' : ''} d-flex flex-column align-items-start p-3 sidebar`}>
             <div className='d-flex justify-content-between flex-column vh-100 w-100'>
                 <div>
                     <NavLink to="/home" className="nav-link d-flex align-items-center px-2 py-1">
