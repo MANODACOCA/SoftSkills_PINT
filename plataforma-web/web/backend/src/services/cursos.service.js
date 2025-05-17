@@ -1,6 +1,6 @@
 const { Sequelize, Op } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos } = require('../models/init-models')(sequelize);
+const { cursos, inscricoes } = require('../models/init-models')(sequelize);
 
 // Função para obter o curso síncrono em destaque
 async function getCourseDestaqueSincrono() {
@@ -92,5 +92,42 @@ async function getCourseWithMoreFormandos() {
   return courseMoreFormandos;
 }
 
-module.exports = { getCourseDestaqueSincrono, getCourseDestaqueAssincrono, getCourseWithMoreFormandos };
+async function getEnrolledCoursesForUser(userId) {
+  console.log(userId);
+  try {
+    const enrolledCourses = await inscricoes.findAll({
+      
+      where: { id_formando: userId },
+      include: [
+        {
+          model: cursos,
+          as: 'id_curso_curso',
+          attributes: [
+            'id_curso',
+            'nome_curso',
+            'descricao_curso',
+            'data_inicio_curso',
+            'data_fim_curso',
+            'imagem',
+          ]
+        }
+      ]
+    });
+
+    if (!enrolledCourses || enrolledCourses.length === 0) {
+      return null; 
+    }
+
+    return enrolledCourses; 
+  } catch (error) {
+    console.error('Erro ao buscar cursos inscritos para o usuário:', error);
+    throw error; 
+  }
+}
+
+module.exports = { 
+  getCourseDestaqueSincrono, 
+  getCourseDestaqueAssincrono, 
+  getCourseWithMoreFormandos, 
+  getEnrolledCoursesForUser };
 

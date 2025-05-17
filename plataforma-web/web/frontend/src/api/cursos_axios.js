@@ -84,3 +84,14 @@ export const getCousesWithMoreFormandos = async () => {
     }
 };
 
+export const getEnrolledCourses = async (userId) => {
+    try{
+        const response = await axios.get(`${API_URL}/users/${userId}/enrolled-courses`);
+        return response.data;
+    } catch(error){
+        console.error('Erro ao procurar cursos inscritos!');
+        throw error;
+    }
+};
+
+

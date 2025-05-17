@@ -112,4 +112,20 @@ controllers.getDestaqueCourses = async (req, res) => {
   }
 };
 
+controllers.getEnrolledCourses = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const enrolledCourses = await cursosService.getEnrolledCoursesForUser(userId);
+    
+    if (enrolledCourses && enrolledCourses.length > 0) {
+    
+      res.status(200).json(enrolledCourses); 
+    } else {
+      res.status(404).json({ erro: 'Nenhum curso encontrado para este utilizador' });
+    }
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao procurar cursos inscritos.', desc: err.message });
+  }
+};
+
 module.exports = controllers;

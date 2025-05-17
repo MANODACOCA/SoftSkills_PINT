@@ -13,7 +13,7 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
                         {!collapsed && 'Home'}
                     </NavLink>
                     <hr />
-                    <NavLink to="/cursos" className="nav-link d-flex align-items-center px-2 py-1">
+                    <NavLink to="/cursos" end className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-mortarboard fs-4 px-2"></i>
                         {!collapsed && 'Cursos'}
                     </NavLink>
