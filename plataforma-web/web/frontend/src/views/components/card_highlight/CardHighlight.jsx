@@ -43,7 +43,7 @@ const FeaturedCourseCard = ({
               {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
             </p>
             <p className="card-text text-muted mb-3 fs-6 fst-italic fw-bold">
-              Tipologia: {course.tipo === 'sincrono' ? 'Sincrono' : 'Assincrono'}
+              Tipologia: {course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono'}
             </p>
           </div>
 
