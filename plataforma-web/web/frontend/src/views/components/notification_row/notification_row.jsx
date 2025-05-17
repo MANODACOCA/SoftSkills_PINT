@@ -13,7 +13,6 @@ const NotificationRow = ({notification}) => {
                     <p>Erro na tabela que contem uma falha de campo para o conteudo da notificaçao</p>
                 </div>
             </div>
-            
             <div>
                 {daysMonthsYears(notification.data_hora_notificacaocurso)}
                 <div className="d-flex justify-content-center p-2">
