@@ -50,6 +50,7 @@ dependencies:
   get_storage_pro: ^0.1.9
   shared_preferences: ^2.5.3
   device_info_plus: ^11.4.0
+  crypto:
   
 
 dev_dependencies:
