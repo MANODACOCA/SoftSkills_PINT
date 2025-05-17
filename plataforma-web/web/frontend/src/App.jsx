@@ -10,6 +10,8 @@ import NotFoundPage from './views/pages/page_not_found/PageNotFound';
 import HomePage from './views/pages/home/homepage';
 import EnrolledCourses from './views/pages/enrolled_courses/EnrolledCourses';
 import NotificationPage from './views/pages/notifications/notificationsPage';
+import CompletedCourses from './views/pages/completed_courses/CompletedCourses';
+import FavoriteCourses from './views/pages/favorite_courses/FavoriteCourses';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/notificacoes" element={<NotificationPage />} />
           <Route path="/cursos/inscritos" element={<EnrolledCourses />}/>
+          <Route path="/cursos/terminados" element={<CompletedCourses />}/>
+          <Route path="/cursos/favoritos" element={<FavoriteCourses />}/>
         </Route>
 //#endregion{/*  AQUI COMECA O CONTEUDO DA PAGINA */}
 

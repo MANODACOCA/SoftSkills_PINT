@@ -32,6 +32,14 @@
   text-overflow: ellipsis;
 }
 
-/* #endregion */
-/* #region card */
+.heart-icon{
+  font-size: 28px;
+  color: red;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.heart-icon:hover {
+  transform: scale(1.1);
+}
+
 /* #endregion */

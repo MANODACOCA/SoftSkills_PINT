@@ -96,3 +96,23 @@ export const getEnrolledCourses = async (userId, tipologia = 'todos') => {
     }
 };
 
+export const getCompletedCourses = async (userId) => {
+    try{
+        const response= await axios.get(`${API_URL}/users/${userId}/completed-courses`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao procurar cursos terminados!');
+        throw error;
+    }
+};
+
+
+export const getFavoriteCourses = async (userId) => {
+    try{
+        const response= await axios.get(`${API_URL}/users/${userId}/completed-courses`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao procurar cursos terminados!');
+        throw error;
+    }
+};
