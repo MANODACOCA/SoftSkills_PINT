@@ -92,36 +92,42 @@ async function getCourseWithMoreFormandos() {
   return courseMoreFormandos;
 }
 
-async function getEnrolledCoursesForUser(userId) {
-  console.log(userId);
+async function getEnrolledCoursesForUser(userId, tipologia = null) {
   try {
-    const enrolledCourses = await inscricoes.findAll({
-      
-      where: { id_formando: userId },
-      include: [
-        {
-          model: cursos,
-          as: 'id_curso_curso',
-          attributes: [
-            'id_curso',
-            'nome_curso',
-            'descricao_curso',
-            'data_inicio_curso',
-            'data_fim_curso',
-            'imagem',
-          ]
-        }
+    const includeFilter = {
+      model: cursos,
+      as: 'id_curso_curso',
+      attributes: [
+        'id_curso',
+        'nome_curso',
+        'descricao_curso',
+        'data_inicio_curso',
+        'data_fim_curso',
+        'imagem',
+        'issincrono',
+        'isassincrono'
       ]
+    };
+
+    if (tipologia === 'sincrono') {
+      includeFilter.where = { issincrono: true };
+    } else if (tipologia === 'assincrono') {
+      includeFilter.where = { isassincrono: true };
+    }
+
+    const enrolledCourses = await inscricoes.findAll({
+      where: { id_formando: userId },
+      include: [includeFilter]
     });
 
     if (!enrolledCourses || enrolledCourses.length === 0) {
-      return null; 
+      return [];
     }
 
-    return enrolledCourses; 
+    return enrolledCourses.filter(c => c.id_curso_curso); 
   } catch (error) {
-    console.error('Erro ao buscar cursos inscritos para o usuário:', error);
-    throw error; 
+    console.error('Erro ao encontrar cursos inscritos para o utilizador:', error);
+    throw error;
   }
 }
 
