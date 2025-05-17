@@ -5,42 +5,47 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 const Forum = () => {
-  const [conteudopartilhado, setconteudopartilhado] = useState([]);
+  const [conteudospartilhados, setConteudosPartilhados] = useState([]);
 
-   useEffect(() => {
-      loadConteudoPartilhado();
-    }, []);
-  
-    const loadConteudoPartilhado = async () => {
-      try {
-        const res = await axios.get("http://localhost:3000/conteudos_partilhado/list");
-        if (res.data.success) {
-          setconteudopartilhado(res.data.data);
-        } else {
-          alert("Erro ao carregar Conteúdos Partilhados!");
-        }
-      } catch (error) {
-        alert("Erro: " + error.message);
-      }
-    };
+  useEffect(() => {
+    loadConteudoPartilhado();
+  }, []);
 
-    return (
+  const loadConteudoPartilhado = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/conteudos_partilhado/list");
+      // Considerando que a resposta é um array direto (como mostraste)
+      setConteudosPartilhados(res.data);
+    } catch (error) {
+      alert("Erro ao carregar conteúdos: " + error.message);
+    }
+  };
+
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString("pt-PT", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  };
+
+  return (
     <div className="container mt-4">
       <h2 className="mb-4">Fórum de Cursos</h2>
       <div className="row row-cols-1 g-4">
-        {conteudopartilhado.map((conteudopartilhado) => (
-          <div key={conteudopartilhado.id_conteudos_partilhado} className="col">
+        {conteudospartilhados.map((conteudospartilhado) => (
+          <div key={conteudospartilhado.id_conteudos_partilhado} className="col">
             <div className="card h-100 flex-row shadow-sm">
-              <img
-                src={conteudopartilhado.image}
-                alt="Imagem do curso"
-                className="img-fluid"
-                style={{ width: '250px', objectFit: 'cover' }}
-              />
               <div className="card-body d-flex flex-column justify-content-between">
                 <div>
-                  <h5 className="card-title">{conteudopartilhado.topico.nome_topico}</h5>
-                  <p className="card-text">{conteudopartilhado.descricao_cp}</p>
+                  <h5 className="card-title">Tópico #{conteudospartilhado.id_topico}</h5>
+                  <p className="card-text">{conteudospartilhado.descricao_cp}</p>
+                  <p className="card-text">
+                    <small className="text-muted">
+                      Criado em: {formatDate(conteudospartilhado.data_criacao_cp)}
+                    </small>
+                  </p>
                 </div>
                 <div className="text-end">
                   <button className="btn btn-primary">Participar</button>
