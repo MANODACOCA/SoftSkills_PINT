@@ -38,6 +38,7 @@ class _AssincronoState extends State<Assincrono> {
                     Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),
                     Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),
                     Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),
+                    Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),Text('assincrono'),
                   ],
                 ),
               ),

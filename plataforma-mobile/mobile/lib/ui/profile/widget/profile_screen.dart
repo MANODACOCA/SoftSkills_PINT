@@ -61,7 +61,7 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     Text(
-                      "Emai do Utilizador",
+                      "Email do Utilizador",
                       style: TextStyle(fontSize: 13, color: Colors.grey),
                     ),
                   ],
