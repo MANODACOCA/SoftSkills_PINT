@@ -13,6 +13,7 @@ import NotificationPage from './views/pages/notifications/notificationsPage';
 import Forum from './views/pages/forum/forum';
 import CompletedCourses from './views/pages/completed_courses/CompletedCourses';
 import FavoriteCourses from './views/pages/favorite_courses/FavoriteCourses';
+import CursosPage from './views/pages/courses/CursosPage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/notificacoes" element={<NotificationPage />} />
           <Route path="/cursos/inscritos" element={<EnrolledCourses />}/>
+          <Route path="/cursos" element={<CursosPage/>}/>
           <Route path="/cursos/terminados" element={<CompletedCourses />}/>
           <Route path="/cursos/favoritos" element={<FavoriteCourses />}/>
           <Route path="/forum" element={<Forum />}/>
