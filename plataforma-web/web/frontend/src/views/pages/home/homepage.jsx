@@ -40,7 +40,6 @@ const HomePage = () => {
       setCourseSincrono(courseSync);
       setCourseAssincrono(courseAsync);
       setTopCourses(topCourses);
-      console.log(topCourses);
     } catch(error){
       console.error('Erro a procurar cursos em destaque:', error);
     }
