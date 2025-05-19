@@ -1,6 +1,7 @@
 import React from 'react';
+import { Outlet, useLocation, useNavigate, NavLink } from "react-router-dom";
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
-import './login.css'
+import './login_basePage.css'
 
 //slide images
 import slide1 from '../../../assets/images/carrousel-login/1.jpg';
@@ -9,7 +10,7 @@ import slide3 from '../../../assets/images/carrousel-login/3.jpg';
 
 
 //componets
-import FirstLogin from '../../components/login/firstLogin/firstLogin'
+import FirstLogin from '../../components/login_comp/login/Login'
 
 const LoginPage = () => {
     const slides = [
@@ -35,7 +36,7 @@ const LoginPage = () => {
                     </Carousel>
                 </Col>
                 <Col md={6} className="d-flex flex-column justify-content-center align-items-center">
-                   <FirstLogin/>
+                   <Outlet/>
                 </Col>
             </Row>
         </Container>

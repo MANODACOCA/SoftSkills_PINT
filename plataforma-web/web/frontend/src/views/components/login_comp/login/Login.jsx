@@ -1,7 +1,8 @@
-// src/components/FirstLogin.jsx
 import React, { useState } from 'react';
-import './firstLogin.css';
+import { useNavigate, Link } from 'react-router-dom';
+import './Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
+import { PiMicrosoftOutlookLogoBold } from "react-icons/pi";
 
 const providers = [
     { id: 'outlook', name: 'Outlook' },
@@ -9,6 +10,8 @@ const providers = [
 ];
 
 const FirstLogin = () => {
+    const navigate = useNavigate();
+
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,23 +19,35 @@ const FirstLogin = () => {
     const handleProviderSignIn = (provider) => {
         setError('');
 
-        setTimeout(() => {
-            if (provider.id === 'credentials') {
-                if (!email || !password) {
-                    if (!email && !password) {
-                        setError('O e-mail e a password são obrigatórios.');
-                    } else if (!email) {
-                        setError('Por favor, preencha o e-mail.');
-                    } else {
-                        setError('Por favor, preencha a password.');
-                    }
-                    return;
+        if (provider.id === 'credentials') {
+            if (!email || !password) {
+                if (!email && !password) {
+                    setError('O e-mail e a password são campos obrigatórios.');
+                } else if (!email) {
+                    setError('Por favor, preencha o campo de e-mail.');
+                } else {
+                    setError('Por favor, preencha o campo da password.');
                 }
-                console.log(`Signing in with Email: ${email}`);
-            } else {
-                console.log(`Signing in with ${provider.name}`);
+                return;
             }
-        }, 500);
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                setError('Por favor, insira um email válido.');
+                return;
+            }
+
+            setTimeout(() => {
+                console.log(`Signing in with Email: ${email}`);
+                navigate('/login/new-password');
+            }, 500);
+        } else {//SSO
+            setTimeout(() => {
+                console.log(`Signing in with ${provider.name}`);
+                navigate('/home');
+            }, 500);
+        }
+
     };
 
     return (
@@ -46,16 +61,16 @@ const FirstLogin = () => {
                     provider.id !== 'credentials' ? (
                         <button
                             key={provider.id}
-                            className="login-button social"
+                            className="login-button social outlook"
                             onClick={() => handleProviderSignIn(provider)}
                         >
-                            Login com {provider.name}
+                            <PiMicrosoftOutlookLogoBold />  Login com {provider.name}
                         </button>
                     ) : null
                 )}
             </div>
 
-            <div className="login-divider">ou use o seu email</div>
+            <div className="login-divider"><p>ou use o seu email</p></div>
 
             <input
                 type="email"
@@ -73,11 +88,13 @@ const FirstLogin = () => {
                 className="login-input"
             />
 
-            <div className="login-forgot">
-                <a href="#">Esqueceu-se da sua password?</a>
+            <div className="login-forgot d-flex justify-content-between text-start">
+                <Link to="/login/esqueceu-password">Esqueceu-se da sua palavra-passe?</Link>
+                {error && <p className="login-error text-end">{error}</p>}
             </div>
             <div className="login-buttons">
                 <button
+                    type="button"
                     className="login-button primary"
                     onClick={() =>
                         handleProviderSignIn({ id: 'credentials', name: 'Email and Password' })
@@ -85,15 +102,14 @@ const FirstLogin = () => {
                 >
                     Login
                 </button>
-                     <button
+                <button
+                    type="button"
+                     onClick={() => navigate('nova-conta')}
                     className="login-button social"
                 >
                     Criar Nova Conta
                 </button>
             </div>
-
-
-            {error && <p className="login-error text-end">{error}</p>}
         </div>
     );
 };
