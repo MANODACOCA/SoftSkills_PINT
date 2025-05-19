@@ -63,7 +63,7 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                                     Spacer(),
                                     IconButton(
                                       onPressed: () {
-                                        context.go('/changePassword');
+                                        context.push('/changeinfopass');
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward_ios,

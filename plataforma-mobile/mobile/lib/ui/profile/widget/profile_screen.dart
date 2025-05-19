@@ -192,7 +192,9 @@ class _ProfileState extends State<Profile> {
                           Text('Cursos terminados'),
                           Spacer(),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.push('/endedcourses');
+                            },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
                         ],
