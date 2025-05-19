@@ -55,3 +55,14 @@ export const delete_notificacoes_curso = async (id) => {
         throw error;
     }
 };
+
+//encontra o imagem e nome de curso por id
+export const find_notificacao_curso = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/find_notificacoes_curso`)
+        return response.data
+    } catch (error) {
+        console.error('Erro ao encontrar Notificacao de Curso!');
+        throw error;
+    }
+}
