@@ -564,12 +564,12 @@ class Basedados {
   Future<void> inserirOcorrenciaEdicao({
   required int nrOcorrencia,
   required int idCurso,
-  required String data_ult_ocorrencia,
+  required String dataUltOcorrencia,
   }) async {
   Database db = await basededados;
   await db.rawInsert('''
     INSERT INTO OCORRENCIAS_EDICOES (
-      NR_OCORRENCIA, ID_CURSO, DATA_ULT_OCORRENCIA) VALUES ("$nrOcorrencia", "$idCurso", "$data_ult_ocorrencia")
+      NR_OCORRENCIA, ID_CURSO, DATA_ULT_OCORRENCIA) VALUES ("$nrOcorrencia", "$idCurso", "$dataUltOcorrencia")
   ''');
   }
 

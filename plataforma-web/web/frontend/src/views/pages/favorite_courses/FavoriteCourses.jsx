@@ -11,8 +11,7 @@ const FavoriteCourses = () => {
     const fetchFavoriteCourses = async () => {
         try {
             const data = await getFavoriteCourses(userId);
-
-            setCourses(formatted);
+            setCourses(data);
         } catch (error) {
             console.error('Erro ao procurar cursos favoritos:', error);
             setCourses([]);
@@ -51,11 +50,11 @@ const FavoriteCourses = () => {
                 </select>
             </div>
 
-            {courses.length === 0 ? (
+            {filteredCourses.length === 0 ? (
                 <p>Você ainda não adicionou cursos aos favoritos.</p>
             ) : (
                 <div className="course-list">
-                    {courses.map(course => (
+                    {filteredCourses.map(course => (
                         <FeaturedCourseCard
                             key={`${userId}-${course.id_curso_curso.id_curso}`}
                             course={course.id_curso_curso}
