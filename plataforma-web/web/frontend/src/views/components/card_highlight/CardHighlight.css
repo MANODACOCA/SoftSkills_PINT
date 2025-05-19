@@ -42,4 +42,9 @@
   transform: scale(1.1);
 }
 
+.custom-badge {
+  background-color: var(--cor-principal); 
+  color: white;
+}
+
 /* #endregion */

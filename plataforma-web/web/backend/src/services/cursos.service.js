@@ -1,6 +1,6 @@
 const { Sequelize, Op } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, inscricoes } = require('../models/init-models')(sequelize);
+const { cursos, inscricoes, resultados } = require('../models/init-models')(sequelize);
 
 // Função para obter o curso síncrono em destaque
 async function getCourseDestaqueSincrono() {
@@ -131,9 +131,75 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
   }
 }
 
+async function getCompleteCoursesFromUser(userId) {
+  try {
+    const completedCourses = await inscricoes.findAll({
+      where: { id_formando: userId },
+      include: [
+        {
+          model: cursos,
+          as: 'id_curso_curso',
+          attributes: [
+            'id_curso',
+            'nome_curso',
+            'descricao_curso',
+            'data_inicio_curso',
+            'data_fim_curso',
+            'imagem',
+            'issincrono',
+            'isassincrono'
+          ],
+          where: {
+            data_fim_curso: {
+              [Op.lt]: new Date() 
+            }
+          }
+        }
+      ]
+    });
+
+    const formattedCourses = await Promise.all(
+      completedCourses.map(async (inscricao) => {
+        const curso = inscricao.id_curso_curso;
+
+        const tipo = curso.issincrono ? 'sincrono' : curso.isassincrono ? 'assincrono' : 'outro';
+
+        let notaFinal = null;
+        if (curso.issincrono) {
+          const resultado = await resultados.findOne({
+            where: {
+              id_formando: userId,
+              id_curso_sincrono: curso.id_curso
+            }
+          });
+          notaFinal = resultado ? resultado.resul : null;
+        }
+
+        return {
+          id_curso: curso.id_curso,
+          nome_curso: curso.nome_curso,
+          descricao_curso: curso.descricao_curso,
+          data_inicio_curso: curso.data_inicio_curso,
+          data_fim_curso: curso.data_fim_curso,
+          imagem: curso.imagem,
+          tipo,
+          nota_final: notaFinal,
+          concluido: true 
+        };
+      })
+    );
+
+    return formattedCourses;
+  } catch (error) {
+    console.error('Erro ao procurar cursos terminados para o utilizador:', error);
+    throw error;
+  }
+}
+
 module.exports = { 
   getCourseDestaqueSincrono, 
   getCourseDestaqueAssincrono, 
   getCourseWithMoreFormandos, 
-  getEnrolledCoursesForUser };
+  getEnrolledCoursesForUser,
+  getCompleteCoursesFromUser };
 

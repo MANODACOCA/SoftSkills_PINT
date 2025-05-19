@@ -89,15 +89,15 @@ const FeaturedCourseCard = ({
     const avaliado = typeof notaFinal === 'number';
 
     return (
-      <div className="card flex-row rounded-4 card-highlight evaluation-card p-3">
-        <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" style={{ width: '180px', height: 'auto', objectFit: 'cover' }} />
+      <div className="card flex-row rounded-4 card-highlight evaluation-card">
+        <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso"/>
 
         <div className="card-body d-flex flex-column justify-content-between w-100">
           <div className="d-flex justify-content-between align-items-start">
             <h4 className="card-title mb-2">{course.nome_curso}</h4>
-            <span className={`badge bg-${course.tipo === 'sincrono' ? 'primary' : 'secondary'}`}>
-              {tipoBadge}
-            </span>
+              <span className="badge rounded-pill px-3 py-2 no-pointer custom-badge">
+                {tipoBadge}
+              </span>
           </div>
 
           <div className="d-flex justify-content-between align-items-center text-muted mb-2">
@@ -131,22 +131,25 @@ const FeaturedCourseCard = ({
     const diffTime = endDate - today;
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     const showWarning = course.tipo === 'assincrono' && diffDays <= 30 && diffDays > 0;
+    const tipoBadge = course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono';
 
     return (
       <div className="card flex-row rounded-4 card-highlight enrolled-card">
         <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" />
-        <div className="card-body d-flex flex-column justify-content-between">
-          <div>
-            <h4 className="card-title">{course.nome_curso}</h4>
+        <div className="card-body d-flex flex-column justify-content-between w-100">
+        <div className="d-flex justify-content-between align-items-start">
+          <h4 className="card-title mb-2">{course.nome_curso}</h4>
+          <span className="badge rounded-pill px-3 py-2 no-pointer custom-badge">
+            {tipoBadge}
+          </span>
+        </div>
 
-            <p className="card-text text-muted mb-1 fs-6 d-flex align-items-center">
-              <FaCalendarAlt className="me-2" />
-              {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
-            </p>
-            <p className="card-text text-muted mb-3 fs-6 fst-italic fw-bold">
-              Tipologia: {course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono'}
-            </p>
-          </div>
+        <div className="d-flex justify-content-between align-items-center text-muted mb-2">
+          <p className="mb-0">
+            <FaCalendarAlt className="me-2" />
+            {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
+          </p>
+        </div>
 
           <div className="d-flex justify-content-between align-items-center mt-3">
             <p className={`mb-0 me-auto ${showWarning ? 'text-danger d-flex align-items-center' : 'text-success'}`}>

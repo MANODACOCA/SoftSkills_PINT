@@ -11,7 +11,7 @@ const CompletedCourses = () => {
     const fetchCompletedCourses = async () => {
         try {
             const data = await getCompletedCourses(userId);
-            setCourses(formatted);
+            setCourses(data);
         } catch (error) {
             console.error('Erro ao encontrar cursos terminados:', error);
             setCourses([]);
@@ -41,14 +41,14 @@ const CompletedCourses = () => {
                 </select>
             </div>
 
-            {courses.length === 0 ? (
+            {filteredCourses.length === 0 ? (
                 <p>Você ainda não terminou nenhum curso.</p>
             ) : (
                 <div className="course-list">
-                    {courses.map(course => (
+                    {filteredCourses.map(course => (
                         <FeaturedCourseCard
-                            key={`${userId}-${course.id_curso_curso.id_curso}`}
-                            course={course.id_curso_curso}
+                            key={`${userId}-${course.id_curso}`}
+                            course={course}
                             showDescription={false}
                             showFormador={false}
                             variant="evaluation"

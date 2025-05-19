@@ -106,13 +106,13 @@ export const getCompletedCourses = async (userId) => {
     }
 };
 
-
+//POR ACABAR!!! FALTA TABELA FAVORITOS
 export const getFavoriteCourses = async (userId) => {
     try{
-        const response= await axios.get(`${API_URL}/users/${userId}/completed-courses`);
+        const response = await axios.get(`${API_URL}/users/${userId}/favorite-courses`);
         return response.data;
-    } catch (error) {
-        console.error('Erro ao procurar cursos terminados!');
-        throw error;
+    } catch(error) {
+        console.error('Erro ao procurar cursos favoritos!');
+        throw error;        
     }
-};
+}
