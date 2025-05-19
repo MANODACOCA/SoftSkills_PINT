@@ -2,6 +2,7 @@
 
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
+const { getNotificationOfCourse } = require("../services/notificacoes_course.service");
 const model = initModels(sequelize).notificacoes_curso;
 const controllers = {};
 
@@ -71,5 +72,14 @@ controllers.delete = async (req,res)=>{
     res.status(500).json({erro:'Erro ao apagar o/a Notificacao de Curso!',desc: err.message});
   }
 };
+
+controllers.getCursoNotificationsController = async (req,res)=>{
+  try {
+    const cursos = await getNotificationOfCourse();
+    res.status(200).json(cursos); 
+  } catch(error) {
+    res.status(500).json({erro:'Erro ao obter notificaçao'});
+  }
+}
 
 module.exports = controllers;

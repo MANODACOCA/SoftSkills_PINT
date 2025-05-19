@@ -55,3 +55,14 @@ export const delete_notificacoes_post = async (id) => {
         throw error;
     }
 };
+
+//encontra o imagem e nome de post por id
+export const find_notificacao_post = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/find_notificacoes_post`)
+        return response.data
+    } catch (error) {
+        console.error('Erro ao encontrar Notificacao de post!');
+        throw error;
+    }
+}
