@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import logo from '../../../assets/images/logos/semfundo3.png';
 import './Header.css';
 import { IoIosArrowForward, IoIosFlag } from "react-icons/io";
@@ -32,7 +33,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
                 <button className="btn btn-outline-secondary mx-2" onClick={toggleSidebar}>
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
                 </button>
-                <img src={logo} alt="logo softskills" height={45} />
+                <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
 
             <div className="input-group" style={{ maxWidth: '500px' }}>
