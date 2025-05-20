@@ -24,6 +24,11 @@ import '../ui/login/widget/create_password.dart';
 import '../ui/login/widget/confirm_to_change_pass.dart';
 import '../ui/login/widget/change_forgot_pass.dart';
 import '../ui/profile/widget/courser_joined.dart';
+import '../ui/profile/widget/info_change_pass.dart';
+import '../ui/profile/widget/ended_courses.dart';
+import '../ui/profile/widget/rated_courses.dart';
+import '../ui/profile/widget/unrated.dart';
+import '../ui/profile/widget/gerir_notification.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -132,7 +137,7 @@ final rotas = GoRouter(
       builder: (context, state) => CreatePassword(),
     ),
     GoRoute(
-      name:'changeforgotpass',
+      name: 'changeforgotpass',
       path: '/changeforgotpass',
       builder: (context, state) => ChangePasswordForget(),
     ),
@@ -156,6 +161,31 @@ final rotas = GoRouter(
         final title = state.extra as String;
         return Sincrono(title: title);
       },
+    ),
+    GoRoute(
+      name: 'changeinfopass',
+      path: '/changeinfopass',
+      builder: (context, state) => ChangeInfoPassword(),
+    ),
+    GoRoute(
+      name: 'endedcourses',
+      path: '/endedcourses',
+      builder: (context, state) => EndedCourses(),
+    ),
+    GoRoute(
+      name: 'ratedcourses',
+      path: '/ratedcourses',
+      builder: (context, state) => RateCourses(),
+    ),
+    GoRoute(
+      name: 'unratedcourses',
+      path: '/unratedcourses',
+      builder: (context, state) => UnratedCourses(),
+    ),
+    GoRoute(
+      name: 'gerirnotification',
+      path: '/gerirnotification',
+      builder: (context, state) => GerirNotification(),
     )
   ],
 );
