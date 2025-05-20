@@ -1,4 +1,4 @@
-require('dotenv').config();
+/*require('dotenv').config();
 const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
@@ -16,9 +16,9 @@ sequelize.authenticate()
     .then(()=> console.log('Conexão com base de dados realizada com sucesso!'))
     .catch(error=> console.log('Erro ao conectar com base de dados:', error));
 
-module.exports = sequelize;
+module.exports = sequelize;*/
 
-/* const { Sequelize } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 // Configuração direta (substitua com seus valores reais)
 const sequelize = new Sequelize(
@@ -41,4 +41,4 @@ sequelize.authenticate()
   .then(() => console.log('✅ Conectado ao PostgreSQL com sucesso'))
   .catch(err => console.error('❌ Falha na conexão:', err));
 
-module.exports = sequelize; */
+module.exports = sequelize;
