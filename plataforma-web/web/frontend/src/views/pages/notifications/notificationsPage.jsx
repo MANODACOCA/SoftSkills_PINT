@@ -5,9 +5,9 @@ import { delete_notificacoes_post, find_notificacao_post, list_notificacoes_post
 
 
 const NotificationPage = () => {
-    const [not_cursos, setNotCursos] = useState([]);
-    const [not_post, setNotPost] = useState([]);
     const [notificacoes, setNotificacoes] = useState([]);
+    const [tipoFiltro, setTipoFiltro] = useState('todas');
+    const [ordenacao, setOrdenacao] = useState('recente');
 
     const fetchAllNotifications = async () => {
         try {
@@ -17,7 +17,7 @@ const NotificationPage = () => {
             const cursosComTipo = cursos.map(n => ({
                 ...n,
                 tipo: 'curso',
-                id: n.id_notificacao_curso
+                id: n.id_notificacao_cursos
             }));
 
             const postsComTipo = posts.map(n => ({
@@ -40,7 +40,7 @@ const NotificationPage = () => {
         const confirm = window.confirm('Tem a certeza que pretende eleminar');
 
         if (!confirm) return;
-        console.log(id);
+        console.log("Tentando eliminar:", id, tipo);
         try {
             if (tipo == 'curso') {
                 await delete_notificacoes_curso(id);
@@ -55,34 +55,51 @@ const NotificationPage = () => {
         }
     }
 
+    const  getNotificacaoFiltradas = () => {
+        let filtradas = [...notificacoes];
+
+        if (tipoFiltro != 'todas') {
+            filtradas = filtradas.filter(n => n.tipo == tipoFiltro);
+        }
+        
+        filtradas.sort((a,b) => {
+            const dataA = new Date(a.data_hora_notificacaocurso || a.data_hora_notificacaocp);
+            const dataB = new Date(b.data_hora_notificacaocurso || b.data_hora_notificacaocp);
+
+            if(ordenacao == 'antigo') return dataA - dataB;
+            return dataB - dataA;
+        });
+
+        return filtradas;
+    }
+
     useEffect(() => {
         fetchAllNotifications();
     }, []);
 
     return (
-        <div className='p-4'>
-            <div className='d-flex justify-content-between mb-5'>
+        <div className='m-2'>
+            <div className='d-flex justify-content-between mb-2'>
                 <h1>Notificações</h1>
-                <div className='d-flex gap-4 w-25'>
-                    <div className="d-flex align-items-center gap-1 w-50">
+            </div>
+            <div className='d-flex mb-5 justify-content-between'>
+                    <div className="d-flex align-items-center gap-1 filtro">
                         <label htmlFor="">Tipo:</label>
-                        <select name="" id="" className="form-select w-100">
-                            <option value="">Curso</option>
-                            <option value="">Forum</option>
+                        <select name="filtra" id="filtra" className="form-select w-100" value={tipoFiltro} onChange={(e) => setTipoFiltro(e.target.value)}>
+                            <option value="todas">Todas</option>
+                            <option value="curso">Curso</option>
+                            <option value="post">Forum</option>
                         </select>
                     </div>
-                    <div className="d-flex align-items-center gap-1 w-50">
+                    <div className="d-flex align-items-center gap-1 filtro">
                         <label htmlFor="">Ordenar:</label>
-                        <select name="" id="" className="form-select w-100">
-                            <option value="">Mais Recente</option>
-                            <option value="">Mais Antigas</option>
-                            <option value="">Curso</option>
-                            <option value="">Forum</option>
+                        <select name="ordena" id="ordena" className="form-select w-100" value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)}>
+                            <option value="recente">Mais Recente</option>
+                            <option value="antigo">Mais Antigas</option>
                         </select>
                     </div>
                 </div>
-            </div>
-            {notificacoes.map((notification, index) => (
+            {getNotificacaoFiltradas().map((notification, index) => (
                 <div key={index}>
                     <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id, notification.tipo)} />
                     <hr />

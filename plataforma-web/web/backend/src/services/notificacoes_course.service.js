@@ -20,6 +20,7 @@ async function getNotificationOfCourse() {
 
     return notifications.map(n => {
       const notif = n.toJSON();
+      notif.id_notificacao_cursos = n.id_notificacao_cursos;
       notif.curso = cursosMap[n.id_curso] || null;
       return notif;
     });
