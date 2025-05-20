@@ -28,6 +28,7 @@ import '../ui/profile/widget/info_change_pass.dart';
 import '../ui/profile/widget/ended_courses.dart';
 import '../ui/profile/widget/rated_courses.dart';
 import '../ui/profile/widget/unrated.dart';
+import '../ui/profile/widget/gerir_notification.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -180,6 +181,11 @@ final rotas = GoRouter(
       name: 'unratedcourses',
       path: '/unratedcourses',
       builder: (context, state) => UnratedCourses(),
+    ),
+    GoRoute(
+      name: 'gerirnotification',
+      path: '/gerirnotification',
+      builder: (context, state) => GerirNotification(),
     )
   ],
 );

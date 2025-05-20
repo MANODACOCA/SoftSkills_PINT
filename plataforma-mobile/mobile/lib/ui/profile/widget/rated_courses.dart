@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 
 class RateCourses extends StatefulWidget {
@@ -16,10 +17,10 @@ class _RateCoursesState extends State<RateCourses> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context);
+            context.pop();
           },
         ),
-        title: Text("Avaliar cursos", style: TextStyle(color: Colors.white)),
+        title: Text("Cursos por avaliar", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),
