@@ -14,8 +14,17 @@ const NotificationPage = () => {
             const cursos = await find_notificacao_curso();
             const posts = await find_notificacao_post();
 
-            const cursosComTipo = cursos.map(n => ({ ...n, tipo: 'curso' }));
-            const postsComTipo = posts.map(n => ({ ...n, tipo: 'post' }));
+            const cursosComTipo = cursos.map(n => ({
+                ...n,
+                tipo: 'curso',
+                id: n.id_notificacao_curso
+            }));
+
+            const postsComTipo = posts.map(n => ({
+                ...n,
+                tipo: 'post',
+                id: n.id_notificacao_post
+            }));
 
             const todas = [...cursosComTipo, ...postsComTipo];
 
@@ -30,21 +39,18 @@ const NotificationPage = () => {
     const HandleDelete = async (id, tipo) => {
         const confirm = window.confirm('Tem a certeza que pretende eleminar');
 
-        if(!confirm) return;
-
+        if (!confirm) return;
+        console.log(id);
         try {
-            if (tipo == 'curso'){
+            if (tipo == 'curso') {
                 await delete_notificacoes_curso(id);
-                setNotCursos([]);
-                not_cursos();
             } else if (tipo == 'post') {
                 console.log(id);
                 await delete_notificacoes_post(id);
-                setNotPost([]);
-                not_post();
             }
+            fetchAllNotifications();
             console.log('Eliminado com sucesso!');
-        } catch(error) {
+        } catch (error) {
             console.log('Erro ao eliminar notificação!');
         }
     }
@@ -53,7 +59,7 @@ const NotificationPage = () => {
         fetchAllNotifications();
     }, []);
 
-    return(
+    return (
         <div className='p-4'>
             <div className='d-flex justify-content-between mb-5'>
                 <h1>Notificações</h1>
@@ -73,12 +79,12 @@ const NotificationPage = () => {
                             <option value="">Curso</option>
                             <option value="">Forum</option>
                         </select>
-                    </div>    
+                    </div>
                 </div>
             </div>
             {notificacoes.map((notification, index) => (
                 <div key={index}>
-                    <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id_notificacao_curso || notification.id_notificacao_post, notification.tipo)} />
+                    <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id, notification.tipo)} />
                     <hr />
                 </div>
             ))}
