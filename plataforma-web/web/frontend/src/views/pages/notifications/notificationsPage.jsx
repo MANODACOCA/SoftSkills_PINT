@@ -31,13 +31,14 @@ const NotificationPage = () => {
         const confirm = window.confirm('Tem a certeza que pretende eleminar');
 
         if(!confirm) return;
-        console.log(id);
+
         try {
             if (tipo == 'curso'){
                 await delete_notificacoes_curso(id);
                 setNotCursos([]);
                 not_cursos();
             } else if (tipo == 'post') {
+                console.log(id);
                 await delete_notificacoes_post(id);
                 setNotPost([]);
                 not_post();
