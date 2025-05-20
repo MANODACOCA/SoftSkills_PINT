@@ -254,7 +254,9 @@ class _ProfileState extends State<Profile> {
                           Text('Notificações'),
                           Spacer(),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.push('/gerirnotification');
+                            },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
                         ],
