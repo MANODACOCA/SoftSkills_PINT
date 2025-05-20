@@ -56,7 +56,7 @@ const FeaturedCourseCard = ({
 
             <p className="card-text text-muted mb-2 fs-6 d-flex align-items-center">
               <FaCalendarAlt className="me-2" />
-              {formatDayMonthYear(course.data_inicio_curso)} -{' '} {formatDayMonthYear(course.data_fim_curso)}
+              {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
             </p>
 
             <div className="d-flex justify-content-between align-items-center">
@@ -188,7 +188,7 @@ const FeaturedCourseCard = ({
             <FaCalendarAlt className="me-2" />
             {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
           </p>
-          {showFormador && course.tipo === 'sincrono' && (
+          {showFormador && (course.issincrono || course.tipo === 'sincrono') && (
             <div className="d-flex align-items-center mb-2">
               <img src={imageFormador} alt="formador" className="rounded-circle me-2 avatar" />
               <span>{nameFormador}</span>
