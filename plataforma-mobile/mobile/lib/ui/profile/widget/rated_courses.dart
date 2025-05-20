@@ -26,7 +26,7 @@ class _RateCoursesState extends State<RateCourses> {
       body: GestureDetector(
         child: Padding(
           padding: EdgeInsets.all(20),
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
             child: Column(
               children: <Widget>[
