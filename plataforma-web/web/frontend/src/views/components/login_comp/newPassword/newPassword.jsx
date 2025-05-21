@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../login/Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 
 
 const NewPassword = () => {
+    const location = useLocation();
     const navigate = useNavigate();
+
+    const redirectTo = location.state?.redirectTo || '/login';
 
     const [error, setError] = useState('');
     const [novapassword, setNovapassword] = useState('');
@@ -29,7 +32,7 @@ const NewPassword = () => {
         }
 
         console.log('Nova password defenida com sucesso.');
-        navigate('/login/verificacao-identidade');
+        navigate(redirectTo);
     };
 
     return (

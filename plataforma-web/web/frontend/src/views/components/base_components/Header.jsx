@@ -36,7 +36,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
                 <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
 
-            <div className="input-group" style={{ maxWidth: '500px' }}>
+            <div className="input-group">
                 <input
                     className="form-control form-control-md"
                     type="search"
