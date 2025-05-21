@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/ui/core/shared/navigationbar_component.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -48,7 +49,7 @@ class _TwoFactorActivate extends State<TwoFactorActivate> {
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
-            context.go('/profile');
+            context.pop('');
           },
         ),
       ),
@@ -94,6 +95,7 @@ class _TwoFactorActivate extends State<TwoFactorActivate> {
           ),
         ),
       ),
+      bottomNavigationBar: Footer(),
     );
   }
 }

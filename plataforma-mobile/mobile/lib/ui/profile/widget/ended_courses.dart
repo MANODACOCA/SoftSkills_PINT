@@ -74,6 +74,7 @@ class _EndedCoursesState extends State<EndedCourses> {
           ),
         ),
       ),
+      bottomNavigationBar: Footer(),
     );
   }
 }

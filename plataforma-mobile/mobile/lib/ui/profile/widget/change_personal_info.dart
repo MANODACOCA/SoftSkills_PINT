@@ -3,6 +3,7 @@ import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/shared/navigationbar_component.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChangePersonalInfo extends StatefulWidget {
   const ChangePersonalInfo({super.key});

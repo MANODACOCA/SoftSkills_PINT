@@ -29,6 +29,8 @@ import '../ui/profile/widget/ended_courses.dart';
 import '../ui/profile/widget/rated_courses.dart';
 import '../ui/profile/widget/unrated.dart';
 import '../ui/profile/widget/gerir_notification.dart';
+import '../ui/profile/widget/support.dart';
+import '../ui/profile/widget/privacy_politics.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -186,6 +188,16 @@ final rotas = GoRouter(
       name: 'gerirnotification',
       path: '/gerirnotification',
       builder: (context, state) => GerirNotification(),
+    ),
+    GoRoute(
+      name: 'support',
+      path: '/support',
+      builder: (context, state) => Support(),
+    ),
+    GoRoute(
+      name: 'privacypolitics',
+      path: '/privacypolitics',
+      builder: (context, state) => PrivacyPolitics(),
     )
   ],
 );
