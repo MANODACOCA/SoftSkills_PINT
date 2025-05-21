@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
 import { list_post, get_post, create_post, update_post, delete_post } from '../../../../api/post_axios';
 
 const Post = () => {
@@ -30,4 +27,4 @@ const Post = () => {
   );
 };
 
-export default PostListView;
+export default Post;
