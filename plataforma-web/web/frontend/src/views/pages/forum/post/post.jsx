@@ -30,4 +30,4 @@ const Post = () => {
   );
 };
 
-export default PostListView;
+export default Post;

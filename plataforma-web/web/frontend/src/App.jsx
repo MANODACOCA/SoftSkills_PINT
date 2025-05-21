@@ -46,7 +46,7 @@ function App() {
           <Route path="/cursos/terminados" element={<CompletedCourses />}/>
           <Route path="/cursos/favoritos" element={<FavoriteCourses />}/>
           <Route path="/forum" element={<Forum />}/>
-          <Route path="/posts" element={<Posts />}/>
+          <Route path="/posts" element={<Post />}/>
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
 
