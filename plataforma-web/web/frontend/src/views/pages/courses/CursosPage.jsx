@@ -9,10 +9,10 @@ const CursosPage = () => {
   const [tipologia, setTipologia] = useState('todos');
 
   useEffect(() => {
-    loadConteudoPartilhado();
+    loadCursos();
   }, [tipologia]);
 
-  const loadConteudoPartilhado = async () => {
+  const loadCursos = async () => {
     try {
       const res = await axios.get("http://localhost:3000/cursos/list");
       setCursos(res.data);
