@@ -15,6 +15,12 @@ class _GerirNotificationState extends State<GerirNotification> {
   bool isSwitchedVibration = false;
   bool isSwitchedSound = false;
   bool isSwitchedNotification = false;
+  bool isSwitchedVibrationinscritos = false;
+  bool isSwitchedSoundinscritos = false;
+  bool isSwitchedNotificationinscritos = false;
+  bool isSwitchedVibrationforum = false;
+  bool isSwitchedSoundforum = false;
+  bool isSwitchedNotificationforum = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +106,7 @@ class _GerirNotificationState extends State<GerirNotification> {
                           activeColor: AppColors.primary,
                           value: isSwitchedSound,
                           onChanged: (value) async {
+                            value:
                             isSwitchedSound;
                             setState(() {
                               isSwitchedSound = value;
@@ -117,6 +124,7 @@ class _GerirNotificationState extends State<GerirNotification> {
                           value: isSwitchedVibration,
                           activeColor: AppColors.primary,
                           onChanged: (value) async {
+                            value:
                             isSwitchedVibration;
                             setState(() {
                               isSwitchedVibration = value;
@@ -157,6 +165,7 @@ class _GerirNotificationState extends State<GerirNotification> {
           ),
         ),
       ),
+      bottomNavigationBar: Footer(),
     );
   }
 }

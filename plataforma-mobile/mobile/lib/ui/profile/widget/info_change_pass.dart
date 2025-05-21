@@ -1,3 +1,5 @@
+import 'package:mobile/ui/core/shared/navigationbar_component.dart';
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
@@ -42,7 +44,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
-            context.pop();
+            context.go('/seeinfoprofile');
           },
         ),
       ),
@@ -162,6 +164,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
           ),
         ),
       ),
+      bottomNavigationBar: Footer(),
     );
   }
 

@@ -1,18 +1,19 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../login/Login.css';
 import './twofa.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
-import { BiZoomIn } from 'react-icons/bi';
-
 
 function gerarCodigo5Digitos() {
     return Math.floor(10000 + Math.random() * 90000);
 }
 
 
-const NewPassword = () => {
+const TwoFA = () => {
+    const location = useLocation();
     const navigate = useNavigate();
+
+    const redirectTo = location.state?.redirectTo || '/home';
 
     const inputRefs = useRef([]);
     const [error, setError] = useState('');
@@ -61,7 +62,7 @@ const NewPassword = () => {
         }
 
         console.log('TwoFA feita com sucesso.');
-        navigate('/home');
+        navigate(redirectTo);
     };
 
     return (
@@ -99,4 +100,4 @@ const NewPassword = () => {
     );
 };
 
-export default NewPassword;
+export default TwoFA;

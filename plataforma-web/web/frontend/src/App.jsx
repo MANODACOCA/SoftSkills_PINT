@@ -6,6 +6,7 @@ import Login from './views/components/login_comp/login/Login';
 import NewPassword from './views/components/login_comp/newPassword/newPassword';
 import TwoFA from './views/components/login_comp/twofa/twofa';
 import ForgotPassword from './views/components/login_comp/forgot_password/forgotPassword';
+import CreateAccout from './views/components/login_comp/create_account/createAccount';
 
 //pages
 import LoginPage from './views/pages/login_basePage/login_basePage';
@@ -30,10 +31,10 @@ function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route element={<LoginPage />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/login/new-password" element={<NewPassword />} />
+          <Route path="/login/nova-password" element={<NewPassword />} />
           <Route path="/login/verificacao-identidade" element={<TwoFA />} />
           <Route path="/login/esqueceu-password" element={<ForgotPassword />} />
-          <Route path="/login/nova-conta" element={<NewPassword />} />
+          <Route path="/login/criar-conta" element={<CreateAccout />} />
         </Route>
  //#region{/*CONTEUDO DO LOGIN*/}
 

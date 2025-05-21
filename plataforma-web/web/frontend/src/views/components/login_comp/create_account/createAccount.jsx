@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './Login.css';
+import '../login/Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
-import { PiMicrosoftOutlookLogoBold } from "react-icons/pi";
 
-const providers = [
-    { id: 'outlook', name: 'Outlook' },
-    { id: 'credentials', name: 'Email and Password' },
-];
-
-const FirstLogin = () => {
+const CreateAccount = () => {
     const navigate = useNavigate();
 
     const [error, setError] = useState('');
@@ -39,9 +33,7 @@ const FirstLogin = () => {
 
             setTimeout(() => {
                 console.log(`Signing in with Email: ${email}`);
-                navigate('/login/nova-password', {
-             state: {redirectTo:'/login/verificacao-identidade'}
-            });
+                navigate('/login/new-password');
             }, 500);
         } else {//SSO
             setTimeout(() => {
@@ -55,27 +47,10 @@ const FirstLogin = () => {
     return (
         <div className="login-form-container">
             <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
-            <h2 className="login-title text-start">Entre na sua conta</h2>
-            <p className="login-subtitle text-start">Invista no seu futuro, aprende com a SoftSkills!</p>
-
-            <div className="login-buttons">
-                {providers.map((provider) =>
-                    provider.id !== 'credentials' ? (
-                        <button
-                            key={provider.id}
-                            className="login-button social outlook"
-                            onClick={() => handleProviderSignIn(provider)}
-                        >
-                            <PiMicrosoftOutlookLogoBold />  Login com {provider.name}
-                        </button>
-                    ) : null
-                )}
-            </div>
-
-            <div className="login-divider"><p>ou use o seu email</p></div>
+            <h2 className="login-title text-start">Criar nova conta</h2>
+            <p className="login-subtitle text-start">Preencha os campos abaixo para criar uma nova conta.</p>
 
             <input
-                id='email'
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -92,7 +67,6 @@ const FirstLogin = () => {
             />
 
             <div className="login-forgot d-flex justify-content-between text-start">
-                <Link to="/login/esqueceu-password">Esqueceu-se da sua palavra-passe?</Link>
                 {error && <p className="login-error text-end">{error}</p>}
             </div>
             <div className="login-buttons">
@@ -103,18 +77,11 @@ const FirstLogin = () => {
                         handleProviderSignIn({ id: 'credentials', name: 'Email and Password' })
                     }
                 >
-                    Login
-                </button>
-                <button
-                    type="button"
-                     onClick={() => navigate('/login/criar-conta')}
-                    className="login-button social"
-                >
-                    Criar Nova Conta
+                    Seguinte
                 </button>
             </div>
         </div>
     );
 };
 
-export default FirstLogin;
+export default CreateAccount;

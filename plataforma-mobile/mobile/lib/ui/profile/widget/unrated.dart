@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import '../../core/shared/export.dart';
+import '../../core/shared/navigationbar_component.dart';
 
 class UnratedCourses extends StatefulWidget {
   const UnratedCourses({super.key});
@@ -19,7 +20,10 @@ class _UnratedCoursesState extends State<UnratedCourses> {
             context.pop();
           },
         ),
-        title: Text("Cursos por avaliar", style: TextStyle(color: Colors.white)),
+        title: Text(
+          "Cursos por avaliar",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),
@@ -30,12 +34,15 @@ class _UnratedCoursesState extends State<UnratedCourses> {
             width: double.infinity,
             child: Column(
               children: <Widget>[
-                Text('Aqui vai estar presente a lista de cursos que o utilizador ainda não avaliou'),
+                Text(
+                  'Aqui vai estar presente a lista de cursos que o utilizador ainda não avaliou',
+                ),
               ],
             ),
           ),
         ),
       ),
+      bottomNavigationBar: Footer(),
     );
   }
-} 
+}

@@ -1,4 +1,6 @@
 import 'package:mobile/ui/core/shared/export.dart';
+import '../../core/shared/navigationbar_component.dart';
+
 
 class LogOut extends StatefulWidget {
   const LogOut({super.key});
@@ -12,6 +14,7 @@ class LogoutAllDevices extends State<LogOut> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(children: [Text('Logout from all devices')]),
+      bottomNavigationBar: Footer(),
     );
   }
 }

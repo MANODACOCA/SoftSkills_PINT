@@ -1,14 +1,14 @@
 /* #region header */
-header{
+header {
   height: 80px;
   position: fixed;
   z-index: 1001;
   background-color: #ffff;
 }
 
-.image-border{
-    border-radius: 100%;
-    border: solid 1px var(--cor-principal);
+.image-border {
+  border-radius: 100%;
+  border: solid 1px var(--cor-principal);
 }
 
 .profile-dropdown {
@@ -42,5 +42,19 @@ header{
   margin: 1px;
   margin-bottom: 10px;
 }
-/* #endregion */
 
+.input-group {
+  max-width: 550px;
+  height: 45px;
+}
+
+.input-group .form-control:focus {
+  border-color:var(--cor-principal);
+  box-shadow: none;
+}
+
+.input-group .btn {
+  width: 55px;
+}
+
+/* #endregion */

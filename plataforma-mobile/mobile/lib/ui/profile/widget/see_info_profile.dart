@@ -81,7 +81,7 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                                     Spacer(),
                                     IconButton(
                                       onPressed: () {
-                                        context.go('/activateTwofa');
+                                        context.push('/activateTwofa');
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward_ios,
@@ -99,7 +99,8 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                                     Spacer(),
                                     IconButton(
                                       onPressed: () {
-                                        context.go('');
+                                        //context.push('');
+                                        print('Ir para todos os devices que têm ligação');
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward_ios,

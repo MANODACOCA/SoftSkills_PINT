@@ -3,8 +3,6 @@ import 'package:go_router/go_router.dart';
 import '../../core/shared/navigationbar_component.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//I need to insert a routes
-
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
@@ -285,7 +283,9 @@ class _ProfileState extends State<Profile> {
                         Text('Central de suporte'),
                         Spacer(),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.push('/support');
+                          },
                           icon: Icon(Icons.arrow_forward_ios, size: 15),
                         ),
                       ],
@@ -302,7 +302,9 @@ class _ProfileState extends State<Profile> {
                         Text('Politica de privacidade'),
                         Spacer(),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.push('/privacypolitics');
+                          },
                           icon: Icon(Icons.arrow_forward_ios, size: 15),
                         ),
                       ],
