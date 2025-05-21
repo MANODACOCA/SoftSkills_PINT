@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../core/shared/navigationbar_component.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+//import '../../core/shared/navigationbar_component.dart';
 import '../../core/shared/export.dart';
 
 class GerirNotification extends StatefulWidget {
@@ -101,7 +100,6 @@ class _GerirNotificationState extends State<GerirNotification> {
                           activeColor: AppColors.primary,
                           value: isSwitchedSound,
                           onChanged: (value) async {
-                            value:
                             isSwitchedSound;
                             setState(() {
                               isSwitchedSound = value;
@@ -119,7 +117,6 @@ class _GerirNotificationState extends State<GerirNotification> {
                           value: isSwitchedVibration,
                           activeColor: AppColors.primary,
                           onChanged: (value) async {
-                            value:
                             isSwitchedVibration;
                             setState(() {
                               isSwitchedVibration = value;
