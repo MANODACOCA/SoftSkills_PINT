@@ -1,0 +1,43 @@
+.mega-menu {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: white;
+  width: 100%;
+  max-width: 750px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.menu-column {
+  flex: 1;
+  padding: 16px;
+  border-right: 1px solid #eee;
+}
+
+.menu-column:last-child {
+  border-right: none;
+}
+
+.menu-column h6 {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.menu-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-column li {
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.menu-column li:hover,
+.menu-column li.active {
+  background-color: #f0f4ff;
+  color: var(--cor-principal);
+  font-weight: 500;
+}

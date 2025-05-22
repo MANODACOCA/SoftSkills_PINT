@@ -26,6 +26,8 @@ router.get('/curso-destaque/assincrono',controller.getDestaqueAssincrono);
 router.get('/curso-destaque/topcurso',controller.getDestaqueCourses);
 router.get('/users/:userId/enrolled-courses',controller.getEnrolledCourses);
 router.get('/users/:userId/completed-courses',controller.getCompleteCourses);
+router.get('/area/:id_categoria',controller.getAreaForCategoria);
+router.get('/topico/:id_area',controller.getTopicoForArea);
 
 
 module.exports = router;

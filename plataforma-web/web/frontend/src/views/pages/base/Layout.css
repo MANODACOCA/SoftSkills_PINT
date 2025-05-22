@@ -1,12 +1,15 @@
 /* #region container */
 .main-container{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     width: calc(100% - 16.6667%);
     margin-top: 80px;
     z-index: 999;
 }
 
 .main-container.collapsed{
-    width: calc(100% - 90px);
+    width: calc(100% - 90px); 
 }
 /* #endregion */
 
