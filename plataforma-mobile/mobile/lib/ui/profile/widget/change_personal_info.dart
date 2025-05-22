@@ -22,7 +22,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
-          onPressed: (){
+          onPressed: () {
             context.go('/profile');
           },
         ),
@@ -31,6 +31,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         backgroundColor: AppColors.primary,
       ),
       body: SingleChildScrollView(
+        padding: EdgeInsets.all(10),
         child: Column(
           children: <Widget>[
             SizedBox(height: 20),
@@ -58,7 +59,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      choosePhoto();
+                    },
                     child: Text(
                       'Alterar foto',
                       style: TextStyle(color: Colors.white),
@@ -206,7 +209,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                             children: <Widget>[
                               SizedBox(width: 20),
                               SizedBox(
-                                width: screenWidth / 2 - 20,
+                                width: 125,
                                 child: Column(
                                   children: <Widget>[
                                     Text(
@@ -256,7 +259,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               SizedBox(width: 10),
                               /*Gender part*/
                               SizedBox(
-                                width: screenWidth / 2 - 30,
+                                width: 150,
                                 child: Column(
                                   children: <Widget>[
                                     Text(
@@ -288,8 +291,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                                   leading: Icon(Icons.female),
                                                   title: Text('Feminino'),
                                                   onTap: () {
-                                                    selectedGender =
-                                                        'Feminino';
+                                                    selectedGender = 'Feminino';
                                                     context.pop(context);
                                                   },
                                                 ),
@@ -312,8 +314,8 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                           ),
                                         ),
                                         padding: EdgeInsets.symmetric(
-                                          vertical: 8,
-                                          horizontal: 16,
+                                          vertical: 15,
+                                          horizontal: 4,
                                         ),
                                         child: Text(
                                           'Selecionar género',
@@ -371,9 +373,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
           content: Text('Quer guardar as alterações?'),
           actions: <Widget>[
             TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
+              style: TextButton.styleFrom(backgroundColor: Colors.green),
               child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.go('/profile');
@@ -392,5 +392,63 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         );
       },
     );
+  }
+
+  choosePhoto() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Escolher foto'),
+          content: Text('Escolha uma opção para a nova foto de perfil'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.green),
+              child: Text('Galeria', style: TextStyle(color: Colors.white)),
+              onPressed: () async {
+                await uploadImage();
+                context.pop();
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.red),
+              child: Text('Câmara', style: TextStyle(color: Colors.white)),
+              onPressed: () async {
+                await takeAPicture();
+                context.pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> uploadImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+    if (image != null) {
+      setState(() {
+        // Use the selected image
+        print('Image selected: ${image.path}');
+      });
+    }
+  }
+
+  Future<void> takeAPicture() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? image = await _picker.pickImage(
+      source: ImageSource.camera,
+      imageQuality: 50,
+    );
+    if (image != null) {
+      setState(() {
+        // Use the selected image
+        print('Image selected: ${image.path}');
+      });
+    }
   }
 }

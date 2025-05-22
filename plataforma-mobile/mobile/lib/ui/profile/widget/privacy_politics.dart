@@ -113,6 +113,7 @@ class _PrivacyPoliticsState extends State<PrivacyPolitics> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 30),
                 ],
               ),
             ),

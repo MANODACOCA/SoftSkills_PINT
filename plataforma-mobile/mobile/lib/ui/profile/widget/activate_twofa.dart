@@ -42,7 +42,7 @@ class _TwoFactorActivate extends State<TwoFactorActivate> {
       appBar: AppBar(
         title: const Text(
           'Autenticação de Dois Fatores',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontSize: 18),
         ),
         backgroundColor: AppColors.primary,
         leading: IconButton(
@@ -64,7 +64,7 @@ class _TwoFactorActivate extends State<TwoFactorActivate> {
                   Text(
                     'Ativar autenticação de dois fatores',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
