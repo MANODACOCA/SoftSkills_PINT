@@ -42,7 +42,7 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                       width: double.infinity,
                       child: Text(
                         'Segurança',
-                        style: TextStyle(color: Colors.grey , fontSize: 20),
+                        style: TextStyle(color: Colors.grey, fontSize: 20),
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -100,7 +100,9 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                                     IconButton(
                                       onPressed: () {
                                         //context.push('');
-                                        print('Ir para todos os devices que têm ligação');
+                                        print(
+                                          'Ir para todos os devices que têm ligação',
+                                        );
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward_ios,

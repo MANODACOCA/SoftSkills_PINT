@@ -31,6 +31,7 @@ import '../ui/profile/widget/unrated.dart';
 import '../ui/profile/widget/gerir_notification.dart';
 import '../ui/profile/widget/support.dart';
 import '../ui/profile/widget/privacy_politics.dart';
+import '../ui/profile/widget/liked_coursed.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -198,6 +199,11 @@ final rotas = GoRouter(
       name: 'privacypolitics',
       path: '/privacypolitics',
       builder: (context, state) => PrivacyPolitics(),
-    )
+    ),
+    GoRoute(
+      name: 'likedcourses',
+      path: '/likedcourses',
+      builder: (context, state) => LikedCourses(),
+    ),
   ],
 );
