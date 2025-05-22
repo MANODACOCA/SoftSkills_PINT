@@ -131,18 +131,51 @@ controllers.getEnrolledCourses = async (req, res) => {
 };
 
 controllers.getCompleteCourses = async (req, res) => {
-  try{
-    const {userId} =req.params;
+  try {
+    const { userId } = req.params;
     const completedCourses = await cursosService.getCompleteCoursesFromUser(userId);
 
-    if(completedCourses && completedCourses.length > 0){
+    if (completedCourses && completedCourses.length > 0) {
       res.status(200).json(completedCourses);
-    } else{
-      res.status(404).json({erro: 'Nenhum curso terminado encontrado para este utilizador'});
+    } else {
+      res.status(404).json({ erro: 'Nenhum curso terminado encontrado para este utilizador' });
     }
-  } catch(err){
+  } catch (err) {
     console.error('Erro ao procurar cursos terminados:', err);
-    res.status(500).json({erro: 'Erro ao procurar cursos terminados.', desc: err.message});
+    res.status(500).json({ erro: 'Erro ao procurar cursos terminados.', desc: err.message });
+  }
+};
+
+controllers.getAreaForCategoria = async (req, res) => {
+  try {
+    const { id_categoria } = req.params;
+    console.log(req.params);
+    const areaPorCategoria = await cursosService.getAreaForCategoria(id_categoria);
+
+    if (areaPorCategoria && areaPorCategoria.length > 0) {
+      res.status(200).json(areaPorCategoria);
+    } else {
+      res.status(404).json({ erro: 'Nenhum area encontrada para esta categoria' });
+    }
+  } catch (err) {
+    console.error('Erro ao procurar areas:', err);
+    res.status(500).json({ erro: 'Erro ao procurar areas.', desc: err.message });
+  }
+};
+
+controllers.getTopicoForArea = async (req, res) => {
+  try {
+    const { id_area } = req.params;
+    const topicoPorArea = await cursosService.getTopicoForArea(id_area);
+
+    if (topicoPorArea && topicoPorArea.length > 0) {
+      res.status(200).json(topicoPorArea);
+    } else {
+      res.status(404).json({ erro: 'Nenhum topico encontrado para esta area' });
+    }
+  } catch (err) {
+    console.error('Erro ao procurar topico:', err);
+    res.status(500).json({ erro: 'Erro ao procurar topico.', desc: err.message });
   }
 };
 

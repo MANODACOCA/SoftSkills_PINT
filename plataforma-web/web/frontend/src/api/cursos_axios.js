@@ -97,8 +97,8 @@ export const getEnrolledCourses = async (userId, tipologia = 'todos') => {
 };
 
 export const getCompletedCourses = async (userId) => {
-    try{
-        const response= await axios.get(`${API_URL}/users/${userId}/completed-courses`);
+    try {
+        const response = await axios.get(`${API_URL}/users/${userId}/completed-courses`);
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos terminados!');
@@ -108,11 +108,32 @@ export const getCompletedCourses = async (userId) => {
 
 //POR ACABAR!!! FALTA TABELA FAVORITOS
 export const getFavoriteCourses = async (userId) => {
-    try{
+    try {
         const response = await axios.get(`${API_URL}/users/${userId}/favorite-courses`);
         return response.data;
-    } catch(error) {
+    } catch (error) {
         console.error('Erro ao procurar cursos favoritos!');
-        throw error;        
+        throw error;
+    }
+
+}
+
+export const getAreaForCategoria = async (id_categoria) => {
+    try {
+        const response = await axios.get(`${API_URL}/area/${id_categoria}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao procurar areas!');
+        throw error;
+    }
+}
+
+export const getTopicoForArea = async (id_area) => {
+    try {
+        const response = await axios.get(`${API_URL}/area/${id_area}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao procurar topicos!');
+        throw error;
     }
 }
