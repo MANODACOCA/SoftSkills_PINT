@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/core/themes/colors.dart';
 import '../../core/shared/export.dart';
 import '../../core/shared/navigationbar_component.dart';
 
