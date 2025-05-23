@@ -51,7 +51,7 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
+    <div classname="">
       <div className='px-3'><Slide course={topCourses}/></div>
 
       <ScrollableSection title="Para si" courses={courses} scrollRef={scrollRef} onScroll={scroll}></ScrollableSection>

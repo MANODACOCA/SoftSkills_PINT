@@ -21,6 +21,7 @@ import FavoriteCourses from './views/pages/favorite_courses/FavoriteCourses';
 import CursosPage from './views/pages/courses/CursosPage';
 import Post from './views/pages/forum/post/post';
 import CPlusPlusPage from './views/pages/forum/post/post';
+import CourseRegistration from './views/pages/course_registration/CourseRegistration';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
           <Route path="/cursos/favoritos" element={<FavoriteCourses />}/>
           <Route path="/forum" element={<Forum />}/>
           <Route path="/posts" element={<Post />}/>
+          <Route path="/curso/:id" element={<CourseRegistration />}/>
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
 
