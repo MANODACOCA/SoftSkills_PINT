@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/core/shared/navigationbar_component.dart';
+//import 'package:mobile/ui/core/shared/navigationbar_component.dart';
 import '../../core/shared/export.dart';
 
 class PrivacyPolitics extends StatefulWidget {
@@ -39,7 +38,7 @@ class _PrivacyPoliticsState extends State<PrivacyPolitics> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 30),
-            Container(
+            SizedBox(
               child: Column(
                 children: <Widget>[
                   SizedBox(
@@ -113,6 +112,7 @@ class _PrivacyPoliticsState extends State<PrivacyPolitics> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 30),
                 ],
               ),
             ),

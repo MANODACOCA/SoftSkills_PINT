@@ -2,15 +2,16 @@ import React from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import Card from '../../components/card/Card';
 import { formatDayMonthYear } from '../shared_functions/FunctionsUtils';
+import './ScrollableSection.css';
 
 const ScrollableSection = ({ title, courses, scrollRef, onScroll }) => {
-    
+        
     return (
         <>
             <h1 className="mt-3 ps-3">{title}</h1>
             <div className="position-relative px-3">
                 <button
-                    className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click border-dark d-flex justify-content-center align-items-center"
+                    className="btn btn-light position-absolute top-50 start-0 translate-middle-y z-1 arrow-click border-dark d-flex justify-content-center align-items-center seta"
                     onClick={() => onScroll(scrollRef, 'left')}>
                     <FaChevronLeft />
                 </button>
@@ -31,9 +32,8 @@ const ScrollableSection = ({ title, courses, scrollRef, onScroll }) => {
                         </div>
                     ))}
                 </div>
-
                 <button
-                    className="btn btn-light position-absolute top-50 end-0 translate-middle-y z-1 arrow-click"
+                    className="btn btn-light position-absolute top-50 end-0 translate-middle-y z-1 border-dark arrow-click d-flex align-items-center justify-content-center seta"
                     onClick={() => onScroll(scrollRef, 'right')}>
                     <FaChevronRight />
                 </button>

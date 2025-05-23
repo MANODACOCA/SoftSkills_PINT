@@ -34,11 +34,11 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
                         <i className="bi bi-chat-dots fs-4 px-2"></i>
                         {!collapsed && 'Fórum'}
                     </NavLink>
-                    <hr />
+                    {/* <hr />
                     <NavLink to="/notificacoes" className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-bell fs-4 px-2"></i>
                         {!collapsed && 'Notificações'}
-                    </NavLink>
+                    </NavLink> */}
                 </div>
                 <div>
                     <NavLink to="/definicoes" className="nav-link d-flex align-items-center px-2 py-1">

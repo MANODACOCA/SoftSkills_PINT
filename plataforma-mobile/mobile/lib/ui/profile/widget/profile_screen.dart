@@ -210,7 +210,9 @@ class _ProfileState extends State<Profile> {
                           Text('Cursos que gostaste'),
                           Spacer(),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              context.push('/likedcourses');
+                            },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
                         ],
@@ -324,7 +326,7 @@ class _ProfileState extends State<Profile> {
                           onPressed: () async {
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setBool('remember_me', false);
-                            context.go('/');
+                            confirm();
                           },
                           icon: Icon(Icons.arrow_forward_ios, size: 15),
                         ),
@@ -338,6 +340,36 @@ class _ProfileState extends State<Profile> {
         ),
       ),
       bottomNavigationBar: Footer(),
+    );
+  }
+
+  confirm() {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Aviso'),
+          content: Text('Quer terminar sessão na tua conta?'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.red),
+              child: Text('Terminar sessão', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                context.go('/');
+                print('LogOut!');
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: AppColors.primary),
+              child: Text('Cancelar', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                context.pop(); // Close the dialog
+                print('Não foi dado logOut!');
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

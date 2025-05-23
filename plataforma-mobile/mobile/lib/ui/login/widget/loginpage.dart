@@ -1,9 +1,9 @@
-import 'dart:convert';
+//import 'dart:convert';
 //import 'package:mobile/data/services/basedados.dart';
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:crypto/crypto.dart';
+//import 'package:crypto/crypto.dart';
 //import '../../profile/widget/activate_twofa.dart';
 
 class LoginPage extends StatefulWidget {
@@ -43,12 +43,12 @@ class _LoginPage extends State<LoginPage> {
       isSwitched = rememberMe;
     });
   }
-  // Função para encriptar a password
+  /* // Função para encriptar a password
   String _encryptPassword(String password) {
     final bytes = utf8.encode(password);
     final hash = sha256.convert(bytes);
     return hash.toString();
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {

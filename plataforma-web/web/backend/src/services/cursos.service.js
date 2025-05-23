@@ -1,6 +1,6 @@
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, inscricoes, resultados } = require('../models/init-models')(sequelize);
+const { cursos, inscricoes, resultados, area, topico } = require('../models/init-models')(sequelize);
 
 // Função para obter o curso síncrono em destaque
 async function getCourseDestaqueSincrono() {
@@ -196,10 +196,41 @@ async function getCompleteCoursesFromUser(userId) {
   }
 }
 
+async function getAreaForCategoria(id_categoria) {
+  try {
+    const listAreas = await area.findAll({
+      where: {
+       id_categoria: id_categoria
+      },
+      attributes: ['id_area', 'nome_area']
+    });
+
+    return listAreas;
+  } catch (error) {
+    console.error('Erro ao procurar áreas por categoria:', error);
+    throw error;
+  }
+}
+
+async function getTopicoForArea (id_area){
+    try{
+    const listTopicos = await topico.findAll({
+      where: {id_area: id_area},
+      attributes:['id_topico', 'nome_topico']
+    });
+    return listTopicos;
+  }catch(error){
+    console.error('Erro ao buscar áreas por categoria');
+    throw error;
+  }
+}
+
 module.exports = { 
   getCourseDestaqueSincrono, 
   getCourseDestaqueAssincrono, 
   getCourseWithMoreFormandos, 
   getEnrolledCoursesForUser,
-  getCompleteCoursesFromUser };
+  getCompleteCoursesFromUser,
+  getAreaForCategoria,
+  getTopicoForArea};
 

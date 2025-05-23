@@ -62,7 +62,7 @@ controllers.update = async (req,res)=>{
 controllers.delete = async (req,res)=>{
   try {
     const {id} = req.params;
-    const deleted = await model.destroy({where:{id:id}});
+    const deleted = await model.destroy({where:{id_notificacao_cursos:id}});
     if(deleted){
       res.status(200).json({msg:'Notificacao de Curso apagado/a com sucesso!'});
     }else{

@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/shared/navigationbar_component.dart';
+//import '../../core/shared/navigationbar_component.dart';
 import '../../core/shared/export.dart';
 
 class EndedCourses extends StatefulWidget {
@@ -74,7 +73,6 @@ class _EndedCoursesState extends State<EndedCourses> {
           ),
         ),
       ),
-      bottomNavigationBar: Footer(),
     );
   }
 }
