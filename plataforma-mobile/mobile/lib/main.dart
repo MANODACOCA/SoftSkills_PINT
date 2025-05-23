@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       routerConfig: rotas,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 106, 107, 108)),
       ),
     );
   }
