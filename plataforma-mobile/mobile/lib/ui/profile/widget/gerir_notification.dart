@@ -107,7 +107,6 @@ class _GerirNotificationState extends State<GerirNotification> {
                           activeColor: AppColors.primary,
                           value: isSwitchedSound,
                           onChanged: (value) async {
-                            value:
                             isSwitchedSound;
                             setState(() {
                               isSwitchedSound = value;
@@ -125,7 +124,6 @@ class _GerirNotificationState extends State<GerirNotification> {
                           value: isSwitchedVibration,
                           activeColor: AppColors.primary,
                           onChanged: (value) async {
-                            value:
                             isSwitchedVibration;
                             setState(() {
                               isSwitchedVibration = value;

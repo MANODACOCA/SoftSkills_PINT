@@ -425,8 +425,8 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   }
 
   Future<void> uploadImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 50,
     );
@@ -439,8 +439,8 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   }
 
   Future<void> takeAPicture() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
       source: ImageSource.camera,
       imageQuality: 50,
     );

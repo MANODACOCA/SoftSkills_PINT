@@ -1,4 +1,4 @@
-import 'package:go_router/go_router.dart';
+/* //import 'package:go_router/go_router.dart';
 import '../../core/shared/export.dart';
 import 'dart:math' as math;
 import '../../core/shared/navigationbar_component.dart';
@@ -39,8 +39,10 @@ class _NotificationState extends State<Notification> {
 }
 
 class SearchBarCustom extends StatefulWidget {
+  const SearchBarCustom({super.key});
+
   @override
-  _SearchBarCustomState createState() => _SearchBarCustomState();
+  State<SearchBarCustom> createState() => _SearchBarCustomState();
 }
 
 class _SearchBarCustomState extends State<SearchBarCustom> {
@@ -305,3 +307,4 @@ class Notifications extends State<NotificationsWidget> {
     );
   }
 }
+ */

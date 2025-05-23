@@ -1,16 +1,12 @@
 import 'package:mobile/ui/course_assync/widget/course_assync_screen.dart';
 import 'package:mobile/ui/course_sync/widget/course_sync_screen.dart';
 import 'package:mobile/ui/forum/widget/forum.dart';
-import 'package:mobile/ui/notification/widget/notifications.dart';
-//import 'package:path/path.dart';
 import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';
 import '../ui/login/widget/forgetpassword.dart';
 import '../ui/login/widget/return_login.dart';
-//import 'primeirologin.dart';
 import '../ui/login/widget/registar.dart';
-//import 'confirm_criar_conta.dart';
 import '../ui/login/widget/success.dart';
 import 'package:mobile/ui/login/widget/loginpage.dart';
 import 'package:go_router/go_router.dart';
@@ -99,11 +95,11 @@ final rotas = GoRouter(
       path: '/profile',
       builder: (context, state) => Profile(),
     ),
-    GoRoute(
+    /* GoRoute(
       name: 'notificacoes',
       path: '/notificacoes',
       builder: (context, state) => Notification(),
-    ),
+    ), */
     GoRoute(
       name: 'forum',
       path: '/forum',
