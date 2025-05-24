@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('cursos', {
     id_curso: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -28,12 +29,16 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     descricao_curso: {
-      type: DataTypes.STRING(256),
+      type: DataTypes.STRING(2024),
       allowNull: false
     },
-    numero_vagas: {
-      type: DataTypes.INTEGER,
-      allowNull: true
+    data_inicio_inscricao: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    data_fim_inscricao: {
+      type: DataTypes.DATE,
+      allowNull: false
     },
     data_inicio_curso: {
       type: DataTypes.DATE,
@@ -44,8 +49,9 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     estado: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
     idioma: {
       type: DataTypes.STRING(50),
@@ -60,8 +66,8 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     imagem: {
-      type: DataTypes.STRING(200),
-      allowNull: true
+      type: DataTypes.STRING(1024),
+      allowNull: false
     },
     isassincrono: {
       type: DataTypes.BOOLEAN,
@@ -78,7 +84,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "cursos_pkey",
+        name: "pk_cursos",
         unique: true,
         fields: [
           { name: "id_curso" },

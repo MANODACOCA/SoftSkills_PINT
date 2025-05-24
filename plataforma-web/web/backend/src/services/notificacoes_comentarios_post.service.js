@@ -1,9 +1,9 @@
 const sequelize = require('../models/database');
-const {notificacoes_post, post, utilizador} = require('../models/init-models')(sequelize);
+const {notificacoes_comentarios_post, post, utilizador} = require('../models/init-models')(sequelize);
 
 async function getNotificationOfPost() {
   try {
-    const notifications = await notificacoes_post.findAll();
+    const notifications = await notificacoes_comentarios_post.findAll();
     
     const postIds = [...new Set(notifications.map(n => n.id_post))];
     const postList = await post.findAll({

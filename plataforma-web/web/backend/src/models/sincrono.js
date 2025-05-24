@@ -17,6 +17,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'formadores',
         key: 'id_formador'
       }
+    },
+    numero_vagas: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     sequelize,

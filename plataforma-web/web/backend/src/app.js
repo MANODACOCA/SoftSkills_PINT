@@ -28,17 +28,20 @@ app.use('/assincrono',assincronoRouter);
 const aulasRouter = require('./routes/aulas_route.js');
 app.use('/aulas',aulasRouter);
 
-const avaliacoesRouter = require('./routes/avaliacoes_route.js');
-app.use('/avaliacoes',avaliacoesRouter);
-
 const categoriaRouter = require('./routes/categoria_route.js');
 app.use('/categoria',categoriaRouter);
+
+const certificadosRouter = require('./routes/certificados_route.js');
+app.use('/certificados',certificadosRouter);
 
 const comentarioRouter = require('./routes/comentario_route.js');
 app.use('/comentario',comentarioRouter);
 
 const conteudosRouter = require('./routes/conteudos_route.js');
 app.use('/conteudos',conteudosRouter);
+
+const conteudos_forumRouter = require('./routes/conteudos_forum_route.js');
+app.use('/conteudos_forum',conteudos_forumRouter);
 
 const conteudos_partilhadoRouter = require('./routes/conteudos_partilhado_route.js');
 app.use('/conteudos_partilhado',conteudos_partilhadoRouter);
@@ -48,6 +51,9 @@ app.use('/cursos',cursosRouter);
 
 const denunciaRouter = require('./routes/denuncia_route.js');
 app.use('/denuncia',denunciaRouter);
+
+const favoritosRouter = require('./routes/favoritos_route.js');
+app.use('/favoritos',favoritosRouter);
 
 const formadoresRouter = require('./routes/formadores_route.js');
 app.use('/formadores',formadoresRouter);
@@ -61,11 +67,17 @@ app.use('/gestor_administrador',gestor_administradorRouter);
 const inscricoesRouter = require('./routes/inscricoes_route.js');
 app.use('/inscricoes',inscricoesRouter);
 
+const material_apoioRouter = require('./routes/material_apoio_route.js');
+app.use('/material_apoio',material_apoioRouter);
+
+const modelo_certificadoRouter = require('./routes/modelo_certificado_route.js');
+app.use('/modelo_certificado',modelo_certificadoRouter);
+
+const notificacoes_comentarios_postRouter = require('./routes/notificacoes_comentarios_post_route.js');
+app.use('/notificacoes_comentarios_post',notificacoes_comentarios_postRouter);
+
 const notificacoes_cursoRouter = require('./routes/notificacoes_curso_route.js');
 app.use('/notificacoes_curso',notificacoes_cursoRouter);
-
-const notificacoes_postRouter = require('./routes/notificacoes_post_route.js'); 
-app.use('/notificacoes_post',notificacoes_postRouter);
 
 const ocorrencias_edicoesRouter = require('./routes/ocorrencias_edicoes_route.js');
 app.use('/ocorrencias_edicoes',ocorrencias_edicoesRouter);

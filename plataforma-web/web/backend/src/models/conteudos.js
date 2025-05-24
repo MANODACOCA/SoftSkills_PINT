@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('conteudos', {
     id_conteudo: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -23,9 +24,17 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_formato'
       }
     },
+    nome_conteudo: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
     conteudo: {
       type: DataTypes.STRING(200),
       allowNull: false
+    },
+    tempo_duracao: {
+      type: DataTypes.TIME,
+      allowNull: true
     }
   }, {
     sequelize,
@@ -34,7 +43,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "pk_conteudos",
+        name: "pk_conteudo",
         unique: true,
         fields: [
           { name: "id_conteudo" },

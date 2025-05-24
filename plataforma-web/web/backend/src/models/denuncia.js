@@ -3,13 +3,14 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('denuncia', {
     id_denuncia: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
     id_comentario: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'comentario',
         key: 'id_comentario'
@@ -25,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_post: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'post',
         key: 'id_post'

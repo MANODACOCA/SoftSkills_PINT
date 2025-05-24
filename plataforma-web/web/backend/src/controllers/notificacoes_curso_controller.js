@@ -2,10 +2,9 @@
 
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const { getNotificationOfCourse } = require("../services/notificacoes_course.service");
 const model = initModels(sequelize).notificacoes_curso;
 const controllers = {};
-
+const { getNotificationOfCourse } = require("../services/notificacoes_course.service");
 
 
 controllers.list = async (req,res)=>{
@@ -62,7 +61,7 @@ controllers.update = async (req,res)=>{
 controllers.delete = async (req,res)=>{
   try {
     const {id} = req.params;
-    const deleted = await model.destroy({where:{id_notificacao_cursos:id}});
+    const deleted = await model.destroy({where:{id:id}});
     if(deleted){
       res.status(200).json({msg:'Notificacao de Curso apagado/a com sucesso!'});
     }else{
@@ -72,6 +71,7 @@ controllers.delete = async (req,res)=>{
     res.status(500).json({erro:'Erro ao apagar o/a Notificacao de Curso!',desc: err.message});
   }
 };
+
 
 controllers.getCursoNotificationsController = async (req,res)=>{
   try {

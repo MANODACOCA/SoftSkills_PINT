@@ -2,19 +2,23 @@ var DataTypes = require("sequelize").DataTypes;
 var _area = require("./area");
 var _assincrono = require("./assincrono");
 var _aulas = require("./aulas");
-var _avaliacoes = require("./avaliacoes");
 var _categoria = require("./categoria");
+var _certificados = require("./certificados");
 var _comentario = require("./comentario");
 var _conteudos = require("./conteudos");
+var _conteudos_forum = require("./conteudos_forum");
 var _conteudos_partilhado = require("./conteudos_partilhado");
 var _cursos = require("./cursos");
 var _denuncia = require("./denuncia");
+var _favoritos = require("./favoritos");
 var _formadores = require("./formadores");
 var _formandos = require("./formandos");
 var _gestor_administrador = require("./gestor_administrador");
 var _inscricoes = require("./inscricoes");
+var _material_apoio = require("./material_apoio");
+var _modelo_certificado = require("./modelo_certificado");
+var _notificacoes_comentarios_post = require("./notificacoes_comentarios_post");
 var _notificacoes_curso = require("./notificacoes_curso");
-var _notificacoes_post = require("./notificacoes_post");
 var _ocorrencias_edicoes = require("./ocorrencias_edicoes");
 var _post = require("./post");
 var _resultados = require("./resultados");
@@ -30,19 +34,23 @@ function initModels(sequelize) {
   var area = _area(sequelize, DataTypes);
   var assincrono = _assincrono(sequelize, DataTypes);
   var aulas = _aulas(sequelize, DataTypes);
-  var avaliacoes = _avaliacoes(sequelize, DataTypes);
   var categoria = _categoria(sequelize, DataTypes);
+  var certificados = _certificados(sequelize, DataTypes);
   var comentario = _comentario(sequelize, DataTypes);
   var conteudos = _conteudos(sequelize, DataTypes);
+  var conteudos_forum = _conteudos_forum(sequelize, DataTypes);
   var conteudos_partilhado = _conteudos_partilhado(sequelize, DataTypes);
   var cursos = _cursos(sequelize, DataTypes);
   var denuncia = _denuncia(sequelize, DataTypes);
+  var favoritos = _favoritos(sequelize, DataTypes);
   var formadores = _formadores(sequelize, DataTypes);
   var formandos = _formandos(sequelize, DataTypes);
   var gestor_administrador = _gestor_administrador(sequelize, DataTypes);
   var inscricoes = _inscricoes(sequelize, DataTypes);
+  var material_apoio = _material_apoio(sequelize, DataTypes);
+  var modelo_certificado = _modelo_certificado(sequelize, DataTypes);
+  var notificacoes_comentarios_post = _notificacoes_comentarios_post(sequelize, DataTypes);
   var notificacoes_curso = _notificacoes_curso(sequelize, DataTypes);
-  var notificacoes_post = _notificacoes_post(sequelize, DataTypes);
   var ocorrencias_edicoes = _ocorrencias_edicoes(sequelize, DataTypes);
   var post = _post(sequelize, DataTypes);
   var resultados = _resultados(sequelize, DataTypes);
@@ -58,70 +66,82 @@ function initModels(sequelize) {
   area.hasMany(topico, { as: "topicos", foreignKey: "id_area"});
   conteudos.belongsTo(aulas, { as: "id_aula_aula", foreignKey: "id_aula"});
   aulas.hasMany(conteudos, { as: "conteudos", foreignKey: "id_aula"});
-  comentario.belongsTo(avaliacoes, { as: "id_avaliacao_avaliaco", foreignKey: "id_avaliacao"});
-  avaliacoes.hasMany(comentario, { as: "comentarios", foreignKey: "id_avaliacao"});
   area.belongsTo(categoria, { as: "id_categoria_categorium", foreignKey: "id_categoria"});
   categoria.hasMany(area, { as: "areas", foreignKey: "id_categoria"});
+  conteudos_forum.belongsTo(comentario, { as: "id_comentario_comentario", foreignKey: "id_comentario"});
+  comentario.hasMany(conteudos_forum, { as: "conteudos_forums", foreignKey: "id_comentario"});
   denuncia.belongsTo(comentario, { as: "id_comentario_comentario", foreignKey: "id_comentario"});
   comentario.hasMany(denuncia, { as: "denuncia", foreignKey: "id_comentario"});
+  notificacoes_comentarios_post.belongsTo(comentario, { as: "id_comentario_comentario", foreignKey: "id_comentario"});
+  comentario.hasMany(notificacoes_comentarios_post, { as: "notificacoes_comentarios_posts", foreignKey: "id_comentario"});
   post.belongsTo(conteudos_partilhado, { as: "id_conteudos_partilhado_conteudos_partilhado", foreignKey: "id_conteudos_partilhado"});
   conteudos_partilhado.hasMany(post, { as: "posts", foreignKey: "id_conteudos_partilhado"});
   assincrono.belongsTo(cursos, { as: "id_curso_assincrono_curso", foreignKey: "id_curso_assincrono"});
   cursos.hasOne(assincrono, { as: "assincrono", foreignKey: "id_curso_assincrono"});
   aulas.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
   cursos.hasMany(aulas, { as: "aulas", foreignKey: "id_curso"});
+  certificados.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
+  cursos.hasMany(certificados, { as: "certificados", foreignKey: "id_curso"});
+  favoritos.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
+  cursos.hasMany(favoritos, { as: "favoritos", foreignKey: "id_curso"});
   inscricoes.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
   cursos.hasMany(inscricoes, { as: "inscricos", foreignKey: "id_curso"});
+  material_apoio.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
+  cursos.hasMany(material_apoio, { as: "material_apoios", foreignKey: "id_curso"});
+  modelo_certificado.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
+  cursos.hasMany(modelo_certificado, { as: "modelo_certificados", foreignKey: "id_curso"});
   notificacoes_curso.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
   cursos.hasMany(notificacoes_curso, { as: "notificacoes_cursos", foreignKey: "id_curso"});
-  notificacoes_post.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
-  cursos.hasMany(notificacoes_post, { as: "notificacoes_posts", foreignKey: "id_curso"});
   ocorrencias_edicoes.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
   cursos.hasMany(ocorrencias_edicoes, { as: "ocorrencias_edicos", foreignKey: "id_curso"});
   sincrono.belongsTo(cursos, { as: "id_curso_sincrono_curso", foreignKey: "id_curso_sincrono"});
   cursos.hasOne(sincrono, { as: "sincrono", foreignKey: "id_curso_sincrono"});
   sincrono.belongsTo(formadores, { as: "id_formador_formadore", foreignKey: "id_formador"});
   formadores.hasMany(sincrono, { as: "sincronos", foreignKey: "id_formador"});
+  certificados.belongsTo(formandos, { as: "id_formando_formando", foreignKey: "id_formando"});
+  formandos.hasMany(certificados, { as: "certificados", foreignKey: "id_formando"});
   inscricoes.belongsTo(formandos, { as: "id_formando_formando", foreignKey: "id_formando"});
   formandos.hasMany(inscricoes, { as: "inscricos", foreignKey: "id_formando"});
   resultados.belongsTo(formandos, { as: "id_formando_formando", foreignKey: "id_formando"});
   formandos.hasMany(resultados, { as: "resultados", foreignKey: "id_formando"});
   cursos.belongsTo(gestor_administrador, { as: "id_gestor_administrador_gestor_administrador", foreignKey: "id_gestor_administrador"});
   gestor_administrador.hasMany(cursos, { as: "cursos", foreignKey: "id_gestor_administrador"});
-  avaliacoes.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
-  post.hasMany(avaliacoes, { as: "avaliacos", foreignKey: "id_post"});
   comentario.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
   post.hasMany(comentario, { as: "comentarios", foreignKey: "id_post"});
+  conteudos_forum.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
+  post.hasMany(conteudos_forum, { as: "conteudos_forums", foreignKey: "id_post"});
   denuncia.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
   post.hasMany(denuncia, { as: "denuncia", foreignKey: "id_post"});
-  notificacoes_post.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
-  post.hasMany(notificacoes_post, { as: "notificacoes_posts", foreignKey: "id_post"});
   resultados.belongsTo(sincrono, { as: "id_curso_sincrono_sincrono", foreignKey: "id_curso_sincrono"});
   sincrono.hasMany(resultados, { as: "resultados", foreignKey: "id_curso_sincrono"});
   denuncia.belongsTo(tipo_denuncia, { as: "id_tipo_denuncia_tipo_denuncium", foreignKey: "id_tipo_denuncia"});
   tipo_denuncia.hasMany(denuncia, { as: "denuncia", foreignKey: "id_tipo_denuncia"});
   conteudos.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
   tipo_formato.hasMany(conteudos, { as: "conteudos", foreignKey: "id_formato"});
+  conteudos_forum.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
+  tipo_formato.hasMany(conteudos_forum, { as: "conteudos_forums", foreignKey: "id_formato"});
+  material_apoio.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
+  tipo_formato.hasMany(material_apoio, { as: "material_apoios", foreignKey: "id_formato"});
   conteudos_partilhado.belongsTo(topico, { as: "id_topico_topico", foreignKey: "id_topico"});
   topico.hasMany(conteudos_partilhado, { as: "conteudos_partilhados", foreignKey: "id_topico"});
   cursos.belongsTo(topico, { as: "id_topico_topico", foreignKey: "id_topico"});
   topico.hasMany(cursos, { as: "cursos", foreignKey: "id_topico"});
-  avaliacoes.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
-  utilizador.hasMany(avaliacoes, { as: "avaliacos", foreignKey: "id_utilizador"});
   comentario.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
   utilizador.hasMany(comentario, { as: "comentarios", foreignKey: "id_utilizador"});
   denuncia.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
   utilizador.hasMany(denuncia, { as: "denuncia", foreignKey: "id_utilizador"});
+  favoritos.belongsTo(utilizador, { as: "id_formando_utilizador", foreignKey: "id_formando"});
+  utilizador.hasMany(favoritos, { as: "favoritos", foreignKey: "id_formando"});
   formadores.belongsTo(utilizador, { as: "id_formador_utilizador", foreignKey: "id_formador"});
   utilizador.hasOne(formadores, { as: "formadore", foreignKey: "id_formador"});
   formandos.belongsTo(utilizador, { as: "id_formando_utilizador", foreignKey: "id_formando"});
   utilizador.hasOne(formandos, { as: "formando", foreignKey: "id_formando"});
   gestor_administrador.belongsTo(utilizador, { as: "id_gestor_administrador_utilizador", foreignKey: "id_gestor_administrador"});
   utilizador.hasOne(gestor_administrador, { as: "gestor_administrador", foreignKey: "id_gestor_administrador"});
+  notificacoes_comentarios_post.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
+  utilizador.hasMany(notificacoes_comentarios_post, { as: "notificacoes_comentarios_posts", foreignKey: "id_utilizador"});
   notificacoes_curso.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
   utilizador.hasMany(notificacoes_curso, { as: "notificacoes_cursos", foreignKey: "id_utilizador"});
-  notificacoes_post.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
-  utilizador.hasMany(notificacoes_post, { as: "notificacoes_posts", foreignKey: "id_utilizador"});
   post.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
   utilizador.hasMany(post, { as: "posts", foreignKey: "id_utilizador"});
   s_s_o.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
@@ -133,19 +153,23 @@ function initModels(sequelize) {
     area,
     assincrono,
     aulas,
-    avaliacoes,
     categoria,
+    certificados,
     comentario,
     conteudos,
+    conteudos_forum,
     conteudos_partilhado,
     cursos,
     denuncia,
+    favoritos,
     formadores,
     formandos,
     gestor_administrador,
     inscricoes,
+    material_apoio,
+    modelo_certificado,
+    notificacoes_comentarios_post,
     notificacoes_curso,
-    notificacoes_post,
     ocorrencias_edicoes,
     post,
     resultados,

@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('aulas', {
     id_aula: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -22,6 +23,10 @@ module.exports = function(sequelize, DataTypes) {
     nome_aula: {
       type: DataTypes.STRING(50),
       allowNull: false
+    },
+    caminho_url: {
+      type: DataTypes.STRING(1024),
+      allowNull: true
     }
   }, {
     sequelize,

@@ -100,6 +100,7 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                                     IconButton(
                                       onPressed: () {
                                         //context.push('');
+                                         // ignore: avoid_print
                                         print('Ir para todos os devices que têm ligação',);
                                       },
                                       icon: Icon(

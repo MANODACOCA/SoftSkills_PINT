@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `http://localhost:3000/gestor_administrador`;
+const API_URL = 'http://localhost:3000/gestor_administrador';
 
 
 export const list_gestor_administrador = async () => {
@@ -12,7 +12,6 @@ export const list_gestor_administrador = async () => {
     throw error;
   }
 }
-
 
 export const get_gestor_administrador  = async (id) => {
     try{
@@ -34,7 +33,6 @@ export const create_gestor_administrador = async (data) => {
     }
 };
 
-//atualiza filme por id
 export const update_gestor_administrador = async (id, data) => {
     try{
         const response = await axios.put(`${API_URL}/update/${id}`, data);
@@ -45,7 +43,6 @@ export const update_gestor_administrador = async (id, data) => {
     }
 };
 
-//elimina filme por id
 export const delete_gestor_administrador = async (id) => {
     try{
         const response = await axios.delete(`${API_URL}/delete/${id}`);

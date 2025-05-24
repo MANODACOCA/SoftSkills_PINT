@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('area', {
     id_area: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -18,10 +19,6 @@ module.exports = function(sequelize, DataTypes) {
     nome_area: {
       type: DataTypes.STRING(50),
       allowNull: false
-    },
-    descricao_ar: {
-      type: DataTypes.STRING(100),
-      allowNull: true
     }
   }, {
     sequelize,
@@ -30,7 +27,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "area_pkey",
+        name: "pk_area",
         unique: true,
         fields: [
           { name: "id_area" },

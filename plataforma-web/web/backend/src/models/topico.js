@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('topico', {
     id_topico: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -20,8 +21,8 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false
     },
     descricao_top: {
-      type: DataTypes.STRING(100),
-      allowNull: true
+      type: DataTypes.STRING(1024),
+      allowNull: false
     }
   }, {
     sequelize,
@@ -30,7 +31,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "topico_pkey",
+        name: "pk_topico",
         unique: true,
         fields: [
           { name: "id_topico" },

@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('utilizador', {
     id_utilizador: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -11,13 +12,22 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(1024),
       allowNull: false
     },
+    email: {
+      type: DataTypes.STRING(50),
+      allowNull: false
+    },
     password_util: {
       type: DataTypes.STRING(256),
       allowNull: false
     },
+    img_perfil: {
+      type: DataTypes.STRING(1024),
+      allowNull: false
+    },
     data_criacao_utiliz: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.fn('now')
     },
     telemovel: {
       type: DataTypes.INTEGER,
@@ -39,10 +49,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: false
     },
-    email: {
-      type: DataTypes.STRING(50),
-      allowNull: false
-    },
     data_ativ_utili: {
       type: DataTypes.DATE,
       allowNull: true
@@ -53,7 +59,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     isformando: {
       type: DataTypes.BOOLEAN,
-      allowNull: true
+      allowNull: true,
+      defaultValue: true
     },
     isformador: {
       type: DataTypes.BOOLEAN,
@@ -70,7 +77,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "utilizador_pkey",
+        name: "pk_utilizador",
         unique: true,
         fields: [
           { name: "id_utilizador" },

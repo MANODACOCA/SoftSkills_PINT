@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('twofa', {
     id_2fa: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -21,7 +22,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     data_fa: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.fn('now')
     }
   }, {
     sequelize,
@@ -30,7 +32,7 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
-        name: "twofa_pkey",
+        name: "pk_2fa",
         unique: true,
         fields: [
           { name: "id_2fa" },

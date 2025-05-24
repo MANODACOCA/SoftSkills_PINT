@@ -10,12 +10,8 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_utilizador'
       }
     },
-    especialidades: {
-      type: DataTypes.STRING(100),
-      allowNull: true
-    },
-    experiencia: {
-      type: DataTypes.STRING(100),
+    descricao_formador: {
+      type: DataTypes.STRING(1024),
       allowNull: true
     }
   }, {
