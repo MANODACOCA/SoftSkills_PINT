@@ -23,6 +23,7 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
 
   void randoCode() {
     code = Random().nextInt(90000) + 10000;
+    // ignore: avoid_print
     print('O código é : $code');
   }
 

@@ -238,6 +238,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                               context: context,
                                               showPhoneCode: false,
                                               onSelect: (Country country) {
+                                                // ignore: avoid_print
                                                 print(
                                                   'Selected country: ${country.flagEmoji} ${country.displayName}',
                                                 );
@@ -299,6 +300,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                             );
                                           },
                                         );
+                                        // ignore: avoid_print
                                         print(
                                           'Selected Gender: $selectedGender',
                                         );
@@ -377,6 +379,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
               child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.go('/profile');
+                // ignore: avoid_print
                 print('Alterações guardadas!');
               },
             ),
