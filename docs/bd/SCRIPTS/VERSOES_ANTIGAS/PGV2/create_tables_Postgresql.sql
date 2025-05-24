@@ -1,0 +1,420 @@
+/*PG-PINT*/
+
+DROP TABLE IF EXISTS RESULTADOS;
+DROP TABLE IF EXISTS SINCRONO;
+DROP TABLE IF EXISTS OCORRENCIAS_EDICOES;
+DROP TABLE IF EXISTS NOTIFICACOES_CURSO;
+DROP TABLE IF EXISTS INSCRICOES;
+DROP TABLE IF EXISTS FORMANDOS;
+DROP TABLE IF EXISTS FORMADORES;
+DROP TABLE IF EXISTS DENUNCIA;
+DROP TABLE IF EXISTS TIPO_DENUNCIA;
+DROP TABLE IF EXISTS CONTEUDOS;
+DROP TABLE IF EXISTS TIPO_FORMATO;
+DROP TABLE IF EXISTS COMENTARIO;
+DROP TABLE IF EXISTS AVALIACOES;
+DROP TABLE IF EXISTS NOTIFICACOES_POST;
+DROP TABLE IF EXISTS POST;
+DROP TABLE IF EXISTS CONTEUDOS_PARTILHADO;
+DROP TABLE IF EXISTS AULAS;
+DROP TABLE IF EXISTS ASSINCRONO;
+DROP TABLE IF EXISTS TWOFA;
+DROP TABLE IF EXISTS S_S_O;
+DROP TABLE IF EXISTS CURSOS;
+DROP TABLE IF EXISTS GESTOR_ADMINISTRADOR;
+DROP TABLE IF EXISTS UTILIZADOR;
+DROP TABLE IF EXISTS TOPICO;
+DROP TABLE IF EXISTS AREA;
+DROP TABLE IF EXISTS CATEGORIA;
+
+
+/*==============================================================*/
+/* Table: CATEGORIA                                             */
+/*==============================================================*/
+CREATE TABLE CATEGORIA (
+   ID_CATEGORIA       SERIAL PRIMARY KEY,
+   NOME_CAT           VARCHAR(50) NOT NULL,
+   DESCRICAO_CAT      VARCHAR(100) NULL
+);
+
+
+/*==============================================================*/
+/* Table: AREA                                                  */
+/*==============================================================*/
+CREATE TABLE AREA (
+   ID_AREA            SERIAL PRIMARY KEY,
+   ID_CATEGORIA       INT NOT NULL,
+   NOME_AREA          VARCHAR(50) NOT NULL,
+   DESCRICAO_AR       VARCHAR(100) NULL,
+   CONSTRAINT FK_AREA_ADQUIRE_CATEGORI FOREIGN KEY (ID_CATEGORIA)
+      REFERENCES CATEGORIA (ID_CATEGORIA)
+);
+
+
+/*==============================================================*/
+/* Table: TOPICO                                                */
+/*==============================================================*/
+CREATE TABLE TOPICO (
+   ID_TOPICO          SERIAL PRIMARY KEY,
+   ID_AREA            INT NOT NULL,
+   NOME_TOPICO        VARCHAR(50) NOT NULL,
+   DESCRICAO_TOP      VARCHAR(100) NULL,
+   CONSTRAINT FK_TOPICO_CONTAM_AREA FOREIGN KEY (ID_AREA)
+      REFERENCES AREA (ID_AREA)
+);
+
+
+/*==============================================================*/
+/* Table: UTILIZADOR                                            */
+/*==============================================================*/
+CREATE TABLE UTILIZADOR (
+   ID_UTILIZADOR       SERIAL PRIMARY KEY,
+   NOME_UTILIZADOR     VARCHAR(1024) NOT NULL,
+   PASSWORD_UTIL       VARCHAR(256) NOT NULL,
+   DATA_CRIACAO_UTILIZ TIMESTAMP NOT NULL,
+   TELEMOVEL           INT NULL,
+   GENERO              INT NOT NULL,
+   MORADA              VARCHAR(100) NOT NULL,
+   PAIS                VARCHAR(100) NOT NULL,
+   DATA_NASC           TIMESTAMP NOT NULL,
+   EMAIL               VARCHAR(50) NOT NULL,
+   DATA_ATIV_UTILI     TIMESTAMP NULL,
+   AUTEN2FAT           BOOLEAN NULL,
+   ISFORMANDO          BOOLEAN NULL,
+   ISFORMADOR          BOOLEAN NULL,
+   ISGESTOR_ADMINISTRADOR BOOLEAN NULL
+);
+
+
+/*==============================================================*/
+/* Table: S_S_O                                                 */
+/*==============================================================*/
+CREATE TABLE S_S_O (
+   ID_SSO             SERIAL PRIMARY KEY,
+   ID_UTILIZADOR      INT NOT NULL,
+   EMAIL_SSO          VARCHAR(50) NOT NULL,
+   TOKEN              VARCHAR(2048) NOT NULL,
+   CONSTRAINT FK_S_S_O_PODE_POSS_UTILIZAD FOREIGN KEY (ID_UTILIZADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR)
+);
+
+
+/*==============================================================*/
+/* Table: TWOFA                                                 */
+/*==============================================================*/
+CREATE TABLE TWOFA (
+   ID_2FA            SERIAL PRIMARY KEY,
+   ID_UTILIZADOR     INT NOT NULL,
+   CODIGO            VARCHAR(6) NOT NULL,
+   DATA_FA           TIMESTAMP NOT NULL,
+   CONSTRAINT FK_2FA_IRA_FAZER_UTILIZAD FOREIGN KEY (ID_UTILIZADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR)
+);
+
+
+/*==============================================================*/
+/* Table: GESTOR_ADMINISTRADOR                                  */
+/*==============================================================*/
+CREATE TABLE GESTOR_ADMINISTRADOR (
+   ID_GESTOR_ADMINISTRADOR INT NOT NULL,
+   CONSTRAINT PK_GESTOR_ADMINISTRADOR PRIMARY KEY (ID_GESTOR_ADMINISTRADOR),
+   CONSTRAINT FK_GESTOR_A_PODE_SER2_UTILIZAD FOREIGN KEY (ID_GESTOR_ADMINISTRADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR)
+);
+
+
+/*==============================================================*/
+/* Table: CURSOS                                                */
+/*==============================================================*/
+CREATE TABLE CURSOS (
+   ID_CURSO             SERIAL PRIMARY KEY,
+   ID_GESTOR_ADMINISTRADOR INT NOT NULL,
+   ID_TOPICO            INT NOT NULL,
+   NOME_CURSO           VARCHAR(75) NOT NULL,
+   DESCRICAO_CURSO      VARCHAR(256) NOT NULL,
+   NUMERO_VAGAS         INT NULL,
+   DATA_INICIO_CURSO    TIMESTAMP NOT NULL,
+   DATA_FIM_CURSO       TIMESTAMP NOT NULL,
+   ESTADO               INT NOT NULL,
+   IDIOMA               VARCHAR(50) NOT NULL,
+   HORAS_CURSO          FLOAT NOT NULL,
+   CONTADOR_FORMANDOS   INT NOT NULL,
+   IMAGEM               VARCHAR(500) NULL,
+   ISASSINCRONO         BOOLEAN NULL,
+   ISSINCRONO           BOOLEAN NULL,
+   CONSTRAINT FK_CURSOS_CONTA_TOPICO FOREIGN KEY (ID_TOPICO)
+      REFERENCES TOPICO (ID_TOPICO),
+   CONSTRAINT FK_CURSOS_CRIA_GESTOR_A FOREIGN KEY (ID_GESTOR_ADMINISTRADOR)
+      REFERENCES GESTOR_ADMINISTRADOR (ID_GESTOR_ADMINISTRADOR)
+);
+
+
+/*==============================================================*/
+/* Table: ASSINCRONO                                            */
+/*==============================================================*/
+CREATE TABLE ASSINCRONO (
+   ID_CURSO_ASSINCRONO  SERIAL                  NOT NULL,
+   CONSTRAINT PK_ASSINCRONO PRIMARY KEY (ID_CURSO_ASSINCRONO),
+   CONSTRAINT FK_ASSINCRO_PODEM_SER_CURSOS FOREIGN KEY (ID_CURSO_ASSINCRONO)
+      REFERENCES CURSOS (ID_CURSO)
+);
+
+
+/*==============================================================*/
+/* Table: AULAS                                                 */
+/*==============================================================*/
+CREATE TABLE AULAS (
+   ID_AULA            SERIAL                NOT NULL,
+   CONSTRAINT PK_AULAS PRIMARY KEY (ID_AULA),
+   ID_CURSO           INT                   NOT NULL,
+   DATA_AULA          TIMESTAMP             NOT NULL,
+   NOME_AULA          VARCHAR(50)           NOT NULL,
+   CONSTRAINT FK_AULAS_E_CONSTIT_CURSOS FOREIGN KEY (ID_CURSO)
+      REFERENCES CURSOS (ID_CURSO)
+);
+
+
+/*==============================================================*/
+/* Table: CONTEUDOS_PARTILHADO                                  */
+/*==============================================================*/
+CREATE TABLE CONTEUDOS_PARTILHADO (
+   ID_CONTEUDOS_PARTILHADO SERIAL              NOT NULL,
+   ID_TOPICO             INT                 NOT NULL,
+   DESCRICAO_CP          VARCHAR(50)         NULL,
+   DATA_CRIACAO_CP       TIMESTAMP           NOT NULL,
+   CONSTRAINT PK_CONTEUDOS_PARTILHADO PRIMARY KEY (ID_CONTEUDOS_PARTILHADO),
+   CONSTRAINT FK_CONTEUDO_DETEM_TOPICO FOREIGN KEY (ID_TOPICO)
+      REFERENCES TOPICO (ID_TOPICO)
+);
+
+
+/*==============================================================*/
+/* Table: POST                                                  */
+/*==============================================================*/
+CREATE TABLE POST (
+   ID_POST               SERIAL              NOT NULL,
+   ID_UTILIZADOR         INT                 NOT NULL,
+   ID_CONTEUDOS_PARTILHADO INT               NOT NULL,
+   TEXTO_POST            VARCHAR(100)        NOT NULL,
+   CONTADOR_LIKES_POST   INT                 NOT NULL,
+   CONTADOR_COMENTARIOS  INT                 NOT NULL,
+   CONSTRAINT PK_POST PRIMARY KEY (ID_POST),
+   CONSTRAINT FK_POST_VAI_TER_CONTEUDO FOREIGN KEY (ID_CONTEUDOS_PARTILHADO)
+      REFERENCES CONTEUDOS_PARTILHADO (ID_CONTEUDOS_PARTILHADO),
+   CONSTRAINT FK_POST_ESCREVE_UTILIZAD FOREIGN KEY (ID_UTILIZADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR)
+);
+
+
+/*==============================================================*/
+/* Table: NOTIFICACOES_POST                                     */
+/*==============================================================*/
+CREATE TABLE NOTIFICACOES_POST (
+   ID_NOTIFICACAO_POST       SERIAL               NOT NULL,
+   ID_CURSO                  INT                  NOT NULL,
+   ID_POST                   INT                  NOT NULL,
+   ID_UTILIZADOR             INT                  NOT NULL,
+   DATA_HORA_NOTIFICACAOCP   TIMESTAMP            NOT NULL,
+   CONSTRAINT PK_NOTIFICACOES_POST PRIMARY KEY (ID_NOTIFICACAO_POST),
+   CONSTRAINT FK_NOTIFICA_ENGLOBA_UTILIZAD FOREIGN KEY (ID_UTILIZADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR),
+   CONSTRAINT FK_NOTIFICA_PODE_TER_CURSOS FOREIGN KEY (ID_CURSO)
+      REFERENCES CURSOS (ID_CURSO),
+   CONSTRAINT FK_NOTIFICA_PERTENEC_POST FOREIGN KEY (ID_POST)
+      REFERENCES POST (ID_POST)
+);
+
+
+/*==============================================================*/
+/* Table: AVALIACOES                                            */
+/*==============================================================*/
+CREATE TABLE AVALIACOES (
+   ID_AVALIACAO      SERIAL        NOT NULL,
+   ID_POST           INT           NOT NULL,
+   ID_UTILIZADOR     INT           NOT NULL,
+   AVALIACAO         BOOLEAN       NOT NULL,
+   CONSTRAINT PK_AVALIACOES PRIMARY KEY (ID_AVALIACAO),
+   CONSTRAINT FK_AVALIACO_FAZER_UTILIZAD FOREIGN KEY (ID_UTILIZADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR),
+   CONSTRAINT FK_AVALIACO_EXISTEM___POST FOREIGN KEY (ID_POST)
+      REFERENCES POST (ID_POST)
+);
+
+
+/*==============================================================*/
+/* Table: COMENTARIO                                            */
+/*==============================================================*/
+CREATE TABLE COMENTARIO (
+   ID_COMENTARIO         SERIAL             NOT NULL,
+   ID_POST               INT                NOT NULL,
+   ID_UTILIZADOR         INT                NOT NULL,
+   ID_AVALIACAO          INT                NOT NULL,
+   TEXTO_COMENTARIO      VARCHAR(500)       NOT NULL,
+   CONTADOR_LIKES_COM    INT                NOT NULL,
+   CONSTRAINT PK_COMENTARIO PRIMARY KEY (ID_COMENTARIO),
+   CONSTRAINT FK_COMENTAR_RELATIONS_POST FOREIGN KEY (ID_POST)
+      REFERENCES POST (ID_POST),
+   CONSTRAINT FK_COMENTAR_ESCREVE__UTILIZAD FOREIGN KEY (ID_UTILIZADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR),
+   CONSTRAINT FK_COMENTAR_EXISTEM__AVALIACO FOREIGN KEY (ID_AVALIACAO)
+      REFERENCES AVALIACOES (ID_AVALIACAO)
+);
+
+
+/*==============================================================*/
+/* Table: TIPO_FORMATO                                          */
+/*==============================================================*/
+CREATE TABLE TIPO_FORMATO (
+   ID_FORMATO SERIAL NOT NULL,
+   FORMATO VARCHAR(200) NOT NULL,
+   CONSTRAINT PK_TIPO_FORMATO PRIMARY KEY (ID_FORMATO)
+);
+
+
+/*==============================================================*/
+/* Table: CONTEUDOS                                             */
+/*==============================================================*/
+CREATE TABLE CONTEUDOS (
+   ID_CONTEUDO SERIAL NOT NULL,
+   ID_AULA INT NOT NULL,
+   ID_FORMATO INT NOT NULL,
+   CONTEUDO VARCHAR(200) NOT NULL,
+   CONSTRAINT PK_CONTEUDOS PRIMARY KEY (ID_CONTEUDO),
+   CONSTRAINT FK_CONTEUDO_TEM_DISPO_AULAS FOREIGN KEY (ID_AULA)
+      REFERENCES AULAS (ID_AULA),
+   CONSTRAINT FK_CONTEUDO_REUNE_TIPO_FOR FOREIGN KEY (ID_FORMATO)
+      REFERENCES TIPO_FORMATO (ID_FORMATO)
+);
+
+
+/*==============================================================*/
+/* Table: TIPO_DENUNCIA                                         */
+/*==============================================================*/
+CREATE TABLE TIPO_DENUNCIA (
+   ID_TIPO_DENUNCIA SERIAL NOT NULL,
+   TIPO_DENUNCIA VARCHAR(100) NOT NULL,
+   CONSTRAINT PK_TIPO_DENUNCIA PRIMARY KEY (ID_TIPO_DENUNCIA)
+);
+
+
+/*==============================================================*/
+/* Table: DENUNCIA                                              */
+/*==============================================================*/
+CREATE TABLE DENUNCIA (
+   ID_DENUNCIA SERIAL NOT NULL,
+   ID_COMENTARIO INT NOT NULL,
+   ID_UTILIZADOR INT NOT NULL,
+   ID_POST INT NOT NULL,
+   ID_TIPO_DENUNCIA INT NOT NULL,
+   CONSTRAINT PK_DENUNCIA PRIMARY KEY (ID_DENUNCIA),
+   CONSTRAINT FK_DENUNCIA_REALIZA_UTILIZAD FOREIGN KEY (ID_UTILIZADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR),
+   CONSTRAINT FK_DENUNCIA_POSSUIR_TIPO_DEN FOREIGN KEY (ID_TIPO_DENUNCIA)
+      REFERENCES TIPO_DENUNCIA (ID_TIPO_DENUNCIA),
+   CONSTRAINT FK_DENUNCIA_RELATIONS_POST FOREIGN KEY (ID_POST)
+      REFERENCES POST (ID_POST),
+   CONSTRAINT FK_DENUNCIA_PERTENCE_COMENTAR FOREIGN KEY (ID_COMENTARIO)
+      REFERENCES COMENTARIO (ID_COMENTARIO)
+);
+
+
+/*==============================================================*/
+/* Table: FORMADORES                                            */
+/*==============================================================*/
+CREATE TABLE FORMADORES (
+   ID_FORMADOR INT NOT NULL,
+   ESPECIALIDADES VARCHAR(100),
+   EXPERIENCIA VARCHAR(100),
+   CONSTRAINT PK_FORMADORES PRIMARY KEY (ID_FORMADOR),
+   CONSTRAINT FK_FORMADOR_PODE_SER3_UTILIZAD FOREIGN KEY (ID_FORMADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR)
+);
+
+
+/*==============================================================*/
+/* Table: FORMANDOS                                             */
+/*==============================================================*/
+CREATE TABLE FORMANDOS (
+   ID_FORMANDO INT NOT NULL,
+   PERCURSO_FORMATIVO VARCHAR(100),
+   CONSTRAINT PK_FORMANDOS PRIMARY KEY (ID_FORMANDO),
+   CONSTRAINT FK_FORMANDO_PODE_SER_UTILIZAD FOREIGN KEY (ID_FORMANDO)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR)
+);
+
+
+/*==============================================================*/
+/* Table: INSCRICOES                                            */
+/*==============================================================*/
+CREATE TABLE INSCRICOES (
+   ID_INSCRICAO SERIAL NOT NULL,
+   ID_FORMANDO INT NOT NULL,
+   ID_CURSO INT NOT NULL,
+   DATA_LIMITE TIMESTAMP NOT NULL,
+   DATA_INICIO_INSC TIMESTAMP NOT NULL,
+   STATUS_INSCRICAO INT NOT NULL,
+   CONSTRAINT PK_INSCRICOES PRIMARY KEY (ID_INSCRICAO),
+   CONSTRAINT FK_INSCRICO_DETERMINA_CURSOS FOREIGN KEY (ID_CURSO)
+      REFERENCES CURSOS (ID_CURSO),
+   CONSTRAINT FK_INSCRICO_REALIZAM_FORMANDO FOREIGN KEY (ID_FORMANDO)
+      REFERENCES FORMANDOS (ID_FORMANDO)
+);
+
+
+/*==============================================================*/
+/* Table: NOTIFICACOES_CURSO                                    */
+/*==============================================================*/
+CREATE TABLE NOTIFICACOES_CURSO (
+   ID_NOTIFICACAO_CURSOS SERIAL NOT NULL,
+   ID_UTILIZADOR INT NOT NULL,
+   ID_CURSO INT NOT NULL,
+   DATA_HORA_NOTIFICACAOCURSO TIMESTAMP NOT NULL,
+   CONSTRAINT PK_NOTIFICACOES_CURSO PRIMARY KEY (ID_NOTIFICACAO_CURSOS),
+   CONSTRAINT FK_NORIFICA_VAI_RECEB_UTILIZAD FOREIGN KEY (ID_UTILIZADOR)
+      REFERENCES UTILIZADOR (ID_UTILIZADOR),
+   CONSTRAINT FK_NORIFICA_TERA_CURSOS FOREIGN KEY (ID_CURSO)
+      REFERENCES CURSOS (ID_CURSO)
+);
+
+
+/*==============================================================*/
+/* Table: OCORRENCIAS_EDICOES                                   */
+/*==============================================================*/
+CREATE TABLE OCORRENCIAS_EDICOES (
+   ID_CURSO INT NOT NULL,
+   NR_OCORRENCIA INT NOT NULL,
+   DATA_ULT_OCORRENCIA TIMESTAMP NOT NULL,
+   CONSTRAINT PK_OCORRENCIAS_EDICOES PRIMARY KEY (ID_CURSO, NR_OCORRENCIA),
+   CONSTRAINT FK_OCORRENC_CONTEM_VA_CURSOS FOREIGN KEY (ID_CURSO)
+      REFERENCES CURSOS (ID_CURSO)
+);
+
+
+/*==============================================================*/
+/* Table: SINCRONO                                              */
+/*==============================================================*/
+CREATE TABLE SINCRONO (
+   ID_CURSO_SINCRONO INT NOT NULL,
+   ID_FORMADOR INT NOT NULL,
+   CONSTRAINT PK_SINCRONO PRIMARY KEY (ID_CURSO_SINCRONO),
+   CONSTRAINT FK_SINCRONO_LECIONAM_FORMADOR FOREIGN KEY (ID_FORMADOR)
+      REFERENCES FORMADORES (ID_FORMADOR),
+   CONSTRAINT FK_SINCRONO_PODEM_SER_CURSOS FOREIGN KEY (ID_CURSO_SINCRONO)
+      REFERENCES CURSOS (ID_CURSO)
+);
+
+
+/*==============================================================*/
+/* Table: RESULTADOS                                            */
+/*==============================================================*/
+CREATE TABLE RESULTADOS (
+   ID_RESUL SERIAL NOT NULL,
+   ID_FORMANDO INT NOT NULL,
+   ID_CURSO_SINCRONO INT NOT NULL,
+   RESUL FLOAT NOT NULL,
+   CONSTRAINT PK_RESULTADOS PRIMARY KEY (ID_RESUL),
+   CONSTRAINT FK_RESULTAD_VAI_POSSU_SINCRONO FOREIGN KEY (ID_CURSO_SINCRONO)
+      REFERENCES SINCRONO (ID_CURSO_SINCRONO),
+   CONSTRAINT FK_RESULTAD_CLASSIFIC_FORMANDO FOREIGN KEY (ID_FORMANDO)
+      REFERENCES FORMANDOS (ID_FORMANDO)
+);

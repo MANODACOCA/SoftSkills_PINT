@@ -1,0 +1,8 @@
+.sticky-card {
+  position: sticky;
+  top: 100px;
+}
+
+.bg-custom-light{
+  background-color: #e6f2ff;
+}
