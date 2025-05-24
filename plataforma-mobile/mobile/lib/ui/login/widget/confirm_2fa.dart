@@ -23,6 +23,7 @@ class _TwoFactorAuthentication extends State<TwoFactorAuthentication> {
 
   void randomCode() {
     code = Random().nextInt(90000) + 10000;
+    // ignore: avoid_print
     print('O código é : $code');
   }
 

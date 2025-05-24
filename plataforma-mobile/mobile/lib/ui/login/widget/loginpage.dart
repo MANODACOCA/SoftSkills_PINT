@@ -153,6 +153,7 @@ class _LoginPage extends State<LoginPage> {
                             onChanged: (value) async {
                               setState(() {
                                 isSwitched = value;
+                                // ignore: avoid_print
                                 print('Switch is $isSwitched');
                               });
                               await _saveRememberMe(value);

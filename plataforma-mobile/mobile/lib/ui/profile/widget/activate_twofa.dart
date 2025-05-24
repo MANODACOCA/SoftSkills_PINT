@@ -13,7 +13,7 @@ class TwoFactorActivate extends StatefulWidget {
 
 class _TwoFactorActivate extends State<TwoFactorActivate> {
   bool _isTwoFactorEnabled = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -77,6 +77,7 @@ class _TwoFactorActivate extends State<TwoFactorActivate> {
                       setState(() {
                         _isTwoFactorEnabled = !_isTwoFactorEnabled;
                         _saveTwoFactor(_isTwoFactorEnabled);
+                        // ignore: avoid_print
                         print(
                           'Autenticação de dois fatores: $_isTwoFactorEnabled',
                         );
