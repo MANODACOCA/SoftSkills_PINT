@@ -7,9 +7,6 @@ import './Carrousel.css';
 
 
 const MyCarousel = ({ course }) => {
-
-  if (!course) return null;
-
   return (
     <Carousel fade>
 
@@ -35,6 +32,7 @@ const MyCarousel = ({ course }) => {
         </Carousel.Caption>
       </Carousel.Item>
 
+      {course && (
       <Carousel.Item className='bg-dark rounded-4 position-relative overflow-hidden'>
         <img className="carrousel-img-centered" src={course.imagem} alt="Slide" />
         <Carousel.Caption className='carousel-caption overlay-caption text-center'>
@@ -45,7 +43,7 @@ const MyCarousel = ({ course }) => {
           </a>
         </Carousel.Caption>
       </Carousel.Item>
-
+     )}
     </Carousel>
   );
 };

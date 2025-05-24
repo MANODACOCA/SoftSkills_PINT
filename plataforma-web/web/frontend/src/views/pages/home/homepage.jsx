@@ -37,6 +37,12 @@ const HomePage = () => {
       const courseSync = await getCourseDestaqueSincrono();
       const courseAsync = await getCourseDestaqueAssincrono();
       const topCourses = await getCousesWithMoreFormandos();
+
+      
+    console.log('Sincrono:', courseSync);
+    console.log('Assincrono:', courseAsync);
+    console.log('Top:', topCourses);
+
       setCourseSincrono(courseSync);
       setCourseAssincrono(courseAsync);
       setTopCourses(topCourses);
@@ -50,8 +56,16 @@ const HomePage = () => {
     fetchCoursesDestaque();
   }, []);
 
+  useEffect(() => {
+  console.log("Estado atual:", {
+    topCourses,
+    courseSincrono,
+    courseAssincrono
+  });
+}, [topCourses, courseSincrono, courseAssincrono]);
+
   return (
-    <div classname="">
+    <div className="">
       <div className='px-3'><Slide course={topCourses}/></div>
 
       <ScrollableSection title="Para si" courses={courses} scrollRef={scrollRef} onScroll={scroll}></ScrollableSection>
