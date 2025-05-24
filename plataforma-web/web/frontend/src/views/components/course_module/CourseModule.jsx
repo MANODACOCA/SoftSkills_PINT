@@ -32,10 +32,7 @@ const CourseModule = ({ module, index }) => {
       {/* Conteúdo do módulo (exibido quando expandido) */}
       {isExpanded && (
         <div className="bg-white border-top px-4 py-3">
-          {module.description && (
-            <p className="mb-3 text-muted">{module.description}</p>
-          )}
-          
+
           {module.aulas && module.aulas.length > 0 ? (
             <div className="list-group">
               {module.aulas.map((aula) => (

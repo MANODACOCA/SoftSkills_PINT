@@ -127,88 +127,97 @@ const courseModules = [
   if (!course) return <div className="">Curso não encontrado</div>;
 
   return (
-    <div className="px-3">
-      <div className="row">
-        {/* Coluna Esquerda */}
-        <div className="col-md-8">
-          <div className="course-header">
-            <h1 className="course-title">{course.nome_curso}</h1>
+  <div className="px-3">
+    {/* Header com fundo azul de largura completa */}
+    <div className="row bg-custom-light rounded-4">
+      <div className="col-md-8">
+        <div className="">
+          <h1 className="fs-2 fw-bold">{course.nome_curso}</h1>
 
-            <div className="course-info">
-              <div className="info-item">
-                <FaVideo className="info-icon me-2 fs-3" />
-                <span className="info-text fw-bold">Tipologia: {course.issincrono ? 'Síncrono' : course.isassincrono ? 'Assíncrono' : 'Outro'}</span>
-              </div>
-              <div className="info-item justify-content-align-itens-center">
-                <FaUsers className="info-icon me-2 fs-3" />
-                <span className="info-text fw-bold ">Vagas: {course.contador_formandos} / {course.numero_vagas}</span>
-              </div>
-              <div className="info-item">
-                <FaCalendarAlt className="info-icon me-2 fs-3" />
-                <span className="info-text fw-bold">
-                  Inscrições: {formatDayMonthYear(course.data_inicio_inscricao)} - {formatDayMonthYear(course.data_fim_inscricao)}
-                </span>
-              </div>
+          <div className="d-flex flex-column flex-md-row gap-3 mt-3">
+            <div className="d-flex align-items-center">
+              <FaVideo className="text-primary me-2 fs-4" />
+              <span className="fw-bold">Tipologia: {course.issincrono ? 'Síncrono' : course.isassincrono ? 'Assíncrono' : 'Outro'}</span>
             </div>
-          </div>
-
-          <h2>Descrição</h2>
-          <p>{course.descricao_curso || "Sem descrição disponível para este curso."}</p>
-
-          <h2 className="mt-5">Conteúdo</h2>
-          {courseModules.map((module, index) => (
-            <CourseModule key={index} module={module} index={index} />
-          ))}
-
-          <h2 className="mt-5">Formador</h2>
-          <div className="d-flex align-items-center mt-3 gap-3">
-            <img
-              src={course.formador?.imagem_utilizador || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(course.formador?.nome_formador || 'Formador')}`}
-              alt="Foto do formador"
-              className="rounded-circle"
-              width="80"
-              height="80"
-            />
-            <div>
-              <h5 className="mb-1">{course.formador?.nome_formador || "Formador não especificado"}</h5>
-              <p className="mb-0 text-muted">{course.formador?.email_formador || ""}</p>
-              {course.formador?.descricao_formador && (
-                <p className="mt-2">{course.formador.descricao_formador}</p>
-              )}
+            <div className="d-flex align-items-center">
+              <FaUsers className="text-primary me-2 fs-4" />
+              <span className="fw-bold">Vagas: {course.contador_formandos} / {course.numero_vagas}</span>
+            </div>
+            <div className="d-flex align-items-center">
+              <FaCalendarAlt className="text-primary me-2 fs-4" />
+              <span className="fw-bold">
+                Inscrições: {formatDayMonthYear(course.data_inicio_inscricao)} - {formatDayMonthYear(course.data_fim_inscricao)}
+              </span>
             </div>
           </div>
         </div>
+      </div>
+      
+      {/* O espaço da coluna direita também faz parte do header com fundo azul */}
+      <div className="col-md-4"></div>
+    </div>
 
-        {/* Coluna Direita - Card Sticky */}
-        <div className="col-md-4">
-          <div className={isSticky ? "sticky-card" : ""}>
-            <EnrollmentCard
-              course={course}
-              onEnroll={() => handleEnroll(course.id_curso)}
-            />
+    {/* Conteúdo principal - mantém a estrutura de 8+4 colunas */}
+    <div className="row">
+      {/* Coluna Esquerda - conteúdo */}
+      <div className="col-md-8 mt-4">
+        <h2>Descrição</h2>
+        <p>{course.descricao_curso || "Sem descrição disponível para este curso."}</p>
+
+        <h2 className="mt-5">Conteúdo</h2>
+        {courseModules.map((module, index) => (
+          <CourseModule key={index} module={module} index={index} />
+        ))}
+
+        <h2 className="mt-5">Formador</h2>
+        <div className="d-flex align-items-center mt-3 gap-3">
+          <img
+            src={course.formador?.imagem_utilizador || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(course.formador?.nome_formador || 'Formador')}`}
+            alt="Foto do formador"
+            className="rounded-circle"
+            width="80"
+            height="80"
+          />
+          <div>
+            <h5 className="mb-1">{course.formador?.nome_formador || "Formador não especificado"}</h5>
+            <p className="mb-0 text-muted">{course.formador?.email_formador || ""}</p>
+            {course.formador?.descricao_formador && (
+              <p className="mt-2">{course.formador.descricao_formador}</p>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Row para os cursos de interesse apos formador e card */}
-      <div className="row mt-5">
-        <div className="col-12">
-          <h2 className="mb-3" ref={sentinelRef}>Cursos que podem ser do seu interesse</h2>
-          {relatedCourses.length > 0 ? (
-            <ScrollableSection
-              title=""
-              courses={relatedCourses}
-              scrollRef={scrollRef}
-              onScroll={(ref, direction) =>
-                ref.current?.scrollBy({ left: direction === 'left' ? -300 : 300, behavior: 'smooth' })}
-            />
-          ) : (
-            <p>Não encontramos cursos relacionados.</p>
-          )}
+      {/* Coluna Direita - Card Sticky (sobreposto ao header) */}
+      <div className="col-md-4">
+        <div className={isSticky ? "sticky-card" : ""} style={{marginTop: "-70px"}}>
+          <EnrollmentCard
+            course={course}
+            onEnroll={() => handleEnroll(course.id_curso)}
+          />
         </div>
       </div>
     </div>
-  );
+
+    {/* Resto do conteúdo permanece igual */}
+    <div className="row mt-5">
+      <div className="col-12">
+        <h2 className="mb-3" ref={sentinelRef}>Cursos que podem ser do seu interesse</h2>
+        {relatedCourses.length > 0 ? (
+          <ScrollableSection
+            title=""
+            courses={relatedCourses}
+            scrollRef={scrollRef}
+            onScroll={(ref, direction) =>
+              ref.current?.scrollBy({ left: direction === 'left' ? -300 : 300, behavior: 'smooth' })}
+          />
+        ) : (
+          <p>Não encontramos cursos relacionados.</p>
+        )}
+      </div>
+    </div>
+  </div>
+);
 };
 
 export default CourseRegistration;
