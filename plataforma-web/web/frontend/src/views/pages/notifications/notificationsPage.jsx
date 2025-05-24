@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import NotificationRow from "../../components/notification_row/notification_row";
 import { delete_notificacoes_curso, find_notificacao_curso, list_notificacoes_curso } from '../../../api/notificacoes_curso_axios';
-import { delete_notificacoes_post, find_notificacao_post, list_notificacoes_post } from '../../../api/notificacoes_post_axios';
+import { delete_notificacoes_comentarios_post, find_notificacoes_comentarios_post  } from '../../../api/notificacoes_comentarios_post_axios';
 
 
 const NotificationPage = () => {
@@ -12,7 +12,7 @@ const NotificationPage = () => {
     const fetchAllNotifications = async () => {
         try {
             const cursos = await find_notificacao_curso();
-            const posts = await find_notificacao_post();
+            const posts = await find_notificacoes_comentarios_post();
 
             const cursosComTipo = cursos.map(n => ({
                 ...n,
@@ -46,7 +46,7 @@ const NotificationPage = () => {
                 await delete_notificacoes_curso(id);
             } else if (tipo == 'post') {
                 console.log(id);
-                await delete_notificacoes_post(id);
+                await delete_notificacoes_comentarios_post(id);
             }
             fetchAllNotifications();
             console.log('Eliminado com sucesso!');

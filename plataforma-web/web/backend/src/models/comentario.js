@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('comentario', {
     id_comentario: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -23,16 +24,8 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_utilizador'
       }
     },
-    id_avaliacao: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'avaliacoes',
-        key: 'id_avaliacao'
-      }
-    },
     texto_comentario: {
-      type: DataTypes.STRING(500),
+      type: DataTypes.STRING(1024),
       allowNull: false
     },
     contador_likes_com: {

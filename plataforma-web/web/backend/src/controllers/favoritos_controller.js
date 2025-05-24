@@ -1,8 +1,8 @@
-//const model = require('../models/avaliacoes');;
+//const model = require('../models/favoritos');;
 
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const model = initModels(sequelize).avaliacoes;
+const model = initModels(sequelize).favoritos;
 const controllers = {};
 
 
@@ -19,10 +19,10 @@ controllers.get = async (req,res)=>{
     if(data){
       res.status(200).json(data);
     }else{
-      res.status(404).json({erro: 'Avaliacao nao encontrado/a!'});
+      res.status(404).json({erro: 'Favoritos nao encontrado/a!'});
     }
   }catch (err){
-    res.status(500).json({erro: 'Erro ao procurar Avaliacao!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao procurar Favoritos!',desc: err.message});
   }
 };
 
@@ -32,10 +32,10 @@ controllers.create = async (req,res)=>{
       const data = await model.create(req.body);
       res.status(201).json(data);
     }else{
-      res.status(400).json({erro: 'Erro ao criar Avaliacao!',desc: 'Corpo do pedido esta vazio.'});
+      res.status(400).json({erro: 'Erro ao criar Favoritos!',desc: 'Corpo do pedido esta vazio.'});
     }
   }catch(err){
-    res.status(500).json({erro: 'Erro ao criar Avaliacao!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao criar Favoritos!',desc: err.message});
   }
 };
 
@@ -48,13 +48,13 @@ controllers.update = async (req,res)=>{
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
       }else{
-        res.status(404).json({erro:'Avaliacao nao foi atualizado/a!'});
+        res.status(404).json({erro:'Favoritos nao foi atualizado/a!'});
       }
     }else{
-      res.status(400).json({erro: 'Erro ao atualizar o/a Avaliacao!',desc: 'Corpo do pedido esta vazio.'});
+      res.status(400).json({erro: 'Erro ao atualizar o/a Favoritos!',desc: 'Corpo do pedido esta vazio.'});
     }
   }catch(err){
-    res.status(500).json({erro: 'Erro ao atualizar o/a Avaliacao!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao atualizar o/a Favoritos!',desc: err.message});
   }
 };
 
@@ -63,12 +63,12 @@ controllers.delete = async (req,res)=>{
     const {id} = req.params;
     const deleted = await model.destroy({where:{id:id}});
     if(deleted){
-      res.status(200).json({msg:'Avaliacao apagado/a com sucesso!'});
+      res.status(200).json({msg:'Favoritos apagado/a com sucesso!'});
     }else{
-      res.status(404).json({erro:'Avaliacao não foi apagado/a!'});
+      res.status(404).json({erro:'Favoritos não foi apagado/a!'});
     }
   }catch(err) {
-    res.status(500).json({erro:'Erro ao apagar o/a Avaliacao!',desc: err.message});
+    res.status(500).json({erro:'Erro ao apagar o/a Favoritos!',desc: err.message});
   }
 };
 

@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('post', {
     id_post: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -24,7 +25,7 @@ module.exports = function(sequelize, DataTypes) {
       }
     },
     texto_post: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(1024),
       allowNull: false
     },
     contador_likes_post: {

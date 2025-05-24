@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('conteudos_partilhado', {
     id_conteudos_partilhado: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -15,13 +16,10 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_topico'
       }
     },
-    descricao_cp: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
     data_criacao_cp: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.fn('now')
     }
   }, {
     sequelize,

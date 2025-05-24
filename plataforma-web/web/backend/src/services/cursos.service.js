@@ -1,95 +1,104 @@
-const { Sequelize, Op, where } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, inscricoes, resultados, area, topico } = require('../models/init-models')(sequelize);
+const { cursos, inscricoes, resultados, area, topico, aulas, conteudos } = require('../models/init-models')(sequelize);
 
 // Função para obter o curso síncrono em destaque
 async function getCourseDestaqueSincrono() {
+  try {
+    // Primeiro, encontrar o curso síncrono com o maior número de formandos
+    // usando um JOIN entre as tabelas cursos e sincrono
+    const featuredCourse = await cursos.findOne({
+      include: [
+        {
+          model: sequelize.models.sincrono,
+          as: 'sincrono',
+          required: true, 
+          attributes: ['numero_vagas']
+        }
+      ],
+      where: {
+        issincrono: true,
+        contador_formandos: {
+          [Op.lt]: Sequelize.col('sincrono.numero_vagas') // Compara com o campo na tabela sincrono
+        }
+      },
+      order: [['contador_formandos', 'DESC'], Sequelize.literal('RANDOM()')],
+      subQuery: false
+    });
 
-  const maxFormandosSubquery = await cursos.findOne({
-    attributes: [
-      [Sequelize.fn('MAX', Sequelize.col('contador_formandos')), 'max_formandos']
-    ],
-    where: {
-      issincrono: true,
-      contador_formandos: {
-        [Op.lt]: Sequelize.col('numero_vagas')
-      }
-    },
-    raw: true
-  });
-
-
-  if (!maxFormandosSubquery || maxFormandosSubquery.max_formandos === null) {
+    return featuredCourse;
+  } catch (error) {
+    console.error('Erro ao procurar curso síncrono em destaque:', error);
     return null;
   }
-
-  const featuredCourse = await cursos.findOne({
-    where: {
-      issincrono: true,
-      contador_formandos: maxFormandosSubquery.max_formandos,
-      numero_vagas: {
-        [Op.gt]: Sequelize.col('contador_formandos')
-      }
-    },
-    order: Sequelize.literal('RANDOM()')
-  });
-
-  return featuredCourse;
 }
 
 // Função para obter o curso assíncrono em destaque
 async function getCourseDestaqueAssincrono() {
+  try {
+    const featuredCourse = await cursos.findOne({
+      include: [
+        {
+          model: sequelize.models.assincrono,
+          as: 'assincrono',
+          required: true,
+          attributes: ['numero_vagas']
+        }
+      ],
+      where: {
+        isassincrono: true,
+        contador_formandos: {
+          [Op.lt]: Sequelize.col('assincrono.numero_vagas')
+        }
+      },
+      order: [['contador_formandos', 'DESC'], Sequelize.literal('RANDOM()')],
+      subQuery: false
+    });
 
-  const maxFormandosSubquery = await cursos.findOne({
-    attributes: [
-      [Sequelize.fn('MAX', Sequelize.col('contador_formandos')), 'max_formandos']
-    ],
-    where: {
-      isassincrono: true,
-      contador_formandos: {
-        [Op.lt]: Sequelize.col('numero_vagas')
-      }
-    },
-    raw: true
-  });
-
-
-  if (!maxFormandosSubquery || maxFormandosSubquery.max_formandos === null) {
+    return featuredCourse;
+  } catch (error) {
+    console.error('Erro ao procurar curso assíncrono em destaque:', error);
     return null;
   }
-
-
-  const featuredCourse = await cursos.findOne({
-    where: {
-      isassincrono: true,
-      contador_formandos: maxFormandosSubquery.max_formandos,
-      numero_vagas: {
-        [Op.gt]: Sequelize.col('contador_formandos')
-      }
-    },
-    order: Sequelize.literal('RANDOM()')
-  });
-
-  return featuredCourse;
 }
 
 async function getCourseWithMoreFormandos() {
-
-  const courseMoreFormandos = await cursos.findOne({
-    attributes: ['nome_curso', 'imagem', 'contador_formandos'],
-    where: {
-      contador_formandos: {
-        [Op.lt]: Sequelize.col('numero_vagas')
+  try {
+    // Buscar todos os cursos com suas vagas (sincronos e assincronos)
+    const allCourses = await cursos.findAll({
+      attributes: ['id_curso', 'nome_curso', 'imagem', 'contador_formandos', 'issincrono', 'isassincrono'],
+      include: [
+        {
+          model: sequelize.models.sincrono,
+          as: 'sincrono',
+          required: false,
+          attributes: ['numero_vagas']
+        },
+        {
+          model: sequelize.models.assincrono,
+          as: 'assincrono',
+          required: false,
+          attributes: ['numero_vagas']
+        }
+      ],
+      order: [['contador_formandos', 'DESC']]
+    });
+    
+    // Filtrar apenas cursos com vagas disponíveis
+    const coursesWithSpots = allCourses.filter(course => {
+      if (course.issincrono && course.sincrono) {
+        return course.contador_formandos < course.sincrono.numero_vagas;
+      } else if (course.isassincrono && course.assincrono) {
+        return course.contador_formandos < course.assincrono.numero_vagas;
       }
-    },
-    order: [['contador_formandos', 'DESC']]
-  });
+      return false;
+    });
 
-  if (!courseMoreFormandos) {
+    return coursesWithSpots.length > 0 ? coursesWithSpots[0] : null;
+  } catch (error) {
+    console.error('Erro ao procurar curso com mais formandos:', error);
     return null;
   }
-
-  return courseMoreFormandos;
 }
 
 async function getEnrolledCoursesForUser(userId, tipologia = null) {
@@ -106,11 +115,22 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
         'imagem',
         'issincrono',
         'isassincrono'
-      ]
+      ],
+      include: [] // Corrigido: vírgula removida e include colocado no lugar certo
     };
 
-    if (tipologia === 'sincrono') {
-      includeFilter.where = { issincrono: true };
+    // Adicionar JOIN com formadores para cursos síncronos
+    if (tipologia === 'sincrono' || tipologia === null) {
+      includeFilter.include.push({
+        model: sequelize.models.sincrono,
+        as: 'sincrono',
+        required: false,
+        include: [{
+          model: sequelize.models.formadores,
+          as: 'id_formador_formadore',
+          attributes: ['nome_formador', 'email_formador', 'imagem_utilizador']
+        }]
+      });
     } else if (tipologia === 'assincrono') {
       includeFilter.where = { isassincrono: true };
     }
@@ -161,6 +181,7 @@ async function getCompleteCoursesFromUser(userId) {
     const formattedCourses = await Promise.all(
       completedCourses.map(async (inscricao) => {
         const curso = inscricao.id_curso_curso;
+        if (!curso) return null;
 
         const tipo = curso.issincrono ? 'sincrono' : curso.isassincrono ? 'assincrono' : 'outro';
 
@@ -172,7 +193,7 @@ async function getCompleteCoursesFromUser(userId) {
               id_curso_sincrono: curso.id_curso
             }
           });
-          notaFinal = resultado ? resultado.resul : null;
+          notaFinal = resultado ? resultado.nota_final : null; 
         }
 
         return {
@@ -189,7 +210,8 @@ async function getCompleteCoursesFromUser(userId) {
       })
     );
 
-    return formattedCourses;
+  
+    return formattedCourses.filter(course => course !== null);
   } catch (error) {
     console.error('Erro ao procurar cursos terminados para o utilizador:', error);
     throw error;
@@ -212,15 +234,38 @@ async function getAreaForCategoria(id_categoria) {
   }
 }
 
-async function getTopicoForArea (id_area){
-    try{
+async function getTopicoForArea(id_area) {
+  try {
     const listTopicos = await topico.findAll({
       where: {id_area: id_area},
-      attributes:['id_topico', 'nome_topico']
+      attributes: ['id_topico', 'nome_topico']
     });
     return listTopicos;
-  }catch(error){
-    console.error('Erro ao buscar áreas por categoria');
+  } catch(error) {
+    console.error('Erro ao buscar áreas por categoria:', error);
+    throw error;
+  }
+}
+
+// Encntrar módulos e aulas de um curso
+async function getCourseContent(id_curso) {
+  try {
+    const courseContent = await aulas.findAll({
+      where: { id_curso: id_curso },
+      attributes: ['id_aula', 'nome_aula', 'data_aula'],
+      include: [
+        {
+          model: conteudos,
+          as: 'conteudos',
+          attributes: ['id_conteudo', 'titulo', 'descricao', 'id_formato']
+        }
+      ],
+      order: [['data_aula', 'ASC']]
+    });
+
+    return courseContent;
+  } catch (error) {
+    console.error('Erro ao procurar conteúdo do curso:', error);
     throw error;
   }
 }
@@ -232,5 +277,7 @@ module.exports = {
   getEnrolledCoursesForUser,
   getCompleteCoursesFromUser,
   getAreaForCategoria,
-  getTopicoForArea};
+  getTopicoForArea,
+  getCourseContent 
+};
 

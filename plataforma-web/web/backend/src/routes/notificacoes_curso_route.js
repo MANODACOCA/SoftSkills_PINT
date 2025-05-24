@@ -21,6 +21,8 @@ router.get('/get/:id',controller.get);
 router.post('/create',controller.create);
 router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
+
+//Nossas rotas:
 router.get('/find_notificacoes_curso', controller.getCursoNotificationsController);
 
 module.exports = router;

@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes) {
   return sequelize.define('inscricoes', {
     id_inscricao: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -23,17 +24,15 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_curso'
       }
     },
-    data_limite: {
+    data_inscricao: {
       type: DataTypes.DATE,
-      allowNull: false
-    },
-    data_inicio_insc: {
-      type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.fn('now')
     },
     status_inscricao: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1
     }
   }, {
     sequelize,

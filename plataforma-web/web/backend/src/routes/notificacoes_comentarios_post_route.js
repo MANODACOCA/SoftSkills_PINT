@@ -1,5 +1,5 @@
 const express = require('express');
-const controller = require('../controllers/avaliacoes_controller.js')
+const controller = require('../controllers/notificacoes_comentarios_post_controller.js')
 const router = express.Router();
 
 router.get('/',(req, res) => {
@@ -21,5 +21,8 @@ router.get('/get/:id',controller.get);
 router.post('/create',controller.create);
 router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
+
+//Nossas rotas:
+router.get('/find_notificacoes_post', controller.getComentarioPostNotificationsController);
 
 module.exports = router;

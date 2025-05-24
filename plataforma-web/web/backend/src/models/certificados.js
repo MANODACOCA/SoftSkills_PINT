@@ -1,11 +1,20 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('notificacoes_post', {
-    id_notificacao_post: {
+  return sequelize.define('certificados', {
+    id_certificado: {
       autoIncrement: true,
+      autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
+    },
+    id_formando: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'formandos',
+        key: 'id_formando'
+      }
     },
     id_curso: {
       type: DataTypes.INTEGER,
@@ -15,37 +24,21 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_curso'
       }
     },
-    id_post: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'post',
-        key: 'id_post'
-      }
-    },
-    id_utilizador: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'utilizador',
-        key: 'id_utilizador'
-      }
-    },
-    data_hora_notificacaocp: {
-      type: DataTypes.DATE,
+    certificado_final: {
+      type: DataTypes.TEXT,
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'notificacoes_post',
+    tableName: 'certificados',
     schema: 'public',
     timestamps: false,
     indexes: [
       {
-        name: "pk_notificacoes_post",
+        name: "pk_certificados",
         unique: true,
         fields: [
-          { name: "id_notificacao_post" },
+          { name: "id_certificado" },
         ]
       },
     ]

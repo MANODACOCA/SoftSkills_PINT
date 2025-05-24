@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = `http://localhost:3000/ocorrencias_edicoes`;
+const API_URL = 'http://localhost:3000/ocorrencias_edicoes';
 
 
 export const list_ocorrencias_edicoes = async () => {
@@ -12,7 +12,6 @@ export const list_ocorrencias_edicoes = async () => {
     throw error;
   }
 }
-
 
 export const get_ocorrencias_edicoes  = async (id) => {
     try{
@@ -34,7 +33,6 @@ export const create_ocorrencias_edicoes = async (data) => {
     }
 };
 
-//atualiza filme por id
 export const update_ocorrencias_edicoes = async (id, data) => {
     try{
         const response = await axios.put(`${API_URL}/update/${id}`, data);
@@ -45,7 +43,6 @@ export const update_ocorrencias_edicoes = async (id, data) => {
     }
 };
 
-//elimina filme por id
 export const delete_ocorrencias_edicoes = async (id) => {
     try{
         const response = await axios.delete(`${API_URL}/delete/${id}`);
