@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'dart:math' as math;
 
+import 'package:mobile/ui/core/shared/dropdown_filter.dart';
+
 class SearchBarCustom extends StatelessWidget {
   const SearchBarCustom({super.key});
 
@@ -33,7 +35,7 @@ class SearchBarCustom extends StatelessWidget {
           child: IconButton(
           icon: Icon(Ionicons.options, size: 30.0, color: Colors.white),
           onPressed: () {
-            //implementar o filtro action depois aqui i guess
+            DropdownFilter.show(context);
           },
         ),
       ),
