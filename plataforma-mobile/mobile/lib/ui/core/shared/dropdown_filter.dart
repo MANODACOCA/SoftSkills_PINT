@@ -108,11 +108,11 @@ class _DropdownFilterState extends State<DropdownFilter> {
               fixedSize: Size(screenWidth - 40, 46),
             ),
             onPressed: () {
-              print('✔ Relevância: $selectedRelevancia');
-              print('✔ Tipologia: $selectedTipologia');
-              print('✔ Categoria: $selectedCategoria');
-              print('✔ Área: $selectedArea');
-              print('✔ Tópico: $selectedTopico');
+              print('Relevância: $selectedRelevancia');
+              print('Tipologia: $selectedTipologia');
+              print('Categoria: $selectedCategoria');
+              print('Área: $selectedArea');
+              print('Tópico: $selectedTopico');
 
               Navigator.of(context).pop(); // fechar o modal
             },
