@@ -114,7 +114,7 @@ class _DropdownFilterState extends State<DropdownFilter> {
               print('Área: $selectedArea');
               print('Tópico: $selectedTopico');
 
-              Navigator.of(context).pop(); // fechar o modal
+              Navigator.of(context).pop(); 
             },
             child: Text('Aplicar', style: TextStyle(color: Colors.white)),
           ),
