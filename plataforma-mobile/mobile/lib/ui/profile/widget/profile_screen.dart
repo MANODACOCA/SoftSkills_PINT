@@ -356,6 +356,7 @@ class _ProfileState extends State<Profile> {
               child: Text('Terminar sessão', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.go('/');
+                 // ignore: avoid_print
                 print('LogOut!');
               },
             ),
@@ -364,6 +365,7 @@ class _ProfileState extends State<Profile> {
               child: Text('Cancelar', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.pop(); // Close the dialog
+                 // ignore: avoid_print
                 print('Não foi dado logOut!');
               },
             ),
