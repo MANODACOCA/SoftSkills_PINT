@@ -28,6 +28,7 @@ import '../ui/profile/widget/gerir_notification.dart';
 import '../ui/profile/widget/support.dart';
 import '../ui/profile/widget/privacy_politics.dart';
 import '../ui/profile/widget/liked_coursed.dart';
+import '../ui/forum/widget/forum_page.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
@@ -200,6 +201,11 @@ final rotas = GoRouter(
       name: 'likedcourses',
       path: '/likedcourses',
       builder: (context, state) => LikedCourses(),
+    ),
+    GoRoute(
+      name: 'forumPage',
+      path: '/forumPage',
+      builder: (context, state) => ForumPage(),
     ),
   ],
 );
