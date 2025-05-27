@@ -12,17 +12,33 @@ class Forum extends StatefulWidget {
 class _ForumState extends State<Forum> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.primary,
-        title: SearchBarCustom(),
-        centerTitle: true,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.primary,
+          title: SearchBarCustom(),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(20),
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              SizedBox(height: 20),
+              Card(
+                child: ListTile(
+                  title: Text('Título da Discussão'),
+                  subtitle: Text('Descrição breve da discussão.'),
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: Footer(),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
-        child: Text('Forum'),
-      ),
-      bottomNavigationBar: Footer(),
     );
   }
 }
