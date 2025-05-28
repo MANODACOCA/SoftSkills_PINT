@@ -1,3 +1,7 @@
 .btn-color {
     background-color: var(--cor-principal) !important;
 }
+
+.img-profile {
+    max-height: 300px;
+}
