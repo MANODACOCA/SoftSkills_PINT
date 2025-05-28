@@ -21,10 +21,10 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
                         <i className="bi bi-laptop fs-4 px-2"></i>
                         {!collapsed && 'Cursos inscritos'}
                     </NavLink>
-                    <NavLink to="/cursos/favoritos" className="nav-link d-flex align-items-center px-2 py-1">
+                   {/*  <NavLink to="/cursos/favoritos" className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-heart fs-4 px-2"></i>
                         {!collapsed && 'Cursos Favoritos'}
-                    </NavLink>
+                    </NavLink> */}
                     <NavLink to="/cursos/terminados" className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-patch-check fs-4 px-2"></i>
                         {!collapsed && 'Cursos Terminados'}

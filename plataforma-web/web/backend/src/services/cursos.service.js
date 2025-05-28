@@ -1,451 +1,370 @@
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, inscricoes, resultados, area, topico, aulas, conteudos, formadores, modulos, sincrono } = require('../models/init-models')(sequelize);
+const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos } = require('../models/init-models')(sequelize);
 
 
-/*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
-// async function updateFormandosCounter() {
-//   try {
-//     // Buscar contagem de inscrições ativas agrupadas por curso
-//     const inscricoesPorCurso = await sequelize.query(`
-//       SELECT id_curso, COUNT(id_inscricao) as total 
-//       FROM inscricoes 
-//       WHERE status_inscricao = 1 
-//       GROUP BY id_curso
-//     `, { type: sequelize.QueryTypes.SELECT });
-    
-//     // Atualizar cada curso com sua contagem
-//     for (const item of inscricoesPorCurso) {
-//       await cursos.update(
-//         { contador_formandos: item.total },
-//         { where: { id_curso: item.id_curso } }
-//       );
-//       console.log(`Contador atualizado para curso ${item.id_curso}: ${item.total} formandos`);
-//     }
-    
-//     // Zerar contador para cursos sem inscrições ativas
-//     const cursosComInscricoes = inscricoesPorCurso.map(i => i.id_curso);
-//     await cursos.update(
-//       { contador_formandos: 0 },
-//       { 
-//         where: { 
-//           id_curso: { [Op.notIn]: cursosComInscricoes } 
-//         } 
-//       }
-//     );
-    
-//     console.log('Atualização de contadores concluída com sucesso');
-//     return { success: true, message: 'Contadores atualizados com sucesso' };
-//   } catch (error) {
-//     console.error('Erro ao atualizar contador de formandos:', error);
-//     throw error;
-//   }
-// }
+//esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
+async function getCursosDiponiveisParaInscricao(tipo = "todos") {
+  const today = new Date();
+  let cursosAssincronos = [];
+  let cursosSincronosDisponiveis = [];
 
-
-
-// Função para obter o curso síncrono em destaque(vai buscar o curso com mais inscricoes)
-// Função para obter o curso síncrono em destaque(vai buscar o curso com mais inscricoes)
-async function getCourseDestaqueSincrono() {
-  try {
-    const cursosOrdenados = await cursos.findAll({
-      where: { issincrono: true },
-      order: [['contador_formandos', 'DESC']]
-    });
-
-    for (const curso of cursosOrdenados) {
-      const infoSincrono = await sincrono.findOne({
-        where: { id_curso_sincrono: curso.id_curso }
-      });
-
-      if (!infoSincrono) continue;
-
-      const temVagas = curso.contador_formandos < infoSincrono.numero_vagas;
-
-      if (temVagas) {
-        const cursosEmpatados = cursosOrdenados.filter(c =>
-          c.contador_formandos === curso.contador_formandos
-        );
-
-        const cursosComVagas = [];
-
-        for (const c of cursosEmpatados) {
-          const info = await sincrono.findOne({
-            where: { id_curso_sincrono: c.id_curso }
-          });
-
-          if (info && c.contador_formandos < info.numero_vagas) {
-            cursosComVagas.push(c);
-          }
-        }
-
-        if (cursosComVagas.length > 0) {
-          const aleatorio = cursosComVagas[Math.floor(Math.random() * cursosComVagas.length)];
-          return aleatorio;
-        }
-      }
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Erro ao procurar curso síncrono em destaque:', error);
-    return null;
-  }
-}
-
-// Função para obter o curso assíncrono em destaque(vai buscar o curso com mais inscricoes)
-async function getCourseDestaqueAssincrono() {
-  try {
-    const featuredCourse = await cursos.findOne({
+  if (tipo === "todos" || tipo === "assincrono") {
+    cursosAssincronos = await cursos.findAll({
       where: {
-        isassincrono: true
+        estado: true,
+        issincrono: false,
+        data_fim_inscricao: { [Op.gte]: today }
       },
-      order: [['contador_formandos', 'DESC']]
-    });
-    if (!featuredCourse) return null;
-    const maxFormandos = featuredCourse.contador_formandos;
-
-    const cursosEmpatados = await cursos.findAll({
-      where: {
-        isassincrono: true,
-        contador_formandos: maxFormandos
-      }
-    });
-
-    if (cursosEmpatados.length === 0) return null;
-
-    const aleatorio = cursosEmpatados[Math.floor(Math.random() * cursosEmpatados.length)];
-    return aleatorio;
-  } catch (error) {
-    console.error('Erro ao procurar curso assíncrono em destaque:', error);
-    return null;
-  }
-}
-
-async function getCourseWithMoreFormandos() {
-  try {
-    // Buscar todos os cursos ordenados por contador_formandos
-    const allCourses = await cursos.findAll({
-      attributes: ['id_curso', 'nome_curso', 'imagem', 'contador_formandos', 'issincrono', 'isassincrono'],
       include: [
         {
-          model: sequelize.models.sincrono,
-          as: 'sincrono',
-          required: false,
-          attributes: ['numero_vagas']
-        },
-        {
-          model: sequelize.models.assincrono,
-          as: 'assincrono',
-          required: false
-          // Removida a referência a numero_vagas
+          model: aulas,
+          as: "aulas",
+          attributes: ['id_aula', 'data_aula', 'nome_aula', 'caminho_url'],
+          include: [
+            {
+              model: conteudos,
+              as: "conteudos",
+              attributes: ['id_conteudo', 'id_formato', 'nome_conteudo', 'conteudo', 'tempo_duracao'],
+            }
+          ]
         }
       ],
-      order: [['contador_formandos', 'DESC']]
+      order: [['id_curso', 'ASC']]
     });
-    
-    console.log(`Total de cursos encontrados: ${allCourses.length}`);
-    
-    // Filtrar cursos disponíveis
-    const availableCourses = allCourses.filter(course => {
-      // Para cursos síncronos: verificar se tem vagas disponíveis
-      if (course.issincrono && course.sincrono) {
-        const hasSpots = course.contador_formandos < course.sincrono.numero_vagas;
-        console.log(`Curso síncrono ${course.id_curso}: ${course.contador_formandos}/${course.sincrono.numero_vagas} - Tem vagas: ${hasSpots}`);
-        return hasSpots;
-      } 
-      // Para cursos assíncronos: sempre disponíveis (não dependem de numero_vagas)
-      else if (course.isassincrono && course.assincrono) {
-        console.log(`Curso assíncrono ${course.id_curso}: ${course.contador_formandos} formandos - Sempre disponível`);
-        return true;
-      }
-      
-      console.log(`Curso ${course.id_curso} não é válido (não tem relacionamento correto)`);
-      return false;
+  }
+
+  if (tipo === "todos" || tipo === "sincrono") {
+    const cursosSincronos = await cursos.findAll({
+      where: {
+        estado: true,
+        issincrono: true,
+        data_fim_inscricao: { [Op.gte]: today }
+      },
+      include: [
+        {
+          model: aulas,
+          as: "aulas",
+          attributes: ['id_aula', 'data_aula', 'nome_aula', 'caminho_url'],
+          include: [
+            {
+              model: conteudos,
+              as: "conteudos",
+              attributes: ['id_conteudo', 'id_formato', 'nome_conteudo', 'conteudo', 'tempo_duracao'],
+            }
+          ]
+        },
+        {
+          model: sincrono,
+          as: "sincrono",
+          attributes: ['id_curso_sincrono', 'numero_vagas'],
+          include: [
+            {
+              model: formadores,
+              as: "id_formador_formadore",
+              attributes: ['id_formador', 'descricao_formador'],
+              include: [
+                {
+                  model: utilizador,
+                  as: "id_formador_utilizador",
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      order: [['id_curso', 'ASC']]
     });
 
-    console.log(`Cursos disponíveis: ${availableCourses.length}`);
-    
-    // Se não houver cursos disponíveis
-    if (availableCourses.length === 0) {
-      return null;
-    }
-    
-    // Verificar se há vários cursos com o mesmo número máximo de formandos
-    const maxFormandos = availableCourses[0].contador_formandos;
-    const topCourses = availableCourses.filter(course => course.contador_formandos === maxFormandos);
-    
-    // Se houver vários cursos com o mesmo número de formandos, retornar um aleatoriamente
-    if (topCourses.length > 1) {
-      console.log(`${topCourses.length} cursos encontrados com ${maxFormandos} formandos. Selecionando um aleatoriamente.`);
-      const randomIndex = Math.floor(Math.random() * topCourses.length);
-      return topCourses[randomIndex];
-    }
-    
-    // Caso contrário, retornar o curso com mais formandos
-    return availableCourses[0];
+    cursosSincronosDisponiveis = cursosSincronos.filter(curso => {
+      return curso.contador_formandos < (curso.sincrono?.numero_vagas || 0);
+    });
+  }
+
+  const cursosTodos = [...cursosAssincronos, ...cursosSincronosDisponiveis];
+  const cursosDisponiveis = cursosTodos.map(curso => curso.toJSON());
+
+  return cursosDisponiveis;
+}
+
+//vai retornar o curso com mais formandos, se houve mais que um faz um radom e seleciona um deles
+async function getCourseWithMoreFormandos() {
+  try {
+    const cursosDisponiveis = await getCursosDiponiveisParaInscricao("todos");
+
+    if (cursosDisponiveis.length === 0) return null;
+
+    const maxFormandos = Math.max(...cursosDisponiveis.map(c => c.contador_formandos));
+    const cursosTop = cursosDisponiveis.filter(c => c.contador_formandos === maxFormandos);
+
+    return cursosTop[Math.floor(Math.random() * cursosTop.length)];
   } catch (error) {
     console.error('Erro ao procurar curso com mais formandos:', error);
     return null;
   }
 }
 
+
+// Função para colocar 8 cursos random
+async function getCourseForYou() {
+  try {
+    const cursosDisponiveis = await getCursosDiponiveisParaInscricao("todos");
+
+    const cursosEmbaralhados = cursosDisponiveis.sort(() => 0.5 - Math.random());
+
+    return cursosEmbaralhados.slice(0, 8);
+  } catch (error) {
+    console.error('Erro ao procurar cursos:', error);
+    throw error;
+  }
+}
+
+
+// Função para colocar 8 cursos mais populares
+async function getCoursePopular() {
+  try {
+    const limiteDesejado = 8;
+
+    const cursosDisponiveis = await getCursosDiponiveisParaInscricao("todos");
+
+    const cursosPopulares = cursosDisponiveis
+      .sort((a, b) => b.contador_formandos - a.contador_formandos)
+      .slice(0, limiteDesejado);
+
+    return cursosPopulares;
+  } catch (error) {
+    console.error('Erro ao procurar cursos populares:', error);
+    throw error;
+  }
+}
+
+
+// Função para obter o curso assíncrono em destaque(vai buscar o curso com mais inscricoes)
+async function getCourseDestaqueAssincrono() {
+  try {
+    const cursosDisponiveis = await getCursosDiponiveisParaInscricao("assincrono");
+
+    if (cursosDisponiveis.length === 0) return null;
+
+    const maxFormandos = Math.max(...cursosDisponiveis.map(c => c.contador_formandos));
+
+    const cursosEmpatados = cursosDisponiveis.filter(c => c.contador_formandos === maxFormandos);
+
+    return cursosEmpatados[Math.floor(Math.random() * cursosEmpatados.length)];
+  } catch (error) {
+    console.error('Erro ao procurar curso assíncrono em destaque:', error);
+    return null;
+  }
+}
+
+
+// Função para colocar 8 cursos mais recentes
+async function getCourseNews() {
+  try {
+    const limiteDesejado = 8;
+
+    const cursosDisponiveis = await getCursosDiponiveisParaInscricao("todos");
+
+    const cursosMaisRecentes = cursosDisponiveis
+      .sort((a, b) => new Date(b.data_inicio_inscricao) - new Date(a.data_inicio_inscricao))
+      .slice(0, limiteDesejado);
+
+    return cursosMaisRecentes;
+  } catch (error) {
+    console.error('Erro ao procurar cursos recentes:', error);
+    throw error;
+  }
+}
+
+
+// Função para obter o curso síncrono em destaque(vai buscar o curso com mais inscricoes)
+async function getCourseDestaqueSincrono() {
+  try {
+    const cursosDisponiveis = await getCursosDiponiveisParaInscricao("sincrono");
+
+    if (cursosDisponiveis.length === 0) return null;
+
+    const maxFormandos = Math.max(...cursosDisponiveis.map(c => c.contador_formandos));
+
+    const cursosEmpatados = cursosDisponiveis.filter(c => c.contador_formandos === maxFormandos);
+
+    return cursosEmpatados[Math.floor(Math.random() * cursosEmpatados.length)];
+  } catch (error) {
+    console.error('Erro ao procurar curso síncrono em destaque:', error);
+    return null;
+  }
+}
+
+
+/*Esta funcao vai buscar todos os cursos em curso de um determinado formando*/
 async function getEnrolledCoursesForUser(userId, tipologia = null) {
   try {
-    const includeFilter = {
-      model: cursos,
-      as: 'id_curso_curso',
-      attributes: [
-        'id_curso',
-        'nome_curso',
-        'descricao_curso',
-        'data_inicio_curso',
-        'data_fim_curso',
-        'imagem',
-        'issincrono',
-        'isassincrono',
-        'contador_formandos',
-        'horas_curso',
-        'idioma'
-      ],
-      include: []
-    };
-
-    // Adicionar JOIN com formadores para cursos síncronos
-    if (tipologia === 'sincrono' || tipologia === null) {
-      includeFilter.include.push({
-        model: sequelize.models.sincrono,
-        as: 'sincrono',
-        required: false,
-        include: [{
-          model: formadores,
-          as: 'id_formador_formadore',
-          attributes: ['id_formador', 'nome_formador', 'email_formador', 'imagem_utilizador', 'descricao_formador']
-        }]
-      });
-    } 
-    
-    if (tipologia === 'assincrono' || tipologia === null) {
-      includeFilter.include.push({
-        model: sequelize.models.assincrono,
-        as: 'assincrono',
-        required: false
-      });
+    if (!userId) {
+      console.log('ID do formando não fornecido');
+      return [];
     }
-
-    const enrolledCourses = await inscricoes.findAll({
-      where: { 
-        id_formando: userId,
-        status_inscricao: 1
-      },
-      include: [includeFilter]
-    });
-
-    if (!enrolledCourses || enrolledCourses.length === 0) {
+    
+    const formando = await formandos.findByPk(userId);
+    if (!formando) {
+      console.log(`Formando com ID ${userId} não encontrado`);
       return [];
     }
 
-    return enrolledCourses.filter(c => c.id_curso_curso); 
+    const whereClause = {
+      id_formando: userId,
+      status_inscricao: 1 
+    };
+
+    let cursoWhere = {};
+    if (tipologia === 'sincrono') {
+      cursoWhere.issincrono = true;
+    } else if (tipologia === 'assincrono') {
+      cursoWhere.isassincrono = true;
+    }
+
+    const enrolledCourses = await inscricoes.findAll({
+      where: whereClause,
+      include: [
+        {
+          model: cursos,
+          as: 'id_curso_curso',
+          where: Object.keys(cursoWhere).length > 0 ? cursoWhere : undefined,
+          attributes: [
+            'id_curso', 'nome_curso', 'descricao_curso', 'data_inicio_curso', 
+            'data_fim_curso', 'imagem', 'issincrono', 'isassincrono', 
+            'contador_formandos', 'horas_curso', 'idioma'
+          ]
+        }
+      ],
+      order: [['data_inscricao', 'DESC']]
+    });
+
+    console.log(`Encontradas ${enrolledCourses.length} inscrições para o utilizador ${userId} com tipologia ${tipologia || 'todos'}`);
+
+    return enrolledCourses.filter(inscricao => inscricao.id_curso_curso);
   } catch (error) {
     console.error('Erro ao encontrar cursos inscritos para o utilizador:', error);
     throw error;
   }
 }
 
-async function getCompleteCoursesFromUser(userId) {
+
+/*Esta funcao vai buscar todos os cursos completosa de um determinado formando*/
+async function getCompleteCoursesFromUser(userId, tipologia = null) {
   try {
-    const completedCourses = await inscricoes.findAll({
-      where: { 
+    if (!userId) {
+      console.log('ID do formando não fornecido');
+      return [];
+    }
+
+    const formando = await formandos.findByPk(userId);
+    if (!formando) {
+      console.log(`Formando com ID ${userId} não encontrado`);
+      return [];
+    }
+
+    const resultadosDoFormando = await resultados.findAll({
+      where: {
         id_formando: userId,
-        status_inscricao: 1 
       },
-      include: [
-        {
-          model: cursos,
-          as: 'id_curso_curso',
-          attributes: [
-            'id_curso',
-            'nome_curso',
-            'descricao_curso',
-            'data_inicio_curso',
-            'data_fim_curso',
-            'imagem',
-            'issincrono',
-            'isassincrono',
-            'horas_curso',
-            'idioma'
-          ],
-          where: {
-            data_fim_curso: {
-              [Op.lt]: new Date() 
-            }
-          }
-        }
-      ]
     });
 
-    const formattedCourses = await Promise.all(
-      completedCourses.map(async (inscricao) => {
-        const curso = inscricao.id_curso_curso;
-        if (!curso) return null;
+    if (!resultadosDoFormando.length) {
+      console.log(`Nenhum resultado encontrado para o formando ${userId}`);
+      return [];
+    }
 
-        const tipo = curso.issincrono ? 'sincrono' : curso.isassincrono ? 'assincrono' : 'outro';
+   
+    const idsCursos = resultadosDoFormando.map(r => r.id_curso_sincrono).filter(Boolean);
 
-        let notaFinal = null;
-        if (curso.issincrono) {
-          const resultado = await resultados.findOne({
-            where: {
-              id_formando: userId,
-              id_curso: curso.id_curso
-            }
-          });
-          notaFinal = resultado ? resultado.nota_final : null; 
-        }
+    if (!idsCursos.length) {
+      console.log("Nenhum curso síncrono encontrado nos resultados.");
+      return [];
+    }
 
-        return {
-          id_curso: curso.id_curso,
-          nome_curso: curso.nome_curso,
-          descricao_curso: curso.descricao_curso,
-          data_inicio_curso: curso.data_inicio_curso,
-          data_fim_curso: curso.data_fim_curso,
-          imagem: curso.imagem,
-          tipo,
-          horas_curso: curso.horas_curso,
-          idioma: curso.idioma,
-          nota_final: notaFinal,
-          concluido: true 
-        };
-      })
-    );
+    let cursoWhere = {
+      id_curso: { [Op.in]: idsCursos },
+      data_fim_curso: { [Op.lt]: new Date() },
+    };
 
-    return formattedCourses.filter(course => course !== null);
+    if (tipologia === 'sincrono') {
+      cursoWhere.issincrono = true;
+    } else if (tipologia === 'assincrono') {
+      cursoWhere.isassincrono = true;
+    }
+
+    const cursosEncontrados = await cursos.findAll({
+      where: cursoWhere,
+    });
+
+    const formattedCourses = cursosEncontrados.map(curso => {
+      const resultado = resultadosDoFormando.find(r => r.id_curso_sincrono === curso.id_curso);
+      const tipo = curso.issincrono ? 'sincrono' : curso.isassincrono ? 'assincrono' : 'outro';
+
+      return {
+        id_curso: curso.id_curso,
+        nome_curso: curso.nome_curso,
+        descricao_curso: curso.descricao_curso,
+        data_inicio_curso: curso.data_inicio_curso,
+        data_fim_curso: curso.data_fim_curso,
+        imagem: curso.imagem,
+        tipo,
+        horas_curso: curso.horas_curso,
+        idioma: curso.idioma,
+        nota_final: resultado ? resultado.resul : null,
+        concluido: true
+      };
+    });
+
+    console.log(`Foram encontrados ${formattedCourses.length} cursos concluídos com base nos resultados do formando ${userId}.`);
+
+    return formattedCourses;
   } catch (error) {
     console.error('Erro ao procurar cursos terminados para o utilizador:', error);
     throw error;
   }
 }
 
-async function getAreaForCategoria(id_categoria) {
-  try {
-    const listAreas = await area.findAll({
-      where: {
-       id_categoria: id_categoria
-      },
-      attributes: ['id_area', 'nome_area']
-    });
 
-    return listAreas;
+/*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
+async function updateFormandosCounter() {
+  try {
+    // Buscar contagem de inscrições ativas agrupadas por curso
+    const inscricoesPorCurso = await sequelize.query(`
+      SELECT id_curso, COUNT(id_inscricao) as total 
+      FROM inscricoes 
+      WHERE status_inscricao = 1 
+      GROUP BY id_curso
+    `, { type: sequelize.QueryTypes.SELECT });
+    
+    // Atualizar cada curso com sua contagem
+    for (const item of inscricoesPorCurso) {
+      await cursos.update(
+        { contador_formandos: item.total },
+        { where: { id_curso: item.id_curso } }
+      );
+      console.log(`Contador atualizado para curso ${item.id_curso}: ${item.total} formandos`);
+    }
+  
+    
+    console.log('Atualização de contadores concluída com sucesso');
+    return { success: true, message: 'Contadores atualizados com sucesso' };
   } catch (error) {
-    console.error('Erro ao procurar áreas por categoria:', error);
+    console.error('Erro ao atualizar contador de formandos:', error);
     throw error;
   }
 }
+/*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
 
-async function getTopicoForArea(id_area) {
-  try {
-    const listTopicos = await topico.findAll({
-      where: {id_area: id_area},
-      attributes: ['id_topico', 'nome_topico']
-    });
-    return listTopicos;
-  } catch(error) {
-    console.error('Erro ao buscar tópicos por área:', error);
-    throw error;
-  }
-}
-
-// Função para obter detalhes completos de um curso incluindo módulos e aulas
-async function getCourseDetails(id_curso) {
-  try {
-    const courseDetails = await cursos.findOne({
-      where: { id_curso: id_curso },
-      include: [
-        {
-          model: modulos,
-          as: 'modulos',
-          attributes: ['id_modulo', 'titulo', 'descricao', 'ordem'],
-          order: [['ordem', 'ASC']],
-          include: [
-            {
-              model: aulas,
-              as: 'aulas',
-              attributes: ['id_aula', 'nome_aula', 'data_aula', 'caminho_url'],
-              order: [['data_aula', 'ASC']],
-              include: [
-                {
-                  model: conteudos,
-                  as: 'conteudos',
-                  attributes: ['id_conteudo', 'titulo', 'descricao', 'id_formato']
-                }
-              ]
-            }
-          ]
-        },
-        {
-          model: sequelize.models.sincrono,
-          as: 'sincrono',
-          required: false,
-          include: [{
-            model: formadores,
-            as: 'id_formador_formadore',
-            attributes: ['id_formador', 'nome_formador', 'email_formador', 'imagem_utilizador', 'descricao_formador']
-          }]
-        },
-        {
-          model: sequelize.models.assincrono,
-          as: 'assincrono',
-          required: false
-        }
-      ]
-    });
-
-    return courseDetails;
-  } catch (error) {
-    console.error('Erro ao buscar detalhes do curso:', error);
-    throw error;
-  }
-}
-
-// Função para obter módulos e aulas de um curso
-async function getCourseContent(id_curso) {
-  try {
-    const courseModules = await modulos.findAll({
-      where: { id_curso: id_curso },
-      attributes: ['id_modulo', 'titulo', 'descricao', 'ordem'],
-      order: [['ordem', 'ASC']],
-      include: [
-        {
-          model: aulas,
-          as: 'aulas',
-          attributes: ['id_aula', 'nome_aula', 'data_aula', 'caminho_url'],
-          include: [
-            {
-              model: conteudos,
-              as: 'conteudos',
-              attributes: ['id_conteudo', 'titulo', 'descricao', 'id_formato']
-            }
-          ]
-        }
-      ]
-    });
-
-    return courseModules;
-  } catch (error) {
-    console.error('Erro ao procurar conteúdo do curso:', error);
-    throw error;
-  }
-}
-
-module.exports = { 
-  getCourseDestaqueSincrono, 
-  getCourseDestaqueAssincrono, 
-  getCourseWithMoreFormandos, 
+module.exports = {
+  getCursosDiponiveisParaInscricao,
+  getCourseDestaqueSincrono,
+  getCourseDestaqueAssincrono,
+  getCourseWithMoreFormandos,
   getEnrolledCoursesForUser,
   getCompleteCoursesFromUser,
-  getAreaForCategoria,
-  getTopicoForArea,
-  getCourseContent,
-  getCourseDetails,
-  //updateFormandosCounter /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */~
-
+  getCourseForYou,
+  getCourseNews,
+  getCoursePopular,
+  updateFormandosCounter,
 };

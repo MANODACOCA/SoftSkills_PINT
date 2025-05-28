@@ -32,9 +32,13 @@
 
 .carousel-caption h1 {
     color: rgb(255, 255, 255);
-    font-size: 3rem;
     font-weight: bold;
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
+
 
 .carousel-caption p {
     color: rgb(255, 255, 255);

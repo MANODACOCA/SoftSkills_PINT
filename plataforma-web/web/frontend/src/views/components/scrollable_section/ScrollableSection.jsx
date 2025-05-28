@@ -27,7 +27,7 @@ const ScrollableSection = ({ title, courses, scrollRef, onScroll }) => {
                                 startDate={formatDayMonthYear(courses.data_inicio_curso)}
                                 endDate={formatDayMonthYear(courses.data_fim_curso)}
                                 membrosAtual={courses.contador_formandos}
-                                membrosMax={courses.numero_vagas}
+                                membrosMax={courses.issincrono ? courses.sincrono?.numero_vagas : null}
                             />
                         </div>
                     ))}

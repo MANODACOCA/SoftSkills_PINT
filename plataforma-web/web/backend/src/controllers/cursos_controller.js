@@ -73,30 +73,24 @@ controllers.delete = async (req,res)=>{
 };
 
 
+/*------------------------------------------------------------------------------------------------------------*/
 
-controllers.getDestaqueSincrono = async (req, res) => {
+
+controllers.getCursosDisponiveisParaInscricao = async (req, res) => {
   try {
-    const curso = await cursosService.getCourseDestaqueSincrono();
-    if (curso) {
-      res.status(200).json(curso);
+    const cursosDisponiveis = await cursosService.getCursosDiponiveisParaInscricao();
+
+    if (cursosDisponiveis && cursosDisponiveis.length > 0) {
+      res.status(200).json(cursosDisponiveis);
     } else {
-      res.status(404).json({ erro: 'Nenhum curso síncrono em destaque encontrado.' });
+      res.status(404).json({ erro: 'Nenhum curso disponível para inscrição encontrado.' });
     }
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao procurar curso síncrono em destaque', desc: err.message });
-  }
-};
-
-controllers.getDestaqueAssincrono = async (req, res) => {
-  try {
-    const curso = await cursosService.getCourseDestaqueAssincrono();
-    if (curso) {
-      res.status(200).json(curso);
-    } else {
-      res.status(404).json({ erro: 'Nenhum curso assíncrono em destaque encontrado.' });
-    }
-  } catch (err) {
-    res.status(500).json({ erro: 'Erro ao procurar curso assíncrono em destaque', desc: err.message });
+    console.error('Erro ao procurar cursos disponíveis:', err);
+    res.status(500).json({
+      erro: 'Erro ao procurar cursos disponíveis para inscrição.',
+      desc: err.message
+    });
   }
 };
 
@@ -113,28 +107,102 @@ controllers.getDestaqueCourses = async (req, res) => {
   }
 };
 
-controllers.getEnrolledCourses = async (req, res) => {
+controllers.getCourseForYou = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const { tipologia } = req.query;
+    const ForYou = await cursosService.getCourseForYou();
 
-    const enrolledCourses = await cursosService.getEnrolledCoursesForUser(userId, tipologia);
-
-    if (enrolledCourses && enrolledCourses.length > 0) {
-
-      res.status(200).json(enrolledCourses);
+    if (ForYou && ForYou.length > 0) {
+      res.status(200).json(ForYou);
     } else {
-      res.status(404).json({ erro: 'Nenhum curso encontrado para este utilizador' });
+      res.status(404).json({ erro: 'Nenhum top 8 cursos encontrado' });
     }
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao procurar cursos inscritos.', desc: err.message });
+    console.error('Erro ao procurar cursos:', err);
+    res.status(500).json({ erro: 'Erro ao procurar top 8 cursos.', desc: err.message });
+  }
+};
+
+controllers.getCoursePopular = async (req, res) => {
+  try {
+    const Popular = await cursosService.getCoursePopular();
+
+    if (Popular && Popular.length > 0) {
+      res.status(200).json(Popular);
+    } else {
+      res.status(404).json({ erro: 'Nenhum top 8 cursos encontrado' });
+    }
+  } catch (err) {
+    console.error('Erro ao procurar cursos:', err);
+    res.status(500).json({ erro: 'Erro ao procurar top 8 cursos.', desc: err.message });
+  }
+};
+
+controllers.getDestaqueAssincrono = async (req, res) => {
+  try {
+    const curso = await cursosService.getCourseDestaqueAssincrono();
+    if (curso) {
+      res.status(200).json(curso);
+    } else {
+      res.status(404).json({ erro: 'Nenhum curso assíncrono em destaque encontrado.' });
+    }
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao procurar curso assíncrono em destaque', desc: err.message });
+  }
+};
+
+controllers.getCourseNews = async (req, res) => {
+  try {
+    const News = await cursosService.getCourseNews();
+
+    if (News && News.length > 0) {
+      res.status(200).json(News);
+    } else {
+      res.status(404).json({ erro: 'Nenhum top 8 cursos encontrado' });
+    }
+  } catch (err) {
+    console.error('Erro ao procurar cursos:', err);
+    res.status(500).json({ erro: 'Erro ao procurar top 8 cursos.', desc: err.message });
+  }
+};
+
+controllers.getDestaqueSincrono = async (req, res) => {
+  try {
+    const curso = await cursosService.getCourseDestaqueSincrono();
+    if (curso) {
+      res.status(200).json(curso);
+    } else {
+      res.status(404).json({ erro: 'Nenhum curso síncrono em destaque encontrado.' });
+    }
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao procurar curso síncrono em destaque', desc: err.message });
+  }
+};
+
+controllers.getUserEnrolledCourses = async (req, res) => {
+  try {
+    const userId = req.params.id || req.params.userId;
+    console.log('Parâmetros recebidos:', req.params); 
+       if (!userId) {
+      return res.status(400).json({ erro: 'ID do usuário não fornecido' });
+    }
+    const tipologia = req.query.tipologia || null;
+    
+    console.log(`Buscando cursos para usuário ${userId} com tipologia: ${tipologia}`);
+    
+    const enrolledCourses = await cursosService.getEnrolledCoursesForUser(userId, tipologia);
+    res.status(200).json(enrolledCourses);
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao buscar cursos inscritos', desc: err.message });
   }
 };
 
 controllers.getCompleteCourses = async (req, res) => {
   try {
-    const { userId } = req.params;
-    const completedCourses = await cursosService.getCompleteCoursesFromUser(userId);
+    
+    const userId = req.params.id || req.params.userId;
+    const tipologia = req.query.tipologia || null;
+  
+    const completedCourses = await cursosService.getCompleteCoursesFromUser(userId, tipologia);
 
     if (completedCourses && completedCourses.length > 0) {
       res.status(200).json(completedCourses);
@@ -146,40 +214,5 @@ controllers.getCompleteCourses = async (req, res) => {
     res.status(500).json({ erro: 'Erro ao procurar cursos terminados.', desc: err.message });
   }
 };
-
-controllers.getAreaForCategoria = async (req, res) => {
-  try {
-    const { id_categoria } = req.params;
-    console.log(req.params);
-    const areaPorCategoria = await cursosService.getAreaForCategoria(id_categoria);
-
-    if (areaPorCategoria && areaPorCategoria.length > 0) {
-      res.status(200).json(areaPorCategoria);
-    } else {
-      res.status(404).json({ erro: 'Nenhum area encontrada para esta categoria' });
-    }
-  } catch (err) {
-    console.error('Erro ao procurar areas:', err);
-    res.status(500).json({ erro: 'Erro ao procurar areas.', desc: err.message });
-  }
-};
-
-controllers.getTopicoForArea = async (req, res) => {
-  try {
-    const { id_area } = req.params;
-    const topicoPorArea = await cursosService.getTopicoForArea(id_area);
-
-    if (topicoPorArea && topicoPorArea.length > 0) {
-      res.status(200).json(topicoPorArea);
-    } else {
-      res.status(404).json({ erro: 'Nenhum topico encontrado para esta area' });
-    }
-  } catch (err) {
-    console.error('Erro ao procurar topico:', err);
-    res.status(500).json({ erro: 'Erro ao procurar topico.', desc: err.message });
-  }
-};
-
-
 
 module.exports = controllers;

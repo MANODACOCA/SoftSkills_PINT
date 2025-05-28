@@ -1,4 +1,5 @@
 import React from 'react';
+import  { Link } from 'react-router-dom';
 import logo from '../../../assets/images/logos/semfundo3.png';
 import './Footer.css'
 
@@ -35,9 +36,9 @@ const Footer = () => {
                             <div className="col-6 col-md-4 mb-3">
                                 <h6 className="text-uppercase fw-bold">LINKS RÁPIDOS</h6>
                                 <div className="d-flex flex-column">
-                                    <a href="#">Cursos</a>
-                                    <a href="#">Fórum</a>
-                                    <a href="#">Notificações</a>
+                                    <Link to="/cursos">Cursos</Link>
+                                     <Link to="/forum">Fórum</Link>
+{/*                                      <Link>Notificações</Link> */}
                                 </div>
                             </div>
                             <div className="col-6 col-md-4 mb-3">
@@ -68,10 +69,9 @@ const Footer = () => {
                     </div>
                     <div className="col-md-6 text-center text-md-end">
                         <div className="d-flex justify-content-center justify-content-md-end gap-4">
-                            <a href="#"><BsFacebook size={20} /></a>
-                            <a href="#"><BsInstagram size={20} /></a>
-                            <a href="#"><BsTwitter size={20} /></a>
-                            <a href="#"><BsLinkedin size={20} /></a>
+                            <a href="https://www.facebook.com/Softinsa/?locale=pt_PT" target='blank'><BsFacebook size={20} /></a>
+                            <a href="https://www.instagram.com/softinsa/" target='blank'><BsInstagram size={20} /></a>
+                            <a href="https://www.linkedin.com/company/softinsa/?originalSubdomain=pt" target='blank'><BsLinkedin size={20} /></a>
                         </div>
                     </div>
                 </div>
