@@ -7,10 +7,10 @@
   border: 1px solid #dee2e6;
 }
 
-.enrollment-image {
-  width: 100%;
-  height: 100%;
+.enrollment-image-vertical {
+  height: 300px; 
   object-fit: cover;
+  object-position: center;
 }
 
 .enrollment-details {

@@ -22,13 +22,16 @@ router.post('/create',controller.create);
 router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 
-//Nossas rotas:
-router.get('/curso-destaque/sincrono',controller.getDestaqueSincrono);
-router.get('/curso-destaque/assincrono',controller.getDestaqueAssincrono);
+//Nossas Rotas:
 router.get('/curso-destaque/topcurso',controller.getDestaqueCourses);
-router.get('/users/:userId/enrolled-courses',controller.getEnrolledCourses);
+router.get('/cursos-destaque/top8foryou',controller.getCourseForYou);
+router.get('/cursos-destaque/top8popular',controller.getCoursePopular);
+router.get('/curso-destaque/assincrono',controller.getDestaqueAssincrono);
+router.get('/cursos-destaque/top8news',controller.getCourseNews);
+router.get('/curso-destaque/sincrono',controller.getDestaqueSincrono);
+router.get('/cursos-disponiveis-inscricao', controller.getCursosDisponiveisParaInscricao);//todos os curso com formador, aulas e conteudos
+router.get('/users/:userId/enrolled-courses',controller.getUserEnrolledCourses);
 router.get('/users/:userId/completed-courses',controller.getCompleteCourses);
-router.get('/area/:id_categoria',controller.getAreaForCategoria);
-router.get('/topico/:id_area',controller.getTopicoForArea);
+
 
 module.exports = router;

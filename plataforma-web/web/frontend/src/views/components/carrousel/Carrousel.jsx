@@ -1,5 +1,6 @@
 import React from 'react';
 import { Carousel } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import cursos from '../../../assets/images/carrousel/courses.svg';
 import forum from '../../../assets/images/carrousel/forum_resized.png';
@@ -15,9 +16,7 @@ const MyCarousel = ({ course }) => {
         <Carousel.Caption className='carousel-caption overlay-caption text-center'>
           <h1>Cursos</h1>
           <p>📚 Descubra nossos cursos e transforme seu futuro hoje!</p>
-          <a href="#" className="btn btn-primary">
-            <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações
-          </a>
+           <Link to="/cursos" className='btn btn-primary'><i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações</Link> 
         </Carousel.Caption>
       </Carousel.Item>
 
@@ -26,9 +25,7 @@ const MyCarousel = ({ course }) => {
         <Carousel.Caption className='carousel-caption overlay-caption text-center'>
           <h1>Forúm</h1>
           <p>🌐 Vem partilhar o teu conhecimento no nosso forúm!</p>
-          <a href="#" className="btn btn-primary">
-            <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações
-          </a>
+            <Link to="/forum" className='btn btn-primary'><i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações</Link>
         </Carousel.Caption>
       </Carousel.Item>
 
@@ -38,9 +35,7 @@ const MyCarousel = ({ course }) => {
         <Carousel.Caption className='carousel-caption overlay-caption text-center'>
           <h1>{course.nome_curso}</h1>
           <p>🧠 Conhece o curso mais procurado na SoftSkills.</p>
-          <a href="#" className="btn btn-primary">
-            <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações
-          </a>
+         <Link to={`/curso/${course.id_curso}`} className='btn btn-primary'>  <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações</Link>
         </Carousel.Caption>
       </Carousel.Item>
      )}

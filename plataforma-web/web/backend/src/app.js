@@ -3,8 +3,9 @@ const app = express();
 const port = 3000;
 const cors = require('cors');
 const bodyParser = require('body-parser');
-/*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
-const cursosService = require('./services/cursos.service'); 
+const cursosService = require('./services/cursos.service');
+
+
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -16,17 +17,14 @@ app.get('/', (req, res) => {
 });
 app.use(cors());
 // Mensagem para mostrar que o servidor está a correr
-app.listen(port, () => {
+app.listen(port, async() => {
   console.log(`Servidor a correr: http://localhost:${port}`);
-
   /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
-  /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
-  // try{
-  //   await cursosService.updateFormandosCounter();
-  // }catch(error){
-  //   console.error('Erro ao atualiar contadores de formandos:', error);
-  // }
-  /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
+  try{
+    await cursosService.updateFormandosCounter();
+  }catch(error){
+    console.error('Erro ao atualiar contadores de formandos:', error);
+  }
   /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
 });
 

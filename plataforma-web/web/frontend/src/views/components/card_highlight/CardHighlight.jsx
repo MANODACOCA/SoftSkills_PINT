@@ -25,7 +25,7 @@ const FeaturedCourseCard = ({
     ? course.imagem_utilizador
     : `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(nameFormador)}`;
 
-//CARD PARA CURSOS FAVORITOS
+  //CARD PARA CURSOS FAVORITOS
   if (variant === 'favorite') {
     const today = new Date();
     const endDate = new Date(course.data_fim_curso);
@@ -74,14 +74,14 @@ const FeaturedCourseCard = ({
         </div>
 
         <div className="position-absolute top-0 end-0 p-3" onClick={handleRemoveFavorite}>
-          <BiSolidHeart className="heart-icon"/>
+          <BiSolidHeart className="heart-icon" />
         </div>
       </div>
     );
   }
 
 
-//CARD PARA CURSOS TERMINADOS
+  //CARD PARA CURSOS TERMINADOS
   if (variant === 'evaluation') {
     const tipoBadge = course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono';
     const notaFinal = course.nota_final ?? null;
@@ -90,14 +90,14 @@ const FeaturedCourseCard = ({
 
     return (
       <div className="card flex-row rounded-4 card-highlight evaluation-card">
-        <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso"/>
+        <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" />
 
         <div className="card-body d-flex flex-column justify-content-between w-100">
           <div className="d-flex justify-content-between align-items-start">
             <h4 className="card-title mb-2">{course.nome_curso}</h4>
-              <span className="badge rounded-pill px-3 py-2 no-pointer custom-badge">
-                {tipoBadge}
-              </span>
+            <span className="badge rounded-pill px-3 py-2 no-pointer custom-badge">
+              {tipoBadge}
+            </span>
           </div>
 
           <div className="d-flex justify-content-between align-items-center text-muted mb-2">
@@ -124,7 +124,7 @@ const FeaturedCourseCard = ({
 
 
 
-//CARD PARA CURSOS INSCRITOS
+  //CARD PARA CURSOS INSCRITOS
   if (variant === 'enrolled') {
     const today = new Date();
     const endDate = new Date(course.data_fim_curso);
@@ -137,19 +137,19 @@ const FeaturedCourseCard = ({
       <div className="card flex-row rounded-4 card-highlight enrolled-card">
         <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" />
         <div className="card-body d-flex flex-column justify-content-between w-100">
-        <div className="d-flex justify-content-between align-items-start">
-          <h4 className="card-title mb-2">{course.nome_curso}</h4>
-          <span className="badge rounded-pill px-3 py-2 no-pointer custom-badge">
-            {tipoBadge}
-          </span>
-        </div>
+          <div className="d-flex justify-content-between align-items-start">
+            <h4 className="card-title mb-2">{course.nome_curso}</h4>
+            <span className="badge rounded-pill px-3 py-2 no-pointer custom-badge">
+              {tipoBadge}
+            </span>
+          </div>
 
-        <div className="d-flex justify-content-between align-items-center text-muted mb-2">
-          <p className="mb-0">
-            <FaCalendarAlt className="me-2" />
-            {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
-          </p>
-        </div>
+          <div className="d-flex justify-content-between align-items-center text-muted mb-2">
+            <p className="mb-0">
+              <FaCalendarAlt className="me-2" />
+              {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
+            </p>
+          </div>
 
           <div className="d-flex justify-content-between align-items-center mt-3">
             <p className={`mb-0 me-auto ${showWarning ? 'text-danger d-flex align-items-center' : 'text-success'}`}>
@@ -172,7 +172,7 @@ const FeaturedCourseCard = ({
     );
   }
 
-//CARD PARA CURSOS NA HOMEPAGE
+  //CARD PARA CURSOS NA HOMEPAGE
   return (
     <div className="card flex-row rounded-4 card-highlight">
       <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" />
@@ -184,16 +184,25 @@ const FeaturedCourseCard = ({
               {course.descricao_curso || 'Sem descrição'}
             </p>
           )}
-          <p className="card-text text-muted mb-0 fs-6">
-            <FaCalendarAlt className="me-2" />
-            {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
-          </p>
-          {showFormador && (course.issincrono || course.tipo === 'sincrono') && (
-            <div className="d-flex align-items-center mb-2">
-              <img src={imageFormador} alt="formador" className="rounded-circle me-2 avatar" />
-              <span>{nameFormador}</span>
+          <div className='d-flex justify-content-between align-items-center my-0'>
+            <div className="d-flex align-items-center gap-2">
+              <p className="card-text text-muted">
+                <FaCalendarAlt className='me-2'/>
+                {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
+              </p>
             </div>
-          )}
+            {showFormador && (course.issincrono || course.tipo === 'sincrono') && (
+              <div className="d-flex align-items-center gap-2">
+                <span>Formador: {course.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util}</span>
+                <img
+                  src={course.sincrono?.id_formador_formadore?.id_formador_utilizador?.img_perfi}
+                  alt="formador"
+                  className="rounded-circle me-2 avatar"
+                />
+              </div>
+            )}
+          </div>
+
           {customMessage && (
             <p className="text-success fw-bold">{customMessage}</p>
           )}

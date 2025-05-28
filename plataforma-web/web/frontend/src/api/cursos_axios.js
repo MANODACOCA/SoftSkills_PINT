@@ -53,6 +53,7 @@ export const delete_cursos = async (id) => {
     }
 };
 
+/*------------------------------------------------------------------------------------------------*/ 
 
 export const getCourseDestaqueAssincrono = async () => {
     try {
@@ -85,6 +86,17 @@ export const getCousesWithMoreFormandos = async () => {
 };
 
 
+export const getCompletedCourses = async (userId, tipologia = null) => {
+    try {
+        const params = tipologia !== 'todos' ? { tipologia } : {};
+        const response = await axios.get(`${API_URL}/users/${userId}/completed-courses`, { params });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao procurar cursos terminados!');
+        throw error;
+    }
+};
+
 export const getEnrolledCourses = async (userId, tipologia = 'todos') => {
     try {
         const params = tipologia !== 'todos' ? { tipologia } : {};
@@ -92,16 +104,6 @@ export const getEnrolledCourses = async (userId, tipologia = 'todos') => {
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos inscritos!');
-        throw error;
-    }
-};
-
-export const getCompletedCourses = async (userId) => {
-    try {
-        const response = await axios.get(`${API_URL}/users/${userId}/completed-courses`);
-        return response.data;
-    } catch (error) {
-        console.error('Erro ao procurar cursos terminados!');
         throw error;
     }
 };
@@ -118,22 +120,32 @@ export const getFavoriteCourses = async (userId) => {
 
 }
 
-export const getAreaForCategoria = async (id_categoria) => {
+export const getCourseForYou = async () => {
     try {
-        const response = await axios.get(`${API_URL}/area/${id_categoria}`);
+        const response = await axios.get(`${API_URL}/cursos-destaque/top8foryou`);
         return response.data;
     } catch (error) {
-        console.error('Erro ao procurar areas!');
+        console.error('Erro ao procurar cursos ForYou!');
         throw error;
     }
 }
 
-export const getTopicoForArea = async (id_area) => {
+export const getCourseNews = async () => {
     try {
-        const response = await axios.get(`${API_URL}/area/${id_area}`);
+        const response = await axios.get(`${API_URL}/cursos-destaque/top8news`);
         return response.data;
     } catch (error) {
-        console.error('Erro ao procurar topicos!');
+        console.error('Erro ao procurar cursos News!');
+        throw error;
+    }
+}
+
+export const getCoursePopular = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/cursos-destaque/top8popular`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao procurar cursos Popular!');
         throw error;
     }
 }
