@@ -60,7 +60,7 @@ const EditProfile = () => {
                     </div>
                     <button className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
                 </div>
-            </div> 
+            </div>
         </div>
     );
 }
