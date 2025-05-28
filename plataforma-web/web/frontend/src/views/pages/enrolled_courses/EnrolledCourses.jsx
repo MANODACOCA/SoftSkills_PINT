@@ -31,6 +31,7 @@ const EnrolledCourses = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchEnrolledCourses();
   }, [tipologia]);
 
