@@ -96,10 +96,10 @@ const Header = ({ toggleSidebar, collapsed }) => {
                         </div>
                         <hr />
                         <div className="d-flex flex-column align-items-center justify-content-between">
-                            <button className="dropdown-item" onClick={() => alert('teste')}><CgProfile />Alterar dados pessoais<IoIosArrowForward /></button>
-                            <button className="dropdown-item" onClick={() => alert('teste')}><IoIosFlag />Cursos Terminados<IoIosArrowForward /></button>
-                            <button className="dropdown-item" onClick={() => alert('teste')}><GoKey />Informações de login<IoIosArrowForward /></button>
-                            <button className="dropdown-item text-danger" onClick={() => alert('teste')}><RxExit />Encerrar sessão<IoIosArrowForward /></button>
+                            <Link className="dropdown-item" to={'/perfil/editar'}><CgProfile />Alterar dados pessoais<IoIosArrowForward /></Link>
+                            <Link className="dropdown-item" to={'/cursos/terminados'}><IoIosFlag />Cursos Terminados<IoIosArrowForward /></Link>
+                            <Link className="dropdown-item" to={'/info/login'}><GoKey />Informações de login<IoIosArrowForward /></Link>
+                            <Link className="dropdown-item text-danger" to={''}><RxExit />Encerrar sessão<IoIosArrowForward /></Link>
                         </div>
                     </div>
                 )}
