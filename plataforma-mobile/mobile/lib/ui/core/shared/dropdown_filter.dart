@@ -42,8 +42,45 @@ class DropdownFilter extends StatefulWidget {
 
 class _DropdownFilterState extends State<DropdownFilter> {
   final List<String> tipologia = ['Sincrono', 'Assincrono'];
-  final List<String> relevancia = ['Maior aderência', 'Mais recentes', 'Recomendados'];
-  final List<String> items = ['Android', 'iOS', 'Flutter', 'Node', 'Java', 'Python', 'PHP', 'React', 'Vue.js', 'Angular', 'Kotlin', 'Swift', 'Dart', 'C#', '.NET', 'Ruby', 'Laravel', 'Spring Boot', 'Express.js', 'TypeScript', 'Go', 'Rust', 'SQL', 'NoSQL', 'Firebase', 'MongoDB', 'PostgreSQL', 'MySQL', 'AWS', 'Azure', 'Docker', 'Kubernetes'];
+  final List<String> relevancia = [
+    'Maior aderência',
+    'Mais recentes',
+    'Recomendados',
+  ];
+  final List<String> items = [
+    'Android',
+    'iOS',
+    'Flutter',
+    'Node',
+    'Java',
+    'Python',
+    'PHP',
+    'React',
+    'Vue.js',
+    'Angular',
+    'Kotlin',
+    'Swift',
+    'Dart',
+    'C#',
+    '.NET',
+    'Ruby',
+    'Laravel',
+    'Spring Boot',
+    'Express.js',
+    'TypeScript',
+    'Go',
+    'Rust',
+    'SQL',
+    'NoSQL',
+    'Firebase',
+    'MongoDB',
+    'PostgreSQL',
+    'MySQL',
+    'AWS',
+    'Azure',
+    'Docker',
+    'Kubernetes',
+  ];
 
   String? selectedRelevancia;
   String? selectedTipologia;
@@ -104,17 +141,24 @@ class _DropdownFilterState extends State<DropdownFilter> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               fixedSize: Size(screenWidth - 40, 46),
             ),
             onPressed: () {
+              // ignore: avoid_print
               print('Relevância: $selectedRelevancia');
+              // ignore: avoid_print
               print('Tipologia: $selectedTipologia');
+              // ignore: avoid_print
               print('Categoria: $selectedCategoria');
+              // ignore: avoid_print
               print('Área: $selectedArea');
+              // ignore: avoid_print
               print('Tópico: $selectedTopico');
 
-              Navigator.of(context).pop(); 
+              Navigator.of(context).pop();
             },
             child: Text('Aplicar', style: TextStyle(color: Colors.white)),
           ),
@@ -122,7 +166,9 @@ class _DropdownFilterState extends State<DropdownFilter> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
               fixedSize: Size(screenWidth - 40, 46),
             ),
             onPressed: () => Navigator.of(context).pop(),

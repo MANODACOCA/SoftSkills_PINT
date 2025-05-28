@@ -57,6 +57,7 @@ class _GerirNotificationState extends State<GerirNotification> {
                         onChanged: (value) async {
                           setState(() {
                             isSwitched = value;
+                             // ignore: avoid_print
                             print('Switch is $isSwitched');
                           });
                         },
@@ -93,6 +94,7 @@ class _GerirNotificationState extends State<GerirNotification> {
                           onChanged: (value) async {
                             setState(() {
                               isSwitchedNotification = value;
+                               // ignore: avoid_print
                               print('Switch is $isSwitchedNotification');
                             });
                           },
@@ -110,6 +112,7 @@ class _GerirNotificationState extends State<GerirNotification> {
                             isSwitchedSound;
                             setState(() {
                               isSwitchedSound = value;
+                               // ignore: avoid_print
                               print('Switch is $isSwitchedSound');
                             });
                           },
@@ -127,6 +130,7 @@ class _GerirNotificationState extends State<GerirNotification> {
                             isSwitchedVibration;
                             setState(() {
                               isSwitchedVibration = value;
+                               // ignore: avoid_print
                               print('Switch is $isSwitchedVibration');
                             });
                           },

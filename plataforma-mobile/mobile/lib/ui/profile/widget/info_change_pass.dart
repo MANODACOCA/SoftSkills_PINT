@@ -181,6 +181,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
               child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.go('/seeinfoprofile');
+                 // ignore: avoid_print
                 print('Alterações guardadas!');
               },
             ),
@@ -189,6 +190,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
               child: Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.pop(); // Close the dialog
+                 // ignore: avoid_print
                 print('Alterações não foram guardadas!');
               },
             ),

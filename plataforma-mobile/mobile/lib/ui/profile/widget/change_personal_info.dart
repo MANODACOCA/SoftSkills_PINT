@@ -388,6 +388,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
               child: Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.pop(); // Close the dialog
+                // ignore: avoid_print
                 print('Alterações não foram guardadas!');
               },
             ),
@@ -410,6 +411,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
               child: Text('Galeria', style: TextStyle(color: Colors.white)),
               onPressed: () async {
                 await uploadImage();
+                // ignore: use_build_context_synchronously
                 context.pop();
               },
             ),
@@ -418,6 +420,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
               child: Text('Câmara', style: TextStyle(color: Colors.white)),
               onPressed: () async {
                 await takeAPicture();
+                // ignore: use_build_context_synchronously
                 context.pop();
               },
             ),
@@ -436,6 +439,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
     if (image != null) {
       setState(() {
         // Use the selected image
+         // ignore: avoid_print
         print('Image selected: ${image.path}');
       });
     }
@@ -450,6 +454,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
     if (image != null) {
       setState(() {
         // Use the selected image
+         // ignore: avoid_print
         print('Image selected: ${image.path}');
       });
     }
