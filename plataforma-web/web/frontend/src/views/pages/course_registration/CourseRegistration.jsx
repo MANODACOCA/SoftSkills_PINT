@@ -72,7 +72,7 @@ const CourseRegistration = () => {
         observer.unobserve(sentinelRef.current);
       }
     };
-  }, []);
+  }, [id]);
 
 
   useEffect(() => {
@@ -88,7 +88,7 @@ const CourseRegistration = () => {
           c.id_curso !== parseInt(id) &&
           ((courseData.issincrono && c.issincrono) ||
             (courseData.isassincrono && c.isassincrono))
-        ).slice(0, 10);
+        ).slice(0, 8);
 
         setRelatedCourses(filtered);
       } catch (error) {
