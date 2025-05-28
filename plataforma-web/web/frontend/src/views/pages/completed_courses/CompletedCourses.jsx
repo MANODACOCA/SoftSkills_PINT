@@ -19,6 +19,7 @@ const CompletedCourses = () => {
     };
 
     useEffect(() => {
+         window.scrollTo(0, 0);
         fetchCompletedCourses();
     }, []);
 
