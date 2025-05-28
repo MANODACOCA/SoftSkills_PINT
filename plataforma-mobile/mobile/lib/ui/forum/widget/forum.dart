@@ -34,7 +34,7 @@ class _ForumState extends State<Forum> {
               /*Falta dar import da database e fazer o list de todos os foruns que a database tem*/
               GestureDetector(
                 onTap: () {
-                  context.push('/forumPage');
+                  context.push('/forumPage', extra: 'Facebook');
                   print('Entra no forum Facebook');
                 },
                 child: CardForum(

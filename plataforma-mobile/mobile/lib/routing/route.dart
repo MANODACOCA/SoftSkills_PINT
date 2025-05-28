@@ -205,7 +205,10 @@ final rotas = GoRouter(
     GoRoute(
       name: 'forumPage',
       path: '/forumPage',
-      builder: (context, state) => ForumPage(),
+      builder: (context, state) {
+        final forumName = state.extra as String;
+        return ForumPage(forumName: forumName);
+      },
     ),
   ],
 );
