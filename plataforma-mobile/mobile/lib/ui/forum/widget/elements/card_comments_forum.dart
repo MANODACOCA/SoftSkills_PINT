@@ -1,5 +1,5 @@
 // ignore_for_file: avoid_print
-
+import 'comment_box.dart';
 import 'package:like_button/like_button.dart';
 import 'package:mobile/ui/core/shared/export.dart';
 
@@ -27,7 +27,7 @@ class Post extends StatelessWidget {
   void dispose() {
     //Guardar na database o novo valor de likes
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -71,7 +71,7 @@ class Post extends StatelessWidget {
             child: Row(
               children: [
                 SizedBox(width: 20),
-                LikeButton( 
+                LikeButton(
                   size: 30,
                   likeCount: likes,
                   likeBuilder: (isLiked) {
@@ -95,7 +95,7 @@ class Post extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.comment, color: Colors.grey),
                       onPressed: () {
-                        print('Comment on $forumName');
+                        //Aqui você pode implementar a lógica para abrir o campo de comentários
                       },
                     ),
                     SizedBox(height: 5),
