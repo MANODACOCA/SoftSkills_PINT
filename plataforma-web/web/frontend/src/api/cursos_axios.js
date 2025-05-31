@@ -54,6 +54,15 @@ export const delete_cursos = async (id) => {
 };
 
 /*------------------------------------------------------------------------------------------------*/ 
+export const getCursosDisponiveisParaInscricao = async (tipo = "todos") => {
+    try {
+        const response = await axios.get(`${API_URL}/cursos-disponiveis-inscricao?tipo=${tipo}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao procurar cursos disponiveis para inscricao!');
+        throw error;
+    }
+};
 
 export const getCourseDestaqueAssincrono = async () => {
     try {
