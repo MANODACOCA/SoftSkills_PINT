@@ -14,7 +14,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null)
       where: {
         estado: true,
         issincrono: false,
-        data_fim_inscricao: { [Op.gte]: today },
+        //data_fim_inscricao: { [Op.gte]: today },
         ...(id_curso && { id_curso })
       },
       include: [
@@ -40,7 +40,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null)
       where: {
         estado: true,
         issincrono: true,
-        data_fim_inscricao: { [Op.gte]: today },
+        //data_fim_inscricao: { [Op.gte]: today },
         ...(id_curso && { id_curso })
       },
       include: [
