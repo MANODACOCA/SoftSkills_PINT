@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/images/logos/semfundo3.png';
 import './Header.css';
 import { IoIosArrowForward, IoIosFlag } from "react-icons/io";
@@ -7,14 +7,13 @@ import { GoKey } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { RxExit } from "react-icons/rx";
 
-import FilterMenu from "../../components/filter_menu/filter_menu";
-
 
 const Header = ({ toggleSidebar, collapsed }) => {
     const [showProfileMenu, setShowProfileMenu] = useState(false);
-    const [showExplorarMenu, setShowExplorarMenu] = useState(false);
     const profileRef = useRef(null);
-    const location = useLocation();
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -32,6 +31,10 @@ const Header = ({ toggleSidebar, collapsed }) => {
         setShowProfileMenu(!showProfileMenu);
     };
 
+    const handleFocus = () => {
+    navigate('/cursos');
+    };
+
     return (
         <header className='w-100 p-3 d-flex justify-content-between align-items-center gap-4 border-bottom'>
             <div className="d-flex gap-4">
@@ -39,31 +42,22 @@ const Header = ({ toggleSidebar, collapsed }) => {
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
                 </button>
                 <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
-                {location.pathname ==='/cursos' && (
-                    <div className="position-relative" onMouseEnter={() => setShowExplorarMenu(true)} onMouseLeave={() => setShowExplorarMenu(false)}>
-                        <button className="btn btn-primary">
-                            Explorar
-                        </button>
-                        {showExplorarMenu && (
-                            <div className="position-absolute top-100 start-0">
-                                <FilterMenu />
-                            </div>
-                        )}
-                    </div>
-                )}
             </div>
 
-            <div className="input-group d-none d-md-flex">
+            <form className="input-group d-none d-md-flex">
                 <input
                     className="form-control form-control-md"
                     type="search"
-                    placeholder="Search"
-                    aria-label="Search"
+                    placeholder="Pesquisar"
+                    aria-label="Pesquisar"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onFocus={handleFocus}
                 />
                 <button className="btn btn-primary btn-sm" type="submit">
                     <i className="bi bi-search"></i>
                 </button>
-            </div>
+            </form>
 
             <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
                 <button onClick={toggleProfileMenu} className="btn p-0 border-0 bg-transparent d-flex align-items-center gap-2">

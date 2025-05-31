@@ -1,54 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { get_cursos, list_cursos } from '../../../api/cursos_axios';
 import EnrollmentCard from '../../components/card_registration/CardRegistration';
 import CourseModule from '../../components/course_module/CourseModule';
 import ScrollableSection from '../../components/scrollable_section/ScrollableSection';
 import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
 import { FaVideo, FaUsers, FaCalendarAlt } from 'react-icons/fa';
+import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
 import './CourseRegistration.css';
 
 const CourseRegistration = () => {
   const { id } = useParams();
   const [course, setCourse] = useState(null);
   const [relatedCourses, setRelatedCourses] = useState([]);
-  const [loading, setLoading] = useState(true);
   const scrollRef = React.useRef(null);
   const [isSticky, setIsSticky] = useState(true);
   const sentinelRef = React.useRef(null);
-
-  const courseModules = [
-    {
-      id: 1,
-      title: "Introdução ao Curso",
-      description: "Visão geral dos objetivos e estrutura do curso.",
-      aulas: [
-        { id: 1, titulo: "Apresentação do curso", duracao: "45 min", tipo: "video" },
-        { id: 2, titulo: "Objetivos de aprendizagem", duracao: "", tipo: "documento" },
-        { id: 3, titulo: "Pré-requisitos", duracao: "20 min", tipo: "quiz" }
-      ]
-    },
-    {
-      id: 2,
-      title: "Fundamentos Básicos",
-      description: "Conceitos fundamentais necessários para o curso.",
-      aulas: [
-        { id: 4, titulo: "Conceitos principais", duracao: "1h 15min", tipo: "video" },
-        { id: 5, titulo: "Terminologia", duracao: "", tipo: "documento" },
-        { id: 6, titulo: "Ferramentas necessárias", duracao: "35 min", tipo: "video" }
-      ]
-    },
-    {
-      id: 3,
-      title: "Aplicações Práticas",
-      description: "Aplicação dos conceitos em cenários reais.",
-      aulas: [
-        { id: 7, titulo: "Estudos de caso", duracao: "1h 30min", tipo: "video" },
-        { id: 8, titulo: "Exercícios práticos", duracao: "", tipo: "documento" },
-        { id: 9, titulo: "Projetos", duracao: "50 min", tipo: "quiz" }
-      ]
-    }
-  ];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -75,33 +41,37 @@ const CourseRegistration = () => {
   }, [id]);
 
 
-  useEffect(() => {
-    const fetchCourseData = async () => {
-      try {
-        setLoading(true);
-        const courseData = await get_cursos(id);
-        setCourse(courseData);
 
+  const fetchCourseData = async (courseId) => {
+    try {
+      const cursosDetalhados = await getCursosDisponiveisParaInscricao("todos", courseId);
 
-        const allCourses = await list_cursos();
-        const filtered = allCourses.filter(c =>
-          c.id_curso !== parseInt(id) &&
-          ((courseData.issincrono && c.issincrono) ||
-            (courseData.isassincrono && c.isassincrono))
-        ).slice(0, 8);
-
-        setRelatedCourses(filtered);
-      } catch (error) {
-        console.error('Erro ao carregar dados do curso:', error);
-      } finally {
-        setLoading(false);
+      if (cursosDetalhados.length === 0) {
+        throw new Error("Curso não encontrado ou não disponível para inscrição");
       }
-    };
 
+      const courseData = cursosDetalhados[0];
+      setCourse(courseData);
+
+      const tipo = courseData.issincrono ? "sincrono" : "assincrono";
+      const cursosRelacionados = await getCursosDisponiveisParaInscricao(tipo);
+
+      const filtered = cursosRelacionados
+        .filter(c => c.id_curso !== parseInt(courseId))
+        .slice(0, 8);
+
+      setRelatedCourses(filtered);
+    } catch (error) {
+      console.error('Erro ao carregar dados do curso:', error);
+    }
+  };
+
+  useEffect(() => {
     if (id) {
-      fetchCourseData();
+      fetchCourseData(id);
     }
   }, [id]);
+
 
   const handleEnroll = async (courseId) => {
     try {
@@ -115,16 +85,6 @@ const CourseRegistration = () => {
     }
   };
 
-  const handleScrollSection = (ref, direction) => {
-    if (ref.current) {
-      ref.current.scrollBy({
-        left: direction === 'left' ? -300 : 300,
-        behavior: 'smooth',
-      });
-    }
-  };
-
-  if (loading) return <div className="">A carregar detalhes do curso...</div>;
   if (!course) return <div className="">Curso não encontrado</div>;
 
   return (
@@ -167,28 +127,45 @@ const CourseRegistration = () => {
           <h2>Descrição</h2>
           <p>{course.descricao_curso || "Sem descrição disponível para este curso."}</p>
 
-          <h2 className="mt-5">Conteúdo</h2>
-          {courseModules.map((module, index) => (
-            <CourseModule key={index} module={module} index={index} />
-          ))}
-
-          <h2 className="mt-5">Formador</h2>
-          <div className="d-flex align-items-center mt-3 gap-3">
-            <img
-              src={course.formador?.imagem_utilizador || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(course.formador?.nome_formador || 'Formador')}`}
-              alt="Foto do formador"
-              className="rounded-circle"
-              width="80"
-              height="80"
+          <h2 className="mt-4">Conteúdo</h2>
+          {course.aulas && course.aulas.length > 0 ? course.aulas.map((aula, index) => (
+            <CourseModule
+              key={aula.id_aula}
+              module={{
+                title: aula.nome_aula,
+                aulas: aula.conteudos.map(c => ({
+                  id: c.id_conteudo,
+                  titulo: c.nome_conteudo,
+                  tipo: c.id_formato === 1 ? 'video' : 'documento',
+                  duracao: `${c.tempo_duracao} min`
+                }))
+              }}
+              index={index}
             />
-            <div>
-              <h5 className="mb-1">{course.formador?.nome_formador || "Formador não especificado"}</h5>
-              <p className="mb-0 text-muted">{course.formador?.email_formador || ""}</p>
-              {course.formador?.descricao_formador && (
-                <p className="mt-2">{course.formador.descricao_formador}</p>
-              )}
-            </div>
-          </div>
+          )) : "Sem conteúdo disponível para este curso."}
+
+          {/* Seção de Formador - apenas para cursos síncronos */}
+          {course.issincrono && course.sincrono && (
+            <>
+              <h2 className="mt-5">Formador</h2>
+              <div className="d-flex align-items-center mt-3 gap-3">
+                <img
+                  src={course.sincrono.id_formador_formadore?.id_formador_utilizador.img_perfi || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(course.sincrono.id_formador_formadore?.nome_formador || 'Formador')}`}
+                  alt="Foto do formador"
+                  className="rounded-circle"
+                  width="80"
+                  height="80"
+                />
+                <div>
+                  <h5 className="mb-1">{course.sincrono.id_formador_formadore?.id_formador_utilizador?.nome_util || "Formador não especificado"}</h5>
+                  <p className="mb-0 text-muted">{course.sincrono.id_formador_formadore?.email_formador || ""}</p>
+                  {course.sincrono.id_formador_formadore?.descricao_formador && (
+                    <p className="mt-2">{course.sincrono.id_formador_formadore.descricao_formador}</p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* Coluna Direita - Card Sticky (sobreposto ao header) */}
@@ -203,7 +180,7 @@ const CourseRegistration = () => {
       </div>
 
       {/* Resto do conteúdo permanece igual */}
-      <div className="row mt-5">
+      <div className="row mt-4">
         <div className="col-12">
           <h2 className="mb-3" ref={sentinelRef}>Cursos que podem ser do seu interesse</h2>
           {relatedCourses.length > 0 ? (

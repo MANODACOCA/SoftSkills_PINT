@@ -4,14 +4,15 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/shared/navigationbar_component.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
-import 'package:mobile/ui/forum/widget/elements/comment_box.dart';
+// ignore: must_be_immutable
 class ForumPage extends StatelessWidget {
-  const ForumPage({super.key, required this.forumName});
+  ForumPage({super.key, required this.forumName});
 
   final String personName = 'John Doe';
   final String forumName;
   final int forumLike = 100;
   final int forumComments = 50;
+  Color paint = Colors.white;
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +31,16 @@ class ForumPage extends StatelessWidget {
           centerTitle: true,
           actions: [
             IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.add_box_outlined,
-                color: Colors.white,
+                color: paint,
                 size: 30,
               ),
               onPressed: () {
                 print('Add new post to $forumName');
+                void setState() {
+                  paint = AppColors.secondary;
+                }
               },
             ),
           ],

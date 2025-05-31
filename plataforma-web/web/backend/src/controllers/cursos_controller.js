@@ -78,7 +78,9 @@ controllers.delete = async (req,res)=>{
 
 controllers.getCursosDisponiveisParaInscricao = async (req, res) => {
   try {
-    const cursosDisponiveis = await cursosService.getCursosDiponiveisParaInscricao();
+    const tipo = req.query.tipo || "todos";
+    const id_curso = req.query.id_curso ? parseInt(req.query.id_curso) : null;
+    const cursosDisponiveis = await cursosService.getCursosDiponiveisParaInscricao(tipo, id_curso);
 
     if (cursosDisponiveis && cursosDisponiveis.length > 0) {
       res.status(200).json(cursosDisponiveis);

@@ -4,6 +4,11 @@
   transition: transform 0.2s ease;
 }
 
+.card {
+  width: 100%;
+  max-width: 100%;
+}
+
 .imgage-card {
     height: 60%;
     object-fit: cover;
