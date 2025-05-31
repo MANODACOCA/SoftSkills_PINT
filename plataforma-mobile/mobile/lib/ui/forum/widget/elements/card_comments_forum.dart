@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
-import 'comment_box.dart';
 import 'package:like_button/like_button.dart';
 import 'package:mobile/ui/core/shared/export.dart';
+import 'package:comment_box/comment/comment.dart';
 
 // ignore: must_be_immutable
 class Post extends StatelessWidget {
@@ -96,6 +96,7 @@ class Post extends StatelessWidget {
                       icon: Icon(Icons.comment, color: Colors.grey),
                       onPressed: () {
                         //Aqui você pode implementar a lógica para abrir o campo de comentários
+                        print('Abrir campo de comentários');
                       },
                     ),
                     SizedBox(height: 5),
