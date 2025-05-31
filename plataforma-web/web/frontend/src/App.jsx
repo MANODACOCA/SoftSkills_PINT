@@ -23,6 +23,7 @@ import Post from './views/pages/forum/post/post';
 import CPlusPlusPage from './views/pages/forum/post/post';
 import CourseRegistration from './views/pages/course_registration/CourseRegistration';
 import EditProfile from './views/pages/profile/profile';
+import InfoProfile from './views/pages/profile/infoprofile';
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
           <Route path="/posts" element={<Post />}/>
           <Route path="/curso/:id" element={<CourseRegistration />}/>
           <Route path="/perfil/editar" element={<EditProfile />}/>
+          <Route path='/perfil/info' element={<InfoProfile />}/>
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
 
