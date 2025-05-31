@@ -7,7 +7,7 @@ const Card = ({ image, title, type, startDate, endDate, courseId, membrosAtual, 
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/curso/${courseId}`);
+    navigate(`/cursos/${courseId}`);
   };
 
   return (

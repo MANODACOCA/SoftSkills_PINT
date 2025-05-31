@@ -4,59 +4,65 @@ const API_URL = 'http://localhost:3000/cursos';
 
 
 export const list_cursos = async () => {
-  try{
-    const response = await axios.get(`${API_URL}/list`);
-    return response.data;
-  }catch (error){
-    console.error('Erro ao ir buscar lista de Curso!');
-    throw error;
-  }
+    try {
+        const response = await axios.get(`${API_URL}/list`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao ir buscar lista de Curso!');
+        throw error;
+    }
 }
 
-export const get_cursos  = async (id) => {
-    try{
+export const get_cursos = async (id) => {
+    try {
         const response = await axios.get(`${API_URL}/get/${id}`);
         return response.data;
-    }catch(error){
+    } catch (error) {
         console.error('Erro ao buscar Curso!');
         throw error;
     }
 };
 
 export const create_cursos = async (data) => {
-    try{
+    try {
         const response = await axios.post(`${API_URL}/create`, data);
         return response.data;
-    }catch(error){
+    } catch (error) {
         console.error('Erro ao criar Curso!');
         throw error;
     }
 };
 
 export const update_cursos = async (id, data) => {
-    try{
+    try {
         const response = await axios.put(`${API_URL}/update/${id}`, data);
         return response.data;
-    }catch(error){
+    } catch (error) {
         console.error('Erro ao atualizar Curso!');
         throw error;
     }
 };
 
 export const delete_cursos = async (id) => {
-    try{
+    try {
         const response = await axios.delete(`${API_URL}/delete/${id}`);
         return response.data;
-    }catch(error){
+    } catch (error) {
         console.error('Erro ao excluir Curso!');
         throw error;
     }
 };
 
-/*------------------------------------------------------------------------------------------------*/ 
-export const getCursosDisponiveisParaInscricao = async (tipo = "todos") => {
+/*------------------------------------------------------------------------------------------------*/
+export const getCursosDisponiveisParaInscricao = async (tipo = "todos", id_curso = null) => {
     try {
-        const response = await axios.get(`${API_URL}/cursos-disponiveis-inscricao?tipo=${tipo}`);
+        let url = `${API_URL}/cursos-disponiveis-inscricao?tipo=${tipo}`;
+
+        if (id_curso !== null && id_curso !== undefined) {
+            url += `&id_curso=${id_curso}`;
+        }
+
+        const response = await axios.get(url);
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos disponiveis para inscricao!');
