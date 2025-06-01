@@ -13,7 +13,7 @@ const CourseRegistration = () => {
   const [course, setCourse] = useState(null);
   const [relatedCourses, setRelatedCourses] = useState([]);
   const scrollRef = React.useRef(null);
-  const [isSticky, setIsSticky] = useState(true);
+  const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = React.useRef(null);
 
   useEffect(() => {
@@ -24,8 +24,8 @@ const CourseRegistration = () => {
       },
       {
         root: null,
-        threshold: 1.0,
-        rootMargin: "-100px 0px 0px 0px",
+        threshold: 0.1,
+        rootMargin: "0px 0px 0px 0px",
       }
     );
 
@@ -92,11 +92,9 @@ const CourseRegistration = () => {
       {/* Header com fundo azul de largura completa */}
       <div className="row bg-custom-light rounded-4">
         <div className="col-md-8">
-          <div className="">
-            <h1 className="fs-2 fw-bold">{course.nome_curso}</h1>
-
+            <h1 className="fs-2 fw-bold text-break w-100">{course.nome_curso}</h1>
             <div className="d-flex flex-column flex-md-row gap-3 mt-3">
-              <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center flex-md-row">
                 <FaVideo className="text-primary me-2 fs-4" />
                 <span className="fw-bold">Tipologia: {course.issincrono ? 'Síncrono' : course.isassincrono ? 'Assíncrono' : 'Outro'}</span>
               </div>
@@ -113,7 +111,6 @@ const CourseRegistration = () => {
                 </span>
               </div>
             </div>
-          </div>
         </div>
 
         {/* O espaço da coluna direita também faz parte do header com fundo azul */}
@@ -137,7 +134,7 @@ const CourseRegistration = () => {
                   id: c.id_conteudo,
                   titulo: c.nome_conteudo,
                   tipo: c.id_formato === 1 ? 'video' : 'documento',
-                  duracao: `${c.tempo_duracao} min`
+                  duracao: c.id_formato === 1 ? `${c.tempo_duracao} min` : ''
                 }))
               }}
               index={index}
@@ -170,11 +167,13 @@ const CourseRegistration = () => {
 
         {/* Coluna Direita - Card Sticky (sobreposto ao header) */}
         <div className="col-md-4">
-          <div className={isSticky ? "sticky-card" : ""} style={{ marginTop: "-70px" }}>
+          <div className="card-container">
+          <div className="sticky-card">
             <EnrollmentCard
               course={course}
               onEnroll={() => handleEnroll(course.id_curso)}
             />
+          </div>
           </div>
         </div>
       </div>

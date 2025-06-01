@@ -21,6 +21,36 @@ export const daysMonthsYears = (isoDate) => {
     if (minutes < 60) return `há ${minutes} minuto${minutes == 1 ? '' : 's'}`;
     if (hours < 24) return `há ${hours} hora${hours == 1 ? '' : 's'}`;
     if (days < 30) return `há ${days} dia${days == 1 ? '' : 's'}`;
-    if (months < 12)return `há ${months} ${months == 1 ? 'mês' : 'meses'}`;
+    if (months < 12) return `há ${months} ${months == 1 ? 'mês' : 'meses'}`;
     return `há ${years} ano${years == 1 ? '' : 's'}`;
 }
+
+export const formatTime = (timeValue) => {
+  if (!timeValue || typeof timeValue !== 'string') return '';
+
+  try {
+    const parts = timeValue.trim().split(':');
+    
+    if (parts.length === 3) {
+      const [hoursStr, minutesStr, secondsStr] = parts;
+      const hours = parseInt(hoursStr, 10);
+      const minutes = parseInt(minutesStr, 10);
+      const seconds = parseInt(secondsStr, 10);
+
+      if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+        return '';
+      }
+
+      if (hours === 0 && minutes < 60) {
+        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} min`;
+      } else {
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+    }
+
+    return '';
+  } catch (error) {
+    console.error('Erro ao formatar tempo:', error);
+    return '';
+  }
+};
