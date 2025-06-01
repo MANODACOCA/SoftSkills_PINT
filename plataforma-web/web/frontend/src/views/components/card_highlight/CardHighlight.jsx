@@ -17,7 +17,7 @@ const FeaturedCourseCard = ({
   if (!course) return null;
 
   const goToCourse = () => {
-    navigate(`/curso/${course.id_curso}`);
+    navigate(`/cursos/${course.id_curso}`);
   };
 
   const nameFormador = course.nome_formador || "Formador";

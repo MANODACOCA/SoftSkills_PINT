@@ -29,7 +29,7 @@ const MegaMenu = () => {
   return (
     <div className="mega-menu">
       <div className="menu-column">
-        <h6>Áreas</h6>
+        <h6>Categorias</h6>
         <ul>
           {Object.keys(menuData).map((area) => (
             <li
@@ -48,7 +48,7 @@ const MegaMenu = () => {
 
       {selectedArea && (
         <div className="menu-column">
-          <h6>Tópicos</h6>
+          <h6>Áreas</h6>
           <ul>
             {Object.keys(menuData[selectedArea].tópicos).map((topic) => (
               <li
@@ -65,7 +65,7 @@ const MegaMenu = () => {
 
       {selectedArea && selectedTopic && (
         <div className="menu-column">
-          <h6>Categorias</h6>
+          <h6>Tópicos</h6>
           <ul>
             {menuData[selectedArea].tópicos[selectedTopic].map((cat) => (
               <li key={cat}>{cat}</li>

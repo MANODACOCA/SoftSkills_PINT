@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { debounce } from 'lodash';
 import logo from '../../../assets/images/logos/semfundo3.png';
 import './Header.css';
 import { IoIosArrowForward, IoIosFlag } from "react-icons/io";
@@ -14,6 +15,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
 
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -27,13 +29,31 @@ const Header = ({ toggleSidebar, collapsed }) => {
         };
     }, []);
 
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const searchParam = params.get('search') || '';
+        setSearchTerm(searchParam);
+    }, [location.search]);
+
     const toggleProfileMenu = () => {
         setShowProfileMenu(!showProfileMenu);
     };
 
     const handleFocus = () => {
-    navigate('/cursos');
+        if (location.pathname !== '/cursos') {
+            navigate('/cursos');
+        }
     };
+
+    const debouncedNavigate = debounce((value) => {
+        const params = new URLSearchParams(location.search);
+        if (value) {
+            params.set("search", value);
+        } else {
+            params.delete("search");
+        }
+        navigate(`${location.pathname}?${params.toString()}`);
+    }, 400);
 
     return (
         <header className='w-100 p-3 d-flex justify-content-between align-items-center gap-4 border-bottom'>
@@ -44,20 +64,20 @@ const Header = ({ toggleSidebar, collapsed }) => {
                 <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
 
-            <form className="input-group d-none d-md-flex">
-                <input
-                    className="form-control form-control-md"
-                    type="search"
-                    placeholder="Pesquisar"
-                    aria-label="Pesquisar"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    onFocus={handleFocus}
-                />
-                <button className="btn btn-primary btn-sm" type="submit">
-                    <i className="bi bi-search"></i>
-                </button>
-            </form>
+            <input
+                className="input-group d-none d-md-flex form-control form-control-md"
+                type="search"
+                placeholder="Pesquisar curso"
+                aria-label="Pesquisar"
+                value={searchTerm}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    setSearchTerm(value);
+                    debouncedNavigate(value);
+                }}
+
+                onFocus={handleFocus}
+            />
 
             <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
                 <button onClick={toggleProfileMenu} className="btn p-0 border-0 bg-transparent d-flex align-items-center gap-2">

@@ -4,19 +4,34 @@ const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, 
 
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
-async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null) {
+async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null, search = "") {
   const today = new Date();
-  let cursosAssincronos = [];
+  let cursosAssincronosDisponiveis = [];
   let cursosSincronosDisponiveis = [];
 
+  const baseWhereAssincrono = {
+    estado: true,
+    issincrono: false,
+  };
+
+  const baseWhereSincrono = {
+    estado: true,
+     issincrono: true,
+  };
+
+   if (id_curso) {
+    baseWhereAssincrono.id_curso = id_curso;
+    baseWhereSincrono.id_curso = id_curso;
+  }
+
+  if (search) {
+    baseWhereAssincrono.nome_curso = { [Op.iLike]: `${search}%` };
+    baseWhereSincrono.nome_curso = { [Op.iLike]: `${search}%` };
+  }
+
   if (tipo === "todos" || tipo === "assincrono") {
-    cursosAssincronos = await cursos.findAll({
-      where: {
-        estado: true,
-        issincrono: false,
-        //data_fim_inscricao: { [Op.gte]: today },
-        ...(id_curso && { id_curso })
-      },
+    cursosAssincronosDisponiveis = await cursos.findAll({
+      where: baseWhereAssincrono,
       include: [
         {
           model: aulas,
@@ -37,12 +52,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null)
 
   if (tipo === "todos" || tipo === "sincrono") {
     const cursosSincronos = await cursos.findAll({
-      where: {
-        estado: true,
-        issincrono: true,
-        //data_fim_inscricao: { [Op.gte]: today },
-        ...(id_curso && { id_curso })
-      },
+      where: baseWhereSincrono,
       include: [
         {
           model: aulas,
@@ -83,7 +93,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null)
     });
   }
 
-  const cursosTodos = [...cursosAssincronos, ...cursosSincronosDisponiveis];
+  const cursosTodos = [...cursosAssincronosDisponiveis, ...cursosSincronosDisponiveis];
   const cursosDisponiveis = cursosTodos.map(curso => curso.toJSON());
 
   return cursosDisponiveis;
@@ -205,7 +215,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
       console.log('ID do formando não fornecido');
       return [];
     }
-    
+
     const formando = await formandos.findByPk(userId);
     if (!formando) {
       console.log(`Formando com ID ${userId} não encontrado`);
@@ -214,7 +224,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
 
     const whereClause = {
       id_formando: userId,
-      status_inscricao: 1 
+      status_inscricao: 1
     };
 
     let cursoWhere = {};
@@ -232,8 +242,8 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
           as: 'id_curso_curso',
           where: Object.keys(cursoWhere).length > 0 ? cursoWhere : undefined,
           attributes: [
-            'id_curso', 'nome_curso', 'descricao_curso', 'data_inicio_curso', 
-            'data_fim_curso', 'imagem', 'issincrono', 'isassincrono', 
+            'id_curso', 'nome_curso', 'descricao_curso', 'data_inicio_curso',
+            'data_fim_curso', 'imagem', 'issincrono', 'isassincrono',
             'contador_formandos', 'horas_curso', 'idioma'
           ]
         }
@@ -276,7 +286,7 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
       return [];
     }
 
-   
+
     const idsCursos = resultadosDoFormando.map(r => r.id_curso_sincrono).filter(Boolean);
 
     if (!idsCursos.length) {
@@ -338,7 +348,7 @@ async function updateFormandosCounter() {
       WHERE status_inscricao = 1 
       GROUP BY id_curso
     `, { type: sequelize.QueryTypes.SELECT });
-    
+
     // Atualizar cada curso com sua contagem
     for (const item of inscricoesPorCurso) {
       await cursos.update(
@@ -347,8 +357,8 @@ async function updateFormandosCounter() {
       );
       console.log(`Contador atualizado para curso ${item.id_curso}: ${item.total} formandos`);
     }
-  
-    
+
+
     console.log('Atualização de contadores concluída com sucesso');
     return { success: true, message: 'Contadores atualizados com sucesso' };
   } catch (error) {

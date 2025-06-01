@@ -80,9 +80,10 @@ controllers.getCursosDisponiveisParaInscricao = async (req, res) => {
   try {
     const tipo = req.query.tipo || "todos";
     const id_curso = req.query.id_curso ? parseInt(req.query.id_curso) : null;
-    const cursosDisponiveis = await cursosService.getCursosDiponiveisParaInscricao(tipo, id_curso);
+    const search = req.query.search || "";
+    const cursosDisponiveis = await cursosService.getCursosDiponiveisParaInscricao(tipo, id_curso, search);
 
-    if (cursosDisponiveis && cursosDisponiveis.length > 0) {
+    if (cursosDisponiveis) {
       res.status(200).json(cursosDisponiveis);
     } else {
       res.status(404).json({ erro: 'Nenhum curso disponível para inscrição encontrado.' });
