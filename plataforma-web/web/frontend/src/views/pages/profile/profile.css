@@ -2,6 +2,10 @@
     background-color: var(--cor-principal) !important;
 }
 
+.btn-color:hover {
+    background-color: var(--cor-secundaria) !important;
+}
+
 .img-profile {
     max-height: 300px;
 }

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-//import './infoprofile.css';
+import './profile.css';
 
 const InfoProfile = () => {
     return(
@@ -17,10 +17,28 @@ const InfoProfile = () => {
                 <div className='d-flex justify-content-end mt-2'>
                     <small>Esqueceu-se da palavra-passe?</small>
                 </div>
-                
             </div>
-            <div className='col-6'>
-                
+            <div className='col-6 p-5'>
+                <div className='d-flex flex-column'>
+                    <div className='mb-2'>
+                        <h5 className='mb-3'>Escolha o tipo de conta: </h5>
+                        <div className='btn-group'>
+                            <button className='btn btn-color text-white'>Formando</button>
+                            <button className='btn btn-color text-white'>Formador</button>
+                            <button className='btn btn-color text-white'>Administrador</button>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="form-check form-switch d-flex align-items-center p-0 mb-2">
+                        <h5 className='m-0'>
+                            <label className="form-check-label me-5" htmlFor="flexSwitchCheckDefault">
+                                Autenticação dois Fatores
+                            </label>
+                        </h5>
+                        <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
+                    </div>
+                    <small>Texto a explicar autenticação dois fatores</small>
+                </div>
             </div>
         </div>
     );
