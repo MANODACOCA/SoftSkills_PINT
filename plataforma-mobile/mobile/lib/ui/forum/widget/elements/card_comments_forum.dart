@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+import 'package:go_router/go_router.dart';
 import 'package:like_button/like_button.dart';
 import 'package:mobile/ui/core/shared/export.dart';
 import 'package:comment_box/comment/comment.dart';
@@ -11,12 +12,14 @@ class Post extends StatelessWidget {
     required this.forumComments,
     required this.forumLike,
     required this.description,
+    required this.photo,
   });
 
   final String forumName;
   final int forumComments;
   final int forumLike;
   final String description;
+  final String photo;
 
   late int likes = forumLike;
 
@@ -44,7 +47,7 @@ class Post extends StatelessWidget {
           SizedBox(
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/forum_icon.png'),
+                backgroundImage: AssetImage(photo),
                 radius: 30,
               ),
               title: Text(
@@ -95,8 +98,13 @@ class Post extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.comment, color: Colors.grey),
                       onPressed: () {
-                        //Aqui você pode implementar a lógica para abrir o campo de comentários
-                        print('Abrir campo de comentários');
+                        context.push('/commentPage', extra: {
+                          'postName': forumName,
+                          'description': description,
+                          'likes': likes,
+                          'comments': forumComments,
+                          'photo': photo,
+                        });
                       },
                     ),
                     SizedBox(height: 5),

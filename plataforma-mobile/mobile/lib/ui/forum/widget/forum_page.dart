@@ -47,15 +47,16 @@ class ForumPage extends StatelessWidget {
         ),
         body: Scaffold(
           body: SingleChildScrollView(
+            //Post(forumName: personName, forumComments: forumComments, forumLike: forumLike, description: 'Como a inteligência artificial pode ser utilizada para melhorar a segurança cibernética em dispositivos do dia a dia, como smartphones e smartwatches?'),
             child: GestureDetector(
               child: Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(children: <Widget>[
-                    Post(forumName: personName, forumComments: forumComments, forumLike: forumLike, description: 'Como a inteligência artificial pode ser utilizada para melhorar a segurança cibernética em dispositivos do dia a dia, como smartphones e smartwatches?'),
+                    Post(forumName: personName, forumComments: forumComments, forumLike: forumLike, description: 'Como a inteligência artificial pode ser utilizada para melhorar a segurança cibernética em dispositivos do dia a dia, como smartphones e smartwatches?', photo: 'assets/facebook.png'),
                     SizedBox(height: 20),
-                    Post(forumName: 'Guilherme Silva', forumComments: 30, forumLike: 10, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+                    Post(forumName: 'Guilherme Silva', forumComments: 30, forumLike: 10, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', photo: 'assets/facebook.png'),
                     SizedBox(height: 20),
-                    Post(forumName: 'Guilherme Silva', forumComments: 30, forumLike: 10, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'),
+                    Post(forumName: 'Guilherme Silva', forumComments: 30, forumLike: 10, description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', photo: 'assets/facebook.png'),
                   ],
                 ),
               ),
