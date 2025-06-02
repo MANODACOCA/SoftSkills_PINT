@@ -211,5 +211,19 @@ final rotas = GoRouter(
         return ForumPage(forumName: forumName);
       },
     ),
+    GoRoute(
+      name: 'commentPage',
+      path: '/commentPage',
+      builder: (context, state) {
+        final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        return CommentPage(
+          postName: "${extra['postName']}",
+          description: "${extra['description']}",
+          likes: extra['likes'] as int,
+          comments: extra['comments'] as int,
+          photo: "${extra['photo']}",
+        );
+      },
+    ),
   ],
 );
