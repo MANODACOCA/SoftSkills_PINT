@@ -2,7 +2,6 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/aulas';
 
-
 export const list_aulas = async () => {
   try{
     const response = await axios.get(`${API_URL}/list`);
@@ -49,6 +48,17 @@ export const delete_aulas = async (id) => {
         return response.data;
     }catch(error){
         console.error('Erro ao excluir Aula!');
+        throw error;
+    }
+};
+
+
+export const getClassWithCourse = async (userId, cursoId) => {
+    try {
+        const response = await axios.get(`${API_URL}/verificar/${userId}/${cursoId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao procurar detalhes da aula e curso:', error);
         throw error;
     }
 };

@@ -25,6 +25,7 @@ export const daysMonthsYears = (isoDate) => {
     return `há ${years} ano${years == 1 ? '' : 's'}`;
 }
 
+//Formata string no formato "hh:mm:ss" que vem da BD, mostra min se for < 1 hora
 export const formatTime = (timeValue) => {
   if (!timeValue || typeof timeValue !== 'string') return '';
 
@@ -53,4 +54,16 @@ export const formatTime = (timeValue) => {
     console.error('Erro ao formatar tempo:', error);
     return '';
   }
+};
+
+//Converte valor numerico em segundos para mm:ss ou hh:mm:ss para o nosso player de videos
+export const formatSecondsToTime = (seconds) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const sec = Math.floor(seconds % 60);
+
+  if (hours === 0) {
+    return `${String(minutes).padStart(2, '0')}:${String(sec).padStart(2, '0')} min`;
+  }
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
 };

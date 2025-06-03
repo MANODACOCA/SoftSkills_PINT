@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
 import { FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
+import { verificar_inscricao } from '../../../api/inscricoes_axios';
 
 const FeaturedCourseCard = ({
   course,
@@ -16,8 +17,19 @@ const FeaturedCourseCard = ({
 
   if (!course) return null;
 
-  const goToCourse = () => {
-    navigate(`/cursos/${course.id_curso}`);
+  const goToCourse = async () => {
+    try{
+      const userId = 2;
+      const verificacao = await verificar_inscricao(userId, course.id_curso);
+      if(verificacao.inscrito){
+        navigate(`/aula/${verificacao.aulaId}`);
+      }else{
+        navigate(`/aula/${course.id_curso}`);
+      }
+    }catch(error){
+      console.error('Erro ao verificar incricao:', error);
+      navigate(`/cursos/${course.id_curso}`);
+    }
   };
 
   const nameFormador = course.nome_formador || "Formador";
