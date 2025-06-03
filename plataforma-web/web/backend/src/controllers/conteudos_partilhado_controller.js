@@ -81,6 +81,8 @@ controllers.delete = async (req,res)=>{
   }
 };
 
+/*------------------------------------------------------------------------------------------------------------*/
+
 controllers.getPostsByConteudoPartilhado = async (req, res) => {
     try {
         const { id } = req.params;
@@ -109,8 +111,6 @@ controllers.getPostsByConteudoPartilhado = async (req, res) => {
         });
     }
 };
-
-/*------------------------------------------------------------------------------------------------------------*/
 
 controllers.getForuns = async (req, res) => {
   try{

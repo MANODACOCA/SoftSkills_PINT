@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getForuns } from '../../../api/conteudos_partilhado_axios';
 
 const Foruns = () => {
@@ -61,7 +61,7 @@ const Foruns = () => {
                     <div className="text-end">
                       <button
                         className="btn btn-primary"
-                        onClick={() => handleParticiparClick(conteudo.id_conteudos_partilhado)}
+                        onClick={() => handleParticiparClick(forum.id_conteudos_partilhado)}
                       >
                         Participar
                       </button>

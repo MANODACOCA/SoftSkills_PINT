@@ -24,5 +24,6 @@ router.delete('/delete/:id',controller.delete);
 
 //Nossas Rotas:
 router.get('/foruns', controller.getForuns);
+router.get('/:id/posts', controller.getPostsByConteudoPartilhado);
 
 module.exports = router;
