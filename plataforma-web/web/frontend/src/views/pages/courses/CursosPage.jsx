@@ -30,7 +30,6 @@ const CursosPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    console.log("DEBUG - topicosIds recebidos:", topicosIds);
     fetchCursosDisponiveisInscricao();
   }, [tipologia, searchTerm, topicosIds]);
 

@@ -52,3 +52,17 @@ export const delete_conteudos_partilhado = async (id) => {
         throw error;
     }
 };
+
+/*------------------------------------------------------------------------------------------------*/
+
+export const getForuns = async (ordenar = "Mais Recentes") => {
+    try{
+         let url = `${API_URL}/foruns?ordenar=${ordenar}`;
+         
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error){
+        console.error('Erro ao procurar foruns!');
+        throw error;
+    }
+}

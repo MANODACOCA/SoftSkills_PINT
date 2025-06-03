@@ -1,9 +1,9 @@
-//const model = require('../models/conteudos_partilhado');;
-const conteudoPartilhadoService = require('../services/conteudo_partilhado_services');
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).conteudos_partilhado;
 const controllers = {};
+
+const conteudoPartilhadoService = require('../services/conteudo_partilhado.service');
 
 
 
@@ -96,5 +96,27 @@ controllers.getPostsByConteudoPartilhado = async (req, res) => {
         });
     }
 };
+
+/*------------------------------------------------------------------------------------------------------------*/
+
+controllers.getForuns = async (req, res) => {
+  try{
+     const ordernar = req.query.ordenar || "Mais Recentes";
+    const conteudos_partilhado = await conteudoPartilhadoService.getForuns(ordernar);
+
+  if(conteudos_partilhado && conteudos_partilhado.length > 0){
+    res.status(200).json(conteudos_partilhado);
+  }else{
+    res.status(404),json({ erro: 'Nenhum conteudo partilhado encontrado.'});
+  }
+
+  }catch(error){
+    console.error('Erro ao procurar cursos disponiveis:', error);
+    res.status(500).json({
+      erro: 'Erro ao procurar conteudos partilhados.',
+      desc: error.message
+    });
+  }
+}
 
 module.exports = controllers;
