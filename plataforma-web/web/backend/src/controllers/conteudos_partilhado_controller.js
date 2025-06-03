@@ -3,12 +3,21 @@ const conteudoPartilhadoService = require('../services/conteudo_partilhado_servi
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).conteudos_partilhado;
+const models = initModels(sequelize);
 const controllers = {};
 
 
 
 controllers.list = async (req,res)=>{
-  const data = await model.findAll();
+  const data = await model.findAll({
+      include: [
+        {
+          model: sequelize.models.topico,
+          as: 'id_topico_topico',
+          attributes: ['nome_topico']
+        }
+      ]
+    });
   res.status(200).json(data);
 };
 

@@ -12,7 +12,6 @@ const Forum = () => {
   const loadConteudoPartilhado = async () => {
     try {
       const res = await axios.get("http://localhost:3000/conteudos_partilhado/list");
-      // Considerando que a resposta é um array direto (como mostraste)
       setConteudosPartilhados(res.data);
     } catch (error) {
       alert("Erro ao carregar conteúdos: " + error.message);
@@ -32,16 +31,19 @@ const Forum = () => {
     <div className="container mt-4">
       <h2 className="mb-4">Fórum de Cursos</h2>
       <div className="row row-cols-1 g-4">
-        {conteudospartilhados.map((conteudospartilhado) => (
-          <div key={conteudospartilhado.id_conteudos_partilhado} className="col">
+        {conteudospartilhados.map((conteudo) => (
+          <div key={conteudo.id_conteudos_partilhado} className="col">
             <div className="card h-100 flex-row shadow-sm">
               <div className="card-body d-flex flex-column justify-content-between">
                 <div>
-                  <h5 className="card-title">Tópico #{conteudospartilhado.id_topico}</h5>
-                  <p className="card-text">{conteudospartilhado.descricao_cp}</p>
+                  <h5 className="card-title">Tópico: {conteudo.id_topico_topico.nome_topico}</h5>
+                  {/* Adicione mais campos do tópico se necessário */}
+                  <p className="card-text text-muted">
+                    {conteudo.topico?.descricao_top || "Sem descrição"}
+                  </p>
                   <p className="card-text">
                     <small className="text-muted">
-                      Criado em: {formatDate(conteudospartilhado.data_criacao_cp)}
+                      Criado em: {formatDate(conteudo.data_criacao_cp)}
                     </small>
                   </p>
                 </div>
