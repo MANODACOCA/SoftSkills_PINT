@@ -1,5 +1,6 @@
 import 'package:mobile/ui/course_assync/widget/course_assync_screen.dart';
 import 'package:mobile/ui/course_sync/widget/course_sync_screen.dart';
+import 'package:mobile/ui/forum/widget/comment_page.dart';
 import 'package:mobile/ui/forum/widget/forum.dart';
 import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
@@ -208,6 +209,20 @@ final rotas = GoRouter(
       builder: (context, state) {
         final forumName = state.extra as String;
         return ForumPage(forumName: forumName);
+      },
+    ),
+    GoRoute(
+      name: 'commentPage',
+      path: '/commentPage',
+      builder: (context, state) {
+        final Map<String, dynamic> extra = state.extra as Map<String, dynamic>;
+        return CommentPage(
+          postName: "${extra['postName']}",
+          description: "${extra['description']}",
+          likes: extra['likes'] as int,
+          comments: extra['comments'] as int,
+          photo: "${extra['photo']}",
+        );
       },
     ),
   ],

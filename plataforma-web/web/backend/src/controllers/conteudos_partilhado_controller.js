@@ -1,5 +1,5 @@
 //const model = require('../models/conteudos_partilhado');;
-
+const conteudoPartilhadoService = require('../services/conteudo_partilhado_services');
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).conteudos_partilhado;
@@ -70,6 +70,31 @@ controllers.delete = async (req,res)=>{
   }catch(err) {
     res.status(500).json({erro:'Erro ao apagar o/a Conteudo Partilhado!',desc: err.message});
   }
+};
+
+controllers.getPostsByConteudoPartilhado = async (req, res) => {
+    try {
+        const posts = await conteudoPartilhadoService.getPostsByConteudoPartilhado(req.params.id);
+        
+        if (!posts || posts.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Nenhum post encontrado para este conteúdo partilhado'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: posts
+        });
+    } catch (error) {
+        console.error('Erro no controller:', error);
+        const statusCode = error.message.includes('não encontrado') ? 404 : 500;
+        res.status(statusCode).json({
+            success: false,
+            message: error.message
+        });
+    }
 };
 
 module.exports = controllers;

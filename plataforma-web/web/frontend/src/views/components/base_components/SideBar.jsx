@@ -13,11 +13,11 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
                         {!collapsed && 'Home'}
                     </NavLink>
                     <hr />
-                    <NavLink to="/cursos" end className="nav-link d-flex align-items-center px-2 py-1">
+                    <NavLink to="/cursos" className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-mortarboard fs-4 px-2"></i>
                         {!collapsed && 'Cursos'}
                     </NavLink>
-                    <NavLink to="/cursos/inscritos" className="nav-link d-flex align-items-center px-2 py-1">
+                    <NavLink to="my/cursos/inscritos" className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-laptop fs-4 px-2"></i>
                         {!collapsed && 'Cursos inscritos'}
                     </NavLink>
@@ -25,7 +25,7 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
                         <i className="bi bi-heart fs-4 px-2"></i>
                         {!collapsed && 'Cursos Favoritos'}
                     </NavLink> */}
-                    <NavLink to="/cursos/terminados" className="nav-link d-flex align-items-center px-2 py-1">
+                    <NavLink to="my/cursos/terminados" className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-patch-check fs-4 px-2"></i>
                         {!collapsed && 'Cursos Terminados'}
                     </NavLink>

@@ -3,8 +3,6 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: white;
-  width: 100%;
-  max-width: 750px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
@@ -12,6 +10,7 @@
   flex: 1;
   padding: 16px;
   border-right: 1px solid #eee;
+  width: 250px;
 }
 
 .menu-column:last-child {

@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
 import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
@@ -16,23 +16,23 @@ const CursosPage = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchTerm = searchParams.get('search') || '';
+  const [topicosIds, setTopicosIds] = useState([]);
 
-  const fetchCursosDisponiveisInscricao = async () => {//buscar cursos
+  const fetchCursosDisponiveisInscricao = async () => {//obter cursos disponiveis inscricao
     try {
-      const cursosDisponiveis = await getCursosDisponiveisParaInscricao(tipologia, null, searchTerm);
+      const cursosDisponiveis = await getCursosDisponiveisParaInscricao(tipologia, null, searchTerm, topicosIds);
       setCourses(cursosDisponiveis);
-      console.log(cursosDisponiveis);
+
     } catch (error) {
       console.error('Erro ao encontrar cursos disponiveis para inscricao:', error);
     }
   }
 
-
-
   useEffect(() => {
     window.scrollTo(0, 0);
+    console.log("DEBUG - topicosIds recebidos:", topicosIds);
     fetchCursosDisponiveisInscricao();
-  }, [tipologia, searchTerm]);
+  }, [tipologia, searchTerm, topicosIds]);
 
 
   return (
@@ -44,11 +44,11 @@ const CursosPage = () => {
             <button className="btn btn-primary">
               Explorar
             </button>
-            {showExplorarMenu && (
+            {showExplorarMenu && 
               <div className="position-absolute" style={{ zIndex: 10 }}>
-                <FilterMenu />
+                <FilterMenu IdsTopicos={setTopicosIds}/>
               </div>
-            )}
+            }
           </div>
         </div>
 

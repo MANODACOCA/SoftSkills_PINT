@@ -22,4 +22,7 @@ router.post('/create',controller.create);
 router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 
+//Nossas Rotas:
+router.get('/categoria_area_topico', controller.getCategoriaAreaTopico);
+
 module.exports = router;
