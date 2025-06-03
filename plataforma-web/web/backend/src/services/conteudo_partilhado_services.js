@@ -1,5 +1,6 @@
 // src/services/conteudo_partilhado_services.js
-
+const { Sequelize, Op, where } = require('sequelize');
+const sequelize = require('../models/database');
 const { conteudos_partilhado, post, utilizador } = require('../models/init-models')(sequelize);
 
 const conteudoPartilhadoService = {

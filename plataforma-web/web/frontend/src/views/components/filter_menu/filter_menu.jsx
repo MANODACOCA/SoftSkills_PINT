@@ -1,74 +1,111 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./filter_menu.css";
+import { getCategoriaAreaTopico } from '../../../api/topico_axios'
 
-const menuData = {
-  "Negócios": {
-    tópicos: {
-      "Business Analytics e Intelligence": [
-        "Power BI",
-        "SQL",
-        "Modelagem de dados",
-        "Análise de dados",
-        "DAX",
-      ],
-      "Gestão de projetos": ["Scrum", "PMI", "Kanban"],
-    },
-  },
-  "Desenvolvimento": {
-    tópicos: {
-      "Desenvolvimento Web": ["React", "Vue", "Angular"],
-      "Mobile": ["Flutter", "React Native"],
-    },
-  },
-};
 
-const MegaMenu = () => {
+const FilterMenu = ({IdsTopicos}) => {
+  const [categoriasAreasTopicos, setCategoriasAreasTopicos] = useState([]);
+
+  const [selectedCategoria, setSelectedCategoria] = useState(null);
   const [selectedArea, setSelectedArea] = useState(null);
-  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedTopico, setSelectedTopico] = useState(null);
+
+
+  const fetchCategoriasAreasTopicos = async () => {
+    try {
+      const data = await getCategoriaAreaTopico();
+      setCategoriasAreasTopicos(data);
+    } catch (error) {
+      console.error('Erro ao encontrar Tópicos!');
+    }
+  }
+
+  useEffect(() => {
+    fetchCategoriasAreasTopicos();
+  }, []);
+
+
+  const handleCategoriaClick =  (categoria) => {
+    const areas = categoria.areas
+    handleAreaClick(areas);
+  }
+
+  const handleAreaClick =  (areas) => {
+    const allAreas = Array.isArray(areas) ? areas : [areas];
+
+    const setTopicosIds = allAreas.flatMap(area => area.topicos.map(t => t.id_topico));
+    IdsTopicos(setTopicosIds);
+  }
+
+  const handleTopicoClick =  (topico) => {
+   IdsTopicos([topico.id_topico]);
+  }
+
+
 
   return (
     <div className="mega-menu">
+
+      {/*Coluna: Categorias*/}
       <div className="menu-column">
         <h6>Categorias</h6>
         <ul>
-          {Object.keys(menuData).map((area) => (
+          {categoriasAreasTopicos.map((categoria) => (
             <li
-              key={area}
+              key={categoria.id_categoria}
+              onClick={() => handleCategoriaClick(categoria)}
               onMouseEnter={() => {
-                setSelectedArea(area);
-                setSelectedTopic(null);
+                setSelectedCategoria(categoria);
+                setSelectedArea(null);
+                setSelectedTopico(null);
               }}
-              className={area === selectedArea ? "active" : ""}
+              className={selectedCategoria?.id_categoria === categoria.id_categoria ? "active" : ""}
             >
-              {area}
+              {categoria.nome_cat}
             </li>
           ))}
         </ul>
       </div>
 
-      {selectedArea && (
+      {/*Coluna: Areas*/}
+      {selectedCategoria && (
         <div className="menu-column">
           <h6>Áreas</h6>
           <ul>
-            {Object.keys(menuData[selectedArea].tópicos).map((topic) => (
+            {selectedCategoria.areas.map((area) => (
               <li
-                key={topic}
-                onMouseEnter={() => setSelectedTopic(topic)}
-                className={topic === selectedTopic ? "active" : ""}
+                key={area.id_area}
+                onClick={() => handleAreaClick(area)}
+                onMouseEnter={() => {
+                  setSelectedArea(area);
+                  setSelectedTopico(null);
+                }}
+                className={selectedArea?.id_area === area.id_area ? "active" : ""}
               >
-                {topic}
+                {area.nome_area}
               </li>
             ))}
           </ul>
         </div>
       )}
 
-      {selectedArea && selectedTopic && (
+      {/*Coluna: Tópicos*/}
+      {selectedCategoria && selectedArea && (
         <div className="menu-column">
           <h6>Tópicos</h6>
           <ul>
-            {menuData[selectedArea].tópicos[selectedTopic].map((cat) => (
-              <li key={cat}>{cat}</li>
+            {selectedArea.topicos.map((topico) => (
+              <li
+                key={topico.id_topico}
+                onClick={() => handleTopicoClick(topico)}
+                onMouseEnter={() => {
+                  setSelectedTopico(topico);
+                }}
+                className={selectedTopico?.id_topico === topico.id_topico ? "active" : ""}
+              >
+                {topico.nome_topico}
+              </li>
             ))}
           </ul>
         </div>
@@ -77,4 +114,4 @@ const MegaMenu = () => {
   );
 };
 
-export default MegaMenu;
+export default FilterMenu;

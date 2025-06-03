@@ -45,8 +45,8 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/notificacoes" element={<NotificationPage />} />
            <Route path="/cursos" element={<CursosPage/>}/>
-          <Route path="/cursos/inscritos" element={<EnrolledCourses />}/>
-          <Route path="/cursos/terminados" element={<CompletedCourses />}/>
+          <Route path="my/cursos/inscritos" element={<EnrolledCourses />}/>
+          <Route path="my/cursos/terminados" element={<CompletedCourses />}/>
           <Route path="/cursos/favoritos" element={<FavoriteCourses />}/>
           <Route path="/forum" element={<Forum />}/>
           <Route path="/posts" element={<Post />}/>

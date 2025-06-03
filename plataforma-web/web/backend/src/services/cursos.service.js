@@ -4,7 +4,7 @@ const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, 
 
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
-async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null, search = "") {
+async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null, search = "", topicosIDs = []) {
   const today = new Date();
   let cursosAssincronosDisponiveis = [];
   let cursosSincronosDisponiveis = [];
@@ -27,6 +27,11 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   if (search) {
     baseWhereAssincrono.nome_curso = { [Op.iLike]: `${search}%` };
     baseWhereSincrono.nome_curso = { [Op.iLike]: `${search}%` };
+  }
+
+   if (topicosIDs.length > 0) {
+    baseWhereAssincrono.id_topico = { [Op.in]: topicosIDs };
+    baseWhereSincrono.id_topico = { [Op.in]: topicosIDs };
   }
 
   if (tipo === "todos" || tipo === "assincrono") {

@@ -53,7 +53,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
             params.delete("search");
         }
         navigate(`${location.pathname}?${params.toString()}`);
-    }, 400);
+    });
 
     return (
         <header className='w-100 p-3 d-flex justify-content-between align-items-center gap-4 border-bottom'>

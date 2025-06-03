@@ -35,7 +35,7 @@ const MyCarousel = ({ course }) => {
         <Carousel.Caption className='carousel-caption overlay-caption text-center'>
           <h1>{course.nome_curso}</h1>
           <p>🧠 Conhece o curso mais procurado na SoftSkills.</p>
-         <Link to={`/curso/${course.id_curso}`} className='btn btn-primary'>  <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações</Link>
+         <Link to={`/cursos/${course.id_curso}`} className='btn btn-primary'>  <i className="bi bi-info-circle-fill"></i>&nbsp;&nbsp;Mais Informações</Link>
         </Carousel.Caption>
       </Carousel.Item>
      )}
