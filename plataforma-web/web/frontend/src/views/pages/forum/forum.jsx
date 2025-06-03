@@ -5,6 +5,7 @@ import { getForuns } from '../../../api/conteudos_partilhado_axios';
 const Foruns = () => {
   const [foruns, setForuns] = useState([]);
   const [ordenar, setOrdenar] = useState('Mais Recentes');
+  const navigate = useNavigate();
 
   const fetchForuns = async () => {
     try {
@@ -13,6 +14,10 @@ const Foruns = () => {
     } catch (error) {
       console.error('Erro ao encontrar foruns!');
     }
+  };
+
+    const handleParticiparClick = (idConteudo) => {
+    navigate(`/forum/posts/${idConteudo}`);
   };
 
   useEffect(() => {
@@ -54,7 +59,12 @@ const Foruns = () => {
                       </p>
                     </div>
                     <div className="text-end">
-                      <Link className="btn btn-primary">Participar</Link>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleParticiparClick(conteudo.id_conteudos_partilhado)}
+                      >
+                        Participar
+                      </button>
                     </div>
                   </div>
                 </div>

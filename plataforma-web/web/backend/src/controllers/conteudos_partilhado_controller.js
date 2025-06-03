@@ -1,6 +1,7 @@
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).conteudos_partilhado;
+const models = initModels(sequelize);
 const controllers = {};
 
 const conteudoPartilhadoService = require('../services/conteudo_partilhado.service');
@@ -8,7 +9,15 @@ const conteudoPartilhadoService = require('../services/conteudo_partilhado.servi
 
 
 controllers.list = async (req,res)=>{
-  const data = await model.findAll();
+  const data = await model.findAll({
+      include: [
+        {
+          model: sequelize.models.topico,
+          as: 'id_topico_topico',
+          attributes: ['nome_topico']
+        }
+      ]
+    });
   res.status(200).json(data);
 };
 
@@ -74,25 +83,29 @@ controllers.delete = async (req,res)=>{
 
 controllers.getPostsByConteudoPartilhado = async (req, res) => {
     try {
-        const posts = await conteudoPartilhadoService.getPostsByConteudoPartilhado(req.params.id);
+        const { id } = req.params;
         
-        if (!posts || posts.length === 0) {
-            return res.status(404).json({
+        // Validação básica do ID
+        if (!id || isNaN(id)) {
+            return res.status(400).json({
                 success: false,
-                message: 'Nenhum post encontrado para este conteúdo partilhado'
+                message: 'ID do conteúdo partilhado inválido'
             });
         }
 
+        const posts = await conteudoPartilhadoService.getPostsByConteudoPartilhado(parseInt(id));
+        
         res.json({
             success: true,
             data: posts
         });
     } catch (error) {
-        console.error('Erro no controller:', error);
+        console.error('Erro no controller getPostsByConteudoPartilhado:', error);
+        
         const statusCode = error.message.includes('não encontrado') ? 404 : 500;
         res.status(statusCode).json({
             success: false,
-            message: error.message
+            message: error.message,
         });
     }
 };
