@@ -1,64 +1,50 @@
-// src/services/conteudo_partilhado_services.js
-const { Sequelize, Op, where } = require('sequelize');
+const initModels = require('../models/init-models');
 const sequelize = require('../models/database');
-const { conteudos_partilhado, post, utilizador } = require('../models/init-models')(sequelize);
+
+const models = initModels(sequelize);
 
 const conteudoPartilhadoService = {
-    /**
-     * Obtém todos os posts associados a um conteúdo partilhado específico
-     * @param {number} conteudoPartilhadoId - ID do conteúdo partilhado
-     * @returns {Promise<Array>} Lista de posts com informações básicas e autor
-     */
     getPostsByConteudoPartilhado: async (conteudoPartilhadoId) => {
         try {
             // Verifica se o conteúdo partilhado existe
-            const conteudoExistente = await conteudos_partilhado.findByPk(conteudoPartilhadoId);
-            if (!conteudoExistente) {
+            const conteudo = await models.conteudos_partilhado.findByPk(conteudoPartilhadoId);
+            if (!conteudo) {
                 throw new Error('Conteúdo partilhado não encontrado');
             }
 
-            // Busca os posts associados com informações do autor
-            const posts = await post.findAll({
-                where: {
-                    id_conteudos_partilhado: conteudoPartilhadoId
-                },
-                include: [{
-                    model: utilizador,
-                    as: 'id_utilizador_utilizador', // Alias exato conforme associação
-                    attributes: [
-                        'id_utilizador', 
-                        'nome_utilizador', 
-                        'img_perfil',
-                        'data_criacao_utiliz'
-                    ]
-                }],
-                order: [['createdAt', 'DESC']],
-                raw: false // Para garantir que os includes funcionem corretamente
-            });
-
-            // Formata os dados para resposta
-            const formattedPosts = posts.map(post => {
-                return {
-                    id_post: post.id_post,
-                    texto_post: post.texto_post,
-                    createdAt: post.createdAt,
-                    autor: {
-                        id_utilizador: post.id_utilizador_utilizador.id_utilizador,
-                        nome: post.id_utilizador_utilizador.nome_utilizador,
-                        imagem: post.id_utilizador_utilizador.img_perfil,
-                        membro_desde: post.id_utilizador_utilizador.data_criacao_utiliz
+            // Busca os posts com informações do autor
+            const posts = await models.post.findAll({
+                where: { id_conteudos_partilhado: conteudoPartilhadoId },
+                include: [
+                    {
+                        model: models.utilizador,
+                        as: 'id_utilizador_utilizador',
+                        attributes: ['id_utilizador', 'nome_utilizador', 'img_perfil']
                     }
-                };
+                ],
+                order: [['id_post', 'DESC']] // Ordena por ID decrescente (mais recentes primeiro)
             });
 
-            return formattedPosts;
+            if (!posts || posts.length === 0) {
+                throw new Error('Nenhum post encontrado para este conteúdo partilhado');
+            }
+
+            // Formata a resposta para incluir informações úteis
+            return posts.map(post => ({
+                id_post: post.id_post,
+                texto_post: post.texto_post,
+                contador_likes_post: post.contador_likes_post,
+                contador_comentarios: post.contador_comentarios,
+                autor: {
+                    id_utilizador: post.id_utilizador_utilizador.id_utilizador,
+                    nome: post.id_utilizador_utilizador.nome_utilizador,
+                    img_perfil: post.id_utilizador_utilizador.img_perfil
+                },
+                data_criacao: post.data_criacao // Adicione este campo se existir na tabela
+            }));
         } catch (error) {
-            console.error('Erro detalhado no serviço:', {
-                message: error.message,
-                stack: error.stack,
-                params: { conteudoPartilhadoId }
-            });
-            throw new Error('Falha ao recuperar posts. Por favor, tente novamente.');
+            console.error('Erro no serviço getPostsByConteudoPartilhado:', error);
+            throw error;
         }
     }
 };
