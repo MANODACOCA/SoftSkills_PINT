@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Forum = () => {
   const [conteudospartilhados, setConteudosPartilhados] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadConteudoPartilhado();
@@ -27,6 +28,10 @@ const Forum = () => {
     });
   };
 
+  const handleParticiparClick = (idConteudo) => {
+    navigate(`/forum/posts/${idConteudo}`);
+  };
+
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Fórum de Cursos</h2>
@@ -37,7 +42,6 @@ const Forum = () => {
               <div className="card-body d-flex flex-column justify-content-between">
                 <div>
                   <h5 className="card-title">Tópico: {conteudo.id_topico_topico.nome_topico}</h5>
-                  {/* Adicione mais campos do tópico se necessário */}
                   <p className="card-text text-muted">
                     {conteudo.topico?.descricao_top || "Sem descrição"}
                   </p>
@@ -48,7 +52,12 @@ const Forum = () => {
                   </p>
                 </div>
                 <div className="text-end">
-                  <button className="btn btn-primary">Participar</button>
+                  <button 
+                    className="btn btn-primary"
+                    onClick={() => handleParticiparClick(conteudo.id_conteudos_partilhado)}
+                  >
+                    Participar
+                  </button>
                 </div>
               </div>
             </div>

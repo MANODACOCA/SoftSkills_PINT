@@ -1,30 +1,76 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { list_post, get_post, create_post, update_post, delete_post } from '../../../../api/post_axios';
+import { useParams, Link } from "react-router-dom";
+import axios from "axios";
 
-const Post = () => {
+const ForumPosts = () => {
+  const { id } = useParams();
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    list_post()
-      .then((data) => {
-        setPosts(data);
-      })
-      .catch((error) => {
-        console.error('Erro ao carregar posts:', error);
-      });
-  }, []);
+    const fetchPosts = async () => {
+      try {
+        const res = await axios.get(`http://localhost:3000/conteudos_partilhado/${id}/posts`);
+        setPosts(res.data.data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.response?.data?.message || "Erro ao carregar posts");
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, [id]);
+
+  if (loading) return <div className="container mt-4">Carregando...</div>;
+  if (error) return <div className="container mt-4 alert alert-danger">{error}</div>;
 
   return (
-    <div>
-      <h1>Lista de Posts</h1>
-      <ul>
-        {posts.map((post) => (
-          <li key={post.id}>{post.texto_post}</li>
-        ))}
-      </ul>
+    <div className="container mt-4">
+      <Link to="/forum" className="btn btn-outline-secondary mb-4">
+        &larr; Voltar ao Fórum
+      </Link>
+      
+      <h2>Discussões</h2>
+      
+      {posts.length === 0 ? (
+        <div className="alert alert-info">Nenhum post encontrado neste tópico.</div>
+      ) : (
+        <div className="list-group">
+          {posts.map((post) => (
+            <div key={post.id_post} className="list-group-item mb-3 shadow-sm">
+              <div className="d-flex align-items-start">
+                <img 
+                  src={post.autor.img_perfil || "/default-profile.png"} 
+                  alt={post.autor.nome}
+                  className="rounded-circle me-3"
+                  style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                />
+                <div className="flex-grow-1">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h5 className="mb-1">{post.autor.nome}</h5>
+                    <small className="text-muted">
+                      {/* Adicione a data do post se disponível */}
+                    </small>
+                  </div>
+                  <p className="mb-1">{post.texto_post}</p>
+                  <div className="d-flex justify-content-between mt-2">
+                    <small className="text-muted">
+                      {post.contador_likes_post} curtidas
+                    </small>
+                    <small className="text-muted">
+                      {post.contador_comentarios} comentários
+                    </small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
-export default Post;
+export default ForumPosts;
