@@ -25,32 +25,11 @@ const ForumPosts = () => {
     fetchPosts();
   }, [id]);
 
-  const handleLike = async (postId) => {
-    try {
-      const response = await axios.post(`http://localhost:3000/posts/${postId}/like`);
-      
-      // Atualiza o contador usando a resposta da API
-      setPosts(posts.map(post => 
-        post.id_post === postId 
-          ? { 
-              ...post, 
-              contador_likes_post: response.data.newLikeCount,
-              liked: true // Adiciona um estado de like se quiser feedback visual
-            } 
-          : post
-      ));
-    } catch (error) {
-      console.error("Erro ao curtir post:", error);
-      // Feedback visual para o usuário
-      setError("Não foi possível curtir o post. Tente novamente.");
-      setTimeout(() => setError(null), 3000);
-    }
-  };
-
   const handleViewComments = (postId) => {
-    navigate(`/forum/posts/${id}/comments/${postId}`);
+  // Corrigido: removendo a duplicação do path
+  navigate(`/forum/posts/${postId}/comments`);
   };
-
+  
   if (loading) return <div className="container mt-4">Carregando...</div>;
   if (error) return <div className="container mt-4 alert alert-danger">{error}</div>;
 
@@ -85,11 +64,7 @@ const ForumPosts = () => {
                   <p className="mb-1">{post.texto_post}</p>
                   <div className="d-flex justify-content-between mt-2">
                     <div>
-                      <button 
-                        className={`btn btn-sm me-2 ${post.liked ? 'btn-primary' : 'btn-outline-primary'}`}
-                        onClick={() => handleLike(post.id_post)}
-                        disabled={post.liked}
-                      >
+                      <button className="btn btn-sm btn-outline-primary me-2">
                         <FaThumbsUp className="me-1" />
                         {post.contador_likes_post}
                       </button>
@@ -98,7 +73,7 @@ const ForumPosts = () => {
                         onClick={() => handleViewComments(post.id_post)}
                       >
                         <FaComment className="me-1" />
-                        {post.contador_comentarios}
+                        Comentários ({post.contador_comentarios})
                       </button>
                     </div>
                   </div>

@@ -4,7 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).post;
 const controllers = {};
-const handleLike = require('../services/post.service');
+const getCommentsByPost = require('../services/post.service');
 
 
 controllers.list = async (req,res)=>{
@@ -72,38 +72,33 @@ controllers.delete = async (req,res)=>{
   }
 };
 
-controllers.handleLike = async (req, res) => {
-    try {
-      const { postId } = req.params;
-      
-      // Encontra o post pelo ID
-      const post = await Post.findByPk(postId);
-      
-      if (!post) {
-        return res.status(404).json({
-          success: false,
-          message: 'Post não encontrado'
-        });
-      }
-
-      // Incrementa o contador de likes
-      post.contador_likes_post += 1;
-      
-      // Salva as alterações
-      await post.save();
-      
-      res.json({
-        success: true,
-        newLikeCount: post.contador_likes_post
-      });
-      
-    } catch (error) {
-      console.error("Erro ao curtir post:", error);
-      res.status(500).json({
+controllers.getCommentsByPost = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    
+    // Validação básica do ID
+    if (!postId || isNaN(postId)) {
+      return res.status(400).json({
         success: false,
-        message: "Erro interno ao processar like"
+        message: 'ID do post inválido'
       });
     }
-  };
+
+    const comments = await getCommentsByPost(parseInt(postId));
+    
+    res.json({
+      success: true,
+      data: comments
+    });
+  } catch (error) {
+    console.error('Erro no controller getCommentsByPost:', error);
+    
+    const statusCode = error.message.includes('não encontrado') ? 404 : 500;
+    res.status(statusCode).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = controllers;

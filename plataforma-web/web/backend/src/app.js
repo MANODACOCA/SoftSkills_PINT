@@ -93,7 +93,7 @@ const ocorrencias_edicoesRouter = require('./routes/ocorrencias_edicoes_route.js
 app.use('/ocorrencias_edicoes',ocorrencias_edicoesRouter);
 
 const postRouter = require('./routes/post_route.js');
-app.use('/post',postRouter);
+app.use('/posts',postRouter);
 
 const resultadosRouter = require('./routes/resultados_route.js');
 app.use('/resultados',resultadosRouter);
