@@ -52,7 +52,7 @@ function App() {
           <Route path="/cursos/favoritos" element={<FavoriteCourses />}/>
           <Route path="/forum" element={<Forum />} />
           <Route path="/forum/posts/:id" element={<ForumPosts />} />
-          <Route path="/forum/posts/:id/comments" element={<PostComments />} />
+          <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
           <Route path="/cursos/:id" element={<CourseRegistration />}/>
           <Route path="/perfil/editar" element={<EditProfile />}/>
           <Route path="/aula/:aulaId" element={<ClassPage/>}/>

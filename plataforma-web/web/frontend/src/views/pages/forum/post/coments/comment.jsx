@@ -1,74 +1,70 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { FaThumbsUp, FaComment } from 'react-icons/fa';
 
 const PostComments = () => {
-  const { postId } = useParams();
-  const navigate = useNavigate();
+  const {postId} = useParams();
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [post, setPost] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchComments = async () => {
       try {
-        // Busca os comentários
-        const commentsRes = await axios.get(`http://localhost:3000/posts/${postId}/comments`);
-        setComments(commentsRes.data);
+        // Verifique se postId é válido antes de fazer a requisição
+        if (!postId || isNaN(postId)) {
+          throw new Error('ID do post inválido');
+        }
+
+        const response = await axios.get(`http://localhost:3000/posts/${postId}/comments`);
         
-        // Busca informações básicas do post (opcional)
-        const postRes = await axios.get(`http://localhost:3000/posts/${postId}`);
-        setPost(postRes.data);
-        
-        setLoading(false);
+        // Verifique se a resposta tem a estrutura esperada
+        if (response.data && response.data.success) {
+          setComments(response.data.data);
+        } else {
+          throw new Error('Estrutura de resposta inesperada');
+        }
       } catch (err) {
-        setError(err.response?.data?.message || "Erro ao carregar comentários");
+        setError(err.message);
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchComments();
   }, [postId]);
 
-  if (loading) return <div className="container mt-4">Carregando comentários...</div>;
-  if (error) return <div className="container mt-4 alert alert-danger">{error}</div>;
+  if (loading) return <div>Carregando...</div>;
+  if (error) return <div className="alert alert-danger">Erro: {error}</div>;
 
   return (
     <div className="container mt-4">
-      <button onClick={() => navigate(-1)} className="btn btn-outline-secondary mb-4">
-        &larr; Voltar ao post
-      </button>
-      
-      {post && (
-        <div className="card mb-4">
-          <div className="card-body">
-            <h5 className="card-title">{post.autor?.nome || "Anônimo"}</h5>
-            <p className="card-text">{post.texto_post}</p>
-          </div>
-        </div>
-      )}
-      
       <h3>Comentários</h3>
-      
       {comments.length === 0 ? (
-        <div className="alert alert-info">Nenhum comentário encontrado.</div>
+        <div className="alert alert-info">Nenhum comentário encontrado</div>
       ) : (
         <div className="list-group">
           {comments.map((comment) => (
-            <div key={comment.id_comentario} className="list-group-item mb-3 shadow-sm">
+            <div key={comment.id_comentario} className="list-group-item mb-3">
               <div className="d-flex align-items-start">
                 <img 
-                  src={comment.utilizador?.img_perfil || "/default-profile.png"} 
-                  alt={comment.utilizador?.nome || "Autor desconhecido"}
+                  src={comment.autor.img_perfil || '/default-profile.png'} 
+                  alt={comment.autor.nome}
                   className="rounded-circle me-3"
-                  style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                  style={{ width: '40px', height: '40px' }}
                 />
-                <div className="flex-grow-1">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <h6 className="mb-1">{comment.utilizador?.nome || "Anónimo"}</h6>
+                <div>
+                  <h6>{comment.autor.nome}</h6>
+                  <p>{comment.texto_comentario}</p>
+                  <div className="d-flex align-items-center">
+                    <button className="btn btn-sm btn-outline-primary me-2">
+                      <FaThumbsUp className="me-1" /> {comment.contador_likes_com}
+                    </button>
+                    <span className="text-muted">
+                      <FaComment className="me-1" /> Responder
+                    </span>
                   </div>
-                  <p className="mb-1">{comment.texto_comentario}</p>
                 </div>
               </div>
             </div>
