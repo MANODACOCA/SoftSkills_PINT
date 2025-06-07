@@ -52,3 +52,15 @@ export const delete_topico = async (id) => {
         throw error;
     }
 };
+
+/*------------------------------------------------------------------------------------------------*/
+
+export const getCategoriaAreaTopico = async () => {
+    try{
+        const response = await axios.get(`${API_URL}/categoria_area_topico`);
+        return response.data;
+    }catch(error){
+        console.error('Erro ao obter Categorias/Areas/Topicos');
+        throw error;
+    }
+}

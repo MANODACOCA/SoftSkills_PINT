@@ -4,6 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).comentario;
 const controllers = {};
+const getConteudosByComentario = require('../services/post.service');
 
 
 
@@ -70,6 +71,34 @@ controllers.delete = async (req,res)=>{
   }catch(err) {
     res.status(500).json({erro:'Erro ao apagar o/a Comentario!',desc: err.message});
   }
+};
+
+controllers.getConteudosByComentario = async (req, res) => {
+        try {
+            const {comentarioId} = req.params;
+            
+            if (!comentarioId || isNaN(comentarioId)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'ID do comentário inválido'
+                });
+            }
+
+            const conteudos = await getConteudosByComentario(parseInt(comentarioId));
+            
+            res.json({
+                success: true,
+                data: conteudos
+            });
+        } catch (error) {
+            console.error('Erro no controller getByComentario:', error);
+            
+            const statusCode = error.message.includes('não encontrado') ? 404 : 500;
+            res.status(statusCode).json({
+                success: false,
+                message: error.message
+            });
+        }
 };
 
 module.exports = controllers;

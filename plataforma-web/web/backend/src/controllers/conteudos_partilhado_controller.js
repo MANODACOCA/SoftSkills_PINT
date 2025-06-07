@@ -1,14 +1,23 @@
-//const model = require('../models/conteudos_partilhado');;
-
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).conteudos_partilhado;
+const models = initModels(sequelize);
 const controllers = {};
+
+const conteudoPartilhadoService = require('../services/conteudo_partilhado.service');
 
 
 
 controllers.list = async (req,res)=>{
-  const data = await model.findAll();
+  const data = await model.findAll({
+      include: [
+        {
+          model: sequelize.models.topico,
+          as: 'id_topico_topico',
+          attributes: ['nome_topico']
+        }
+      ]
+    });
   res.status(200).json(data);
 };
 
@@ -71,5 +80,56 @@ controllers.delete = async (req,res)=>{
     res.status(500).json({erro:'Erro ao apagar o/a Conteudo Partilhado!',desc: err.message});
   }
 };
+
+/*------------------------------------------------------------------------------------------------------------*/
+
+controllers.getPostsByConteudoPartilhado = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Validação básica do ID
+        if (!id || isNaN(id)) {
+            return res.status(400).json({
+                success: false,
+                message: 'ID do conteúdo partilhado inválido'
+            });
+        }
+
+        const posts = await conteudoPartilhadoService.getPostsByConteudoPartilhado(parseInt(id));
+        
+        res.json({
+            success: true,
+            data: posts
+        });
+    } catch (error) {
+        console.error('Erro no controller getPostsByConteudoPartilhado:', error);
+        
+        const statusCode = error.message.includes('não encontrado') ? 404 : 500;
+        res.status(statusCode).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
+
+controllers.getForuns = async (req, res) => {
+  try{
+     const ordernar = req.query.ordenar || "Mais Recentes";
+    const conteudos_partilhado = await conteudoPartilhadoService.getForuns(ordernar);
+
+  if(conteudos_partilhado && conteudos_partilhado.length > 0){
+    res.status(200).json(conteudos_partilhado);
+  }else{
+    res.status(404),json({ erro: 'Nenhum conteudo partilhado encontrado.'});
+  }
+
+  }catch(error){
+    console.error('Erro ao procurar cursos disponiveis:', error);
+    res.status(500).json({
+      erro: 'Erro ao procurar conteudos partilhados.',
+      desc: error.message
+    });
+  }
+}
 
 module.exports = controllers;

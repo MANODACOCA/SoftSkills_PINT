@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
 import { FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
+import { verificar_acesso_aula } from '../../../api/aulas_axios';
+
 
 const FeaturedCourseCard = ({
   course,
@@ -16,8 +18,28 @@ const FeaturedCourseCard = ({
 
   if (!course) return null;
 
-  const goToCourse = () => {
-    navigate(`/curso/${course.id_curso}`);
+  const goToCourse = async () => {
+    try {
+      const userId = 2;
+      const verificacao = await verificar_acesso_aula(userId, course.id_curso);
+
+      const now = new Date();
+      const dataInicio = new Date(course.data_inicio_curso);
+      //const dataFim =  new Date(course.data_fim_curso); meter depois quando tivermos cursos com dados + corretos!
+
+      if (verificacao.inscrito) {
+        if (now >= dataInicio) {
+          navigate(`/aula/${verificacao.aulaId}`);
+        } else {
+          navigate(`/aula/${course.id_curso}`);
+        }
+      } else {
+        navigate(`/aula/${course.id_curso}`);
+      }
+    } catch (error) {
+      console.error('Erro ao verificar incricao:', error);
+      navigate(`/cursos/${course.id_curso}`);
+    }
   };
 
   const nameFormador = course.nome_formador || "Formador";
@@ -187,7 +209,7 @@ const FeaturedCourseCard = ({
           <div className='d-flex justify-content-between align-items-center my-0'>
             <div className="d-flex align-items-center gap-2">
               <p className="card-text text-muted">
-                <FaCalendarAlt className='me-2'/>
+                <FaCalendarAlt className='me-2' />
                 {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
               </p>
             </div>

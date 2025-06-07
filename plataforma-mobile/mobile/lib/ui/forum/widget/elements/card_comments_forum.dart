@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
+import 'package:go_router/go_router.dart';
 import 'package:like_button/like_button.dart';
 import 'package:mobile/ui/core/shared/export.dart';
-import 'package:comment_box/comment/comment.dart';
 
 // ignore: must_be_immutable
 class Post extends StatelessWidget {
@@ -11,12 +11,16 @@ class Post extends StatelessWidget {
     required this.forumComments,
     required this.forumLike,
     required this.description,
+    required this.photo,
+    required this.selectComment,
   });
 
   final String forumName;
   final int forumComments;
   final int forumLike;
   final String description;
+  final String photo;
+  final bool selectComment;
 
   late int likes = forumLike;
 
@@ -31,6 +35,8 @@ class Post extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
+      height: 200,
       decoration: BoxDecoration(
         border: Border.all(
           color: const Color.fromARGB(255, 216, 216, 216),
@@ -40,11 +46,11 @@ class Post extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           SizedBox(
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/forum_icon.png'),
+                backgroundImage: AssetImage(photo),
                 radius: 30,
               ),
               title: Text(
@@ -53,24 +59,24 @@ class Post extends StatelessWidget {
               ),
               subtitle: Text(
                 // ignore: unnecessary_string_interpolations
-                '${DateTime.now().toLocal().toString().substring(0, 10)}',
-                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                '${DateTime.now().toLocal().toString().substring(0, 10)}', //Change to database date
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             ),
           ),
           SizedBox(height: 5),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+            padding: EdgeInsets.symmetric(horizontal: 30),
             child: Text(
               description,
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 5),
           SizedBox(
             child: Row(
               children: [
-                SizedBox(width: 20),
+                SizedBox(width: 25),
                 LikeButton(
                   size: 30,
                   likeCount: likes,
@@ -89,14 +95,20 @@ class Post extends StatelessWidget {
                     return !isLiked;
                   },
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 5),
                 Column(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.comment, color: Colors.grey),
+                      isSelected: selectComment,
+                      icon: Icon(Icons.comment, color: selectComment ? AppColors.secondary : Colors.grey,),
                       onPressed: () {
-                        //Aqui você pode implementar a lógica para abrir o campo de comentários
-                        print('Abrir campo de comentários');
+                        context.push('/commentPage', extra: {
+                          'postName': forumName,
+                          'description': description,
+                          'likes': likes,
+                          'comments': forumComments,
+                          'photo': photo,
+                        });
                       },
                     ),
                     SizedBox(height: 5),
@@ -106,7 +118,7 @@ class Post extends StatelessWidget {
                   '$forumComments',
                   style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
-                SizedBox(width: 20),
+                SizedBox(width: 10),
               ],
             ),
           ),

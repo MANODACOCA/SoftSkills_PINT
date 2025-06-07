@@ -54,12 +54,21 @@ export const delete_cursos = async (id) => {
 };
 
 /*------------------------------------------------------------------------------------------------*/
-export const getCursosDisponiveisParaInscricao = async (tipo = "todos", id_curso = null) => {
+
+export const getCursosDisponiveisParaInscricao = async (tipo = "todos", id_curso = null, search = "", id_topico = []) => {
     try {
         let url = `${API_URL}/cursos-disponiveis-inscricao?tipo=${tipo}`;
 
         if (id_curso !== null && id_curso !== undefined) {
             url += `&id_curso=${id_curso}`;
+        }
+
+        if (search) {
+            url += `&search=${encodeURIComponent(search)}`
+        }
+
+        if (id_topico && Array.isArray(id_topico) && id_topico.length > 0) {
+            url += `&idstopicos=${id_topico.map(encodeURIComponent).join(',')}`;
         }
 
         const response = await axios.get(url);

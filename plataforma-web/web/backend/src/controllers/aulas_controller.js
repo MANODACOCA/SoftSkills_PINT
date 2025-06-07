@@ -4,8 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).aulas;
 const controllers = {};
-
-
+const aulasService = require('../services/aulas.service')
 
 controllers.list = async (req,res)=>{
   const data = await model.findAll();
@@ -71,5 +70,20 @@ controllers.delete = async (req,res)=>{
     res.status(500).json({erro:'Erro ao apagar o/a Aula!',desc: err.message});
   }
 };
+
+controllers.verificarAula = async (req,res) => {
+  try{
+    const { userId, cursoId } = req.params;
+    const resultado = await aulasService.getClassByCurso(userId, cursoId);
+    res.status(200).json(resultado);
+  }catch(error){
+    console.error('Erro ao verificar inscrição:', error);
+    res.status(500).json({
+      erro: 'Erro ao verificar inscrição',
+      desc: error.message
+    });
+  }
+};
+
 
 module.exports = controllers;

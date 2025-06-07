@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
 import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -13,34 +13,41 @@ const CursosPage = () => {
   const [courses, setCourses] = useState([]);
   const [tipologia, setTipologia] = useState('todos');
 
-  const fetchCursosDisponiveisInscricao = async () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchTerm = searchParams.get('search') || '';
+  const [topicosIds, setTopicosIds] = useState([]);
+
+  const fetchCursosDisponiveisInscricao = async () => {//obter cursos disponiveis inscricao
     try {
-      const cursosDisponiveis = await getCursosDisponiveisParaInscricao();
+      const cursosDisponiveis = await getCursosDisponiveisParaInscricao(tipologia, null, searchTerm, topicosIds);
       setCourses(cursosDisponiveis);
+
     } catch (error) {
       console.error('Erro ao encontrar cursos disponiveis para inscricao:', error);
     }
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchCursosDisponiveisInscricao();
-  }, []);
+  }, [tipologia, searchTerm, topicosIds]);
 
 
   return (
     <div className="enrolled-courses">
       <div className='d-flex align-items-center justify-content-between mb-3'>
-        <div className="d-flex align-items-center gap-5">
+        <div className="d-flex align-items-center gap-4">
           <h1 className='mb-0'>Cursos</h1>
           <div className="position-relative" onMouseEnter={() => setShowExplorarMenu(true)} onMouseLeave={() => setShowExplorarMenu(false)}>
             <button className="btn btn-primary">
               Explorar
             </button>
-            {showExplorarMenu && (
-              <div className="position-absolute">
-                <FilterMenu />
+            {showExplorarMenu && 
+              <div className="position-absolute" style={{ zIndex: 10 }}>
+                <FilterMenu IdsTopicos={setTopicosIds}/>
               </div>
-            )}
+            }
           </div>
         </div>
 
@@ -51,9 +58,14 @@ const CursosPage = () => {
           <option value="assincrono">Assíncrono</option>
         </select>
       </div>
-        <div className="row g-3">
-          {courses.map((course) => (
-            <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-1" key={course.id_curso}>
+      <div className="row g-3">
+        {courses.length === 0 ? (
+          <div className="col-12">
+            <p className="text-center">Nenhum curso encontrado.</p>
+          </div>
+        ) : (
+          courses.map((course) => (
+            <div className="col-12 col-sm-6 col-md-4 col-lg-3 mb-2" key={course.id_curso}>
               <Card
                 courseId={course.id_curso}
                 image={course.imagem}
@@ -65,9 +77,10 @@ const CursosPage = () => {
                 membrosMax={course.issincrono ? course.sincrono?.numero_vagas : null}
               />
             </div>
-          ))}
-        </div>
+          ))
+        )}
       </div>
+    </div>
   );
 };
 
