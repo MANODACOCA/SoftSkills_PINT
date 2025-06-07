@@ -20,6 +20,7 @@ import CompletedCourses from './views/pages/completed_courses/CompletedCourses';
 import FavoriteCourses from './views/pages/favorite_courses/FavoriteCourses';
 import CursosPage from './views/pages/courses/CursosPage';
 import ForumPosts from './views/pages/forum/post/post';
+import ConteudosList from './views/pages/forum/post/conteudos_posts';
 import CPlusPlusPage from './views/pages/forum/post/post';
 import PostComments from './views/pages/forum/post/coments/comment';
 import CourseRegistration from './views/pages/course_registration/CourseRegistration';
@@ -53,6 +54,7 @@ function App() {
           <Route path="/forum" element={<Forum />} />
           <Route path="/forum/posts/:id" element={<ForumPosts />} />
           <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
+          <Route path="/forum/posts/:postId/conteudos" element={<ConteudosList />} />
           <Route path="/cursos/:id" element={<CourseRegistration />}/>
           <Route path="/perfil/editar" element={<EditProfile />}/>
           <Route path="/aula/" element={<ClassPage/>}/>

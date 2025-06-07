@@ -4,6 +4,7 @@ const router = express.Router();
 
 // Rotas para comentários (devem vir antes das rotas dinâmicas)
 router.get('/:postId/comments', controller.getCommentsByPost);
+router.get('/:postId/conteudos', controller.getConteudosByPost);
 
 // Rotas básicas do CRUD
 router.get('/', (req, res) => {
