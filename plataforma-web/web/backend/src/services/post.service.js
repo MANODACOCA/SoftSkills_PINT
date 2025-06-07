@@ -41,4 +41,43 @@ async function getCommentsByPost(postId) {
         }
     };
 
-module.exports = getCommentsByPost;
+
+async function getConteudosByPost(postId) {
+        try {
+            // Verifica se o post existe
+            const post = await models.post.findByPk(postId);
+            if (!post) {
+                throw new Error('Post não encontrado');
+            }
+
+            // Busca os conteúdos com informações do formato
+            const conteudos = await models.conteudos_forum.findAll({
+                where: { 
+                    id_post: postId,
+                    id_comentario: null // Garante que só pega conteúdos do post, não de comentários
+                },
+                include: [
+                    {
+                        model: models.tipo_formato,
+                        as: 'id_formato_tipo_formato',
+                        attributes: ['id_formato', 'formato']
+                    }
+                ],
+                order: [['id_conteudos_forum', 'ASC']]
+            });
+
+            return conteudos.map(conteudo => ({
+                id_conteudos_forum: conteudo.id_conteudos_forum,
+                conteudo: conteudo.conteudo,
+                formato: {
+                    id_formato: conteudo.id_formato_tipo_formato.id_formato,
+                    tipo: conteudo.id_formato_tipo_formato.formato
+                }
+            }));
+        } catch (error) {
+            console.error('Erro no serviço getConteudosByPost:', error);
+            throw error;
+        }
+};
+
+module.exports = { getCommentsByPost, getConteudosByPost};

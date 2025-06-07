@@ -101,4 +101,32 @@ controllers.getCommentsByPost = async (req, res) => {
   }
 };
 
+controllers.getConteudosByPost = async (req, res) => {
+        try {
+            const {postId} = req.params;
+            
+            if (!postId || isNaN(postId)) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'ID do post inválido'
+                });
+            }
+
+            const conteudos = await conteudoForumService.getConteudosByPost(parseInt(postId));
+            
+            res.json({
+                success: true,
+                data: conteudos
+            });
+        } catch (error) {
+            console.error('Erro no controller getByPost:', error);
+            
+            const statusCode = error.message.includes('não encontrado') ? 404 : 500;
+            res.status(statusCode).json({
+                success: false,
+                message: error.message
+            });
+        }
+};
+
 module.exports = controllers;
