@@ -5,8 +5,9 @@ import ClassHeader from '../../components/class_header/ClassHeader';
 import VideoPlayer from '../../components/video_player/VideoPlayer';
 import CourseModule from '../../components/course_module/CourseModule';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
-import { getClassWithCourse } from '../../../api/aulas_axios';
+import { get_aulas, verificar_acesso_aula } from '../../../api/aulas_axios';
 import { FaFilePdf, FaFileAlt, FaLink, FaUserTie } from 'react-icons/fa';
+
 
 const ClassPage = () => {
     const { aulaId } = useParams();
@@ -17,15 +18,16 @@ const ClassPage = () => {
     const [materialApoio, setMaterialApoio] = useState([]);
     const [carregar, setCarregar] = useState(true);
     const [erro, setErro] = useState(null);
-    const userId = 2;
+    const userId = 4;
 
-    const carregarAula = async (id) => {
+    const carregarAula = async (cursoId) => {
         try {
             setCarregar(true);
-            const dados = await getClassWithCourse(userId, id);
-            setAulaAtual(dados.aula.find(a => a.id_aula.toString() === id));
+            const dados = await verificar_acesso_aula(userId, cursoId);
+    
+            setAulaAtual(dados.aula);
             setCurso(dados.curso);
-            setAulas(dados.todasAulas);
+            setAulas(dados.todasAulas || []);
             setMaterialApoio(dados.materialApoio || []);
             setErro(null);
         } catch (error) {
@@ -38,7 +40,13 @@ const ClassPage = () => {
 
     useEffect(() => {
         window.scrollTo(0,0);
-        carregarAula(aulaId);
+        if(aulaId){
+            get_aulas(aulaId).then(aula => {
+                if(aula && aula.id_curso){
+                    carregarAula(aula.id_curso);
+                }
+            })
+        }
     }, [aulaId]);
 
     const handlePrevious = () => {

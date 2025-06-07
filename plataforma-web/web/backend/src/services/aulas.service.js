@@ -5,28 +5,10 @@ const { getEnrolledCoursesForUser } = require('./cursos.service');
 
 //Vamos aos cursos inscritos para ir para a pagina de curso com aula ->  
 // material_apoio/sobre(vem da getEnrolledCoursesForUser)
-async function checkEnrollment(userId, cursoId) {
+async function getClassByCurso(userId, cursoId) {
     try {
-        if (!userId) {
-            console.log('ID do utilizador não encontrado');
-        }
-        if (!cursoId) {
-            console.log('Curso não encontrado');
-        }
-
-        const inscricaoUser = await inscricoes.findOne({
-            where: {
-                id_formando: userId,
-                id_curso: cursoId,
-                status_inscricao: 1
-            }
-        });
-
-        const dadosCurso = await getEnrolledCoursesForUser(userId, null);
-        const cursoTodosDados = dadosCurso.find(curso => curso.id_curso_curso?.id_curso === Number(cursoId));
-
         const todasAulas = await aulas.findAll({
-            where: { id_curso: cursoId },
+            where: {id_curso: cursoId},
             include: [
                 {
                     model: conteudos,
@@ -42,10 +24,29 @@ async function checkEnrollment(userId, cursoId) {
             ],
             order: [['id_aula', 'ASC']]
         });
-
-        const primeiraAula = todasAulas.length > 0 ? todasAulas[0] : null;
-
-        const material = await material_apoio.findAll({
+        
+        if (todasAulas.length === 0) {
+            throw new Error('Nenhum aula encontrada para este curso');
+        }
+        
+        const aulaAtual = todasAulas[0];
+        
+        const inscricaoUser = await inscricoes.findOne({
+            where: {
+                id_formando: userId,
+                id_curso: cursoId,
+                status_inscricao: 1
+            }
+        });
+        
+        if (!inscricaoUser) {
+            return { inscrito: false };
+        }
+        
+        const dadosCurso = await getEnrolledCoursesForUser(userId, null);
+        const curso = dadosCurso.find(c => c.id_curso_curso?.id_curso === Number(cursoId));
+        
+        const materialApoio = await material_apoio.findAll({
             where: { id_curso: cursoId },
             include: [
                 {
@@ -55,22 +56,21 @@ async function checkEnrollment(userId, cursoId) {
                 }
             ]
         });
-
-
+        
         return {
             inscrito: true,
-            curso: cursoTodosDados?.id_curso_curso || null,
-            primeiraAulaId: primeiraAula? primeiraAula.id_aula : null,
-            aulas: todasAulas,
-            materiaisApoios: material
+            aula: aulaAtual,
+            curso: curso?.id_curso_curso || null,
+            todasAulas,
+            materialApoio
         };
-
     } catch (error) {
-        console.error('Erro ao tentar verificar inscrição:', error);
+        console.error('Erro ao buscar detalhes da aula:', error);
         throw error;
     }
 }
 
 module.exports = {
-    checkEnrollment
+    getClassByCurso
 };
+

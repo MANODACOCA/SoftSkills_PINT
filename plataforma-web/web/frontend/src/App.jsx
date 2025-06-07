@@ -53,7 +53,7 @@ function App() {
           <Route path="/forum/posts/:id" element={<ForumPosts />} />
           <Route path="/cursos/:id" element={<CourseRegistration />}/>
           <Route path="/perfil/editar" element={<EditProfile />}/>
-          <Route path="/aula/:aulaId" element={<ClassPage/>}/>
+          <Route path="/aula/" element={<ClassPage/>}/>
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
 

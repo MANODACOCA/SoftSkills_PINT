@@ -16,10 +16,10 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
 
   const baseWhereSincrono = {
     estado: true,
-     issincrono: true,
+    issincrono: true,
   };
 
-   if (id_curso) {
+  if (id_curso) {
     baseWhereAssincrono.id_curso = id_curso;
     baseWhereSincrono.id_curso = id_curso;
   }
@@ -29,7 +29,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
     baseWhereSincrono.nome_curso = { [Op.iLike]: `${search}%` };
   }
 
-   if (topicosIDs.length > 0) {
+  if (topicosIDs.length > 0) {
     baseWhereAssincrono.id_topico = { [Op.in]: topicosIDs };
     baseWhereSincrono.id_topico = { [Op.in]: topicosIDs };
   }
@@ -250,6 +250,25 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
             'id_curso', 'nome_curso', 'descricao_curso', 'data_inicio_curso',
             'data_fim_curso', 'imagem', 'issincrono', 'isassincrono',
             'contador_formandos', 'horas_curso', 'idioma'
+          ],
+          include: [
+            {
+              model: sincrono,
+              as: 'sincrono',
+              include: [
+                {
+                  model: formadores,
+                  as: 'id_formador_formadore',
+                  include: [
+                    {
+                      model: utilizador,
+                       as: 'id_formador_utilizador',
+                      attributes: ['id_utilizador', 'nome_utilizador', 'img_perfil']
+                    }
+                  ]
+                }
+              ]
+            }
           ]
         }
       ],

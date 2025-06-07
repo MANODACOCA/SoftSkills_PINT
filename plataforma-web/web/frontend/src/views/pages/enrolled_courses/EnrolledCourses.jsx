@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 const EnrolledCourses = () => {
   const [courses, setCourses] = useState([]);
   const [tipologia, setTipologia] = useState('todos');
-  const userId = 2;
+  const userId = 4;
 
   const fetchEnrolledCourses = async () => {
     try {
