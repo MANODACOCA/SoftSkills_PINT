@@ -55,7 +55,7 @@ function App() {
           <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
           <Route path="/cursos/:id" element={<CourseRegistration />}/>
           <Route path="/perfil/editar" element={<EditProfile />}/>
-          <Route path="/aula/" element={<ClassPage/>}/>
+          <Route path="my/cursos/inscritos/curso/:cursoId/aula/:aulaId" element={<ClassPage/>}/>
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
 

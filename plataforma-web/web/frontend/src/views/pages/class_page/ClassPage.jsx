@@ -10,61 +10,81 @@ import { FaFilePdf, FaFileAlt, FaLink, FaUserTie } from 'react-icons/fa';
 
 
 const ClassPage = () => {
-    const { aulaId } = useParams();
     const navigate = useNavigate();
-    const [aulaAtual, setAulaAtual] = useState(null);
     const [curso, setCurso] = useState(null);
     const [aulas, setAulas] = useState([]);
+    const [aulaAtual, setAulaAtual] = useState(null); // Add state for current class
     const [materialApoio, setMaterialApoio] = useState([]);
     const [carregar, setCarregar] = useState(true);
-    const [erro, setErro] = useState(null);
-    const userId = 4;
+    const [erro, setErro] = useState(null); 
 
-    const carregarAula = async (cursoId) => {
+    const userId = 4;
+    const { cursoId, aulaId } = useParams();
+
+    const carregarAula = async () => {
         try {
             setCarregar(true);
+
+            // Log the API call parameters
+            console.log(`Chamando API com userId=${userId}, cursoId=${cursoId}`);
+            
             const dados = await verificar_acesso_aula(userId, cursoId);
-    
-            setAulaAtual(dados.aula);
-            setCurso(dados.curso);
+            console.log("Dados recebidos da API:", dados);
+            
+            setCurso(dados.curso || null);
             setAulas(dados.todasAulas || []);
             setMaterialApoio(dados.materialApoio || []);
-            setErro(null);
+            
+            // Find the current aula from the list of aulas
+            if (dados.todasAulas && dados.todasAulas.length > 0) {
+                const aulaEncontrada = dados.todasAulas.find(aula => 
+                    aula.id_aula.toString() === aulaId.toString()
+                );
+                
+                if (aulaEncontrada) {
+                    console.log("Aula encontrada:", aulaEncontrada);
+                    setAulaAtual(aulaEncontrada);
+                } else {
+                    console.error("Aula não encontrada com ID:", aulaId);
+                    setErro("Aula não encontrada");
+                }
+            } else {
+                setErro("Nenhuma aula disponível para este curso");
+            }
+                
         } catch (error) {
-            console.error('Erro ao carregar aula:', error);
-            setErro('Não foi possível carregar a aula. Por favor, tente novamente mais tarde.');
+            console.error("Erro ao carregar aula:", error);
+            setErro("Ocorreu um erro ao carregar a aula. Tente novamente.");
         } finally {
             setCarregar(false);
         }
     };
 
-    useEffect(() => {
-        window.scrollTo(0,0);
-        if(aulaId){
-            get_aulas(aulaId).then(aula => {
-                if(aula && aula.id_curso){
-                    carregarAula(aula.id_curso);
-                }
-            })
-        }
-    }, [aulaId]);
-
     const handlePrevious = () => {
+        if (!aulaAtual || !aulas.length) return;
+        
         const index = aulas.findIndex(a => a.id_aula.toString() === aulaAtual.id_aula.toString());
+        console.log("aulaAtual.id_aula:", aulaAtual?.id_aula);
+        console.log("IDs das aulas:", aulas.map(a => a.id_aula));
+
         if (index > 0) {
             const anterior = aulas[index - 1];
-            navigate(`/aula/${anterior.id_aula}`);
+            navigate(`/my/cursos/inscritos/curso/${cursoId}/aula/${anterior.id_aula}`);
+            console.log("Navegando para aula anterior:", anterior.id_aula);
         }
     };
 
     const handleNext = () => {
+        if (!aulaAtual || !aulas.length) return;
+        
         const index = aulas.findIndex(a => a.id_aula.toString() === aulaAtual.id_aula.toString());
         if (index < aulas.length - 1) {
             const proxima = aulas[index + 1];
-            navigate(`/aula/${proxima.id_aula}`);
+            navigate(`/my/cursos/inscritos/curso/${cursoId}/aula/${proxima.id_aula}`);
+            console.log("Navegando para próxima aula:", proxima.id_aula);
         }
     };
-
+    
     const moduleData = aulaAtual ? {
         title: aulaAtual.nome_aula,
         aulas: aulaAtual.conteudos ? aulaAtual.conteudos.map(c => ({
@@ -83,22 +103,27 @@ const ClassPage = () => {
     const tituloAula = aulaAtual ? aulaAtual.nome_aula : "Aula não disponível";
     const descricaoAula = aulaAtual ? aulaAtual.descricao || "Sem descrição disponível." : "";
 
+    const renderIconoFormato = (idFormato) => {
+        switch (idFormato) {
+            case 1: // PDF
+                return <FaFilePdf className="fs-4 me-2 text-danger" />;
+            case 2: // Link
+                return <FaLink className="fs-4 me-2 text-primary" />;
+            default: // Outros documentos
+                return <FaFileAlt className="fs-4 me-2 text-secondary" />;
+        }
+    };
 
-    // const renderIconoFormato = (idFormato) => {
-    //     switch (idFormato) {
-    //         case 1: // PDF
-    //             return <FaFilePdf className="fs-4 me-2 text-danger" />;
-    //         case 2: // Link
-    //             return <FaLink className="fs-4 me-2 text-primary" />;
-    //         default: // Outros documentos
-    //             return <FaFileAlt className="fs-4 me-2 text-secondary" />;
-    //     }
-    // };
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        if (cursoId && aulaId) {
+            carregarAula();
+        }
+    }, [cursoId, aulaId]);
 
     return (
         <div className="container-fluid pt-4">
-            {erro && <Alert variant="danger" className="mb-3">{erro}</Alert>}
-
+           
             <div className="row">
                 <div className="col-12">
                     <ClassHeader
@@ -128,10 +153,6 @@ const ClassPage = () => {
 
                         <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs">
                             <Tab eventKey="aulas" title="Aulas">
-                                <div className="mt-4">
-                                    <h2>Sumário da Aula</h2>
-                                    <p>{descricaoAula}</p>
-                                </div>
 
                                 <div className="mt-4">
                                     <h1>Conteúdos</h1>
@@ -141,7 +162,7 @@ const ClassPage = () => {
                                     />
                                 </div>
                             </Tab>
-                            
+
                             <Tab eventKey="material" title="Material de Apoio">
                                 {materialApoio && materialApoio.length > 0 ? (
                                     <div className="mt-4">
@@ -161,9 +182,9 @@ const ClassPage = () => {
                                                                 {material.conteudo}
                                                             </Card.Text>
                                                             {material.id_formato === 2 && (
-                                                                <a 
-                                                                    href={material.conteudo} 
-                                                                    target="_blank" 
+                                                                <a
+                                                                    href={material.conteudo}
+                                                                    target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className="btn btn-primary btn-sm mt-2"
                                                                 >
@@ -180,27 +201,27 @@ const ClassPage = () => {
                                     <p className="mt-4">Não há material de apoio disponível para esta aula.</p>
                                 )}
                             </Tab>
-                            
+
                             <Tab eventKey="eventos" title="Eventos">
                                 <div className="mt-4">
                                     <h2>Eventos</h2>
                                     <p>Não há eventos programados para esta aula no momento.</p>
-                                    {/* Quando a tabela de trabalhos estiver disponível, substituir por conteúdo dinâmico */}
+                                    Quando a tabela de trabalhos estiver disponível, substituir por conteúdo dinâmico 
                                 </div>
                             </Tab>
-                            
+
                             <Tab eventKey="sobre" title="Sobre">
                                 {curso ? (
                                     <div className="mt-4">
                                         <h2>Sobre o Curso</h2>
                                         <p className="mt-3">{curso.descricao_curso}</p>
-                                        
+
                                         {curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore && (
                                             <div className="mt-4">
                                                 <h2>Formador</h2>
                                                 <div className="d-flex align-items-start mt-3">
                                                     <div className="me-3">
-                                                        <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center" style={{width: '60px', height: '60px'}}>
+                                                        <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
                                                             <FaUserTie className="text-white fs-3" />
                                                         </div>
                                                     </div>

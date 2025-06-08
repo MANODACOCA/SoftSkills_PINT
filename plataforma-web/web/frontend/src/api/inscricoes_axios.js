@@ -53,15 +53,5 @@ export const delete_inscricoes = async (id) => {
     }
 };
 
-export const verificar_inscricao = async (userId, cursoId) => {
-    try{
-        const response = await axios.get(`${API_URL}/verificar/${userId}/${cursoId}`);
-        return response.data;
-    }catch(error){
-        console.error('Erro ao verificar inscrição no curso:', error);
-        throw error;
-    }
-};
-
 
 

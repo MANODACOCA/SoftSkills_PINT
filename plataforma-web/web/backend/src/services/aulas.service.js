@@ -7,6 +7,19 @@ const { getEnrolledCoursesForUser } = require('./cursos.service');
 // material_apoio/sobre(vem da getEnrolledCoursesForUser)
 async function getClassByCurso(userId, cursoId) {
     try {
+         
+        const inscricaoUser = await inscricoes.findOne({
+            where: {
+                id_formando: userId,
+                id_curso: cursoId,
+                status_inscricao: 1
+            }
+        });
+        
+        if (!inscricaoUser) {
+            return { inscrito: false };
+        }
+        
         const todasAulas = await aulas.findAll({
             where: {id_curso: cursoId},
             include: [
@@ -28,21 +41,8 @@ async function getClassByCurso(userId, cursoId) {
         if (todasAulas.length === 0) {
             throw new Error('Nenhum aula encontrada para este curso');
         }
-        
-        const aulaAtual = todasAulas[0];
-        
-        const inscricaoUser = await inscricoes.findOne({
-            where: {
-                id_formando: userId,
-                id_curso: cursoId,
-                status_inscricao: 1
-            }
-        });
-        
-        if (!inscricaoUser) {
-            return { inscrito: false };
-        }
-        
+       
+
         const dadosCurso = await getEnrolledCoursesForUser(userId, null);
         const curso = dadosCurso.find(c => c.id_curso_curso?.id_curso === Number(cursoId));
         
@@ -59,7 +59,6 @@ async function getClassByCurso(userId, cursoId) {
         
         return {
             inscrito: true,
-            aula: aulaAtual,
             curso: curso?.id_curso_curso || null,
             todasAulas,
             materialApoio

@@ -71,6 +71,7 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchCursosForYou();
     fetchCursosPopular();
     fetchCursosNews();

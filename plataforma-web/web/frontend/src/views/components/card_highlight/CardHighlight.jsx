@@ -9,6 +9,7 @@ import { verificar_acesso_aula } from '../../../api/aulas_axios';
 
 const FeaturedCourseCard = ({
   course,
+  userId,
   showDescription = true,
   showFormador = true,
   customMessage = null,
@@ -19,28 +20,21 @@ const FeaturedCourseCard = ({
   if (!course) return null;
 
   const goToCourse = async () => {
-    try {
-      const userId = 2;
       const verificacao = await verificar_acesso_aula(userId, course.id_curso);
-
+      
       const now = new Date();
-      const dataInicio = new Date(course.data_inicio_curso);
-      //const dataFim =  new Date(course.data_fim_curso); meter depois quando tivermos cursos com dados + corretos!
+      const dataInicioCurso = new Date(course.data_inicio_curso);
+      const dataFimCurso = new Date(course.data_fim_curso);
 
-      if (verificacao.inscrito) {
-        if (now >= dataInicio) {
-          navigate(`/aula/${verificacao.aulaId}`);
+      if (verificacao.inscrito ) {
+        if ( now >= dataInicioCurso ) { //&& now <= dataFimCurso
+          navigate(`curso/${course.id_curso}/aula/${verificacao.todasAulas[0].id_aula}`);
         } else {
-          navigate(`/aula/${course.id_curso}`);
+          navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
         }
-      } else {
-        navigate(`/aula/${course.id_curso}`);
       }
-    } catch (error) {
-      console.error('Erro ao verificar incricao:', error);
-      navigate(`/cursos/${course.id_curso}`);
-    }
   };
+
 
   const nameFormador = course.nome_formador || "Formador";
   const imageFormador = course.imagem_utilizador && course.imagem_utilizador.trim() !== ''

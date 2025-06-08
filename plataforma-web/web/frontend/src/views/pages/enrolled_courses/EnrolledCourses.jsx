@@ -65,6 +65,7 @@ const EnrolledCourses = () => {
             <FeaturedCourseCard
               key={`${userId}-${course.id_curso_curso.id_curso}`}
               course={course.id_curso_curso}
+              userId={userId}
               showDescription={false}
               showFormador={false}
               customMessage="Em curso..."

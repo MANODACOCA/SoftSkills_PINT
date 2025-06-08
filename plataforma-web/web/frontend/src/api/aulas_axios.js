@@ -66,10 +66,10 @@ export const getClassWithCourse = async (userId, cursoId) => {
 
 export const verificar_acesso_aula = async (userId, cursoId) => {
     try {
-        const response = await axios.get(`http://localhost:3000/aulas/verificar/${userId}/${cursoId}`);
+        const response = await axios.get(`${API_URL}/verificar/${userId}/${cursoId}`);
         return response.data;
     } catch (error) {
-        console.error('Erro ao procurar a 1 aula:', error);
+        console.error('Erro ao procurar aulas:', error);
         throw error;
     }
 }
