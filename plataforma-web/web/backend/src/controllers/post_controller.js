@@ -4,7 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).post;
 const controllers = {};
-const getCommentsByPost = require('../services/post.service');
+const { getCommentsByPost, getConteudosByPost } = require('../services/post.service');
 
 
 controllers.list = async (req,res)=>{
@@ -112,7 +112,7 @@ controllers.getConteudosByPost = async (req, res) => {
                 });
             }
 
-            const conteudos = await conteudoForumService.getConteudosByPost(parseInt(postId));
+            const conteudos = await getConteudosByPost(parseInt(postId));
             
             res.json({
                 success: true,

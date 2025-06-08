@@ -4,6 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).comentario;
 const controllers = {};
+const getConteudosByComentario = require('../services/post.service');
 
 
 
@@ -72,7 +73,7 @@ controllers.delete = async (req,res)=>{
   }
 };
 
-controllers.getByComentario = async (req, res) => {
+controllers.getConteudosByComentario = async (req, res) => {
         try {
             const {comentarioId} = req.params;
             
@@ -83,7 +84,7 @@ controllers.getByComentario = async (req, res) => {
                 });
             }
 
-            const conteudos = await conteudoForumService.getConteudosByComentario(parseInt(comentarioId));
+            const conteudos = await getConteudosByComentario(parseInt(comentarioId));
             
             res.json({
                 success: true,
