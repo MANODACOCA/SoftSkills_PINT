@@ -9,9 +9,6 @@ import slide2 from '../../../assets/images/carrousel-login/2.jpg';
 import slide3 from '../../../assets/images/carrousel-login/3.jpg';
 
 
-//componets
-import FirstLogin from '../../components/login_comp/login/Login'
-
 const LoginPage = () => {
     const slides = [
         { id: 'slide-1', src: slide1 },

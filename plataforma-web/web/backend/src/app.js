@@ -5,7 +5,6 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const cursosService = require('./services/cursos.service');
 
-
 //Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
+const bcrypt = require('bcrypt');
+
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('utilizador', {
+  const Utilizador = sequelize.define('utilizador', {
     id_utilizador: {
       autoIncrement: true,
       autoIncrementIdentity: true,
@@ -22,7 +24,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     img_perfil: {
       type: DataTypes.STRING(1024),
-      allowNull: false
+      allowNull: true
     },
     data_criacao_utiliz: {
       type: DataTypes.DATE,
@@ -35,19 +37,19 @@ module.exports = function(sequelize, DataTypes) {
     },
     genero: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     },
     morada: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     pais: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: true
     },
     data_nasc: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: true
     },
     data_ativ_utili: {
       type: DataTypes.DATE,
@@ -85,4 +87,11 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  Utilizador.beforeCreate(async (user, options) => {
+    const hash = await bcrypt.hash(user.password_util, 10);
+    user.password_util = hash;
+  });
+
+  return Utilizador;
 };
