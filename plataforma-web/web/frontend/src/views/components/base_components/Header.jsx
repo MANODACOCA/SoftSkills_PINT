@@ -58,7 +58,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
     return (
         <header className='w-100 p-3 d-flex justify-content-between align-items-center gap-4 border-bottom'>
             <div className="d-flex gap-4">
-                <button className="btn btn-outline-secondary mx-2" onClick={toggleSidebar}>
+                <button className="btn btn-outline-secondary mx-2 hide" onClick={toggleSidebar}>
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
                 </button>
                 <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
@@ -95,7 +95,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
                 </button>
 
                 {showProfileMenu && (
-                    <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg  p-3 mt-2 me-5 z-3">
+                    <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg  p-3 mt-2 z-3">
                         <div className="d-flex flex-column align-items-center text-center">
                             <img
                                 src="https://static.vecteezy.com/ti/vetor-gratis/p1/9952572-foto-de-perfil-masculino-vetor.jpg"
@@ -110,10 +110,10 @@ const Header = ({ toggleSidebar, collapsed }) => {
                         </div>
                         <hr />
                         <div className="d-flex flex-column align-items-center justify-content-between">
-                            <Link className="dropdown-item" to={'/perfil/editar'}><CgProfile />Alterar dados pessoais<IoIosArrowForward /></Link>
-                            <Link className="dropdown-item" to={'/cursos/terminados'}><IoIosFlag />Cursos Terminados<IoIosArrowForward /></Link>
-                            <Link className="dropdown-item" to={'/perfil/info'}><GoKey />Informações de login<IoIosArrowForward /></Link>
-                            <Link className="dropdown-item text-danger" to={''}><RxExit />Encerrar sessão<IoIosArrowForward /></Link>
+                            <Link className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile />Alterar dados pessoais<IoIosArrowForward /></Link>
+                            <Link className="dropdown-item" to={'/cursos/terminados'} onClick={() => setShowProfileMenu(false)}><IoIosFlag />Cursos Terminados<IoIosArrowForward /></Link>
+                            <Link className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey />Informações de login<IoIosArrowForward /></Link>
+                            <Link className="dropdown-item text-danger" to={''} onClick={() => setShowProfileMenu(false)}><RxExit />Encerrar sessão<IoIosArrowForward /></Link>
                         </div>
                     </div>
                 )}

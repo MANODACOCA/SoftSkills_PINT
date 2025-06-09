@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import './profile.css';
 
 const InfoProfile = () => {
+    const [typeProfile, setTypeProfile] = useState(['admin', 'formando'])
+
     return(
         <div className='d-flex'>
             <div className='col-6 form-group p-5 border-end'>
@@ -23,9 +25,11 @@ const InfoProfile = () => {
                     <div className='mb-2'>
                         <h5 className='mb-3'>Escolha o tipo de conta: </h5>
                         <div className='btn-group'>
-                            <button className='btn btn-color text-white'>Formando</button>
-                            <button className='btn btn-color text-white'>Formador</button>
-                            <button className='btn btn-color text-white'>Administrador</button>
+                            {typeProfile.map((role, index) => (
+                                <button key={index} className='btn btn-color text-white'>
+                                    {role}
+                                </button>
+                            ))}
                         </div>
                     </div>
                     <hr />
