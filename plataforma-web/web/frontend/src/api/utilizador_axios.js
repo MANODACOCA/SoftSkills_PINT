@@ -23,8 +23,9 @@ export const get_utilizador  = async (id) => {
     }
 };
 
-export const create_utilizador = async (data) => {
+export const create_utilizador = async (nome_utilizador, email) => {
     try{
+        const  data = {nome_utilizador, email};
         const response = await axios.post(`${API_URL}/create`, data);
         return response.data;
     }catch(error){
@@ -49,6 +50,18 @@ export const delete_utilizador = async (id) => {
         return response.data;
     }catch(error){
         console.error('Erro ao excluir Utilizador!');
+        throw error;
+    }
+};
+
+export const login = async (email, password) => {
+    try{
+        const data = {email, password};
+        const response = await axios.post(`${API_URL}/login`, data);
+
+        return response.data;
+    }catch (error) {
+        console.log('Erro ao efetuar login');
         throw error;
     }
 };

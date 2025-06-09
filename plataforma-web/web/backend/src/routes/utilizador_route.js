@@ -26,7 +26,8 @@ router.delete('/delete/:id',controller.delete);
 router.get('/list',middleware.checkToken, controller.list);
 router.post('/login', controller.login);
 router.post('/create',controller.create);
-
+router.post('/alterar-password',controller.alterarPassword);
+router.post('/verificar-codigo',controller.verificarCodigo);
 
 
 module.exports = router;

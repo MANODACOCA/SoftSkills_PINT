@@ -11,7 +11,8 @@ const crypto = require('crypto');
 const config = require('../config/config');
 //const {  } = require('../services/login.service');
 const gerarPassword = require('../utils/gerarPassword');
-const sendEmail = require("../utils/enviarEmail");
+const { sendEmail, enviarEmailVerificaCode } = require("../utils/enviarEmail");
+const { verificarCodigoCerto } = require('../utils/guardar_codigo');
 
 controllers.list = async (req, res) => {
   const data = await model.findAll();
@@ -107,49 +108,79 @@ controllers.delete = async (req, res) => {
 
 controllers.login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await model.findOne({ where: { email: email } });
 
-  if (!user || !bcrypt.compareSync(password, user.password_util)) {
-    return res.status(403).json({ success: false, message: 'Dados de autenticação inválidos.' });
+  try {
+    const user = await model.findOne({ where: { email: email } });
+
+    if (!user) {
+      return res.status(401).json({ success: false , field: 'email', message: 'Email inválido!' });
+    }
+    if (!bcrypt.compareSync(password, user.password_util)) {
+      return res.status(401).json({ success: false, field: 'password', message: 'Password inválida!' });
+    }
+
+    /*   if (!user.data_ativ_utili) {
+        const codigo = Math.floor(10000 + Math.random() * 90000).toString();
+        guardarCodigo(email, codigo);
+        await enviarEmailVerificaCode(email, codigo);
+    
+        return res.status(202).json({ success: false, message: 'Conta não ativada. Código de verificação enviado para o seu email.'});
+      } */
+
+    let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '1h' });
+    res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token });
+  } catch(error){
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Erro ao fazer login!' });
   }
-
-  let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '1h' });
-  res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token });
 };
 
+controllers.alterarPassword = async (req, res) => {
+  const { email, novaPassword } = req.body;
 
-// controllers.requestAccount = async (req, res) => {
-//   const { email } = req.body;
+  try {
+    const utilizador = await model.findOne({ where: { email } });
+    if (!utilizador) {
+      return res.status(404).json({ success: false, message: 'Utilizador não encontrado.' });
+    } else if (bcrypt.compareSync(novaPassword, utilizador.password_util)) {
+      return res.status(409).json({ success: false, message: 'Essa é a sua password atual! Tente outra.' });
+    }
 
-//   const existingUser = await model.findOne({ where: { email } });
-//   if (existingUser) {
-//     return res.status(400).json({ success: false, message: 'Utilizador já existe.' });
-//   }
+    const hash = await bcrypt.hash(novaPassword, 10);
+    utilizador.password_util = hash;
+    await utilizador.save();
 
-//   const tempPassword = crypto.randomBytes(6).toString('hex');
-//   const hashedPassword = await bcrypt.hash(tempPassword, 10);
+    return res.json({ success: true, message: 'Password alterada' });
 
-//   try {
-//     const newUser = await model.create({
-//       email,
-//       password_util: hashedPassword,
-//       nome_utilizador: 'A definir...' 
-//     });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ success: false, message: 'Erro ao alterar a password.' });
+  }
+};
 
-//     const token = jwt.sign(
-//       { email: newUser.email, tipo: 'ativacao' },
-//       config.jwtSecret,
-//       { expiresIn: '15m' }
-//     );
+controllers.verificarCodigo = async (req, res) => {
+  const { email, codigo } = req.body;
 
-//     await sendActivationEmail(email, tempPassword, token);
+  try {
+    const valido = verificarCodigoCerto(email, codigo);
+    if (!valido) {
+      return res.status(401).json({ success: false, message: 'Código inválido ou expirado.' });
+    }
 
-//     return res.json({ success: true, message: 'Email de ativação enviado com sucesso.' });
-//   } catch (err) {
-//     console.error(err);
-//     return res.status(500).json({ success: false, message: 'Erro ao criar utilizador.' });
-//   }
-// };
+    const utilizador = await model.findOne({ where: { email } });
+    if (!utilizador) {
+      return res.status(404).json({ success: false, message: 'Utilizador não encontrado.' });
+    }
 
+    utilizador.data_ativ_utili = new Date();
+    await utilizador.save();
+    apagarCodigo(email);
+
+    return res.json({ success: true, message: 'Conta ativada com sucesso.' });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success: false, message: 'Erro ao ativar conta.' });
+  }
+};
 
 module.exports = controllers;

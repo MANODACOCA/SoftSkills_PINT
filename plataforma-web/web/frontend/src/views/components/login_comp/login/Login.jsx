@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 import { PiMicrosoftOutlookLogoBold } from "react-icons/pi";
+import { login } from '../../../../api/utilizador_axios';
 
 const providers = [
     { id: 'outlook', name: 'Outlook' },
@@ -12,11 +13,35 @@ const providers = [
 const FirstLogin = () => {
     const navigate = useNavigate();
 
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleProviderSignIn = (provider) => {
+
+    useEffect(() => {
+        const emailParam = queryParams.get('email');
+        const passwordParam = queryParams.get('password_util');
+
+        if (emailParam && passwordParam) {
+            setEmail(emailParam);
+            setPassword(passwordParam);
+
+            const autoLogin = async () => {
+       
+                    const response = await login(emailParam, passwordParam);
+                    if (response.success) {
+                            navigate('/login/nova-password');
+                    } 
+            };
+
+            autoLogin();
+        }
+    }, []);
+
+    const handleProviderSignIn = async (provider) => {
         setError('');
 
         if (provider.id === 'credentials') {
@@ -37,17 +62,35 @@ const FirstLogin = () => {
                 return;
             }
 
-            setTimeout(() => {
-                console.log(`Signing in with Email: ${email}`);
-                navigate('/login/nova-password', {
-             state: {redirectTo:'/login/verificacao-identidade'}
-            });
-            }, 500);
+
+            try {
+                const response_CriarUtilizador = await login(email, password);
+
+                if (response_CriarUtilizador.success) {
+                    setTimeout(() => {
+                        navigate('/login/nova-password', {
+                            state: { redirectTo: '/login/verificacao-identidade' }
+                        });
+                    }, );
+                }
+            } catch (error) {
+                if (error.response?.status === 401) {
+                    const field = error.response.data?.field;
+
+                    if (field === 'email') {
+                        setError('Email inserido é inválido. Por favor digite outro email!');
+                    } else if (field === 'password') {
+                        setError('Password inserida é inválida. Por favor digite outra password!');
+                    }
+                } else {
+                    setError('Erro ao efetuar login. Tente novamente mais tarde.');
+                }
+            }
         } else {//SSO
             setTimeout(() => {
                 console.log(`Signing in with ${provider.name}`);
                 navigate('/home');
-            }, 500);
+            }, );
         }
 
     };
@@ -58,7 +101,7 @@ const FirstLogin = () => {
             <h2 className="login-title text-start">Entre na sua conta</h2>
             <p className="login-subtitle text-start">Invista no seu futuro, aprende com a SoftSkills!</p>
 
-            <div className="login-buttons">
+{/*             <div className="login-buttons">
                 {providers.map((provider) =>
                     provider.id !== 'credentials' ? (
                         <button
@@ -72,7 +115,7 @@ const FirstLogin = () => {
                 )}
             </div>
 
-            <div className="login-divider"><p>ou use o seu email</p></div>
+            <div className="login-divider"><p>ou use o seu email</p></div> */}
 
             <input
                 id='email'
@@ -107,7 +150,7 @@ const FirstLogin = () => {
                 </button>
                 <button
                     type="button"
-                     onClick={() => navigate('/login/criar-conta')}
+                    onClick={() => navigate('/login/criar-conta')}
                     className="login-button social"
                 >
                     Criar Nova Conta

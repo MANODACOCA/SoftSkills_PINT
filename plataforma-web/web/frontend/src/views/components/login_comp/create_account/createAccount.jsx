@@ -4,6 +4,8 @@ import '../login/Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 import Swal from 'sweetalert2';
 
+import { create_utilizador } from '../../../../api/utilizador_axios';
+
 const CreateAccount = () => {
     const navigate = useNavigate();
 
@@ -19,7 +21,7 @@ const CreateAccount = () => {
                 if (!nome_util) {
                     setError('O nome de utilizador é campo obrigatório.');
                 }
-                else{
+                else {
                     setError('O e-mail é campo obrigatório.');
                 }
                 return;
@@ -31,10 +33,10 @@ const CreateAccount = () => {
                 return;
             }
 
-            if (!email.toLowerCase().endsWith('@pt.softinsa.com')) {
+            /* if (!email.toLowerCase().endsWith('@pt.softinsa.com')) {//COLOCAR DEPOIS PARA VER SE É EMAIL PROFISSIONAL
                 setError('O e-mail que inseriu não é válido. Por favor, insira o seu e-mail profissional (@pt.softinsa.com).');
                 return;
-            }
+            } */
 
 
             Swal.fire({
@@ -45,15 +47,24 @@ const CreateAccount = () => {
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Sim, enviar e-mail",
                 cancelButtonText: "Cancelar"
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
-                    Swal.fire({
-                        title: "E-mail enviado!",
-                        text: "Receberá brevemente um e-mail com os seus dados de acesso.",
-                        icon: "success",
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
+                    try {
+                        const response_CriarUtilizador = await create_utilizador(nome_util, email);
+                        Swal.fire({
+                            title: "E-mail enviado!",
+                            text: "Receberá brevemente um e-mail com os seus dados de acesso.",
+                            icon: "success",
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    } catch (error) {
+                        Swal.fire({
+                            title: "Erro!",
+                            text: "Não foi possível criar novo utilizador.",
+                            icon: "error"
+                        });
+                    }
 
                     // Aqui podes colocar a navegação ou chamada real
                     setTimeout(() => {
