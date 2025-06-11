@@ -45,7 +45,8 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
                         <i className="bi bi-gear fs-4 px-2"></i>
                         {!collapsed && 'Definições'}
                     </NavLink>
-                    <NavLink to="/login" className="nav-link d-flex align-items-center px-2 py-1">
+                    <NavLink to="/login" onClick={() => localStorage.removeItem('token')} 
+                            className="nav-link d-flex align-items-center px-2 py-1">
                         <i className="bi bi-box-arrow-right fs-4 px-2 text-danger"></i>
                         <span className='text-danger'>{!collapsed && 'Logout'}</span>
                     </NavLink>

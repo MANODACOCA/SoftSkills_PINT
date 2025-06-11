@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, redirect } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import '../login/Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
+
+import { esqueceuPassword } from '../../../../api/utilizador_axios';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
@@ -9,7 +12,7 @@ const ForgotPassword = () => {
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
 
-    const handleProviderSignIn = () => {
+    const handleProviderSignIn = async () => {
         setError('');
 
         if (!email) {
@@ -23,11 +26,49 @@ const ForgotPassword = () => {
             return;
         }
 
-        setTimeout(() => {
-            navigate('/login/verificacao-identidade', {
-             state: {redirectTo:'/login/nova-password'}
+        const result = await Swal.fire({
+            text: `Tem a certeza de que o e-mail "${email}" está correto?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, enviar e-mail',
+            cancelButtonText: 'Cancelar'
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            await esqueceuPassword(email);
+
+            Swal.fire({
+                title: 'E-mail enviado!',
+                text: 'Receberá brevemente um e-mail com os seus dados de acesso.',
+                icon: 'success',
+                timer: 3000,
+                showConfirmButton: false
             });
-        }, 500);
+
+            setTimeout(() => {
+                navigate('/login/verificacao-identidade', {
+                    state: {
+                        email,
+                        redirectTo: '/login/nova-password'
+                    }
+                });
+            }, 500);
+
+        } catch (err) {
+            Swal.fire({
+                title: 'Erro!',
+                text: err?.response?.data?.message || 'Erro ao enviar o código. Tente novamente.',
+                icon: 'error',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        }
+
+
     };
 
     return (

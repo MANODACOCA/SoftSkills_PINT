@@ -113,7 +113,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
                             <Link className="dropdown-item" to={'/perfil/editar'}><CgProfile />Alterar dados pessoais<IoIosArrowForward /></Link>
                             <Link className="dropdown-item" to={'/cursos/terminados'}><IoIosFlag />Cursos Terminados<IoIosArrowForward /></Link>
                             <Link className="dropdown-item" to={'/perfil/info'}><GoKey />Informações de login<IoIosArrowForward /></Link>
-                            <Link className="dropdown-item text-danger" to={''}><RxExit />Encerrar sessão<IoIosArrowForward /></Link>
+                            <Link className="dropdown-item text-danger" to={'/login'} onClick={() => localStorage.removeItem('token')}><RxExit />Encerrar sessão<IoIosArrowForward /></Link>
                         </div>
                     </div>
                 )}

@@ -22,24 +22,28 @@ const FirstLogin = () => {
 
 
     useEffect(() => {
-        const emailParam = queryParams.get('email');
-        const passwordParam = queryParams.get('password_util');
+        const email = queryParams.get('email');
+        const password = queryParams.get('password_util');
 
-        if (emailParam && passwordParam) {
-            setEmail(emailParam);
-            setPassword(passwordParam);
+        if (email && password) {
+            setEmail(email);
+            setPassword(password);
 
             const autoLogin = async () => {
-       
-                    const response = await login(emailParam, passwordParam);
-                    if (response.success) {
-                            navigate('/login/nova-password');
-                    } 
+
+                const response = await login(email, password);
+                if (response.success) {
+                    navigate('/login/nova-password', {
+                        state: {
+                            email,
+                        }
+                    });             
+                }
             };
 
             autoLogin();
         }
-    }, []);
+    }, [queryParams]);
 
     const handleProviderSignIn = async (provider) => {
         setError('');
@@ -64,15 +68,29 @@ const FirstLogin = () => {
 
 
             try {
-                const response_CriarUtilizador = await login(email, password);
-
-                if (response_CriarUtilizador.success) {
-                    setTimeout(() => {
-                        navigate('/login/nova-password', {
-                            state: { redirectTo: '/login/verificacao-identidade' }
+                const response_login = await login(email, password);
+                if (response_login.success) {
+                    if (response_login.jaAtivou && !response_login.twoFa) {
+                        localStorage.setItem('token', response_login.token);
+                        navigate('/home');
+                    } else if (response_login.jaAtivou && response_login.twoFa) {
+                        navigate('/login/verificacao-identidade', {
+                            state: {
+                                email,
+                                response_login,
+                                redirectTo: '/home'
+                            }
                         });
-                    }, );
+                    } else {
+                        navigate('/login/nova-password', {
+                            state: {
+                                email,
+                            }
+                        });
+                    }
                 }
+
+
             } catch (error) {
                 if (error.response?.status === 401) {
                     const field = error.response.data?.field;
@@ -90,7 +108,7 @@ const FirstLogin = () => {
             setTimeout(() => {
                 console.log(`Signing in with ${provider.name}`);
                 navigate('/home');
-            }, );
+            },);
         }
 
     };
@@ -101,7 +119,7 @@ const FirstLogin = () => {
             <h2 className="login-title text-start">Entre na sua conta</h2>
             <p className="login-subtitle text-start">Invista no seu futuro, aprende com a SoftSkills!</p>
 
-{/*             <div className="login-buttons">
+            {/*             <div className="login-buttons">
                 {providers.map((provider) =>
                     provider.id !== 'credentials' ? (
                         <button
@@ -116,38 +134,41 @@ const FirstLogin = () => {
             </div>
 
             <div className="login-divider"><p>ou use o seu email</p></div> */}
+            <form onSubmit={(e) => {
+                e.preventDefault(); // Previne reload da página
+                handleProviderSignIn({ id: 'credentials', name: 'Email and Password' });
+            }}>
+                <input
+                    id='email'
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="login-input"
+                />
 
-            <input
-                id='email'
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="login-input"
-            />
+                <input
+                    type="password"
+                    placeholder="Palavra-passe"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="login-input"
+                />
 
-            <input
-                type="password"
-                placeholder="Palavra-passe"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="login-input"
-            />
-
-            <div className="login-forgot d-flex justify-content-between text-start">
-                <Link to="/login/esqueceu-password">Esqueceu-se da sua palavra-passe?</Link>
-                {error && <p className="login-error text-end">{error}</p>}
-            </div>
+                <div className="login-forgot d-flex justify-content-between text-start">
+                    <Link to="/login/esqueceu-password">Esqueceu-se da sua palavra-passe?</Link>
+                    {error && <p className="login-error text-end">{error}</p>}
+                </div>
+                <div className="login-buttons">
+                    <button
+                        type="submit"
+                        className="login-button primary"
+                    >
+                        Login
+                    </button>
+                </div>
+            </form>
             <div className="login-buttons">
-                <button
-                    type="button"
-                    className="login-button primary"
-                    onClick={() =>
-                        handleProviderSignIn({ id: 'credentials', name: 'Email and Password' })
-                    }
-                >
-                    Login
-                </button>
                 <button
                     type="button"
                     onClick={() => navigate('/login/criar-conta')}

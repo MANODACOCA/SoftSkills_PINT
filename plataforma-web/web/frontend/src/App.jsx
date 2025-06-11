@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
+import ProtectedRoute from './views/components/rotasProtegidas/rotasProtegidas';
+
 //components login
 import Login from './views/components/login_comp/login/Login';
 import NewPassword from './views/components/login_comp/newPassword/newPassword';
@@ -44,8 +46,15 @@ function App() {
         </Route>
  //#region{/*CONTEUDO DO LOGIN*/}
 
+
  //#region{/*CONTEUDO DA PAGINA */}
-        <Route element={<BaseLayout />}>
+ <Route
+  element={
+    <ProtectedRoute>
+      <BaseLayout />
+    </ProtectedRoute>
+  }
+>
           <Route path="/home" element={<HomePage />} />
           <Route path="/notificacoes" element={<NotificationPage />} />
            <Route path="/cursos" element={<CursosPage/>}/>

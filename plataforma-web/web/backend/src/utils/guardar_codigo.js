@@ -9,7 +9,7 @@ function verificarCodigoCerto(email, inputCodigo){
     const entrada = codigos.get(email);
     if(!entrada) return false;
 
-    const expirou = Date.now() - entrada.criadoEm > 1 * 60 * 1000; 
+    const expirou = Date.now() - entrada.criadoEm > 1.5 * 60 * 1000; 
     if(expirou) {
         codigos.delete(email);
         return false;

@@ -3,18 +3,21 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import '../login/Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 
+import { alterarPassword } from '../../../../api/utilizador_axios';
+
 
 const NewPassword = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
 
-    const redirectTo = location.state?.redirectTo || '/login';
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    const email = location.state?.email  || '';
 
     const [error, setError] = useState('');
     const [novapassword, setNovapassword] = useState('');
     const [repNovapassword, setRepNovapassword] = useState('');
 
-    const handleSubmitNewPassword = () => {
+    const handleSubmitNewPassword = async () => {
         setError('');
 
         if (novapassword && repNovapassword) {
@@ -30,9 +33,11 @@ const NewPassword = () => {
             setError('Preencha ambos os campos com a sua nova palavra-passe.');
             return;
         }
-
-        console.log('Nova password defenida com sucesso.');
-        navigate(redirectTo);
+        console.log(`EMAIL : ${email}`);
+        const response = await alterarPassword(email, novapassword);
+        if(response){
+            navigate('/login');
+        }
     };
 
     return (
