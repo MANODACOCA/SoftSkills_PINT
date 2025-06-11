@@ -62,11 +62,12 @@ const CreateAccount = () => {
                         Swal.fire({
                             title: "Erro!",
                             text: "Não foi possível criar novo utilizador.",
-                            icon: "error"
+                            icon: "error",
+                            timer: 3000,
+                            showConfirmButton: false
                         });
                     }
 
-                    // Aqui podes colocar a navegação ou chamada real
                     setTimeout(() => {
                         console.log(`Signing in with Email: ${email}`);
                         navigate('/login');

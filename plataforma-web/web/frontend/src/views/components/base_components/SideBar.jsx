@@ -117,7 +117,8 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
                             </div>
                         }
                     </NavLink>
-                    <NavLink to="/login" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
+                    <NavLink to="/login" onClick={() => localStorage.removeItem('token')} 
+                            className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-box-arrow-right fs-4 px-2 text-danger"></i>

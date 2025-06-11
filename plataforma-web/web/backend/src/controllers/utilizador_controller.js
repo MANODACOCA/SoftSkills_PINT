@@ -9,10 +9,10 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const config = require('../config/config');
-//const {  } = require('../services/login.service');
+
 const gerarPassword = require('../utils/gerarPassword');
 const { sendEmail, enviarEmailVerificaCode } = require("../utils/enviarEmail");
-const { verificarCodigoCerto } = require('../utils/guardar_codigo');
+const { guardarCodigo, verificarCodigoCerto, apagarCodigo} = require('../utils/guardar_codigo');
 
 controllers.list = async (req, res) => {
   const data = await model.findAll();
@@ -113,23 +113,21 @@ controllers.login = async (req, res) => {
     const user = await model.findOne({ where: { email: email } });
 
     if (!user) {
-      return res.status(401).json({ success: false , field: 'email', message: 'Email inválido!' });
+      return res.status(401).json({ success: false, field: 'email', message: 'Email inválido!' });
     }
     if (!bcrypt.compareSync(password, user.password_util)) {
       return res.status(401).json({ success: false, field: 'password', message: 'Password inválida!' });
     }
 
-    /*   if (!user.data_ativ_utili) {
-        const codigo = Math.floor(10000 + Math.random() * 90000).toString();
-        guardarCodigo(email, codigo);
-        await enviarEmailVerificaCode(email, codigo);
-    
-        return res.status(202).json({ success: false, message: 'Conta não ativada. Código de verificação enviado para o seu email.'});
-      } */
+    if (user.auten2fat) {
+            const codigo = Math.floor(10000 + Math.random() * 90000).toString();
+            await guardarCodigo(email, codigo);
+            await enviarEmailVerificaCode(email, codigo);
+    } 
 
-    let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '1h' });
-    res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token });
-  } catch(error){
+    let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '1min' });
+    res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token, jaAtivou: user.data_ativ_utili, twoFa: user.auten2fat });
+  } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: 'Erro ao fazer login!' });
   }
@@ -148,6 +146,9 @@ controllers.alterarPassword = async (req, res) => {
 
     const hash = await bcrypt.hash(novaPassword, 10);
     utilizador.password_util = hash;
+
+    utilizador.data_ativ_utili = new Date();
+
     await utilizador.save();
 
     return res.json({ success: true, message: 'Password alterada' });
@@ -155,6 +156,29 @@ controllers.alterarPassword = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: 'Erro ao alterar a password.' });
+  }
+};
+
+controllers.esqueceuPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ success: false, message: 'Email é obrigatório.' });
+  }
+  try {
+    const utilizador = await model.findOne({ where: { email } });
+    if (!utilizador) {
+      return res.status(404).json({ success: false, message: 'Utilizador não encontrado.' });
+    }
+
+    const codigo = Math.floor(10000 + Math.random() * 90000).toString();
+    
+    await guardarCodigo(email, codigo);
+    await enviarEmailVerificaCode(email, codigo);
+
+    return res.status(200).json({ success: true, message: 'Código enviado com sucesso para o email.' });
+  } catch (error) {
+    console.error('Erro ao enviar código de verificação:', error);
+    return res.status(500).json({ success: false, message: 'Erro interno no servidor.' });
   }
 };
 
@@ -178,7 +202,7 @@ controllers.verificarCodigo = async (req, res) => {
 
     return res.json({ success: true, message: 'Conta ativada com sucesso.' });
   } catch (err) {
-    console.error(err);
+    console.error('Erro ao ativar conta:', err);
     return res.status(500).json({ success: false, message: 'Erro ao ativar conta.' });
   }
 };

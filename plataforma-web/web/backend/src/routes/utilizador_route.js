@@ -28,6 +28,7 @@ router.post('/login', controller.login);
 router.post('/create',controller.create);
 router.post('/alterar-password',controller.alterarPassword);
 router.post('/verificar-codigo',controller.verificarCodigo);
+router.post('/esqueceu-password',controller.esqueceuPassword);
 
 
 module.exports = router;

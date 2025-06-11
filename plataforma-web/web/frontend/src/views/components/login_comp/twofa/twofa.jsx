@@ -4,9 +4,7 @@ import '../login/Login.css';
 import './twofa.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 
-function gerarCodigo5Digitos() {
-    return Math.floor(10000 + Math.random() * 90000);
-}
+import { verificarCodigo } from '../../../../api/utilizador_axios';
 
 
 const TwoFA = () => {
@@ -14,18 +12,13 @@ const TwoFA = () => {
     const navigate = useNavigate();
 
     const redirectTo = location.state?.redirectTo || '/home';
+    const email = location.state?.email || '';
+    const response_login = location.state?.response_login || '';
 
+    console.log(response_login);
     const inputRefs = useRef([]);
     const [error, setError] = useState('');
-    const [codeTFA, setCodeTFA] = useState('');
     const [verificationCode, setVerificationCode] = useState(['', '', '', '', '']);
-
-
-    useEffect(() => {
-        const codeg = gerarCodigo5Digitos()
-        setCodeTFA(codeg);
-        localStorage.setItem('codeTFA', codeg);
-    }, []);
 
     const handleChange = (e, index) => {
         const value = e.target.value;
@@ -41,28 +34,33 @@ const TwoFA = () => {
     };
 
     const handleKeyDown = (e, index) => {
-        if(e.key === 'Backspace' && !verificationCode[index] && index > 0){
-             inputRefs.current[index - 1].focus();
+        if (e.key === 'Backspace' && !verificationCode[index] && index > 0) {
+            inputRefs.current[index - 1].focus();
         }
     };
 
 
-    const handleSubmitTwoFA = () => {
+    const handleSubmitTwoFA = async () => {
 
         setError('');
-        const codeEntered = verificationCode.join(''); 
-        if (codeEntered) {
-            if (codeEntered != codeTFA) {
-                setError('Código inserido não é o correto! Por favor tente novamente.');
-                return;
-            }
-        } else {
+        const codigo = verificationCode.join('');
+        if (!codigo) {
             setError('Por favor, insira no campo acima o código que foi enviado para o seu e-mail.');
             return;
         }
-
-        console.log('TwoFA feita com sucesso.');
-        navigate(redirectTo);
+        try {
+            await verificarCodigo(email, codigo);
+            localStorage.setItem('token', response_login.token);
+            console.log('TwoFA feita com sucesso.');
+            navigate(redirectTo, {
+                state: {
+                    email,
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao verificar código:', error);
+            setError('Código inválido ou expirado. Por favor, tente novamente.');
+        }
     };
 
     return (
