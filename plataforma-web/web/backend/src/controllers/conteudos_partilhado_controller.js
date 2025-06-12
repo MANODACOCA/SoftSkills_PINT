@@ -132,4 +132,13 @@ controllers.getForuns = async (req, res) => {
   }
 }
 
+controllers.listarConteudos = async (req, res) => {
+  try {
+    const filtros = req.query; // Captura filtros da URL (ex: ?id_topico=1&id_area=2)
+    const resultados = await conteudoPartilhadoService.filtrarConteudosPartilhados(filtros);
+    res.status(200).json(resultados);
+  } catch (error) {
+    res.status(500).json({ erro: 'Falha ao buscar conteúdos', detalhes: error.message });
+  }
+}
 module.exports = controllers;
