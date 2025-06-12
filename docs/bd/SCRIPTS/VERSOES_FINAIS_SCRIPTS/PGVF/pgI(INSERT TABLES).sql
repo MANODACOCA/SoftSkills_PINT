@@ -91,74 +91,74 @@ INSERT INTO CURSOS (ID_GESTOR_ADMINISTRADOR, ID_TOPICO, NOME_CURSO, DESCRICAO_CU
                    DATA_INICIO_CURSO, DATA_FIM_CURSO, ESTADO, IDIOMA, HORAS_CURSO, CONTADOR_FORMANDOS, IMAGEM, ISASSINCRONO, ISSINCRONO) VALUES
 -- Cursos originais com datas atualizadas                   
 (9, 1, 'Desenvolvimento Web Responsivo', 'Este curso abrangente de Desenvolvimento Web Responsivo foi desenhado para dotar os formandos com as competências necessárias para criar websites modernos, adaptáveis a qualquer dispositivo. Começaremos pelas fundações do HTML5 semântico, explorando todas as novas tags e atributos, para depois avançarmos para CSS3 com foco em flexbox, grid e media queries. Aprenderá a implementar animações, transições e transformações para melhorar a experiência do utilizador. O curso inclui também módulos sobre acessibilidade web, performance e otimização para motores de busca. Através de projetos práticos, os formandos desenvolverão um portfólio completo de websites responsivos, seguindo as melhores práticas da indústria e os padrões W3C.', 
-   '2025-05-01', '2025-05-31', '2025-06-15', '2025-09-15', TRUE, 'Português', 40, 0, 'https://kinsta.com/pt/wp-content/uploads/sites/3/2020/09/design-responsivo-web.jpg', TRUE, FALSE),
+   '2025-03-01', '2025-05-15', '2025-04-15', '2025-05-15', TRUE, 'Português', 40, 0, 'https://kinsta.com/pt/wp-content/uploads/sites/3/2020/09/design-responsivo-web.jpg', TRUE, FALSE),
    
 (9, 2, 'JavaScript Avançado', 'Curso intensivo de JavaScript Avançado destinado a desenvolvedores que pretendem dominar esta linguagem fundamental para o desenvolvimento web moderno. Partindo de conceitos intermediários, o programa aprofunda tópicos como closures, prototypes, padrões de design, programação funcional e manipulação avançada do DOM. Os formandos aprenderão a trabalhar com as mais recentes funcionalidades do ECMAScript, incluindo classes, módulos, async/await, generators e decorators. O curso aborda ainda o desenvolvimento de SPAs (Single Page Applications), interação com APIs RESTful, websockets, e estratégias de teste automatizado. Inclui workshops práticos sobre frameworks populares como React, Vue ou Angular, e ferramentas essenciais do ecossistema JavaScript como npm, webpack e babel. Todos os conceitos são aplicados em projetos reais de complexidade crescente.', 
-   '2025-05-10', '2025-06-10', '2025-06-25', '2025-09-25', TRUE, 'Português', 45, 0, 'https://blog.cronapp.io/wp-content/uploads/2020/09/javascript-1.jpg', FALSE, TRUE),
+   '2025-03-01', '2025-04-15', '2025-04-17', '2025-05-22', TRUE, 'Português', 45, 0, 'https://blog.cronapp.io/wp-content/uploads/2020/09/javascript-1.jpg', FALSE, TRUE),
    
 (9, 3, 'Java para Iniciantes', 'Introdução abrangente à programação orientada a objetos utilizando a linguagem Java, uma das mais populares e versáteis do mercado. Este curso foi desenhado para iniciantes com pouca ou nenhuma experiência em programação. Começa com os conceitos fundamentais da linguagem Java, incluindo sintaxe básica, tipos de dados, operadores, estruturas de controlo e funções. Progride para tópicos orientados a objetos como classes, herança, polimorfismo, encapsulamento e interfaces. Os formandos aprenderão a trabalhar com o ecossistema Java, incluindo o ambiente de desenvolvimento (JDK), ferramentas de build como Maven e Gradle, e IDEs como IntelliJ IDEA. O curso também aborda manipulação de exceções, coleções, entrada/saída, threading básico e introdução a GUI com JavaFX. Todos os conceitos são reforçados através de exercícios práticos e um projeto final.', 
-   '2025-05-15', '2025-06-15', '2025-07-01', '2025-10-01', TRUE, 'Português', 60, 0, 'https://programadorviking.com.br/wp-content/uploads/2020/06/JavaScript-Para-Iniciantes.jpg', TRUE, FALSE),
+   '2024-05-15', '2024-10-01', '2024-07-01', '2024-10-01', TRUE, 'Português', 60, 0, 'https://programadorviking.com.br/wp-content/uploads/2020/06/JavaScript-Para-Iniciantes.jpg', TRUE, FALSE),
    
 (9, 4, 'Python para Análise de Dados', 'Formação completa em Python focada na análise e visualização de dados, uma competência cada vez mais valorizada no mercado português. Iniciamos com os fundamentos da linguagem Python, abordando tipos de dados, estruturas de controlo, funções e programação orientada a objetos. O curso avança para o ecossistema de análise de dados em Python, com foco nas bibliotecas NumPy para computação numérica, Pandas para manipulação e análise de dados estruturados, e Matplotlib e Seaborn para visualização. Os formandos aprenderão técnicas de importação e exportação de dados em diversos formatos, limpeza e transformação de dados, análise estatística descritiva e inferencial, e criação de dashboards interativos com Plotly e Dash. O programa inclui também uma introdução ao machine learning com scikit-learn e análise de séries temporais. Os conhecimentos são aplicados em datasets reais, incluindo dados abertos do governo português e estatísticas europeias.', 
-   '2025-05-20', '2025-06-20', '2025-07-10', '2025-10-10', TRUE, 'Português', 50, 0, 'https://img-c.udemycdn.com/course/750x422/4596136_0432_3.jpg', FALSE, TRUE),
+   '2025-02-20', '2025-02-24', '2025-03-10', '2025-05-10', TRUE, 'Português', 50, 0, 'https://img-c.udemycdn.com/course/750x422/4596136_0432_3.jpg', FALSE, TRUE),
    
 (9, 5, 'Administração SQL Server', 'Curso avançado de administração de bases de dados Microsoft SQL Server, focado nas necessidades do mercado empresarial português. O programa cobre desde a instalação e configuração inicial do SQL Server até à implementação de soluções complexas de alta disponibilidade e disaster recovery. Os formandos aprenderão a planear e implementar infraestruturas de bases de dados, gerir segurança e permissões, otimizar performance através de índices e query tuning, automatizar tarefas administrativas com scripts e jobs, e implementar estratégias eficientes de backup e recuperação. O curso aborda ainda tópicos avançados como clusters de failover, Always On Availability Groups, replicação, particionamento, columnstore indexes, e monitorização em tempo real. Inclui também boas práticas para migração de dados, upgrade de versões, e integração com o ecossistema Microsoft (Azure, PowerBI, SSIS, SSAS, SSRS). Todas as aulas combinam teoria com exercícios práticos em laboratório virtual.', 
-   '2025-06-01', '2025-06-30', '2025-07-15', '2025-10-15', TRUE, 'Português', 55, 0, 'https://blog.powerdata.es/hs-fs/hubfs/iStock-517373542.jpg?width=591&name=iStock-517373542.jpg', TRUE, FALSE),
+   '2025-05-01', '2025-05-24', '2025-05-02', '2025-05-24', TRUE, 'Português', 55, 0, 'https://blog.powerdata.es/hs-fs/hubfs/iStock-517373542.jpg?width=591&name=iStock-517373542.jpg', TRUE, FALSE),
    
 (9, 7, 'Gestão Ágil de Projetos', 'Formação completa em metodologias ágeis para gestão de projetos, adaptada à realidade das empresas portuguesas que procuram aumentar a eficiência e flexibilidade das suas equipas. O curso começa por apresentar os princípios e valores do Manifesto Ágil, contrastando-os com abordagens tradicionais. Explora em detalhe os principais frameworks ágeis, com especial ênfase em Scrum (papéis, eventos, artefactos), Kanban (fluxo contínuo, limites WIP, métricas) e híbridos como Scrumban. Os formandos aprenderão a planear releases e sprints, gerir backlogs de produto, conduzir cerimónias eficazes, e utilizar métricas ágeis para medir e melhorar a performance da equipa. O programa aborda também tópicos como escalabilidade ágil (SAFe, Nexus, LeSS), gestão de stakeholders, e ferramentas digitais para equipas ágeis. Inclui simulações práticas, estudos de caso de empresas portuguesas que implementaram métodos ágeis, e workshops de aplicação dos conceitos a cenários reais.', 
-   '2025-06-10', '2025-07-10', '2025-07-25', '2025-10-25', TRUE, 'Português', 35, 0, 'https://deverhum.com.br/wp-content/uploads/2022/03/Gestao-Agil-de-Projetos-Conceito-e-aplicacao.jpeg', FALSE, TRUE),
+   '2022-06-10', '2022-07-10', '2022-07-25', '2022-10-25', TRUE, 'Português', 35, 0, 'https://deverhum.com.br/wp-content/uploads/2022/03/Gestao-Agil-de-Projetos-Conceito-e-aplicacao.jpeg', FALSE, TRUE),
    
 (9, 8, 'Liderança e Comunicação', 'Curso especializado em competências de liderança e comunicação, essenciais para profissionais que desejam progredir na carreira em organizações portuguesas. O programa desenvolve capacidades fundamentais de liderança, desde o autoconhecimento e inteligência emocional até à gestão de equipas de alto desempenho. Aborda os diferentes estilos de liderança e a sua aplicação em contextos variados, técnicas de motivação e engagement, delegação eficaz, e gestão de mudança organizacional. Na componente de comunicação, os formandos aprenderão princípios de comunicação assertiva, escuta ativa, feedback construtivo, persuasão e influência, gestão de conflitos, e apresentações de impacto. O programa inclui ainda módulos sobre comunicação em contexto multicultural, liderança remota e híbrida, e comunicação em situações de crise. A metodologia é prática e experiencial, combinando avaliações de perfil, estudos de caso, role-playing, videogravação com feedback, e desenvolvimento de um plano de ação personalizado.', 
-   '2025-06-15', '2025-07-15', '2025-08-01', '2025-11-01', TRUE, 'Português', 30, 0, 'https://www.plantareducacao.com.br/wp-content/uploads/2022/07/comunicacao-lideranca-02-1.png', FALSE, TRUE),
+   '2022-06-15', '2022-07-15', '2022-08-01', '2022-11-01', TRUE, 'Português', 30, 0, 'https://www.plantareducacao.com.br/wp-content/uploads/2022/07/comunicacao-lideranca-02-1.png', FALSE, TRUE),
    
 (9, 9, 'Nutrição e Saúde', 'Curso abrangente sobre princípios de alimentação saudável e o seu impacto na saúde e bem-estar, adaptado ao contexto alimentar português. O programa começa com os fundamentos da nutrição humana, explorando macronutrientes (proteínas, hidratos de carbono, gorduras) e micronutrientes (vitaminas, minerais), suas funções no organismo e fontes alimentares. Os formandos aprenderão a interpretar rótulos nutricionais, identificar alimentos processados e ultraprocessados, e compreender as recomendações da Roda dos Alimentos Portuguesa. O curso aborda a relação entre alimentação e prevenção de doenças crónicas como diabetes, hipertensão e obesidade, com especial foco nas tendências epidemiológicas em Portugal. Inclui módulos sobre alimentação em diferentes fases da vida, estratégias para mudança de comportamentos alimentares, mitos e factos sobre dietas populares, e adaptação de receitas tradicionais portuguesas para versões mais saudáveis. A metodologia combina conhecimentos teóricos com workshops práticos de planeamento de refeições equilibradas e económicas.', 
    '2025-06-20', '2025-07-20', '2025-08-10', '2025-11-10', TRUE, 'Português', 25, 0, 'https://salomaoayrozaribeiro.com.br/wp-content/uploads/2021/01/Ayroza-Blog-Alimentacao.png', TRUE, FALSE),
 
 -- 15 cursos adicionais com datas futuras
 (9, 10, 'Marketing no Facebook e Instagram', 'Formação especializada em estratégias de marketing digital para as plataformas Facebook e Instagram, focada nas particularidades do mercado português. O curso explora detalhadamente o algoritmo e métricas de ambas plataformas, técnicas avançadas de segmentação de público, criação de conteúdo de alto envolvimento, planeamento editorial e gestão de comunidades online. Os formandos aprenderão a desenvolver campanhas publicitárias eficazes com orçamentos variados, utilizar ferramentas nativas como Facebook Business Manager, Instagram Insights e Creator Studio, e implementar estratégias de crescimento orgânico e pago. São ainda abordadas técnicas de storytelling visual, produção de conteúdo para diferentes formatos (feed, stories, reels, IGTV), integração com e-commerce, e análise de dados para otimização contínua. O curso inclui estudos de caso de marcas portuguesas bem-sucedidas nas redes sociais e exercícios práticos de desenvolvimento de estratégias personalizadas.', 
-   '2025-07-01', '2025-07-31', '2025-08-15', '2025-11-15', TRUE, 'Português', 35, 0, 'https://eixo.digital/wp-content/uploads/2018/04/COMO-USAR-CADA-REDE-SOCIAL-NO-MARKETING-DIGITAL-1.png', FALSE, TRUE),
+   '2025-07-01', '2025-07-31', '2025-08-15', '2025-11-15', TRUE, 'Português', 35, 0, 'https://eixo.digital/wp-content/uploads/2018/04/COMO-USAR-CADA-REDE-SOCIAL-NO-MARKETING-DIGITAL-1.png', TRUE, FALSE),
    
 (9, 1, 'UI/UX Design Fundamentals', 'Curso abrangente sobre os princípios fundamentais de design de interface (UI) e experiência do utilizador (UX), duas competências altamente valorizadas no mercado digital português. O programa inicia com os fundamentos do design centrado no utilizador, abordando pesquisa de utilizadores, personas, jornadas de utilizador e arquitetura de informação. Na componente de UI, os formandos aprenderão princípios de design visual, sistemas de grelhas, tipografia, teoria da cor, hierarquia visual, e design de componentes de interface. A componente de UX foca-se em metodologias de design thinking, wireframing, prototipagem, testes de usabilidade e design de interação. Os participantes trabalharão com ferramentas profissionais como Figma, Adobe XD ou Sketch, e aprenderão a criar sistemas de design escaláveis. O curso aborda ainda acessibilidade digital, design responsivo, tendências atuais e considerações específicas para o mercado português. Inclui um projeto final abrangente, desde a pesquisa inicial até ao protótipo funcional de alta fidelidade.', 
-   '2025-07-05', '2025-08-05', '2025-08-20', '2025-11-20', TRUE, 'Português', 50, 0, 'https://leonardoconstanciodesigner.com/wp-content/uploads/2024/06/O-que-Faz-um-UX-UI-Designer.jpg', TRUE, FALSE),
+   '2025-07-05', '2025-08-05', '2025-08-20', '2025-11-20', TRUE, 'Português', 50, 0, 'https://leonardoconstanciodesigner.com/wp-content/uploads/2024/06/O-que-Faz-um-UX-UI-Designer.jpg', FALSE, TRUE),
    
 (9, 2, 'React e Redux para Aplicações Web', 'Formação intensiva nas tecnologias React e Redux, essenciais para o desenvolvimento de aplicações web modernas e altamente requisitadas no mercado de trabalho tecnológico português. O curso parte dos fundamentos do React, abordando componentes, props, estado, ciclo de vida, hooks e roteamento. Avança para tópicos avançados como gestão de estado com Context API e Redux, otimização de performance, code-splitting, server-side rendering, e integração com APIs REST e GraphQL. Os formandos aprenderão a estruturar projetos de média e grande escala, implementar padrões arquiteturais como Flux e Redux-Saga, utilizar TypeScript para tipagem estática, e aplicar testes automatizados com Jest e React Testing Library. O programa inclui ainda módulos sobre deployment, CI/CD, monitorização, e integração com ecossistemas como Next.js e Gatsby. Todos os conceitos são aplicados em um projeto real, desenvolvido progressivamente ao longo do curso, culminando numa aplicação web completa e pronta para produção.', 
-   '2025-07-10', '2025-08-10', '2025-08-25', '2025-11-25', TRUE, 'Português', 60, 0, 'https://www.tutorialswebsite.com/wp-content/uploads/react-redux.png', FALSE, TRUE),
+   '2025-07-10', '2025-08-10', '2025-08-25', '2025-11-25', TRUE, 'Português', 60, 0, 'https://www.tutorialswebsite.com/wp-content/uploads/react-redux.png', TRUE, FALSE),
    
 (9, 4, 'Data Science com Python', 'Curso avançado de Data Science utilizando o ecossistema Python, orientado para profissionais portugueses que pretendem adquirir competências práticas nesta área em expansão. O programa abrange o ciclo completo de análise de dados, desde a aquisição e preparação dos dados até à modelação, avaliação e implementação de soluções. Os formandos aprenderão técnicas avançadas de manipulação de dados com Pandas, visualização científica com Matplotlib, Seaborn e Plotly, análise estatística com SciPy e StatsModels, e machine learning com Scikit-learn. O curso aprofunda algoritmos de aprendizagem supervisionada (regressão, classificação), não supervisionada (clustering, redução de dimensionalidade), e introduz conceitos de deep learning com TensorFlow e Keras. São abordadas ainda técnicas de processamento de linguagem natural, séries temporais, e sistemas de recomendação. O programa enfatiza casos de uso relevantes para o mercado português, incluindo análise de dados financeiros, detecção de fraude, segmentação de clientes e otimização de operações empresariais.', 
-   '2025-07-15', '2025-08-15', '2025-09-01', '2025-12-01', TRUE, 'Português', 70, 0, 'https://www.mygreatlearning.com/blog/wp-content/uploads/2019/09/What-is-data-science-2.jpg', TRUE, FALSE),
+   '2025-07-15', '2025-08-15', '2025-09-01', '2025-12-01', TRUE, 'Português', 70, 0, 'https://www.mygreatlearning.com/blog/wp-content/uploads/2019/09/What-is-data-science-2.jpg', FALSE, TRUE),
    
 (9, 6, 'Nutrição Desportiva Avançada', 'Formação especializada em nutrição desportiva, destinada a profissionais de saúde, treinadores e atletas que pretendem otimizar o desempenho através de estratégias nutricionais avançadas. O curso explora em profundidade o metabolismo energético durante o exercício, requisitos nutricionais específicos para diferentes modalidades desportivas, periodização nutricional em sincronização com o treino, e estratégias para momentos críticos (pré, durante e pós-treino/competição). Os formandos aprenderão sobre suplementação desportiva baseada em evidência científica, nutrição para hipertrofia muscular, estratégias de perda de gordura mantendo performance, hidratação e eletrólitos, e nutrição para recuperação e prevenção de lesões. O programa aborda ainda as necessidades nutricionais específicas de atletas vegetarianos/veganos, atletas femininas, atletas jovens em desenvolvimento e atletas masters. Inclui módulos sobre nutrição em condições ambientais extremas, estratégias para viagens e competições, e considerações para desportos de equipa vs. individuais. A metodologia combina fundamentação científica atualizada com aplicação prática através de estudos de caso e planeamento nutricional personalizado.', 
-   '2025-07-20', '2025-08-20', '2025-09-05', '2025-12-05', TRUE, 'Português', 40, 0, 'https://www.hospitaldaluz.pt/Portals/_default/SiteData/GlobalAssets/Sa%C3%BAde%20e%20bem-estar/Imagens/2022/nutricao-para-quem-inicia-desporto.jpg', FALSE, TRUE),
+   '2025-07-20', '2025-08-20', '2025-09-05', '2025-12-05', TRUE, 'Português', 40, 0, 'https://www.hospitaldaluz.pt/Portals/_default/SiteData/GlobalAssets/Sa%C3%BAde%20e%20bem-estar/Imagens/2022/nutricao-para-quem-inicia-desporto.jpg', TRUE, FALSE),
    
 (9, 5, 'Power BI para Análise de Dados Empresariais', 'Curso prático de análise de dados empresariais utilizando Microsoft Power BI, uma das ferramentas de business intelligence mais utilizadas em empresas portuguesas. O programa inicia com os fundamentos do Power BI Desktop, abordando importação e transformação de dados com Power Query, modelação de dados relacionais, criação de medidas com DAX (Data Analysis Expressions), e desenvolvimento de visualizações interativas e dashboards. Avança para tópicos avançados como relacionamentos complexos entre tabelas, medidas calculadas avançadas, inteligência temporal, análise What-If, hierarquias, parâmetros, e drill-through. Os formandos aprenderão também sobre Power BI Service, colaboração e partilha segura de relatórios, gateways de dados, atualização automática, e integração com outras ferramentas Microsoft. O curso inclui módulos específicos sobre as visualizações mais úteis para diferentes áreas de negócio (finanças, vendas, marketing, RH, operações), KPIs relevantes para empresas portuguesas, e considerações sobre RGPD na análise de dados. Todos os conceitos são aplicados em projetos reais, utilizando conjuntos de dados empresariais representativos do mercado nacional.', 
-   '2025-07-25', '2025-08-25', '2025-09-10', '2025-12-10', TRUE, 'Português', 35, 0, 'https://hermes.dio.me/articles/cover/77cf9981-870a-4cd6-b4f5-3da8e9196453.jpg', TRUE, FALSE),
+   '2025-07-25', '2025-08-25', '2025-09-10', '2025-12-10', TRUE, 'Português', 35, 0, 'https://hermes.dio.me/articles/cover/77cf9981-870a-4cd6-b4f5-3da8e9196453.jpg', FALSE, TRUE),
    
 (9, 7, 'SBV e Primeiros Socorros para Educadores', 'Formação especializada em Suporte Básico de Vida (SBV) e primeiros socorros, desenhada especificamente para professores, educadores de infância, auxiliares de ação educativa e outros profissionais que trabalham com crianças em contexto escolar português. O curso aborda procedimentos essenciais para identificação e atuação em situações de emergência mais comuns em ambiente escolar, seguindo as diretrizes do Conselho Português de Ressuscitação e do INEM. Os formandos aprenderão protocolos de avaliação primária, técnicas de SBV adaptadas a diferentes idades (crianças e adolescentes), desobstrução da via aérea, posição lateral de segurança, e atuação em casos específicos como crises de asma, reações alérgicas graves, convulsões, traumatismos, queimaduras, hemorragias e outras situações frequentes em contexto educativo. O programa inclui componente prática intensiva com simulação de cenários em ambiente escolar, utilização de DAE (Desfibrilhador Automático Externo), e elaboração de planos de emergência para estabelecimentos de ensino. É também abordada a legislação portuguesa relevante e os procedimentos de comunicação com o 112 e com os encarregados de educação.', 
-   '2025-08-01', '2025-09-01', '2025-09-15', '2025-12-15', TRUE, 'Português', 20, 0, 'https://www.qualificar-fp.pt/uploads/1/2/6/8/126871834/primeiro-socorro_orig.png', FALSE, TRUE),
+   '2025-08-01', '2025-09-01', '2025-09-15', '2025-12-15', TRUE, 'Português', 20, 0, 'https://www.qualificar-fp.pt/uploads/1/2/6/8/126871834/primeiro-socorro_orig.png', TRUE, FALSE),
    
 (9, 8, 'Inglês para Profissionais de Turismo', 'Curso especializado de inglês para profissionais do setor turístico português, desenhado para melhorar a comunicação com visitantes internacionais e promover a excelência no atendimento. O programa foca-se no desenvolvimento de competências linguísticas práticas e relevantes para diversos contextos turísticos: hotelaria, restauração, agências de viagens, guias turísticos, animação turística e enoturismo. Os formandos aprenderão vocabulário específico do setor, expressões idiomáticas úteis, estruturas gramaticais essenciais e pronúncia adequada. O curso aborda situações comunicativas frequentes como check-in/check-out, reservas, informações sobre destinos, descrição do património cultural e natural português, resolução de problemas, gestão de reclamações, e promoção de experiências turísticas. Inclui ainda módulos sobre diferenças culturais, etiqueta internacional, e como apresentar a gastronomia, vinhos e tradições portuguesas a visitantes estrangeiros. A metodologia é prática e interativa, privilegiando roleplays de situações reais, simulações, estudos de caso e atividades de listening com diferentes sotaques de falantes de inglês. São também desenvolvidas competências de escrita para e-mails profissionais e comunicação nas redes sociais.', 
-   '2025-08-05', '2025-09-05', '2025-09-20', '2025-12-20', TRUE, 'Português/Inglês', 45, 0, 'https://blog.topenglish.com.br/wp-content/uploads/2017/10/ingles-profissional-quais-profissoes-exigem-fluencia-na-lingua.jpeg', TRUE, FALSE),
+   '2025-08-05', '2025-09-05', '2025-09-20', '2025-12-20', TRUE, 'Português/Inglês', 45, 0, 'https://blog.topenglish.com.br/wp-content/uploads/2017/10/ingles-profissional-quais-profissoes-exigem-fluencia-na-lingua.jpeg', FALSE, TRUE),
    
 (9, 9, 'Francês Comercial e de Negócios', 'Formação intensiva em língua francesa orientada para contextos profissionais e comerciais, especificamente adaptada às necessidades de empresários e profissionais portugueses que trabalham com mercados francófonos (França, Bélgica, Suíça, Canadá e países africanos de expressão francesa). O curso parte de um nível intermédio (A2/B1) e desenvolve competências linguísticas aplicadas ao mundo empresarial. Os formandos aprenderão terminologia específica de negócios, finanças, comércio internacional, marketing, recursos humanos e áreas jurídicas. O programa foca-se em situações comunicativas como apresentações profissionais, reuniões, negociações, networking, atendimento telefónico, videoconferências, e participação em feiras e eventos internacionais. Na componente escrita, são trabalhados e-mails formais, propostas comerciais, relatórios, contratos e documentação técnica. O curso aborda ainda aspetos culturais essenciais para os negócios nos diferentes países francófonos, etiqueta empresarial, e particularidades das relações comerciais luso-francesas. A metodologia combina o desenvolvimento das quatro competências linguísticas (compreensão e expressão oral e escrita) com situações práticas inspiradas no mundo empresarial real, incluindo simulações, estudos de caso e projetos aplicados ao setor de atividade de cada formando.', 
-   '2025-08-10', '2025-09-10', '2025-09-25', '2025-12-25', TRUE, 'Português/Francês', 50, 0, 'https://www.i9project.net/wp-content/uploads/2014/07/Frances-Negocios.jpg', FALSE, TRUE),
+   '2025-08-10', '2025-09-10', '2025-09-25', '2025-12-25', TRUE, 'Português/Francês', 50, 0, 'https://www.i9project.net/wp-content/uploads/2014/07/Frances-Negocios.jpg', TRUE, FALSE),
    
 (9, 3, 'Desenvolvimento Mobile com Flutter', 'Curso prático de desenvolvimento de aplicações móveis multiplataforma utilizando o framework Flutter, cada vez mais procurado por empresas portuguesas que pretendem otimizar recursos no desenvolvimento mobile. O programa começa com os fundamentos do Dart, linguagem de programação utilizada pelo Flutter, para depois explorar a arquitetura do framework, widgets, layouts, navegação entre ecrãs e gestão de estado. Os formandos aprenderão a desenvolver interfaces nativas e responsivas para iOS e Android a partir de um único código-base, aplicar os princípios de Material Design e Cupertino, integrar com APIs RESTful e bases de dados, implementar autenticação e autorização seguras, e utilizar recursos nativos dos dispositivos (câmara, GPS, notificações push, etc). O curso aborda ainda tópicos avançados como testes automatizados, CI/CD para mobile, monitorização de performance, internacionalização, acessibilidade, e publicação nas lojas de aplicações (App Store e Google Play). O programa culmina com o desenvolvimento de uma aplicação completa, desde a conceptualização até à publicação, podendo os formandos optar por desenvolver um projeto pessoal ou profissional com o acompanhamento do formador.', 
-   '2025-08-15', '2025-09-15', '2025-10-01', '2026-01-01', TRUE, 'Português', 65, 0, 'https://blog.solguruz.com/wp-content/uploads/2023/11/Flutter-for-Hybrid-Apps-Why-Flutter-is-the-Best-Platform-to-Make-Hybrid-Apps.png', TRUE, FALSE),
+   '2025-08-15', '2025-09-15', '2025-10-01', '2026-01-01', TRUE, 'Português', 65, 0, 'https://blog.solguruz.com/wp-content/uploads/2023/11/Flutter-for-Hybrid-Apps-Why-Flutter-is-the-Best-Platform-to-Make-Hybrid-Apps.png', FALSE, TRUE),
    
 (9, 10, 'Marketing Estratégico e Branding Digital', 'Formação avançada em marketing estratégico e desenvolvimento de marca no contexto digital, adaptada à realidade das empresas portuguesas que competem em mercados cada vez mais globalizados. O curso integra fundamentos tradicionais de marketing estratégico com as mais recentes tendências digitais, abordando análise de mercado, segmentação, posicionamento e proposta de valor na era digital. Na componente de branding, os formandos aprenderão metodologias para desenvolver identidades de marca memoráveis, storytelling de marca, brand voice, identidade visual e experiência de marca em múltiplos touchpoints digitais. O programa explora ainda estratégias omnichannel, jornada do cliente digital, inbound marketing, content marketing, SEO, marketing de influência e estratégias de crescimento para startups e PMEs. São abordados também tópicos como medição e análise de resultados de marketing digital, attribution modeling, customer lifetime value, e otimização de conversão. A metodologia combina teoria atualizada com aplicação prática através de workshops, análise de casos de sucesso de marcas portuguesas, e desenvolvimento de um plano de marketing digital completo para um projeto real, com feedback personalizado ao longo do processo.', 
-   '2025-08-20', '2025-09-20', '2025-10-05', '2026-01-05', TRUE, 'Português', 45, 0, 'https://informati.com.br/wp-content/uploads/2024/09/Qual_a_diferenca_entre_Branding_e_Campanhas_de_Marketing_Digital_Capa.png', FALSE, TRUE),
+   '2025-08-20', '2025-09-20', '2025-10-05', '2026-01-05', TRUE, 'Português', 45, 0, 'https://informati.com.br/wp-content/uploads/2024/09/Qual_a_diferenca_entre_Branding_e_Campanhas_de_Marketing_Digital_Capa.png', TRUE, FALSE),
    
 (9, 1, 'WordPress Avançado para Empresas', 'Curso especializado em WordPress focado nas necessidades de negócios e empresas portuguesas que pretendem desenvolver e gerir sites profissionais, lojas online e plataformas de conteúdo. O programa vai além das funcionalidades básicas do WordPress, aprofundando tópicos avançados como instalação e configuração em ambiente profissional, personalização avançada de temas (child themes), desenvolvimento de plugins específicos, comércio eletrónico com WooCommerce, otimização de performance, segurança e backups. Os formandos aprenderão técnicas de desenvolvimento front-end e back-end específicas para WordPress, incluindo criação de custom post types, taxonomias personalizadas, campos personalizados com ACF, desenvolvimento de Gutenberg blocks, e integração com APIs externas. O curso aborda ainda SEO técnico para WordPress, adaptação à legislação portuguesa e europeia (RGPD, cookies, acessibilidade), multilinguismo, escalabilidade para sites de alto tráfego, e estratégias de manutenção e atualização. A metodologia é prática, com os formandos a desenvolverem um projeto completo do início ao fim, podendo utilizar casos reais das suas empresas. Inclui também módulos sobre deployment, staging environments e ferramentas de desenvolvimento colaborativo.', 
-   '2025-08-25', '2025-09-25', '2025-10-10', '2026-01-10', TRUE, 'Português', 40, 0, 'https://freenocode.org/wp-content/uploads/2020/10/WordPress-web.jpg', TRUE, FALSE),
+   '2025-08-25', '2025-09-25', '2025-10-10', '2026-01-10', TRUE, 'Português', 40, 0, 'https://freenocode.org/wp-content/uploads/2020/10/WordPress-web.jpg', FALSE, TRUE),
    
 (9, 4, 'Machine Learning para Negócios', 'Curso prático de Machine Learning aplicado a problemas empresariais, desenhado para profissionais portugueses que pretendem utilizar IA para extrair valor de dados e otimizar processos de negócio. O programa adota uma abordagem acessível e orientada para resultados, não exigindo experiência prévia em programação avançada. Os formandos aprenderão os fundamentos teóricos do machine learning (aprendizagem supervisionada, não supervisionada e por reforço), enquanto desenvolvem competências práticas com ferramentas como Python, scikit-learn, e plataformas low-code/no-code como AutoML. O curso aborda casos de uso relevantes para empresas portuguesas: previsão de vendas, segmentação de clientes, análise de sentimento, sistemas de recomendação, deteção de fraude, otimização de preços, manutenção preditiva, e automação de processos. Para cada aplicação, são exploradas as etapas do processo: definição do problema de negócio, preparação de dados, seleção de algoritmos apropriados, treino e avaliação de modelos, interpretação de resultados, e implementação em ambiente de produção. O programa inclui discussões sobre ética em IA, viés algorítmico, privacidade de dados (RGPD), e gestão de mudança organizacional para adoção de soluções baseadas em ML. Os formandos desenvolvem um projeto final aplicado ao seu setor de atividade, com mentoria personalizada.', 
-   '2025-09-01', '2025-10-01', '2025-10-15', '2026-01-15', TRUE, 'Português', 55, 0, 'https://www.flatworldsolutions.com/IT-services/images/benefits-machine-learning-business.jpg', FALSE, TRUE),
+   '2025-09-01', '2025-10-01', '2025-10-15', '2026-01-15', TRUE, 'Português', 55, 0, 'https://www.flatworldsolutions.com/IT-services/images/benefits-machine-learning-business.jpg', TRUE, FALSE),
    
 (9, 6, 'Gestão de Stress e Bem-estar no Trabalho', 'Formação abrangente sobre gestão de stress e promoção do bem-estar em contexto laboral, especialmente relevante para o mercado de trabalho português atual. O curso adota uma abordagem holística, combinando conhecimentos da psicologia, neurociência, medicina do trabalho e gestão organizacional. Os formandos começarão por compreender os mecanismos fisiológicos e psicológicos do stress, identificar fatores de risco pessoais e organizacionais, e reconhecer os sinais de alarme de stress crónico e burnout. O programa desenvolve competências práticas de gestão de stress, incluindo técnicas de respiração e relaxamento, mindfulness aplicado ao trabalho, gestão eficaz do tempo e energia, estabelecimento de limites saudáveis, e estratégias de desconexão digital. São abordados ainda temas como comunicação assertiva em situações de pressão, resolução construtiva de conflitos, e equilíbrio entre vida profissional e pessoal. Na dimensão organizacional, os formandos aprenderão a implementar e promover práticas de trabalho saudáveis, liderança promotora de bem-estar, e programas de saúde mental no local de trabalho em conformidade com a legislação portuguesa. A metodologia é experiencial e reflexiva, combinando exposição teórica com exercícios práticos, dinâmicas de grupo, estudos de caso, e desenvolvimento de um plano personalizado de gestão de stress e bem-estar.', 
-   '2025-09-05', '2025-10-05', '2025-10-20', '2026-01-20', TRUE, 'Português', 25, 0, 'https://edenred.pt/wp-content/uploads/2023/02/Stress-no-trabalho.jpg', TRUE, FALSE),
+   '2025-09-05', '2025-10-05', '2025-10-20', '2026-01-20', TRUE, 'Português', 25, 0, 'https://edenred.pt/wp-content/uploads/2023/02/Stress-no-trabalho.jpg', FALSE, TRUE),
    
 (9, 7, 'Gestão e Compliance em Proteção de Dados', 'Curso especializado em gestão e conformidade (compliance) em proteção de dados pessoais, focado no Regulamento Geral de Proteção de Dados (RGPD) e na legislação portuguesa complementar. A formação foi desenhada para Data Protection Officers, juristas, profissionais de compliance, gestores e técnicos de IT que necessitam implementar e monitorizar práticas de conformidade em organizações portuguesas. O programa aborda em profundidade o enquadramento jurídico da proteção de dados em Portugal e na UE, os princípios fundamentais do RGPD, direitos dos titulares e obrigações dos responsáveis pelo tratamento e subcontratantes. Os formandos desenvolverão competências práticas para implementação de programas de compliance, incluindo mapeamento de tratamentos de dados, avaliações de impacto (DPIA), gestão de riscos, políticas e procedimentos internos, medidas técnicas e organizativas adequadas, e resposta a incidentes de segurança. O curso explora a interação com a autoridade de controlo portuguesa (CNPD), gestão de consentimentos e outras bases legais, transferências internacionais de dados após o Schrems II, e particularidades setoriais (saúde, finanças, recursos humanos, marketing). A metodologia combina exposição teórica com workshops práticos, análise de jurisprudência recente, resolução de casos práticos inspirados em situações reais do mercado português, e desenvolvimento de documentação essencial de compliance.', 
-   '2025-09-10', '2025-10-10', '2025-10-25', '2026-01-25', TRUE, 'Português', 35, 0, 'https://lec.com.br/wp-content/uploads/2018/11/248702-protecao-de-dados-entenda-os-principais-pontos-da-nova-lei.jpg', FALSE, TRUE);
+   '2025-09-10', '2025-10-10', '2025-10-25', '2026-01-25', TRUE, 'Português', 35, 18, 'https://lec.com.br/wp-content/uploads/2018/11/248702-protecao-de-dados-entenda-os-principais-pontos-da-nova-lei.jpg', FALSE, TRUE);
 
 
 -- Inserir ASSINCRONO (incluindo os originais e os novos cursos assíncronos)
@@ -390,21 +390,302 @@ INSERT INTO FAVORITOS (ID_FORMANDO, ID_CURSO) VALUES
 
 -- Inserir INSCRICOES
 INSERT INTO INSCRICOES (ID_FORMANDO, ID_CURSO, DATA_INSCRICAO, STATUS_INSCRICAO) VALUES
-(1, 1, '2023-02-15', 1), -- António Silva - Desenvolvimento Web Responsivo
-(1, 2, '2023-02-20', 1), -- António Silva - JavaScript Avançado
-(2, 6, '2023-03-20', 1), -- Maria Santos - Gestão Ágil de Projetos
-(2, 7, '2023-03-25', 1), -- Maria Santos - Liderança e Comunicação
-(3, 3, '2023-03-01', 1), -- João Oliveira - Java para Iniciantes
-(3, 5, '2023-03-05', 1), -- João Oliveira - Administração SQL Server
-(4, 2, '2023-02-25', 1), -- Ana Costa - JavaScript Avançado
-(10, 8, '2023-04-05', 1), -- Marta Fernandes - Nutrição e Saúde
-(11, 8, '2023-04-10', 1), -- Paulo Lopes - Nutrição e Saúde
-(12, 7, '2023-03-30', 1), -- Sara Ribeiro - Liderança e Comunicação
-(14, 6, '2023-03-15', 1), -- Teresa Pinto - Gestão Ágil de Projetos
-(15, 4, '2023-03-10', 1); -- Carlos Marques - Python para Análise de Dados
+
+-- Inscrições para cursos originais
+-- Desenvolvimento Web Responsivo (ID 1)
+(2, 1, '2023-05-05', 1),  -- Maria Santos
+(4, 1, '2023-05-10', 1),  -- Ana Costa
+
+(10, 1, '2023-05-20', 1), -- Marta Fernandes
+(11, 1, '2023-05-25', 1), -- Paulo Lopes
+(12, 1, '2023-06-01', 1), -- Sara Ribeiro
+(14, 1, '2023-06-05', 1), -- Teresa Pinto
+
+-- JavaScript Avançado (ID 2)
+(3, 2, '2023-05-12', 1),  -- João Oliveira
+
+(10, 2, '2023-05-22', 1), -- Marta Fernandes
+(12, 2, '2023-05-30', 1), -- Sara Ribeiro
+(14, 2, '2023-06-02', 1), -- Teresa Pinto
+(15, 2, '2023-06-10', 1), -- Carlos Marques
+
+-- Java para Iniciantes (ID 3)
+(1, 3, '2023-05-08', 1),  -- António Silva
+(2, 3, '2023-05-14', 1),  -- Maria Santos
+(4, 3, '2023-05-19', 1),  -- Ana Costa
+
+(10, 3, '2023-05-29', 1), -- Marta Fernandes
+(11, 3, '2023-06-03', 1), -- Paulo Lopes
+(12, 3, '2023-06-08', 1), -- Sara Ribeiro
+(14, 3, '2023-06-12', 1), -- Teresa Pinto
+
+-- Python para Análise de Dados (ID 4)
+(1, 4, '2023-05-07', 1),  -- António Silva
+(2, 4, '2023-05-13', 1),  -- Maria Santos
+(3, 4, '2023-05-17', 1),  -- João Oliveira
+(4, 4, '2023-05-21', 1),  -- Ana Costa
+
+
+
+
+(10, 4, '2023-06-14', 1), -- Marta Fernandes
+
+-- Administração SQL Server (ID 5)
+(1, 5, '2023-05-09', 1),  -- António Silva
+(2, 5, '2023-05-16', 1),  -- Maria Santos
+(4, 5, '2023-05-23', 1),  -- Ana Costa
+
+
+
+(10, 5, '2023-06-16', 1), -- Marta Fernandes
+(11, 5, '2023-06-21', 1), -- Paulo Lopes
+(12, 5, '2023-06-26', 1), -- Sara Ribeiro
+(14, 5, '2023-07-01', 1), -- Teresa Pinto
+
+-- Gestão Ágil de Projetos (ID 6)
+(1, 6, '2023-05-11', 1),  -- António Silva
+(3, 6, '2023-05-27', 1),  -- João Oliveira
+(4, 6, '2023-06-07', 1),  -- Ana Costa
+
+
+(11, 6, '2023-06-28', 1), -- Paulo Lopes
+
+(15, 6, '2023-07-08', 1), -- Carlos Marques
+
+-- Liderança e Comunicação (ID 7)
+(1, 7, '2023-05-06', 1),  -- António Silva
+(3, 7, '2023-06-15', 1),  -- João Oliveira
+(4, 7, '2023-06-20', 1),  -- Ana Costa
+
+
+
+(15, 7, '2023-07-15', 1), -- Carlos Marques
+
+-- Nutrição e Saúde (ID 8)
+(1, 8, '2023-06-17', 1),  -- António Silva
+(3, 8, '2023-06-22', 1),  -- João Oliveira
+(4, 8, '2023-06-27', 1),  -- Ana Costa
+
+
+
+
+(14, 8, '2023-07-22', 1), -- Teresa Pinto
+(15, 8, '2023-07-27', 1), -- Carlos Marques
+
+-- Inscrições para cursos adicionais
+-- Marketing no Facebook e Instagram (ID 9)
+(1, 9, '2023-07-05', 1),  -- António Silva
+(2, 9, '2023-07-09', 1),  -- Maria Santos
+(3, 9, '2023-07-13', 1),  -- João Oliveira
+(4, 9, '2023-07-18', 1),  -- Ana Costa
+
+
+
+
+(10, 9, '2023-08-12', 1), -- Marta Fernandes
+(11, 9, '2023-08-17', 1), -- Paulo Lopes
+(12, 9, '2023-08-22', 1), -- Sara Ribeiro
+(14, 9, '2023-08-27', 1), -- Teresa Pinto
+(15, 9, '2023-09-01', 1), -- Carlos Marques
+
+-- UI/UX Design Fundamentals (ID 10)
+(1, 10, '2023-07-06', 1),  -- António Silva
+(2, 10, '2023-07-11', 1),  -- Maria Santos
+(3, 10, '2023-07-16', 1),  -- João Oliveira
+(4, 10, '2023-07-21', 1),  -- Ana Costa
+
+
+
+
+(10, 10, '2023-08-15', 1), -- Marta Fernandes
+(11, 10, '2023-08-20', 1), -- Paulo Lopes
+(12, 10, '2023-08-25', 1), -- Sara Ribeiro
+
+(14, 10, '2023-09-04', 1), -- Teresa Pinto
+(15, 10, '2023-09-09', 1), -- Carlos Marques
+
+-- React e Redux para Aplicações Web (ID 11)
+(1, 11, '2023-07-07', 1),  -- António Silva
+(2, 11, '2023-07-12', 1),  -- Maria Santos
+(3, 11, '2023-07-17', 1),  -- João Oliveira
+(4, 11, '2023-07-22', 1),  -- Ana Costa
+
+
+(10, 11, '2023-08-11', 1), -- Marta Fernandes
+(11, 11, '2023-08-16', 1), -- Paulo Lopes
+(12, 11, '2023-08-21', 1), -- Sara Ribeiro
+(14, 11, '2023-08-26', 1), -- Teresa Pinto
+(15, 11, '2023-08-31', 1), -- Carlos Marques
+
+-- Data Science com Python (ID 12)
+(1, 12, '2023-07-08', 1),  -- António Silva
+(2, 12, '2023-07-14', 1),  -- Maria Santos
+(3, 12, '2023-07-19', 1),  -- João Oliveira
+(4, 12, '2023-07-24', 1),  -- Ana Costa
+
+
+
+
+(10, 12, '2023-08-18', 1), -- Marta Fernandes
+(11, 12, '2023-08-23', 1), -- Paulo Lopes
+(12, 12, '2023-08-28', 1), -- Sara Ribeiro
+(14, 12, '2023-09-02', 1), -- Teresa Pinto
+(15, 12, '2023-09-07', 1), -- Carlos Marques
+
+-- Nutrição Desportiva Avançada (ID 13)
+(1, 13, '2023-07-10', 1),  -- António Silva
+(2, 13, '2023-07-15', 1),  -- Maria Santos
+(3, 13, '2023-07-20', 1),  -- João Oliveira
+(4, 13, '2023-07-25', 1),  -- Ana Costa
+
+
+
+(10, 13, '2023-08-14', 1), -- Marta Fernandes
+(11, 13, '2023-08-19', 1), -- Paulo Lopes
+(12, 13, '2023-08-24', 1), -- Sara Ribeiro
+
+(14, 13, '2023-09-03', 1), -- Teresa Pinto
+(15, 13, '2023-09-08', 1), -- Carlos Marques
+
+-- Power BI para Análise de Dados Empresariais (ID 14)
+(1, 14, '2023-07-04', 1),  -- António Silva
+(2, 14, '2023-07-09', 1),  -- Maria Santos
+(3, 14, '2023-07-14', 1),  -- João Oliveira
+(4, 14, '2023-07-19', 1),  -- Ana Costa
+
+
+
+
+(10, 14, '2023-08-13', 1), -- Marta Fernandes
+(11, 14, '2023-08-18', 1), -- Paulo Lopes
+(12, 14, '2023-08-23', 1), -- Sara Ribeiro
+(14, 14, '2023-08-28', 1), -- Teresa Pinto
+(15, 14, '2023-09-02', 1), -- Carlos Marques
+
+-- SBV e Primeiros Socorros para Educadores (ID 15)
+(1, 15, '2023-07-03', 1),  -- António Silva
+(2, 15, '2023-07-08', 1),  -- Maria Santos
+(3, 15, '2023-07-13', 1),  -- João Oliveira
+(4, 15, '2023-07-18', 1),  -- Ana Costa
+
+
+
+(10, 15, '2023-08-12', 1), -- Marta Fernandes
+(11, 15, '2023-08-17', 1), -- Paulo Lopes
+(12, 15, '2023-08-22', 1), -- Sara Ribeiro
+
+(14, 15, '2023-09-01', 1), -- Teresa Pinto
+(15, 15, '2023-09-06', 1), -- Carlos Marques
+
+-- Inglês para Profissionais de Turismo (ID 16)
+(1, 16, '2023-07-05', 1),  -- António Silva
+(2, 16, '2023-07-10', 1),  -- Maria Santos
+(3, 16, '2023-07-15', 1),  -- João Oliveira
+(4, 16, '2023-07-20', 1),  -- Ana Costa
+
+
+
+
+(10, 16, '2023-08-14', 1), -- Marta Fernandes
+(11, 16, '2023-08-19', 1), -- Paulo Lopes
+(12, 16, '2023-08-24', 1), -- Sara Ribeiro
+
+(14, 16, '2023-09-03', 1), -- Teresa Pinto
+(15, 16, '2023-09-08', 1), -- Carlos Marques
+
+-- Francês Comercial e de Negócios (ID 17)
+(1, 17, '2023-07-06', 1),  -- António Silva
+(2, 17, '2023-07-11', 1),  -- Maria Santos
+(3, 17, '2023-07-16', 1),  -- João Oliveira
+(4, 17, '2023-07-21', 1),  -- Ana Costa
+
+
+
+
+(10, 17, '2023-08-15', 1), -- Marta Fernandes
+(11, 17, '2023-08-20', 1), -- Paulo Lopes
+(12, 17, '2023-08-25', 1), -- Sara Ribeiro
+
+(14, 17, '2023-09-04', 1), -- Teresa Pinto
+(15, 17, '2023-09-09', 1), -- Carlos Marques
+
+-- Desenvolvimento Mobile com Flutter (ID 18)
+(1, 18, '2023-07-07', 1),  -- António Silva
+(2, 18, '2023-07-12', 1),  -- Maria Santos
+(3, 18, '2023-07-17', 1),  -- João Oliveira
+(4, 18, '2023-07-22', 1),  -- Ana Costa
+
+
+
+(10, 18, '2023-08-16', 1), -- Marta Fernandes
+(11, 18, '2023-08-21', 1), -- Paulo Lopes
+(12, 18, '2023-08-26', 1), -- Sara Ribeiro
+(14, 18, '2023-09-05', 1), -- Teresa Pinto
+(15, 18, '2023-09-10', 1), -- Carlos Marques
+
+-- Marketing Estratégico e Branding Digital (ID 19)
+(1, 19, '2023-07-08', 1),  -- António Silva
+(2, 19, '2023-07-13', 1),  -- Maria Santos
+(3, 19, '2023-07-18', 1),  -- João Oliveira
+(4, 19, '2023-07-23', 1),  -- Ana Costa
+
+
+
+
+(10, 19, '2023-08-17', 1), -- Marta Fernandes
+(11, 19, '2023-08-22', 1), -- Paulo Lopes
+(12, 19, '2023-08-27', 1), -- Sara Ribeiro
+
+(14, 19, '2023-09-06', 1), -- Teresa Pinto
+(15, 19, '2023-09-11', 1), -- Carlos Marques
+
+-- WordPress Avançado para Empresas (ID 20)
+(1, 20, '2023-07-09', 1),  -- António Silva
+(2, 20, '2023-07-14', 1),  -- Maria Santos
+(3, 20, '2023-07-19', 1),  -- João Oliveira
+(4, 20, '2023-07-24', 1),  -- Ana Costa
+
+
+
+(10, 20, '2023-08-18', 1), -- Marta Fernandes
+(11, 20, '2023-08-23', 1), -- Paulo Lopes
+(12, 20, '2023-08-28', 1), -- Sara Ribeiro
+
+(14, 20, '2023-09-07', 1), -- Teresa Pinto
+(15, 20, '2023-09-12', 1), -- Carlos Marques
+
+-- Machine Learning para Negócios (ID 21)
+(1, 21, '2023-07-01', 1),  -- António Silva
+(2, 21, '2023-07-06', 1),  -- Maria Santos
+(3, 21, '2023-07-11', 1),  -- João Oliveira
+(4, 21, '2023-07-16', 1),  -- Ana Costa
+
+
+
+(10, 21, '2023-08-10', 1), -- Marta Fernandes
+(11, 21, '2023-08-15', 1), -- Paulo Lopes
+(12, 21, '2023-08-20', 1), -- Sara Ribeiro
+(14, 21, '2023-08-30', 1), -- Teresa Pinto
+(15, 21, '2023-09-04', 1), -- Carlos Marques
+
+-- Gestão de Stress e Bem-estar no Trabalho (ID 22)
+(1, 22, '2023-07-02', 1),  -- António Silva
+(2, 22, '2023-07-07', 1),  -- Maria Santos
+(3, 22, '2023-07-12', 1),  -- João Oliveira
+(4, 22, '2023-07-17', 1),  -- Ana Costa
+
+
+
+(10, 22, '2023-08-11', 1), -- Marta Fernandes
+(11, 22, '2023-08-16', 1), -- Paulo Lopes
+(12, 22, '2023-08-21', 1), -- Sara Ribeiro
+
+(14, 22, '2023-08-31', 1), -- Teresa Pinto
+(15, 22, '2023-09-05', 1); -- Carlos Marques
+
 
 -- Atualizar contador de formandos nos cursos
-UPDATE CURSOS SET CONTADOR_FORMANDOS = (SELECT COUNT(*) FROM INSCRICOES WHERE INSCRICOES.ID_CURSO = CURSOS.ID_CURSO) WHERE ID_CURSO IN (1, 2, 3, 4, 5, 6, 7, 8);
+--UPDATE CURSOS SET CONTADOR_FORMANDOS = (SELECT COUNT(*) FROM INSCRICOES WHERE INSCRICOES.ID_CURSO = CURSOS.ID_CURSO) WHERE ID_CURSO IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22);
 
 -- Inserir NOTIFICACOES_CURSO
 INSERT INTO NOTIFICACOES_CURSO (ID_UTILIZADOR, ID_CURSO, DATA_HORA_NOTIFICACAOCURSO) VALUES
@@ -554,4 +835,3 @@ INSERT INTO CERTIFICADOS (ID_FORMANDO, ID_CURSO, CERTIFICADO_FINAL) VALUES
 (2, 7, '<html><head><style>body{font-family:Arial,sans-serif;margin:40px;} .certificado{border:3px solid #1a5276;padding:30px;text-align:center;} .titulo{color:#1a5276;font-size:36px;margin-bottom:30px;} .conteudo{font-size:18px;line-height:1.6;margin-bottom:40px;} .assinatura{display:flex;justify-content:space-around;margin-top:80px;} .assinatura div{width:200px;text-align:center;} .linha{border-top:1px solid #000;margin-bottom:10px;} .logos{margin-top:40px;display:flex;justify-content:space-between;}</style></head><body><div class="certificado"><div class="logos"><img src="https://example.com/logos/empresa.png" width="150"><img src="https://example.com/logos/curso_lideranca.png" width="150"></div><h1 class="titulo">Certificado de Conclusão</h1><div class="conteudo"><p>Certifica-se que <strong>Maria Santos</strong> concluiu com aproveitamento o curso de <strong>Liderança e Comunicação</strong>, com duração total de <strong>30 horas</strong>, realizado no período de 1 de março a 1 de junho de 2024.</p><p>Conteúdos programáticos: Estilos de liderança, inteligência emocional, comunicação assertiva, feedback construtivo, gestão de conflitos, apresentações de impacto, liderança em ambiente remoto.</p></div><div class="assinatura"><div><div class="linha"></div><p>Sofia Martins</p><p>Formadora</p></div><div><div class="linha"></div><p>Francisco Gomes</p><p>Direção Pedagógica</p></div></div><p style="margin-top:40px;font-size:14px;">Certificado emitido em 15/06/2024 - Código de Verificação: LD24-MS2-67C2</p></div></body></html>'),
 
 (10, 8, '<html><head><style>body{font-family:Arial,sans-serif;margin:40px;} .certificado{border:3px solid #1a5276;padding:30px;text-align:center;} .titulo{color:#1a5276;font-size:36px;margin-bottom:30px;} .conteudo{font-size:18px;line-height:1.6;margin-bottom:40px;} .assinatura{display:flex;justify-content:space-around;margin-top:80px;} .assinatura div{width:200px;text-align:center;} .linha{border-top:1px solid #000;margin-bottom:10px;} .logos{margin-top:40px;display:flex;justify-content:space-between;}</style></head><body><div class="certificado"><div class="logos"><img src="https://example.com/logos/empresa.png" width="150"><img src="https://example.com/logos/curso_nutricao.png" width="150"></div><h1 class="titulo">Certificado de Conclusão</h1><div class="conteudo"><p>Certifica-se que <strong>Marta Fernandes</strong> concluiu com aproveitamento o curso de <strong>Nutrição e Saúde</strong>, com duração total de <strong>25 horas</strong>, realizado no período de 10 de março a 10 de junho de 2024.</p><p>Conteúdos programáticos: Princípios de nutrição, grupos alimentares, leitura de rótulos, planeamento de refeições, mitos nutricionais, alimentação para diferentes fases da vida, relação entre alimentação e saúde.</p></div><div class="assinatura"><div><div class="linha"></div><p>Rui Ferreira</p><p>Formador</p></div><div><div class="linha"></div><p>Carla Rodrigues</p><p>Direção Pedagógica</p></div></div><p style="margin-top:40px;font-size:14px;">Certificado emitido em 20/06/2024 - Código de Verificação: NT24-MF10-55B8</p></div></body></html>');
-
