@@ -1,3 +1,5 @@
 {
-    "cmake.sourceDirectory": "C:/Users/guisi/OneDrive/Ambiente de Trabalho/Universidade/2  ano/2 Semestre/Projeto Integrado/PINT/plataforma-mobile/mobile/linux"
+    "cmake.sourceDirectory": "C:/Users/guisi/OneDrive/Ambiente de Trabalho/Universidade/2  ano/2 Semestre/Projeto Integrado/PINT/plataforma-mobile/mobile/linux",
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "typescript.updateImportsOnFileMove.enabled": "always"
 }
