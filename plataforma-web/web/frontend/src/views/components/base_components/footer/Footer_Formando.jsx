@@ -12,7 +12,7 @@ import {
     BsDownload,
 } from 'react-icons/bs';
 
-const Footer = () => {
+const FooterFormando = () => {
     return (
         <footer className="app-fotter border-top pt-5 pb-4">
             <div className="container">
@@ -80,4 +80,4 @@ const Footer = () => {
     );
 }
 
-export default Footer;
+export default FooterFormando;
