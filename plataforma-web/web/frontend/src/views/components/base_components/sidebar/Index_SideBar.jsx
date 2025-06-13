@@ -3,9 +3,13 @@ import SidebarFormando from './SideBar_Formando';
 import SidebarFormador from './SideBar_Formador';
 import SidebarAdmin from './SideBar_Admin';
 
-const Sidebar = ({ role, ...props }) => {
-  switch (role) {
-    case 'formador':
+import { useUser } from '../../../../utils/userContext';
+
+const Sidebar = (props) => {
+  const { activeRole } = useUser();
+
+  switch (activeRole) {
+    case 'formador': 
       return <SidebarFormador {...props} />;
     case 'admin':
       return <SidebarAdmin {...props} />;
@@ -14,4 +18,4 @@ const Sidebar = ({ role, ...props }) => {
   }
 };
 
-export default Sidebar;
+export default Sidebar; 
