@@ -1,20 +1,27 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './profile.css';
+import { useUser } from '../../../utils/userContext';
 
 const InfoProfile = () => {
-    const [typeProfile, setTypeProfile] = useState(['admin', 'formando'])
+    const { roles, activeRole, setActiveRole } = useUser();
 
-    return(
+    const handleChangeRole = (role) => {
+        if (role !== activeRole) {
+            setActiveRole(role);
+        }
+    };
+
+    return (
         <div className='d-flex'>
             <div className='col-6 form-group p-5 border-end'>
                 <h5>Alterar Password</h5>
                 <div className='mt-2'>
                     <label htmlFor="passant" className='form-label'>Password antiga</label>
-                    <input type="text" className='form-control' required /> 
+                    <input type="text" className='form-control' required />
                 </div>
                 <div className='mt-2'>
                     <label htmlFor="passnova" className='form-label'>Password nova</label>
-                    <input type="text" className='form-control' required /> 
+                    <input type="text" className='form-control' required />
                 </div>
                 <div className='d-flex justify-content-end mt-2'>
                     <small>Esqueceu-se da palavra-passe?</small>
@@ -25,9 +32,11 @@ const InfoProfile = () => {
                     <div className='mb-2'>
                         <h5 className='mb-3'>Escolha o tipo de conta: </h5>
                         <div className='btn-group'>
-                            {typeProfile.map((role, index) => (
-                                <button key={index} className='btn btn-color text-white'>
-                                    {role}
+                            {roles.map((role, index) => (
+                                <button key={index}
+                                    className={`btn ${activeRole === role ? 'btn-primary' : 'btn-outline-primary'}`}
+                                    onClick={() => handleChangeRole(role)}>
+                                    {role.charAt(0).toUpperCase() + role.slice(1)}
                                 </button>
                             ))}
                         </div>
