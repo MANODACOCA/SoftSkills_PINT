@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'r
 import ProtectedRoute from './views/components/rotasProtegidas/rotasProtegidas';
 import TokenChecker  from './utils/authService.js';
 
-
 //components login
 import Login from './views/components/login_comp/login/Login';
 import NewPassword from './views/components/login_comp/newPassword/newPassword';

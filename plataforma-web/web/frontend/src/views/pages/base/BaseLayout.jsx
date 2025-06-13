@@ -5,7 +5,7 @@ import './Layout.css';
 //components
 import HeaderGeral from '../../components/base_components/header/Index_Header';
 import SideBar from '../../components/base_components/sidebar/Index_SideBar';
-import Footer from '../../components/base_components/footer/Footer_Formando_Formador';
+import Footer from '../../components/base_components/footer/Footer_Formando';
 
 const BaseLayout = () => {
 
