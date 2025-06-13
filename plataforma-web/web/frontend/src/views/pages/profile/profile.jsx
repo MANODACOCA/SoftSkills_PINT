@@ -4,11 +4,11 @@ import Flags from 'react-world-flags';
 import { countries } from 'countries-list';
 import './profile.css';
 
-import { get_utilizador } from '../../../api/utilizador_axios';
-import { getUserIdFromToken } from '../../components/shared_functions/FunctionsUtils';
+import { useUser } from '../../../utils/userContext';
 
 const EditProfile = () => {
-
+    const { user } = useUser();
+    console.log(user);
     const countryOptions = Object.entries(countries)
         .map(([code, info]) => ({
             value: info.name,
@@ -37,30 +37,21 @@ const EditProfile = () => {
     });
 
     useEffect(() => {
-        const fetchUtilizador = async () => {
-            try {
-                const token = localStorage.getItem("token");
-                const userId = getUserIdFromToken(token);
-                const userData = await get_utilizador(userId);
-                setUtilizador(userData);
-                setFormData({
-                    nome: userData.nome_utilizador || '',
-                    email: userData.email || '',
-                    telemovel: userData.telemovel || '',
-                    dataNascimento: userData.data_nasc?.split('T')[0] || '',
-                    pais: userData.pais || '',
-                    genero: userData.genero?.toString() || '0',
-                    morada: userData.morada || '',
-                    img_perfil: userData.img_perfil || ''
-                });
-                setGenero(userData.genero?.toString() || '0');
-            } catch (error) {
-                console.error("Erro ao carregar utilizador:", error);
-            }
-        };
-
-        fetchUtilizador();
-    }, []);
+        if (user) {
+            setUtilizador(user);
+            setFormData({
+                nome: user.nome_utilizador || '',
+                email: user.email || '',
+                telemovel: user.telemovel || '',
+                dataNascimento: user.data_nasc?.split('T')[0] || '',
+                pais: user.pais || '',
+                genero: user.genero?.toString() || '0',
+                morada: user.morada || '',
+                img_perfil: user.img_perfil || ''
+            });
+            setGenero(user.genero?.toString() || '0');
+        }
+    }, [user]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -69,7 +60,6 @@ const EditProfile = () => {
         if (name === "genero") setGenero(value);
     };
 
-    // Handle React Select change for pais
     const handleCountryChange = (selectedOption) => {
         setFormData(prev => ({
             ...prev,
@@ -80,7 +70,6 @@ const EditProfile = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Submeter alterações:", formData);
-        // Aqui podes fazer PUT ou PATCH com os dados atualizados
     };
 
     const renderGeneroLabel = (value) => {
@@ -91,7 +80,6 @@ const EditProfile = () => {
         }
     };
 
-    // Define o option selecionado pelo valor do formData.pais
     const selectedCountry = countryOptions.find(c => c.value === formData.pais) || null;
 
     return (

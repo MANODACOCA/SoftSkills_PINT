@@ -36,7 +36,6 @@ class Post extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 200,
       decoration: BoxDecoration(
         border: Border.all(
           color: const Color.fromARGB(255, 216, 216, 216),
@@ -64,7 +63,6 @@ class Post extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 5),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Text(
@@ -72,11 +70,10 @@ class Post extends StatelessWidget {
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
           ),
-          SizedBox(height: 5),
           SizedBox(
             child: Row(
               children: [
-                SizedBox(width: 25),
+                SizedBox(width: 15,),
                 LikeButton(
                   size: 30,
                   likeCount: likes,
@@ -118,7 +115,6 @@ class Post extends StatelessWidget {
                   '$forumComments',
                   style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
-                SizedBox(width: 10),
               ],
             ),
           ),
