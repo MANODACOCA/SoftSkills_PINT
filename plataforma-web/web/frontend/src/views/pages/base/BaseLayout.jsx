@@ -3,9 +3,9 @@ import { Outlet, useLocation, useNavigate, NavLink } from "react-router-dom";
 import './Layout.css';
 
 //components
-import Header from '../../components/base_components/Header';
-import SideBar from '../../components/base_components/sidebar/SideBar';
-import Footer from '../../components/base_components/footer/Footer';
+import Header from '../../components/base_components/header/Header';
+import SideBar from '../../components/base_components/sidebar/SideBar_Formando';
+import Footer from '../../components/base_components/footer/Footer_Formando_Formador';
 
 const BaseLayout = () => {
 

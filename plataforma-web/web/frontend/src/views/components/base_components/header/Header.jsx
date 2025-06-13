@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { debounce } from 'lodash';
-import logo from '../../../assets/images/logos/semfundo3.png';
+import logo from '../../../../assets/images/logos/semfundo3.png';
 import './Header.css';
 import { IoIosArrowForward, IoIosFlag } from "react-icons/io";
 import { GoKey } from "react-icons/go";

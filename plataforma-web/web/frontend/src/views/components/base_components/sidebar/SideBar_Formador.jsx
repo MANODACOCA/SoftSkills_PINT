@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import './Sidebar.css';
 
-const Sidebar = ({ toggleSidebar, collapsed }) => {
+const SidebarFormador = ({ toggleSidebar, collapsed }) => {
     const [isPequena, setIsPequena] = useState(window.innerWidth <= 768);
 
     useEffect(() => {
@@ -138,4 +138,4 @@ const Sidebar = ({ toggleSidebar, collapsed }) => {
     );
 }
 
-export default Sidebar;
+export default SidebarFormador;
