@@ -9,10 +9,11 @@ import { CgProfile } from "react-icons/cg";
 import { RxExit } from "react-icons/rx";
 import { useUser } from '../../../../utils/userContext';
 
-const Header = ({ toggleSidebar, collapsed }) => {
-    const { user } = useUser();
+const HeaderFormador = ({ toggleSidebar, collapsed }) => {
+    const { user, activeRole } = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileRef = useRef(null);
+    
 
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
@@ -54,7 +55,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
             params.delete("search");
         }
         navigate(`${location.pathname}?${params.toString()}`);
-    }, 300);
+    });
 
     if (!user) {
         return (
@@ -101,7 +102,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
                         />
                         <div className="text-start">
                             <p className="m-0">{user.nome_utilizador}</p>
-                            <small>Formando</small>
+                            <small>{activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}</small>
                         </div>
                     </button>
 
@@ -119,7 +120,7 @@ const Header = ({ toggleSidebar, collapsed }) => {
                                     className="image-border rounded-circle mb-3"
                                 />
                                 <h4>{user.nome_utilizador}</h4>
-                                <h6>Formando</h6>
+                                <h6>{activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}</h6>
                                 <p>{user.email}</p>
                             </div>
                             <hr />
@@ -137,4 +138,4 @@ const Header = ({ toggleSidebar, collapsed }) => {
     );
 };
 
-export default Header;
+export default HeaderFormador;

@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate, NavLink } from "react-router-dom";
 import './Layout.css';
 
 //components
-import Header from '../../components/base_components/header/Header';
+import HeaderGeral from '../../components/base_components/header/Index_Header';
 import SideBar from '../../components/base_components/sidebar/Index_SideBar';
 import Footer from '../../components/base_components/footer/Footer_Formando_Formador';
 
@@ -18,7 +18,7 @@ const BaseLayout = () => {
     return (
         <div className=" d-flex bg-light">
             
-            <Header collapsed={collapsed} toggleSidebar={toggleSidebar} />
+            <HeaderGeral collapsed={collapsed} toggleSidebar={toggleSidebar} />
             <SideBar collapsed={collapsed} toggleSidebar={toggleSidebar} />
 
             <div className={`main-container ${collapsed ? 'collapsed' : ''} ms-auto`}>
