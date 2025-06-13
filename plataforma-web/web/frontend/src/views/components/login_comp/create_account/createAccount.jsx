@@ -55,7 +55,7 @@ const CreateAccount = () => {
                             title: "E-mail enviado!",
                             text: "Receberá brevemente um e-mail com os seus dados de acesso.",
                             icon: "success",
-                            timer: 3000,
+                            timer: 2000,
                             showConfirmButton: false
                         });
                     } catch (error) {
@@ -63,7 +63,7 @@ const CreateAccount = () => {
                             title: "Erro!",
                             text: "Não foi possível criar novo utilizador.",
                             icon: "error",
-                            timer: 3000,
+                            timer: 2000,
                             showConfirmButton: false
                         });
                     }

@@ -118,10 +118,35 @@ const EditProfile = () => {
             }
         }
         try {
-            await update_utilizador(user.id_utilizador, formData);
-            setSuccessMessage('Perfil atualizado com sucesso!');
-            setInitialFormData(formData);
-            setUser(prev => ({ ...prev, ...formData }));
+            Swal.fire({
+                title: "Tens a certeza que queres guardar as alterações?",
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: "Guardar",
+                denyButtonText: `Não Guardar`
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await update_utilizador(user.id_utilizador, formData);
+                    Swal.fire({
+                        text: "Alterações guardadas com sucesso!",
+                        icon: "success",
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                    setSuccessMessage('Perfil atualizado com sucesso!');
+                    setInitialFormData(formData);
+                    setUser(prev => ({ ...prev, ...formData }));
+                } else if (result.isDenied) {
+                    Swal.fire({
+                        text: "Alterações não guardadas!",
+                        icon: "info",
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                    setFormData(initialFormData);
+                }
+            });
+
         } catch (error) {
             setError('Ocorreu um erro a atualizar o perfil. Por favor, tente mais tarde!');
         }
