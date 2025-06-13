@@ -76,31 +76,38 @@ async function getForuns(ordenar = "Mais Recentes") {
 async function filtrarConteudosPartilhados(filtros) {
   try {
     const whereClause = {};
+    const include = [];
 
-    // Configuração do include do tópico
+    // Always include the topic information
     const includeTopico = {
       model: topico,
-      attributes: ['id_topico', 'nome_topico'],
+      as: 'id_topico_topico',
+      attributes: ['id_topico', 'nome_topico', 'id_area'],
+      required: true // Use inner join for filtering
     };
 
-    // Se houver filtro por área, adiciona o include da área dentro do tópico
+    // If filtering by area, include area model
     if (filtros.id_area) {
       includeTopico.include = [{
         model: area,
+        as: 'id_area_area',
         attributes: ['id_area', 'nome_area'],
         where: { id_area: filtros.id_area },
+        required: true // Use inner join for filtering
       }];
     }
 
-    // Filtro por ID do tópico (no where principal)
+    // Filter by topic ID if provided
     if (filtros.id_topico) {
       whereClause.id_topico = filtros.id_topico;
     }
 
-    // Consulta final
+    include.push(includeTopico);
+
+    // Final query
     const resultados = await conteudos_partilhado.findAll({
       where: whereClause,
-      include: [includeTopico], // Passa o include configurado dinamicamente
+      include: include,
       order: [['data_criacao_cp', 'DESC']],
     });
 
@@ -110,7 +117,6 @@ async function filtrarConteudosPartilhados(filtros) {
     throw error;
   }
 }
-
 
 module.exports = {
     getForuns,
