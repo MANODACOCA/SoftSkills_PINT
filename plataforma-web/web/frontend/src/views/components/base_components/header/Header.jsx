@@ -7,12 +7,10 @@ import { IoIosArrowForward, IoIosFlag } from "react-icons/io";
 import { GoKey } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { RxExit } from "react-icons/rx";
-
-import { get_utilizador } from '../../../../api/utilizador_axios';
-import { getUserIdFromToken } from '../../shared_functions/FunctionsUtils';
-
+import { useUser } from '../../../../utils/userContext';
 
 const Header = ({ toggleSidebar, collapsed }) => {
+    const { user } = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileRef = useRef(null);
 
@@ -56,7 +54,14 @@ const Header = ({ toggleSidebar, collapsed }) => {
             params.delete("search");
         }
         navigate(`${location.pathname}?${params.toString()}`);
-    });
+    }, 300);
+
+    if (!user) {
+        return (
+            <header className="w-100 p-3 border-bottom text-center">
+            </header>
+        );
+    }
 
     return (
         <header className='w-100 p-3 d-flex justify-content-between align-items-center gap-4 border-bottom'>
@@ -78,50 +83,56 @@ const Header = ({ toggleSidebar, collapsed }) => {
                     setSearchTerm(value);
                     debouncedNavigate(value);
                 }}
-
                 onFocus={handleFocus}
             />
 
-            <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
-                <button onClick={toggleProfileMenu} className="btn p-0 border-0 bg-transparent d-flex align-items-center gap-2">
-                    <img
-                        src="https://static.vecteezy.com/ti/vetor-gratis/p1/9952572-foto-de-perfil-masculino-vetor.jpg"
-                        alt="Imagem Perfil"
-                        width={45}
-                        height={45}
-                        className="image-border rounded-circle"
-                    />
-                    <div className="text-start">
-                        <p className="m-0">Diogo Oliveira</p>
-                        <small>Formando</small>
-                    </div>
-                </button>
+            {user && (
+                <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
+                    <button onClick={toggleProfileMenu} className="btn p-0 border-0 bg-transparent d-flex align-items-center gap-2">
+                        <img
+                            src={
+                                user.img_perfil ||
+                                `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`
+                            }
+                            alt="Imagem Perfil"
+                            width={45}
+                            height={45}
+                            className="image-border rounded-circle"
+                        />
+                        <div className="text-start">
+                            <p className="m-0">{user.nome_utilizador}</p>
+                            <small>Formando</small>
+                        </div>
+                    </button>
 
-                {showProfileMenu && (
-                    <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg  p-3 mt-2 z-3">
-                        <div className="d-flex flex-column align-items-center text-center">
-                            <img
-                                src="https://static.vecteezy.com/ti/vetor-gratis/p1/9952572-foto-de-perfil-masculino-vetor.jpg"
-                                alt="Imagem Perfil"
-                                width={100}
-                                height={100}
-                                className="image-border rounded-circle mb-3"
-                            />
-                            <h4>Diogo Oliveira</h4>
-                            <h6>Formando</h6>
-                            <p>dfso2013@gmail.com</p>
+                    {showProfileMenu && (
+                        <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg p-3 mt-2 z-3">
+                            <div className="d-flex flex-column align-items-center text-center">
+                                <img
+                                    src={
+                                        user.img_perfil ||
+                                        `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`
+                                    }
+                                    alt="Imagem Perfil"
+                                    width={100}
+                                    height={100}
+                                    className="image-border rounded-circle mb-3"
+                                />
+                                <h4>{user.nome_utilizador}</h4>
+                                <h6>Formando</h6>
+                                <p>{user.email}</p>
+                            </div>
+                            <hr />
+                            <div className="d-flex flex-column align-items-center justify-content-between">
+                                <Link className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile /> Alterar dados pessoais <IoIosArrowForward /></Link>
+                                <Link className="dropdown-item" to={'my/cursos/terminados'} onClick={() => setShowProfileMenu(false)}><IoIosFlag /> Cursos Terminados <IoIosArrowForward /></Link>
+                                <Link className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey /> Informações de login <IoIosArrowForward /></Link>
+                                <Link className="dropdown-item text-danger" to="/login" onClick={() => { localStorage.removeItem('token'); setShowProfileMenu(false); }}><RxExit /> Encerrar sessão <IoIosArrowForward /></Link>
+                            </div>
                         </div>
-                        <hr />
-                        <div className="d-flex flex-column align-items-center justify-content-between">
-                            <Link className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile />Alterar dados pessoais<IoIosArrowForward /></Link>
-                            <Link className="dropdown-item" to={'/cursos/terminados'} onClick={() => setShowProfileMenu(false)}><IoIosFlag />Cursos Terminados<IoIosArrowForward /></Link>
-                            <Link className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey />Informações de login<IoIosArrowForward /></Link>
-                            <Link className="dropdown-item text-danger" to="/login" onClick={() => {localStorage.removeItem('token'); setShowProfileMenu(false);}}><RxExit />Encerrar sessão<IoIosArrowForward /></Link>
-{/*                             <Link className="dropdown-item text-danger" to={'/login'} onClick={() => localStorage.removeItem('token')} onClick={() => setShowProfileMenu(false)}><RxExit />Encerrar sessão<IoIosArrowForward /></Link> */}
-                        </div>
-                    </div>
-                )}
-            </div>
+                    )}
+                </div>
+            )}
         </header>
     );
 };

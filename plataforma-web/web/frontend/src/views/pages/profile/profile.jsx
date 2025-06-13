@@ -8,7 +8,7 @@ import { useUser } from '../../../utils/userContext';
 
 const EditProfile = () => {
     const { user } = useUser();
-
+    console.log(user);
     const countryOptions = Object.entries(countries)
         .map(([code, info]) => ({
             value: info.name,
@@ -60,7 +60,6 @@ const EditProfile = () => {
         if (name === "genero") setGenero(value);
     };
 
-    // Handle React Select change for pais
     const handleCountryChange = (selectedOption) => {
         setFormData(prev => ({
             ...prev,
@@ -71,7 +70,6 @@ const EditProfile = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Submeter alterações:", formData);
-        // Aqui podes fazer PUT ou PATCH com os dados atualizados
     };
 
     const renderGeneroLabel = (value) => {
@@ -82,7 +80,6 @@ const EditProfile = () => {
         }
     };
 
-    // Define o option selecionado pelo valor do formData.pais
     const selectedCountry = countryOptions.find(c => c.value === formData.pais) || null;
 
     return (
