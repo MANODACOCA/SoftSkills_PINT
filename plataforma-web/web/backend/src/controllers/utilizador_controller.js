@@ -125,8 +125,14 @@ controllers.login = async (req, res) => {
             await enviarEmailVerificaCode(email, codigo);
     } 
 
-    let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '1min' });
-    res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token, jaAtivou: user.data_ativ_utili, twoFa: user.auten2fat });
+    const roles = [];
+
+    if(user.isformando) roles.push("formando");
+    if(user.isformador) roles.push("formador");
+    if(user.isgestor_admnistrador) roles.push("admin");
+
+    let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '120min' });
+    res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token, jaAtivou: user.data_ativ_utili, twoFa: user.auten2fat, role: roles });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: 'Erro ao fazer login!' });

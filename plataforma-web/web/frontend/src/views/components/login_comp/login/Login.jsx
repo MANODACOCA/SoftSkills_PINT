@@ -5,12 +5,17 @@ import softskills from '../../../../assets/images/logos/semfundo3.png';
 import { PiMicrosoftOutlookLogoBold } from "react-icons/pi";
 import { login } from '../../../../api/utilizador_axios';
 
+
+
+
+
 const providers = [
     { id: 'outlook', name: 'Outlook' },
     { id: 'credentials', name: 'Email and Password' },
 ];
 
 const FirstLogin = () => {
+
     const navigate = useNavigate();
 
     const location = useLocation();
@@ -37,7 +42,7 @@ const FirstLogin = () => {
                         state: {
                             email,
                         }
-                    });             
+                    });
                 }
             };
 
@@ -69,6 +74,7 @@ const FirstLogin = () => {
 
             try {
                 const response_login = await login(email, password);
+                console.log(response_login);
                 if (response_login.success) {
                     if (response_login.jaAtivou && !response_login.twoFa) {
                         localStorage.setItem('token', response_login.token);

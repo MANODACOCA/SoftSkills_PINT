@@ -58,10 +58,6 @@ const HomePage = () => {
       const courseSync = await getCourseDestaqueSincrono();//card destaque sicrono
       const courseAsync = await getCourseDestaqueAssincrono();//card destaque assicrono
 
-      console.log('Sincrono:', courseSync);
-      console.log('Assincrono:', courseAsync);
-      console.log('Top:', topCourses);
-
       setCourseSincrono(courseSync);
       setCourseAssincrono(courseAsync);
       setTopCourses(topCourses);
@@ -77,14 +73,6 @@ const HomePage = () => {
     fetchCursosNews();
     fetchCoursesDestaque();
   }, []);
-
-  useEffect(() => {
-    console.log("Estado atual:", {
-      topCourses,
-      courseSincrono,
-      courseAssincrono
-    });
-  }, [topCourses, courseSincrono, courseAssincrono]);
 
   return (
     <div className="">

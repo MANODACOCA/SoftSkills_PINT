@@ -99,7 +99,8 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   }
 
   const cursosTodos = [...cursosAssincronosDisponiveis, ...cursosSincronosDisponiveis];
-  const cursosDisponiveis = cursosTodos.map(curso => curso.toJSON());
+  const cursosDisponiveis = cursosTodos
+  .map(curso => curso.toJSON());
 
   return cursosDisponiveis;
 }

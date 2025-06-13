@@ -1,6 +1,6 @@
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { conteudos_partilhado, topico, post, utilizador } = require('../models/init-models')(sequelize);
+const { conteudos_partilhado, topico, post, utilizador, area } = require('../models/init-models')(sequelize);
 
 
 
@@ -73,7 +73,47 @@ async function getForuns(ordenar = "Mais Recentes") {
     return foruns;
 }
 
+async function filtrarConteudosPartilhados(filtros) {
+  try {
+    const whereClause = {};
+
+    // Configuração do include do tópico
+    const includeTopico = {
+      model: topico,
+      attributes: ['id_topico', 'nome_topico'],
+    };
+
+    // Se houver filtro por área, adiciona o include da área dentro do tópico
+    if (filtros.id_area) {
+      includeTopico.include = [{
+        model: area,
+        attributes: ['id_area', 'nome_area'],
+        where: { id_area: filtros.id_area },
+      }];
+    }
+
+    // Filtro por ID do tópico (no where principal)
+    if (filtros.id_topico) {
+      whereClause.id_topico = filtros.id_topico;
+    }
+
+    // Consulta final
+    const resultados = await conteudos_partilhado.findAll({
+      where: whereClause,
+      include: [includeTopico], // Passa o include configurado dinamicamente
+      order: [['data_criacao_cp', 'DESC']],
+    });
+
+    return resultados;
+  } catch (error) {
+    console.error('Erro ao filtrar conteúdos:', error);
+    throw error;
+  }
+}
+
+
 module.exports = {
     getForuns,
-    getPostsByConteudoPartilhado
+    getPostsByConteudoPartilhado,
+    filtrarConteudosPartilhados,
 };

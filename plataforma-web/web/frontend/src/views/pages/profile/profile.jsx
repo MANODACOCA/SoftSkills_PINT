@@ -1,68 +1,166 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Select from 'react-select'; // Import React Select
+import Flags from 'react-world-flags';
+import { countries } from 'countries-list';
 import './profile.css';
 
-const EditProfile = () => {
-    const [genero, setGenero] = '';
-    const userId = 2;
+import { get_utilizador } from '../../../api/utilizador_axios';
+import { getUserIdFromToken } from '../../components/shared_functions/FunctionsUtils';
 
-    useEffect(() => {
-        
+const EditProfile = () => {
+
+    const countryOptions = Object.entries(countries)
+        .map(([code, info]) => ({
+            value: info.name,
+            label: (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Flags code={code} height="12" width="16" style={{ marginRight: '8px' }} />
+                    {info.name}
+                </div>
+            ),
+            code,
+        }))
+        .sort((a, b) => a.value.localeCompare(b.value));
+
+
+    const [genero, setGenero] = useState('0');
+    const [utilizador, setUtilizador] = useState(null);
+    const [formData, setFormData] = useState({
+        nome: '',
+        email: '',
+        telemovel: '',
+        dataNascimento: '',
+        pais: '',
+        genero: '0',
+        morada: '',
+        img_perfil: ''
     });
 
-    return(
+    useEffect(() => {
+        const fetchUtilizador = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const userId = getUserIdFromToken(token);
+                const userData = await get_utilizador(userId);
+                setUtilizador(userData);
+                setFormData({
+                    nome: userData.nome_utilizador || '',
+                    email: userData.email || '',
+                    telemovel: userData.telemovel || '',
+                    dataNascimento: userData.data_nasc?.split('T')[0] || '',
+                    pais: userData.pais || '',
+                    genero: userData.genero?.toString() || '0',
+                    morada: userData.morada || '',
+                    img_perfil: userData.img_perfil || ''
+                });
+                setGenero(userData.genero?.toString() || '0');
+            } catch (error) {
+                console.error("Erro ao carregar utilizador:", error);
+            }
+        };
+
+        fetchUtilizador();
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+
+        if (name === "genero") setGenero(value);
+    };
+
+    // Handle React Select change for pais
+    const handleCountryChange = (selectedOption) => {
+        setFormData(prev => ({
+            ...prev,
+            pais: selectedOption ? selectedOption.value : ''
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Submeter alterações:", formData);
+        // Aqui podes fazer PUT ou PATCH com os dados atualizados
+    };
+
+    const renderGeneroLabel = (value) => {
+        switch (value) {
+            case '1': return 'Masculino';
+            case '2': return 'Feminino';
+            default: return 'Não definido';
+        }
+    };
+
+    // Define o option selecionado pelo valor do formData.pais
+    const selectedCountry = countryOptions.find(c => c.value === formData.pais) || null;
+
+    return (
         <div className='form-group'>
-            <div className='d-flex justify-content-between'>
-                <div className='col-md-9 pe-4 col-sm-10'>
-                    <div className=''>
-                        <label htmlFor="nome" className='form-label'>Nome</label>
-                        <input type="text" className='form-control' required />    
-                    </div>
-                    <div className='mt-2'>
-                        <label htmlFor="mail" className='form-label'>email</label>
-                        <input type="email" className='form-control' required />    
-                    </div>
-                    <div className='mt-2'>
-                        <label htmlFor="telemovel" className='form-label'>Telemóvel <small className='text-secondary'>&#40;Opcional&#41;</small></label>
-                        <input type="tel" className='form-control' />    
-                    </div>
-                    <div className='mt-2'>
-                        <label htmlFor="nasc" className='form-label'>Data nascimento <small className='text-secondary'>&#40;Opcional&#41;</small></label>
-                        <input type="date" className='form-control' />    
-                    </div>
-                    <div className='d-flex w-100 gap-4 mt-2'>
-                        <div className='w-50'>
-                            <label htmlFor="pais" className='form-label'>País <small className='text-secondary'>&#40;Opcional&#41;</small></label>
-                            <select name="" id="" className='form-select'>
-                                {/* Percorrer api paises */}
-                            </select>
+            <form onSubmit={handleSubmit}>
+                <div className='d-flex justify-content-between'>
+                    <div className='col-md-9 pe-4 col-sm-10'>
+                        <div>
+                            <label htmlFor="nome" className='form-label'>Nome</label>
+                            <input type="text" name="nome" className='form-control' value={formData.nome} onChange={handleChange} required />
                         </div>
-                        <div className='w-50'>
-                            <label htmlFor="genero" className='form-label'>Género <small className='text-secondary'>&#40;Opcional&#41;</small></label>
-                            <select name="genero" id="genero" className='form-select' value={genero}>
-                                <option value="" disabled hidden>--Escolha o genero--</option>
-                                <option value="masculino">Masculino</option>
-                                <option value="feminino">Feminino</option>
-                            </select>
+                        <div className='mt-2'>
+                            <label htmlFor="email" className='form-label'>Email</label>
+                            <input type="email" name="email" className='form-control' value={formData.email} onChange={handleChange} required />
                         </div>
+                        <div className='mt-2'>
+                            <label htmlFor="telemovel" className='form-label'>Telemóvel <small className='text-secondary'>&#40;Opcional&#41;</small></label>
+                            <input type="tel" name="telemovel" className='form-control' value={formData.telemovel} onChange={handleChange} />
+                        </div>
+                        <div className='mt-2'>
+                            <label htmlFor="dataNascimento" className='form-label'>Data nascimento <small className='text-secondary'>&#40;Opcional&#41;</small></label>
+                            <input type="date" name="dataNascimento" className='form-control' value={formData.dataNascimento} onChange={handleChange} />
+                        </div>
+                        <div className='d-flex w-100 gap-4 mt-2'>
+                            <div className='w-50'>
+                                <label htmlFor="pais" className='form-label'>País <small className='text-secondary'>&#40;Opcional&#41;</small></label>
+                                <Select
+                                    options={countryOptions}
+                                    value={selectedCountry}
+                                    onChange={handleCountryChange}
+                                    isClearable
+                                    placeholder="--Escolha o país--"
+                                    name="pais"
+                                />
+                            </div>
+                            <div className='w-50'>
+                                <label htmlFor="genero" className='form-label'>Género <small className='text-secondary'>&#40;Opcional&#41;</small></label>
+                                <select name="genero" id="genero" className='form-select' value={genero} onChange={handleChange}>
+                                    <option value="0">--Não definido--</option>
+                                    <option value="1">Masculino</option>
+                                    <option value="2">Feminino</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className='mt-2'>
+                            <label htmlFor="morada" className='form-label'>Morada <small className='text-secondary'>&#40;Opcional&#41;</small></label>
+                            <input type="text" name="morada" className='form-control' value={formData.morada} onChange={handleChange} />
+                        </div>
+                        <button type="submit" className='btn btn-color text-white mt-3'>Submeter alterações</button>
                     </div>
-                    <div className='mt-2'>
-                        <label htmlFor="morada" className='form-label'>Morada <small className='text-secondary'>&#40;Opcional&#41;</small></label>
-                        <input type="text" className='form-control' />    
+
+                    <div className='col-md-3 col-sm-2 bg-custom-light d-flex align-items-center flex-column h-100 p-3 rounded'>
+                        <img
+                            src={formData.img_perfil || `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.nome)}&background=random&bold=true`}
+                            alt="Foto de perfil"
+                            className='w-100 img-profile'
+                        />
+                        <div className='d-flex flex-column align-items-center'>
+                            <h5 className='m-1'>{formData.nome || 'Nome'}</h5>
+                            <p className='m-1'>Formando</p>
+                            <small>{formData.email}</small>
+                            <small className="text-muted mt-1">{renderGeneroLabel(genero)}</small>
+                        </div>
+                        <button type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
                     </div>
-                    <button className='btn btn-color text-white mt-3'>Submeter alterações</button>
                 </div>
-                <div className='col-md-3 col-sm-2 bg-custom-light d-flex align-items-center flex-column h-100 p-3 rounded'>
-                    <img src="https://cdn.europosters.eu/image/750/23817.jpg" alt="" className='w-100 img-profile' />
-                    <div className='d-flex flex-column align-items-center'>
-                        <h5 className='m-1'>nome</h5>
-                        <p className='m-1'>fromando</p>
-                        <small>mail</small>
-                    </div>
-                    <button className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
-                </div>
-            </div>
+            </form>
         </div>
     );
-}
+};
 
 export default EditProfile;

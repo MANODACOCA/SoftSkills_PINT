@@ -23,6 +23,7 @@ router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 
 //Nossas Rotas:
+router.get('/:id_topico/:id_area', controller.listarConteudos);
 router.get('/foruns', controller.getForuns);
 router.get('/:id/posts', controller.getPostsByConteudoPartilhado);
 
