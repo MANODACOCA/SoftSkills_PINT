@@ -1,10 +1,12 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/shared/navigationbar_component.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
 
-class CommentPage extends StatelessWidget {
+class CommentPage extends StatefulWidget {
   const CommentPage({
     super.key,
     required this.postName,
@@ -21,6 +23,14 @@ class CommentPage extends StatelessWidget {
   final String photo;
 
   @override
+  _CommentPageState createState() => _CommentPageState();
+}
+
+class _CommentPageState extends State<CommentPage> {
+  Color cor = Colors.white;
+  bool addcomment = false;
+  TextEditingController commentController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -33,20 +43,64 @@ class CommentPage extends StatelessWidget {
         backgroundColor: AppColors.primary,
         centerTitle: true,
         title: Text('Comments', style: TextStyle(color: Colors.white)),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add_box_outlined, color: cor, size: 30),
+            onPressed: () {
+              setState(() {
+                addcomment = !addcomment;
+                if (addcomment) {
+                  cor = AppColors.secondary;
+                } else {
+                  cor = Colors.white;
+                }
+              });
+            },
+          ),
+        ],
       ),
       body: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Post(
-              forumName: postName,
-              forumComments: comments,
-              forumLike: likes,
-              description: description,
-              photo: photo,
+              forumName: widget.postName,
+              forumComments: widget.comments,
+              forumLike: widget.likes,
+              description: widget.description,
+              photo: widget.photo,
               selectComment: true,
             ),
+            if (addcomment)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: TextField(
+                  controller: commentController,
+                  decoration: InputDecoration(
+                    prefixIcon: IconButton(
+                      icon: Icon(Icons.attach_file_outlined, color: AppColors.secondary),
+                      onPressed: () {
+                        // Handle attach file action
+                      },
+                    ),
+                    hintText: 'Adicionar comentário...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.send, color: AppColors.secondary),
+                      onPressed: () {
+                        setState(() {
+                          addcomment = false;
+                          cor = Colors.white;
+                        });
+                        print('Comment writed ${commentController.text}');
+                      },
+                    ),
+                  ),
+                ),
+              ),
             Divider(
               color: Colors.grey,
               thickness: 1,
@@ -60,7 +114,7 @@ class CommentPage extends StatelessWidget {
                   return ListTile(
                     leading: CircleAvatar(
                       backgroundImage: AssetImage(
-                        photo,
+                        widget.photo,
                       ), // Placeholder for user avatar
                     ),
                     title: Text('User ${index + 1}'),
