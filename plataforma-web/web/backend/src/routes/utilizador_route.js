@@ -23,7 +23,7 @@ router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 
 //para fazer login
-router.get('/list',middleware.checkToken, controller.list);
+router.get('/list', controller.list);/* middleware.checkToken */
 router.post('/login', controller.login);
 router.post('/create',controller.create);
 router.post('/alterar-password',controller.alterarPassword);

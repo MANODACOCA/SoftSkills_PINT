@@ -43,6 +43,11 @@ header {
   margin-bottom: 10px;
 }
 
+.profile-dropdown .dropdown-item.active{
+    background-color: var(--cor-principal);
+    color: white !important;
+}
+
 .input-group {
   max-width: 550px;
   height: 45px;

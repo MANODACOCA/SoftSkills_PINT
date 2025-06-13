@@ -77,7 +77,7 @@ controllers.update = async (req, res) => { // atualizar e isnerir um novo utiliz
   try {
     if (req.body) {
       const { id } = req.params;
-      const updated = await model.update(req.body, { where: { id: id } });
+      const updated = await model.update(req.body, { where: { id_utilizador: id } });
       if (updated) {
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
