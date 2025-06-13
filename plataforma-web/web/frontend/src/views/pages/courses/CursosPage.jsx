@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
-import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
+import { formatDayMonthYear, radomArray } from '../../components/shared_functions/FunctionsUtils';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 import Card from '../../components/card/Card';
 import FilterMenu from "../../components/filter_menu/filter_menu";
+
 
 const CursosPage = () => {
   const [showExplorarMenu, setShowExplorarMenu] = useState(false);
@@ -18,10 +19,14 @@ const CursosPage = () => {
   const searchTerm = searchParams.get('search') || '';
   const [topicosIds, setTopicosIds] = useState([]);
 
+
   const fetchCursosDisponiveisInscricao = async () => {//obter cursos disponiveis inscricao
     try {
       const cursosDisponiveis = await getCursosDisponiveisParaInscricao(tipologia, null, searchTerm, topicosIds);
-      setCourses(cursosDisponiveis);
+
+      const cursosRadom = radomArray(cursosDisponiveis);
+
+      setCourses(cursosRadom);
 
     } catch (error) {
       console.error('Erro ao encontrar cursos disponiveis para inscricao:', error);

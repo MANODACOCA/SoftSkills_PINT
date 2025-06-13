@@ -1,7 +1,9 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
 import ProtectedRoute from './views/components/rotasProtegidas/rotasProtegidas';
+import TokenChecker  from './utils/authService.js';
+
 
 //components login
 import Login from './views/components/login_comp/login/Login';
@@ -31,8 +33,10 @@ import ClassPage from './views/pages/class_page/ClassPage';
 import InfoProfile from './views/pages/profile/infoprofile';
 
 function App() {
+
   return (
     <Router>
+      <TokenChecker />
       <Routes>
 
  //#region{/*CONTEUDO DO LOGIN*/}
@@ -48,28 +52,28 @@ function App() {
 
 
  //#region{/*CONTEUDO DA PAGINA */}
- <Route
-  element={
-    <ProtectedRoute>
-      <BaseLayout />
-    </ProtectedRoute>
-  }
->
+        <Route
+          element={
+            <ProtectedRoute>
+              <BaseLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/home" element={<HomePage />} />
           <Route path="/notificacoes" element={<NotificationPage />} />
-           <Route path="/cursos" element={<CursosPage/>}/>
-          <Route path="my/cursos/inscritos" element={<EnrolledCourses />}/>
-          <Route path="my/cursos/terminados" element={<CompletedCourses />}/>
-          <Route path="/cursos/favoritos" element={<FavoriteCourses />}/>
+          <Route path="/cursos" element={<CursosPage />} />
+          <Route path="my/cursos/inscritos" element={<EnrolledCourses />} />
+          <Route path="my/cursos/terminados" element={<CompletedCourses />} />
+          <Route path="/cursos/favoritos" element={<FavoriteCourses />} />
           <Route path="/forum" element={<Forum />} />
           <Route path="/forum/posts/:id" element={<ForumPosts />} />
           <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
           <Route path="/forum/posts/:postId/conteudos" element={<ConteudosList />} />
-          <Route path="/cursos/:id" element={<CourseRegistration />}/>
-          <Route path="/perfil/editar" element={<EditProfile />}/>
-          <Route path="my/cursos/inscritos/curso/:cursoId/aula/:aulaId" element={<ClassPage/>}/>
-          <Route path='/perfil/info' element={<InfoProfile />}/>
-          <Route path="/aula/" element={<ClassPage/>}/>
+          <Route path="/cursos/:id" element={<CourseRegistration />} />
+          <Route path="/perfil/editar" element={<EditProfile />} />
+          <Route path="my/cursos/inscritos/curso/:cursoId/aula/:aulaId" element={<ClassPage />} />
+          <Route path='/perfil/info' element={<InfoProfile />} />
+          <Route path="/aula/" element={<ClassPage />} />
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
 
