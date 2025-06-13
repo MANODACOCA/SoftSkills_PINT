@@ -8,6 +8,9 @@ import { GoKey } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { RxExit } from "react-icons/rx";
 
+import { get_utilizador } from '../../../../api/utilizador_axios';
+import { getUserIdFromToken } from '../../shared_functions/FunctionsUtils';
+
 
 const Header = ({ toggleSidebar, collapsed }) => {
     const [showProfileMenu, setShowProfileMenu] = useState(false);
