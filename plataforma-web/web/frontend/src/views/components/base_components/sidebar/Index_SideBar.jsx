@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SidebarFormando from './SideBar_Formando';
 import SidebarFormador from './SideBar_Formador';
