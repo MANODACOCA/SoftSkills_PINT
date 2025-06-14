@@ -6,10 +6,11 @@ import { countries } from 'countries-list';
 import { FaLock } from 'react-icons/fa';
 import './profile.css';
 
-import { update_utilizador } from '../../../api/utilizador_axios';
+import { update_utilizador, alterarImgPerfil } from '../../../api/utilizador_axios';
 import { useUser } from '../../../utils/userContext';
 
 const EditProfile = () => {
+    const API_URL = 'http://localhost:3000/';
     const { user, setUser } = useUser();
     const [successMessage, setSuccessMessage] = useState('');
     const [error, setError] = useState('');
@@ -32,14 +33,14 @@ const EditProfile = () => {
         if (user) {
 
             const userData = ({
-                nome_utilizador: user.nome_utilizador || '',
-                email: user.email || '',
-                telemovel: user.telemovel || '',
-                data_nasc: user.data_nasc?.split('T')[0] || '',
-                pais: user.pais || '',
-                genero: user.genero?.toString() || '0',
-                morada: user.morada || '',
-                img_perfil: user.img_perfil || ''
+                nome_utilizador: user.nome_utilizador ?? '',
+                email: user.email ?? '',
+                telemovel: user.telemovel ?? '',
+                data_nasc: user.data_nasc?.split('T')[0] ?? '',
+                pais: user.pais ?? '',
+                genero: user.genero?.toString() ?? '0',
+                morada: user.morada ?? '',
+                img_perfil: user.img_perfil ?? ''
             });
             setFormData(userData);
             setInitialFormData(userData);
@@ -96,10 +97,18 @@ const EditProfile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (formData.data_nasc) {
+        const cleanedFormData = {//caso venha com campos vazios o formulário
+            ...formData,
+            pais: formData.pais?.trim() === '' ? null : formData.pais,//pais nao preenchido
+            morada: formData.morada?.trim() === '' ? null : formData.morada,//morada nao preenchida
+            telemovel: formData.telemovel?.toString().trim() === '' ? null : parseInt(formData.telemovel),//telemovel nao preenchido
+            data_nasc: formData.data_nasc?.trim() === '' ? null : formData.data_nasc //data de nascimento nao preenchida
+        };
+
+        if (cleanedFormData.data_nasc) {
             const hoje = new Date();
-            const dataNascimento = new Date(formData.data_nasc);
-            const idade = hoje.getFullYear() - dataNascimento.getFullYear();
+            const dataNascimento = new Date(cleanedFormData.data_nasc);
+            let idade = hoje.getFullYear() - dataNascimento.getFullYear();
             const mes = hoje.getMonth() - dataNascimento.getMonth();
             if (mes < 0 || (mes === 0 && hoje.getDate() < dataNascimento.getDate())) {
                 idade--;
@@ -111,11 +120,9 @@ const EditProfile = () => {
             }
         }
 
-        if (formData.telemovel) {
-            if (!/^\d{9}$/.test(formData.telemovel)) {
-                setError("O número de telemóvel deve ter 9 dígitos númericos.");
-                return;
-            }
+        if (cleanedFormData.telemovel !== null && !/^\d{9}$/.test(cleanedFormData.telemovel.toString())) {
+            setError("O número de telemóvel deve ter 9 dígitos numéricos.");
+            return;
         }
         try {
             Swal.fire({
@@ -126,7 +133,7 @@ const EditProfile = () => {
                 denyButtonText: `Não Guardar`
             }).then(async (result) => {
                 if (result.isConfirmed) {
-                    await update_utilizador(user.id_utilizador, formData);
+                    await update_utilizador(user.id_utilizador, cleanedFormData);
                     Swal.fire({
                         text: "Alterações guardadas com sucesso!",
                         icon: "success",
@@ -134,8 +141,8 @@ const EditProfile = () => {
                         showConfirmButton: false
                     });
                     setSuccessMessage('Perfil atualizado com sucesso!');
-                    setInitialFormData(formData);
-                    setUser(prev => ({ ...prev, ...formData }));
+                    setInitialFormData(cleanedFormData);
+                    setUser(prev => ({ ...prev, ...cleanedFormData }));
                 } else if (result.isDenied) {
                     Swal.fire({
                         text: "Alterações não guardadas!",
@@ -151,6 +158,67 @@ const EditProfile = () => {
             setError('Ocorreu um erro a atualizar o perfil. Por favor, tente mais tarde!');
         }
     };
+
+    const handleSubmitProfilePhoto = async (e) => {
+        e.preventDefault();
+        try {
+            const { value: file } = await Swal.fire({
+                title: "Seleciona a tua imagem de perfil",
+                input: "file",
+                inputAttributes: {
+                    "accept": "image/*",
+                    "aria-label": "Upload da imagem de perfil"
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Pré-visualizar',
+                cancelButtonText: 'Cancelar',
+            });
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    Swal.fire({
+                        title: "Pré-vizualização",
+                        text: 'É esta a imagem que pretende utilizar?',
+                        imageUrl: e.target.result,
+                        imageAlt: "Imagem de perfil",
+                        showCancelButton: true,
+                        confirmButtonText: 'Sim, alterar!',
+                        cancelButtonText: 'Cancelar',
+                        reverseButtons: true,
+
+                        willOpen: () => {
+                            const img = document.querySelector('.swal2-image');
+                            if (img) {
+                                img.style.borderRadius = '50%';
+                                img.style.width = '100%';
+                                img.style.height = '100%';
+                                img.style.objectFit = 'cover';
+                                img.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
+                            }
+                        }
+
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+
+                            const result = await alterarImgPerfil(user.id_utilizador, file);
+                            setFormData(prev => ({ ...prev, img_perfil: result.ficheiro }));
+                            setUser(prev => ({ ...prev, img_perfil: result.ficheiro }));
+                            setSuccessMessage('Foto de perfil atualizada com sucesso!');
+                            Swal.fire({
+                                text: "Alteração da imagem de perfil realizada com sucesso!",
+                                icon: "success",
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        } catch (error) {
+            setError('Ocorreu um erro a atualizar a foto de perfil. Por favor, tente mais tarde!');
+        }
+    }
 
     const selectedCountry = countryOptions.find(c => c.value === formData.pais) || null;
 
@@ -227,17 +295,23 @@ const EditProfile = () => {
                     </div>
 
                     <div className='col-md-3 col-sm-2 bg-custom-light d-flex align-items-center flex-column h-100 p-3 rounded'>
-                        <img
-                            src={formData.img_perfil || `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.nome_utilizador)}&background=random&bold=true`}
-                            alt="Foto de perfil"
-                            className='w-100 img-profile rounded-2'
-                        />
+                        {user && (
+                            <img
+                                src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.nome_utilizador)}&background=random&bold=true`;
+                                }}
+                                alt="Imagem de perfil"
+                                className='w-100 img-profile rounded-2'
+                            />
+                        )}
                         <div className='d-flex flex-column align-items-center'>
                             <h5 className='m-1'>{formData.nome_utilizador || 'Nome'}</h5>
                             <small>{formData.email}</small>
                             <small className="text-muted mt-1">{renderGeneroLabel(genero)}</small>
                         </div>
-                        <button type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
+                        <button onClick={handleSubmitProfilePhoto} type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
                     </div>
                 </div>
             </form>
