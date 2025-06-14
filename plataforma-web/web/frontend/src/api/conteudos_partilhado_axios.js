@@ -66,3 +66,27 @@ export const getForuns = async (ordenar = "Mais Recentes") => {
         throw error;
     }
 }
+
+export const filtrarConteudosPartilhados = async (filtros) => {
+  try {
+    const params = new URLSearchParams();
+    
+    // Adiciona os parâmetros de filtro
+    if (filtros.id_area) {
+      params.append('id_area', filtros.id_area);
+    }
+    
+    if (filtros.id_topico) {
+      params.append('id_topico', filtros.id_topico);
+    }
+    
+    // Você pode adicionar outros parâmetros de ordenação se necessário
+    params.append('ordenar', 'data_criacao_cp:DESC');
+    
+    const response = await axios.get(`${API_URL}/filtros?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao filtrar conteúdos:', error);
+    throw error;
+  }
+};
