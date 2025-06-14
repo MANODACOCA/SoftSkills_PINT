@@ -23,12 +23,14 @@ router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 
 //para fazer login
-router.get('/list',middleware.checkToken, controller.list);
+router.get('/list', controller.list);/* middleware.checkToken */
 router.post('/login', controller.login);
 router.post('/create',controller.create);
 router.post('/alterar-password',controller.alterarPassword);
 router.post('/verificar-codigo',controller.verificarCodigo);
 router.post('/esqueceu-password',controller.esqueceuPassword);
+router.post('/alterar-imgperfil/:id',controller.alterarImgPerfil);
+
 
 
 module.exports = router;

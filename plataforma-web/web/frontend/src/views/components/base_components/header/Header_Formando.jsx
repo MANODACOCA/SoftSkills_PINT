@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { debounce } from 'lodash';
 import logo from '../../../../assets/images/logos/semfundo3.png';
 import './Header.css';
@@ -125,10 +125,9 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                             </div>
                             <hr />
                             <div className="d-flex flex-column align-items-center justify-content-between">
-                                <Link className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile /> Alterar dados pessoais <IoIosArrowForward /></Link>
-                                <Link className="dropdown-item" to={'my/cursos/terminados'} onClick={() => setShowProfileMenu(false)}><IoIosFlag /> Cursos Terminados <IoIosArrowForward /></Link>
-                                <Link className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey /> Informações de login <IoIosArrowForward /></Link>
-                                <Link className="dropdown-item text-danger" to="/login" onClick={() => { localStorage.removeItem('token'); setShowProfileMenu(false); }}><RxExit /> Encerrar sessão <IoIosArrowForward /></Link>
+                                <NavLink className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile /> Alterar dados pessoais <IoIosArrowForward /></NavLink>
+                                <NavLink className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey /> Informações de login <IoIosArrowForward /></NavLink>
+                                <NavLink className="dropdown-item text-danger" to="/login" onClick={() => { localStorage.removeItem('token'); setShowProfileMenu(false); }}><RxExit /> Encerrar sessão <IoIosArrowForward /></NavLink>
                             </div>
                         </div>
                     )}
