@@ -1,10 +1,12 @@
 // ignore_for_file: avoid_print
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/shared/navigationbar_component.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
+import 'package:file_picker/file_picker.dart';
 
 class CommentPage extends StatefulWidget {
   const CommentPage({
@@ -23,13 +25,68 @@ class CommentPage extends StatefulWidget {
   final String photo;
 
   @override
+  // ignore: library_private_types_in_public_api
   _CommentPageState createState() => _CommentPageState();
 }
 
 class _CommentPageState extends State<CommentPage> {
+  Future<void> pickFile() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.any,
+      );
+
+      if (result != null && result.paths.isNotEmpty) {
+        setState(() {
+          files =
+              result.paths
+                  .where((path) => path != null)
+                  .map((path) => File(path!))
+                  .toList();
+
+          // Update TextField to show selected files
+          String fileNames = files
+              .map((file) => '[${file.path.split('\\').last}]')
+              .join(' ');
+          fileController.text += ' $fileNames';
+        });
+        print('Files selected: ${files.length}');
+      }
+    } catch (e) {
+      print('Error picking files: $e');
+    }
+  }
+
+  Widget buildAttachmentChips() {
+    return Wrap(
+      spacing: 8.0,
+      runSpacing: 4.0,
+      children:
+          files.map((file) {
+            return Chip(
+              backgroundColor: Colors.grey[200],
+              label: Text(
+                file.path.split('/').last,
+                style: TextStyle(fontSize: 12),
+              ),
+              deleteIcon: Icon(Icons.close, size: 16),
+              onDeleted: () {
+                setState(() {
+                  files.remove(file);
+                });
+              },
+            );
+          }).toList(),
+    );
+  }
+
+  List<File> files = [];
   Color cor = Colors.white;
   bool addcomment = false;
   TextEditingController commentController = TextEditingController();
+  TextEditingController fileController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,30 +132,40 @@ class _CommentPageState extends State<CommentPage> {
             if (addcomment)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: TextField(
-                  controller: commentController,
-                  decoration: InputDecoration(
-                    prefixIcon: IconButton(
-                      icon: Icon(Icons.attach_file_outlined, color: AppColors.secondary),
-                      onPressed: () {
-                        // Handle attach file action
-                      },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        prefixIcon: IconButton(
+                          icon: Icon(
+                            Icons.attach_file_outlined,
+                            color: AppColors.secondary,
+                          ),
+                          onPressed: () async {
+                            await pickFile();
+                          },
+                        ),
+                        hintText: 'Adicionar comentário...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.send, color: AppColors.secondary),
+                          onPressed: () {
+                            setState(() {
+                              addcomment = false;
+                              cor = Colors.white;
+                              //Send all info to database
+                            });
+                            print('Comment writed ${commentController.text}');
+                          },
+                        ),
+                      ),
                     ),
-                    hintText: 'Adicionar comentário...',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.send, color: AppColors.secondary),
-                      onPressed: () {
-                        setState(() {
-                          addcomment = false;
-                          cor = Colors.white;
-                        });
-                        print('Comment writed ${commentController.text}');
-                      },
-                    ),
-                  ),
+                    if (files.isNotEmpty) buildAttachmentChips(),
+                  ],
                 ),
               ),
             Divider(
