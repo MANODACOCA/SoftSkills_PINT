@@ -1,43 +1,19 @@
 import Table from "../../../components/table/Table";
 import { columnsUtilizadores } from "../../../components/table/ColumnsUtilizadores";
+import { useEffect, useState } from "react";
+import { list_utilizador } from "../../../../api/utilizador_axios";
 
 const UsersTables = () => {
+    const [user, setuser] = useState([]);
 
-    const user = [
-    {
-        id: 1,
-        nome_utilizador: "joaosilva",
-        email: "joao.silva@email.com",
-        telemovel: "912345678",
-        data_nascimento: "1990-05-12",
-        género: "Masculino",
-        país: "Portugal",
-        morada: "Rua das Flores, 123",
-        role: "admin"
-    },
-    {
-        id: 2,
-        nome_utilizador: "mariaoliveira",
-        email: "maria.oliveira@email.com",
-        telemovel: "934567891",
-        data_nascimento: "1988-09-20",
-        género: "Feminino",
-        país: "Brasil",
-        morada: "Av. Paulista, 456",
-        role: "moderador"
-    },
-    {
-        id: 3,
-        nome_utilizador: "carlosmendes",
-        email: "carlos.mendes@email.com",
-        telemovel: "926789123",
-        data_nascimento: "1995-01-07",
-        género: "Masculino",
-        país: "Angola",
-        morada: "Rua Central, 88",
-        role: "utilizador"
+    const FetchUtilizadores = async() => {
+        try {
+            const response = await list_utilizador();
+            setuser(response.data);
+        } catch(error) {
+            console.log('Erro ao aceder a tabela de utilizador');
+        }
     }
-    ];
 
     const renderActions = (item) => {
         return(
@@ -51,6 +27,10 @@ const UsersTables = () => {
             </>
         );
     }
+
+    useEffect(() => {
+        FetchUtilizadores();
+    }, [])
 
     return(
         <div>
