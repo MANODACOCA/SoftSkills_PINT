@@ -9,10 +9,13 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const config = require('../config/config');
+const uploadProfileImg = require('../middlewares/uploadUserProfileIMG');
 
 const gerarPassword = require('../utils/gerarPassword');
 const { sendEmail, enviarEmailVerificaCode } = require("../utils/enviarEmail");
-const { guardarCodigo, verificarCodigoCerto, apagarCodigo} = require('../utils/guardar_codigo');
+const { guardarCodigo, verificarCodigoCerto, apagarCodigo } = require('../utils/guardar_codigo');
+const utilizador = require("../models/utilizador");
+const { error } = require("console");
 
 controllers.list = async (req, res) => {
   const data = await model.findAll();
@@ -92,6 +95,38 @@ controllers.update = async (req, res) => { // atualizar e isnerir um novo utiliz
   }
 };
 
+controllers.alterarImgPerfil = async (req, res) => {
+  uploadProfileImg.single('imagem')(req, res, async (error) => {
+    try {
+      if(error){
+        return res.status(400).json({ erro: 'Erro no upload da imagem.', desc: error.message});
+      }
+
+      if (req.body) {
+        const { id } = req.params;
+
+        const user = await model.findByPk(id);
+        if (!user) return res.status(404).json({ erro: 'Utilizador não encontrado.' });
+
+        if(!req.file){
+          return res.status(400).json({ erro: 'Nenhum ficheiro foi submetido.' });
+        }
+        user.img_perfil = req.file.filename;
+        await user.save();
+
+        res.status(200).json({
+          mesagem: 'Imagem de perfil guardada com sucesso!',
+          ficheiro: req.file.filename
+        });
+      } else {
+        res.status(400).json({ erro: 'Erro ao atualizar o/a Utilizador!', desc: 'Corpo do pedido esta vazio.' });
+      }
+    } catch (error) {
+      res.status(500).json({ erro: 'Erro ao atualizar imagem do utilizador!', desc: error.message });
+    }
+  });
+};
+
 controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
@@ -120,15 +155,15 @@ controllers.login = async (req, res) => {
     }
 
     if (user.auten2fat) {
-            const codigo = Math.floor(10000 + Math.random() * 90000).toString();
-            await guardarCodigo(email, codigo);
-            await enviarEmailVerificaCode(email, codigo);
-    } 
+      const codigo = Math.floor(10000 + Math.random() * 90000).toString();
+      await guardarCodigo(email, codigo);
+      await enviarEmailVerificaCode(email, codigo);
+    }
 
     const roles = [];
 
     let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '120min' });
-    res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token, jaAtivou: user.data_ativ_utili, twoFa: user.auten2fat});
+    res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token, jaAtivou: user.data_ativ_utili, twoFa: user.auten2fat });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ success: false, message: 'Erro ao fazer login!' });
@@ -173,7 +208,7 @@ controllers.esqueceuPassword = async (req, res) => {
     }
 
     const codigo = Math.floor(10000 + Math.random() * 90000).toString();
-    
+
     await guardarCodigo(email, codigo);
     await enviarEmailVerificaCode(email, codigo);
 

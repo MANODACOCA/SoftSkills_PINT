@@ -29,6 +29,8 @@ router.post('/create',controller.create);
 router.post('/alterar-password',controller.alterarPassword);
 router.post('/verificar-codigo',controller.verificarCodigo);
 router.post('/esqueceu-password',controller.esqueceuPassword);
+router.post('/alterar-imgperfil/:id',controller.alterarImgPerfil);
+
 
 
 module.exports = router;

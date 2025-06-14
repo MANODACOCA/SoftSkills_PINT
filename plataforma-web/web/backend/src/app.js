@@ -4,6 +4,7 @@ const port = 3000;
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const cursosService = require('./services/cursos.service');
+const path = require('path');
 
 //Middlewares
 app.use(express.json());
@@ -117,3 +118,7 @@ app.use('/twofa',twofaRouter);
 
 const utilizadorRouter = require('./routes/utilizador_route.js');
 app.use('/utilizador',utilizadorRouter);
+
+
+//para ir buscar as imagens ao backend
+app.use('/uploads/usersProfilesImg/', express.static(path.join(__dirname, 'uploads/usersProfilesImg/')));
