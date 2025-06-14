@@ -84,6 +84,11 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
                 {
                   model: utilizador,
                   as: "id_formador_utilizador",
+                  attributes: [
+                    [sequelize.col('id_utilizador'), 'id_util'],
+                    [sequelize.col('nome_utilizador'), 'nome_util'],
+                    [sequelize.col('img_perfil'), 'img_perfi']
+                  ]
                 }
               ]
             }
@@ -408,7 +413,8 @@ async function getAllCoursesWithAllInfo() {
         'isassincrono',
         'horas_curso',
         'contador_formandos',
-        'estado'
+        'estado',
+        'id_gestor_administrador'
       ],
       include: [
         {
@@ -424,7 +430,10 @@ async function getAllCoursesWithAllInfo() {
                 {
                   model: utilizador,
                   as: 'id_formador_utilizador',
-                  attributes: ['nome_utilizador']
+                  attributes: [
+                    [sequelize.col('id_utilizador'), 'id_util'],
+                    [sequelize.col('nome_utilizador'), 'nome_util']
+                  ]
                 }
               ]
             }
@@ -433,7 +442,13 @@ async function getAllCoursesWithAllInfo() {
         {
           model: gestor_administrador,
           as: 'id_gestor_administrador_gestor_administrador',
-          attributes: ['id_gestor_administrador']
+          include: [
+            {
+              model: utilizador,
+              as: 'id_gestor_administrador_utilizador',
+              attributes: ['nome_utilizador'],
+            }
+          ]
         },
         {
           model: topico,

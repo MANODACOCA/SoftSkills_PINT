@@ -1,9 +1,20 @@
 import Table from "../../../components/table/Table";
-import { columnsUtilizadores } from "../../../components/table/ColumnsUtilizadores";
+import { useEffect, useState } from "react";
+import { list_denuncia } from "../../../../api/denuncia_axios";
+import { columnsQueixas } from "../../../components/table/ColumnsQueixas";
 
 const QueixasTables = () => {
+    const [queixas, setqueixas] = useState([]);
 
-    
+    const FetchQueixas = async () => {
+        try {
+            const response = await list_denuncia();
+            setqueixas(response);
+            console.log(response);
+        } catch(error) {
+            console.log('Erro ao carregar os dados das queixas');
+        }
+    }
 
     const renderActions = (item) => {
         return(
@@ -18,9 +29,13 @@ const QueixasTables = () => {
         );
     }
 
+    useEffect(() => {
+        FetchQueixas();
+    },[])
+
     return(
         <div>
-            <Table columns={columnsUtilizadores} data={user} actions={renderActions} />
+            <Table columns={columnsQueixas} data={queixas} actions={renderActions} />
         </div>
     );
 }

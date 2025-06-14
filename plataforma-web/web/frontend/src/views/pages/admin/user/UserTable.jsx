@@ -10,6 +10,7 @@ const UsersTables = () => {
         try {
             const response = await list_utilizador();
             setuser(response.data);
+            console.log(response.data);
         } catch(error) {
             console.log('Erro ao aceder a tabela de utilizador');
         }
