@@ -56,7 +56,7 @@ export const alterarImgPerfil = async (id, file) => {
         });
         return response.data;
     } catch (error) {
-        console.error('Erro ao atualizar imagem de Utilizador!');
+      console.error('Erro ao atualizar imagem de utilizador:', error?.response?.data || error.message);
         throw error;
     }
 };

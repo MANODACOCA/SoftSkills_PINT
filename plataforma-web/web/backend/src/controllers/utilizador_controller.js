@@ -9,6 +9,8 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const config = require('../config/config');
+const path = require('path');
+const fs = require('fs');
 const uploadProfileImg = require('../middlewares/uploadUserProfileIMG');
 
 const gerarPassword = require('../utils/gerarPassword');
@@ -98,8 +100,8 @@ controllers.update = async (req, res) => { // atualizar e isnerir um novo utiliz
 controllers.alterarImgPerfil = async (req, res) => {
   uploadProfileImg.single('imagem')(req, res, async (error) => {
     try {
-      if(error){
-        return res.status(400).json({ erro: 'Erro no upload da imagem.', desc: error.message});
+      if (error) {
+        return res.status(400).json({ erro: 'Erro no upload da imagem.', desc: error.message });
       }
 
       if (req.body) {
@@ -108,7 +110,12 @@ controllers.alterarImgPerfil = async (req, res) => {
         const user = await model.findByPk(id);
         if (!user) return res.status(404).json({ erro: 'Utilizador não encontrado.' });
 
-        if(!req.file){
+        const caminhoAntigo = path.resolve('src/uploads/usersProfilesImg', user.img_perfil);//apagar imagem antiga
+        if (fs.existsSync(caminhoAntigo)) {
+          fs.unlinkSync(caminhoAntigo);
+        }
+
+        if (!req.file) {
           return res.status(400).json({ erro: 'Nenhum ficheiro foi submetido.' });
         }
         user.img_perfil = req.file.filename;
