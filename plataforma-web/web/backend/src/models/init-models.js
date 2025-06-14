@@ -132,12 +132,12 @@ function initModels(sequelize) {
   utilizador.hasMany(denuncia, { as: "denuncia", foreignKey: "id_utilizador"});
   favoritos.belongsTo(utilizador, { as: "id_formando_utilizador", foreignKey: "id_formando"});
   utilizador.hasMany(favoritos, { as: "favoritos", foreignKey: "id_formando"});
-  //formadores.belongsTo(utilizador, { as: "id_formador_utilizador", foreignKey: "id_formador"});
-  //utilizador.hasOne(formadores, { as: "formadore", foreignKey: "id_formador"});
-  //formandos.belongsTo(utilizador, { as: "id_formando_utilizador", foreignKey: "id_formando"});
-  //utilizador.hasOne(formandos, { as: "formando", foreignKey: "id_formando"});
-  //gestor_administrador.belongsTo(utilizador, { as: "id_gestor_administrador_utilizador", foreignKey: "id_gestor_administrador"});
-  //utilizador.hasOne(gestor_administrador, { as: "gestor_administrador", foreignKey: "id_gestor_administrador"});
+  formadores.belongsTo(utilizador, { as: "id_formador_utilizador", foreignKey: "id_formador"});
+  utilizador.hasOne(formadores, { as: "formadore", foreignKey: "id_formador"});
+  formandos.belongsTo(utilizador, { as: "id_formando_utilizador", foreignKey: "id_formando"});
+  utilizador.hasOne(formandos, { as: "formando", foreignKey: "id_formando"});
+  gestor_administrador.belongsTo(utilizador, { as: "id_gestor_administrador_utilizador", foreignKey: "id_gestor_administrador"});
+  utilizador.hasOne(gestor_administrador, { as: "gestor_administrador", foreignKey: "id_gestor_administrador"});
   notificacoes_comentarios_post.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
   utilizador.hasMany(notificacoes_comentarios_post, { as: "notificacoes_comentarios_posts", foreignKey: "id_utilizador"});
   notificacoes_curso.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
@@ -149,38 +149,7 @@ function initModels(sequelize) {
   twofa.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
   utilizador.hasMany(twofa, { as: "twofas", foreignKey: "id_utilizador"});
 
-formadores.belongsTo(utilizador, {
-  foreignKey: 'id_formador',
-  targetKey: 'id_utilizador',
-  as: 'id_formador_utilizador'
-});
-utilizador.hasOne(formadores, {
-  sourceKey: 'id_utilizador',
-  foreignKey: 'id_formador',
-  as: 'formadore'
-});
 
-formandos.belongsTo(utilizador, {
-  foreignKey: 'id_formando',
-  targetKey: 'id_utilizador',
-  as: 'id_formando_utilizador'
-});
-utilizador.hasOne(formandos, {
-  sourceKey: 'id_utilizador',
-  foreignKey: 'id_formando',
-  as: 'formando'
-});
-
-gestor_administrador.belongsTo(utilizador, {
-  foreignKey: 'id_gestor_administrador',
-  targetKey: 'id_utilizador',
-  as: 'id_gestor_administrador_utilizador'
-});
-utilizador.hasOne(gestor_administrador, {
-  sourceKey: 'id_utilizador',
-  foreignKey: 'id_gestor_administrador',
-  as: 'gestor_administrador'
-});
 
 
 

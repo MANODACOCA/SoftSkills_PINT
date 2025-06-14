@@ -173,3 +173,14 @@ export const getCoursePopular = async () => {
         throw error;
     }
 }
+
+
+export const getCourseAdminLista = async () => {
+    try {
+        const response = await axios.get(`${API_URL}/all-info`);
+        return response.data;
+    } catch(error) {
+        console.error('Erro ao carregar cursos para lista Admin!');
+        throw error;
+    }
+}

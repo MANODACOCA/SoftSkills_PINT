@@ -1,6 +1,4 @@
-import { formatDayMonthYear } from "../shared_functions/FunctionsUtils";
-
-export const columnsUtilizadores = [
+export const columnsForum = [
   { label: 'Nº', key: 'id_utilizador'},
   { label: 'Nome Utilizador', key: 'nome_utilizador'},
   { label: 'Email', key: 'email' },
@@ -24,4 +22,3 @@ export const columnsUtilizadores = [
     } 
   },
 ];
-

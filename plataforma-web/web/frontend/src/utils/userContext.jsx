@@ -9,7 +9,6 @@ export const UserProvider = ({ children }) => {
   const [roles, setRoles] = useState([]);
   const [activeRole, setActiveRole] = useState('formando');
 
-
   const loadUser = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -17,7 +16,6 @@ export const UserProvider = ({ children }) => {
       setRoles([]);
       return;
     }
-
 
     const userId = getUserIdFromToken(token);
     try {

@@ -52,3 +52,5 @@ export const delete_denuncia = async (id) => {
         throw error;
     }
 };
+
+

@@ -1,46 +1,20 @@
 import Table from "../../../components/table/Table";
 import { columnsCursos } from "../../../components/table/ColumnsCursos";
+import { useEffect, useState } from "react";
+import { getCourseAdminLista } from "../../../../api/cursos_axios";
 
 const CourseTable = () => {
+    const [cursos, setcursos] = useState([]);
 
-    const cursos = [
-    {
-        id: 1,
-        nome: 'React Avançado',
-        tipo: 'Online',
-        datas: '01/07 - 15/07',
-        formador: 'João Silva',
-        vagas: 20,
-        estado: 'Concluído'
-    },
-    {
-        id: 2,
-        nome: 'Node.js Básico',
-        tipo: 'Presencial',
-        datas: '10/08 - 20/08',
-        formador: 'Maria Lima',
-        vagas: 15,
-        estado: 'Aberto'
-    },
-    {
-        id: 1,
-        nome: 'React Avançado',
-        tipo: 'Online',
-        datas: '01/07 - 15/07',
-        formador: 'João Silva',
-        vagas: 20,
-        estado: 'Concluído'
-    },
-    {
-        id: 2,
-        nome: 'Node.js Básico',
-        tipo: 'Presencial',
-        datas: '10/08 - 20/08',
-        formador: 'Maria Lima',
-        vagas: 15,
-        estado: 'Aberto'
+    const FetchCursos = async () => {
+        try {
+            const response = await getCourseAdminLista(); 
+            setcursos(response);
+            console.log(response);
+        } catch(error) {
+            console.log('Erro ao listar Cursos')
+        }
     }
-    ];
 
     const renderActions = (item) => {
         return(
@@ -54,6 +28,10 @@ const CourseTable = () => {
             </>
         );
     }
+
+    useEffect(() => {
+        FetchCursos();
+    }, [])
 
     return(
         <div>

@@ -4,12 +4,17 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).denuncia;
 const controllers = {};
+const denunciasService = require('../services/denuncias.service');
 
 
-
-controllers.list = async (req,res)=>{
-  const data = await model.findAll();
-  res.status(200).json(data);
+controllers.list = async (req, res)=>{
+  try{
+    const data = await denunciasService.getDenunciasAll();
+    res.status(200).json(data);
+  }catch(error){
+    res.status(500).json({erro: 'Erro ao procurar Denuncia!',desc: error.message});
+    throw(error);
+  }
 };
 
 controllers.get = async (req,res)=>{

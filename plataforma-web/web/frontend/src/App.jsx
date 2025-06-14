@@ -35,6 +35,7 @@ import InfoProfile from './views/pages/profile/infoprofile';
 import HomePageAdmin from './views/pages/admin/home/HomePageAdmin.jsx';
 import CourseTable from './views/pages/admin/course/courseTable.jsx';
 import UsersTables from './views/pages/admin/user/UserTable.jsx';
+import QueixasTables from './views/pages/admin/forum/queixasTable.jsx';
 
 function App() {
 
@@ -82,6 +83,7 @@ function App() {
           <Route path='/admin/home' element={<HomePageAdmin />}/>
           <Route path='/admin/cursos' element={<CourseTable />}/>
           <Route path='/admin/utilizadores' element={<UsersTables />}/>
+          <Route path='/admin/queixas' element={<QueixasTables />}/>
           {/* admin */}
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
