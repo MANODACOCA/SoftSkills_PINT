@@ -70,7 +70,7 @@ const HeaderAdmin = ({ toggleSidebar, collapsed }) => {
                 <button className="btn btn-outline-secondary mx-2 hide" onClick={toggleSidebar}>
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
                 </button>
-                <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
+                <Link to="/admin/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
 
             <input
@@ -100,7 +100,7 @@ const HeaderAdmin = ({ toggleSidebar, collapsed }) => {
                             height={45}
                             className="image-border rounded-circle"
                         />
-                        <div className="text-start">
+                        <div className="text-start d-none w-0 d-xl-block w-xl-auto">
                             <p className="m-0">{user.nome_utilizador}</p>
                             <small>{activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}</small>
                         </div>

@@ -31,6 +31,11 @@ import EditProfile from './views/pages/profile/profile';
 import ClassPage from './views/pages/class_page/ClassPage';
 import InfoProfile from './views/pages/profile/infoprofile';
 
+//Admin 
+import HomePageAdmin from './views/pages/admin/home/HomePageAdmin.jsx';
+import CourseTable from './views/pages/admin/course/courseTable.jsx';
+import UsersTables from './views/pages/admin/user/UserTable.jsx';
+
 function App() {
 
   return (
@@ -73,6 +78,11 @@ function App() {
           <Route path="my/cursos/inscritos/curso/:cursoId/aula/:aulaId" element={<ClassPage />} />
           <Route path='/perfil/info' element={<InfoProfile />} />
           <Route path="/aula/" element={<ClassPage />} />
+          {/* admin */}
+          <Route path='/admin/home' element={<HomePageAdmin />}/>
+          <Route path='/admin/cursos' element={<CourseTable />}/>
+          <Route path='/admin/utilizadores' element={<UsersTables />}/>
+          {/* admin */}
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
 

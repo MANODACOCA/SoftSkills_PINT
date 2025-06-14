@@ -1,33 +1,36 @@
-
+import './Table.css';
 
 const Table = ({ columns, data, actions }) => {
   return (
-    <table className="table table-hover table-bordered">
-      <thead>
-        <tr>
-          {columns.map((col, idx) => (
-            <th key={idx}>{col.label}</th>
-          ))}
-          {actions && <th>Ações</th>}
-        </tr>
-      </thead>
-      <tbody>
-        {data.map((item, rowIndex) => (
-          <tr key={rowIndex}>
-            {columns.map((col, colIndex) => (
-              <td key={colIndex}>
-                {col.render ? col.render(item) : item[col.key]}
-              </td>
+    <div className="table-responsive rounded-3 overflow-hidden shadow-sm">
+      <table className="table table-hover rounded-5">
+        <thead className="table-bg">
+          <tr>
+            {columns.map((col, idx) => (
+              <th key={idx}>{col.label}</th>
             ))}
-            {actions && (
-              <td>
-                {actions(item)}
-              </td>
-            )}
+            {actions && <th>Ações</th>}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {data.map((item, rowIndex) => (
+            <tr key={rowIndex}>
+              {columns.map((col, colIndex) => (
+                <td key={colIndex} className={rowIndex % 2 == 0 ? 'bg-white' : 'line-bg'}>
+                  {col.render ? col.render(item) : item[col.key]}
+                </td>
+              ))}
+              {actions && (
+                <td className={rowIndex % 2 == 0 ? 'bg-white' : 'line-bg'}>
+                  {actions(item)}
+                </td>
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>  
+    </div>
+    
   );
 };
 

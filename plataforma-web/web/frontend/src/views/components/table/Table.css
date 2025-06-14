@@ -1,0 +1,7 @@
+.table-bg th {
+  background-color: var(--cor-principal) !important;
+  color: white !important;
+}
+.line-bg{
+    background-color: var(--cor-secundaria-rgba) !important;
+}

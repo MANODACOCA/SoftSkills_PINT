@@ -100,7 +100,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
 
   const cursosTodos = [...cursosAssincronosDisponiveis, ...cursosSincronosDisponiveis];
   const cursosDisponiveis = cursosTodos
-  .map(curso => curso.toJSON());
+    .map(curso => curso.toJSON());
 
   return cursosDisponiveis;
 }
@@ -263,7 +263,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
                   include: [
                     {
                       model: utilizador,
-                       as: 'id_formador_utilizador',
+                      as: 'id_formador_utilizador',
                       attributes: ['id_utilizador', 'nome_utilizador', 'img_perfil']
                     }
                   ]
@@ -393,6 +393,67 @@ async function updateFormandosCounter() {
 }
 /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
 
+
+async function getAllCoursesWithAllInfo(cursoID) {
+  try {
+    const cursoInfoTotal = await cursos.findOne({
+      where: { id_curso: cursoID },
+      include: [
+        {
+          model: sincrono,
+          include: [
+            {
+              model: aulas,
+                  include: [
+                    { 
+                      model: conteudos 
+                    },
+                    { 
+                      model: material_apoio 
+                    }
+                  ]
+
+            },
+              { 
+                model: formadores 
+              }
+          ]
+        },
+
+
+          {
+            model: assincrono,
+            include: [
+                  {
+                    model: aulas,
+                    include: [
+                      { model: conteudos },
+                      { model: material_apoio }
+                    ]
+                  }
+                ]
+          },
+        {
+          model: ocorrencias_edicoes,
+          include: [
+            { model: formandos }
+          ]
+        },
+        { model: tipo_formato },
+        { model: topico },
+        { model: area },
+        { model: categoria }
+      ]
+    });
+
+    return cursoInfoTotal;
+
+  } catch (error) {
+    console.error('Erro ao encontrar a lista completa dos cursos:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   getCursosDiponiveisParaInscricao,
   getCourseDestaqueSincrono,
@@ -404,4 +465,5 @@ module.exports = {
   getCourseNews,
   getCoursePopular,
   updateFormandosCounter,
+  getAllCoursesWithAllInfo,
 };

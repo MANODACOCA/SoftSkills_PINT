@@ -100,7 +100,7 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                             height={45}
                             className="image-border rounded-circle"
                         />
-                        <div className="text-start">
+                        <div className="text-start d-md-none d-lg-block">
                             <p className="m-0">{user.nome_utilizador}</p>
                             <small>{activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}</small>
                         </div>
