@@ -5,11 +5,14 @@ import './twofa.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 
 import { verificarCodigo } from '../../../../api/utilizador_axios';
-
+import { useUser } from '../../../../utils/userContext';
 
 const TwoFA = () => {
     const location = useLocation();
     const navigate = useNavigate();
+
+    const { refreshUser } = useUser();
+
 
     const redirectTo = location.state?.redirectTo || '/home';
     const email = location.state?.email || '';
@@ -51,6 +54,7 @@ const TwoFA = () => {
         try {
             await verificarCodigo(email, codigo);
             localStorage.setItem('token', response_login.token);
+            await refreshUser();
             console.log('TwoFA feita com sucesso.');
             navigate(redirectTo, {
                 state: {

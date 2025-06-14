@@ -44,6 +44,23 @@ export const update_utilizador = async (id, data) => {
     }
 };
 
+export const alterarImgPerfil = async (id, file) => {
+    try {
+        const formData = new FormData();
+        formData.append('imagem', file);
+
+        const response = await axios.post(`${API_URL}/alterar-imgperfil/${id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao atualizar imagem de Utilizador!');
+        throw error;
+    }
+};
+
 export const delete_utilizador = async (id) => {
     try {
         const response = await axios.delete(`${API_URL}/delete/${id}`);
