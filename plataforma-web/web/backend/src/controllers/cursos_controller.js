@@ -223,4 +223,13 @@ controllers.getCompleteCourses = async (req, res) => {
   }
 };
 
+controllers.getAllInfoCursosAdmin = async (req, res) => {
+  try{
+    const cursos = await cursosService.getAllCoursesWithAllInfo();
+    res.status(200).json(cursos);
+  } catch(error) {
+    res.status(500).json({erro: 'Erro ao obter todos os cursos', desc: error.message });
+  }
+}
+
 module.exports = controllers;

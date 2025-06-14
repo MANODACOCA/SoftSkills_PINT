@@ -33,6 +33,6 @@ router.get('/curso-destaque/sincrono',controller.getDestaqueSincrono);
 router.get('/cursos-disponiveis-inscricao', controller.getCursosDisponiveisParaInscricao);//todos os curso com formador, aulas e conteudos
 router.get('/users/:userId/enrolled-courses',controller.getUserEnrolledCourses);
 router.get('/users/:userId/completed-courses',controller.getCompleteCourses);
-
+router.get('/all-info',controller.getAllInfoCursosAdmin);
 
 module.exports = router;
