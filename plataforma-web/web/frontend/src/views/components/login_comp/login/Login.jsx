@@ -4,9 +4,7 @@ import './Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 import { PiMicrosoftOutlookLogoBold } from "react-icons/pi";
 import { login } from '../../../../api/utilizador_axios';
-
-
-
+import { useUser } from '../../../../utils/userContext';
 
 
 const providers = [
@@ -15,8 +13,11 @@ const providers = [
 ];
 
 const FirstLogin = () => {
+    
+    const { refreshUser } = useUser();
 
     const navigate = useNavigate();
+
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
@@ -78,6 +79,7 @@ const FirstLogin = () => {
                 if (response_login.success) {
                     if (response_login.jaAtivou && !response_login.twoFa) {
                         localStorage.setItem('token', response_login.token);
+                        await refreshUser();
                         navigate('/home');
                     } else if (response_login.jaAtivou && response_login.twoFa) {
                         navigate('/login/verificacao-identidade', {

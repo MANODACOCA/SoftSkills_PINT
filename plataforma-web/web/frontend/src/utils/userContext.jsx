@@ -9,37 +9,43 @@ export const UserProvider = ({ children }) => {
   const [roles, setRoles] = useState([]);
   const [activeRole, setActiveRole] = useState('formando');
 
+
+  const loadUser = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setUser(null);
+      setRoles([]);
+      return;
+    }
+
+
+    const userId = getUserIdFromToken(token);
+    try {
+      const userData = await get_utilizador(userId);
+
+      const userRoles = [];
+      if (userData.isformando) userRoles.push('formando');
+      if (userData.isformador) userRoles.push('formador');
+      if (userData.isgestor_administrador) userRoles.push('admin');
+
+      setUser(userData);
+      setRoles(userRoles);
+
+      if (userRoles.includes('admin')) setActiveRole('admin');
+      else if (userRoles.includes('formador')) setActiveRole('formador');
+      else setActiveRole('formando');
+
+    } catch (err) {
+      console.error("Erro ao carregar utilizador:", err);
+    }
+  };
+
   useEffect(() => {
-    const loadUser = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) return;
-
-      const userId = getUserIdFromToken(token);
-      try {
-        const userData = await get_utilizador(userId);
-
-        const userRoles = [];
-        if(userData.isformando) userRoles.push('formando');
-        if(userData.isformador) userRoles.push('formador');
-        if(userData.isgestor_administrador) userRoles.push('admin');
-
-        setUser(userData);
-        setRoles(userRoles);
-
-        if(userRoles.includes('admin')) setActiveRole('admin');
-        else if(userRoles.includes('formador')) setActiveRole('formador');
-        else setActiveRole('formando');
-        
-      } catch (err) {
-        console.error("Erro ao carregar utilizador:", err);
-      }
-    };
-
     loadUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, roles, activeRole, setActiveRole }}>
+    <UserContext.Provider value={{ user, setUser, roles, activeRole, setActiveRole, refreshUser: loadUser }}>
       {children}
     </UserContext.Provider>
   );
