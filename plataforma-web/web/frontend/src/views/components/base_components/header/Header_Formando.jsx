@@ -10,10 +10,11 @@ import { RxExit } from "react-icons/rx";
 import { useUser } from '../../../../utils/userContext';
 
 const HeaderFormando = ({ toggleSidebar, collapsed }) => {
+    const API_URL = 'http://localhost:3000/';
     const { user, activeRole } = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileRef = useRef(null);
-    
+
 
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
@@ -91,10 +92,11 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                 <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
                     <button onClick={toggleProfileMenu} className="btn p-0 border-0 bg-transparent d-flex align-items-center gap-2">
                         <img
-                            src={
-                                user.img_perfil ||
-                                `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`
-                            }
+                            src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`;
+                            }}
                             alt="Imagem Perfil"
                             width={45}
                             height={45}
@@ -110,10 +112,11 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                         <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg p-3 mt-2 z-3">
                             <div className="d-flex flex-column align-items-center text-center">
                                 <img
-                                    src={
-                                        user.img_perfil ||
-                                        `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`
-                                    }
+                                    src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`;
+                                    }}
                                     alt="Imagem Perfil"
                                     width={100}
                                     height={100}
