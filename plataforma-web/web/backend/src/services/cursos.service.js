@@ -1,6 +1,6 @@
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos } = require('../models/init-models')(sequelize);
+const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria } = require('../models/init-models')(sequelize);
 
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
@@ -394,55 +394,66 @@ async function updateFormandosCounter() {
 /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
 
 
-async function getAllCoursesWithAllInfo(cursoID) {
+async function getAllCoursesWithAllInfo() {
   try {
-    const cursoInfoTotal = await cursos.findOne({
-      where: { id_curso: cursoID },
+    const cursoInfoTotal = await cursos.findAll({
+      attributes: [
+        'id_curso',
+        'nome_curso',
+        'data_inicio_curso',
+        'data_fim_curso',
+        'data_inicio_inscricao',
+        'data_fim_inscricao',
+        'issincrono',
+        'isassincrono',
+        'horas_curso',
+        'contador_formandos',
+        'estado'
+      ],
       include: [
         {
           model: sincrono,
+          as: 'sincrono',
+          attributes: ['numero_vagas'],
           include: [
             {
-              model: aulas,
-                  include: [
-                    { 
-                      model: conteudos 
-                    },
-                    { 
-                      model: material_apoio 
-                    }
-                  ]
-
-            },
-              { 
-                model: formadores 
-              }
+              model: formadores,
+              as: 'id_formador_formadore',
+              attributes: ['id_formador'],
+              include: [
+                {
+                  model: utilizador,
+                  as: 'id_formador_utilizador',
+                  attributes: ['nome_utilizador']
+                }
+              ]
+            }
           ]
         },
-
-
-          {
-            model: assincrono,
-            include: [
-                  {
-                    model: aulas,
-                    include: [
-                      { model: conteudos },
-                      { model: material_apoio }
-                    ]
-                  }
-                ]
-          },
         {
-          model: ocorrencias_edicoes,
-          include: [
-            { model: formandos }
-          ]
+          model: gestor_administrador,
+          as: 'id_gestor_administrador_gestor_administrador',
+          attributes: ['id_gestor_administrador']
         },
-        { model: tipo_formato },
-        { model: topico },
-        { model: area },
-        { model: categoria }
+        {
+          model: topico,
+          as: 'id_topico_topico',
+          attributes: ['nome_topico'],
+          include: [
+            {
+              model: area,
+              as: 'id_area_area',
+              attributes: ['nome_area'],
+              include: [
+                {
+                  model: categoria,
+                  as: 'id_categoria_categorium',
+                  attributes: ['nome_cat']
+                }
+              ]
+            }
+          ]
+        }
       ]
     });
 
