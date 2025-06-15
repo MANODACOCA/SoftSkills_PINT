@@ -480,6 +480,8 @@ async function getAllCoursesWithAllInfo() {
   }
 }
 
+
+
 module.exports = {
   getCursosDiponiveisParaInscricao,
   getCourseDestaqueSincrono,
