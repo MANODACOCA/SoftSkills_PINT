@@ -33,6 +33,7 @@ const CursosPage = () => {
     }
   }
 
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchCursosDisponiveisInscricao();

@@ -25,6 +25,7 @@ export const get_inscricoes  = async (id) => {
 
 export const create_inscricoes = async (data) => {
     try{
+        console.log(data);
         const response = await axios.post(`${API_URL}/create`, data);
         return response.data;
     }catch(error){

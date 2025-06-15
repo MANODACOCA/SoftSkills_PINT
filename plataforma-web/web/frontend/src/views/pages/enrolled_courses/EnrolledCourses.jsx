@@ -1,12 +1,14 @@
 import './EnrolledCourses.css';
 import FeaturedCourseCard from '../../components/card_highlight/CardHighlight';
 import { getEnrolledCourses } from '../../../api/cursos_axios';
+import { useUser } from '../../../utils/userContext';
 import React, { useState, useEffect } from 'react';
 
 const EnrolledCourses = () => {
+  const { user, setUser } = useUser();
   const [courses, setCourses] = useState([]);
   const [tipologia, setTipologia] = useState('todos');
-  const userId = 4;
+  const userId = user.id_utilizador;
 
   const fetchEnrolledCourses = async () => {
     try {
