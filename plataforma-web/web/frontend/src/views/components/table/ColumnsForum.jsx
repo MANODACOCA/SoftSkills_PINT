@@ -1,24 +1,16 @@
+import { formatDayMonthYear, daysMonthsYears } from "../shared_functions/FunctionsUtils";
+
 export const columnsForum = [
-  { label: 'Nº', key: 'id_utilizador'},
-  { label: 'Nome Utilizador', key: 'nome_utilizador'},
-  { label: 'Email', key: 'email' },
-  { label: 'Telemovel', key: 'telemovel' },  
-  { label: 'Data Nascimento', render: (item) => formatDayMonthYear(item.data_nasc) },
-  { label: 'Género', render: (item) =>{
-    if(item.genero == 1) return 'Masculino';
-    if(item.genero == 2) return 'Feminino';
-    else return '-';
-    } 
-  },
-  { label: 'País', key: 'pais' },
-  { label: 'Morada', key: 'morada' },
-  { label: 'Roles', 
-    render: (item) => { 
-      const roles = [];
-      if(item.isformando) roles.push('Formando');
-      if(item.isformador) roles.push('Formador');
-      if(item.isgestor_administrador) roles.push('Administrador');
-      return roles.join('/ ');
-    } 
+  { label: 'Nº', key: 'id_conteudos_partilhado'},
+  { label: 'Nome do Tópico', render: (item) => { return item.id_topico; } },
+  { label: 'Data Criação', render: (item) => formatDayMonthYear(item.data_criacao_cp) },
+  { label: 'Categoria/Area', render: (item) => { 
+      const cat_area = [];
+      const cat = item.id_topico;
+      const area = item.id_topico;
+      cat_area.push(cat);
+      cat_area.push(area);
+      return cat_area.join('/ ');
+    }
   },
 ];

@@ -1,6 +1,5 @@
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-
 const { denuncia, comentario, utilizador, post, tipo_denuncia, conteudos_partilhado, topico, area, categoria } = require('../models/init-models')(sequelize);
 
 // async function getDenunciasAll() {
