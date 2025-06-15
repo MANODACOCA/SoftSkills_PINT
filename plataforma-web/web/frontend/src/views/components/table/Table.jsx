@@ -22,7 +22,7 @@ const Table = ({ columns, data, actions }) => {
   }
 
   return (
-    <div className="table-responsive rounded-3 shadow-sm">
+    <div className="">
       <div className='d-flex justify-content-between mb-3'>
         <div className='w-25 d-flex col-4'>
           <div className='w-50 d-flex align-items-center pe-4'>
@@ -53,32 +53,34 @@ const Table = ({ columns, data, actions }) => {
           <strong>Adicionar</strong>
         </button>
       </div>
-      <table className="table table-hover rounded-5">
-        <thead className="table-bg">
-          <tr>
-            {columns.map((col, idx) => (
-              <th key={idx}>{col.label}</th>
-            ))}
-            {actions && <th>Ações</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {currentData.map((item, rowIndex) => (
-            <tr key={rowIndex}>
-              {columns.map((col, colIndex) => (
-                <td key={colIndex} className={rowIndex % 2 == 0 ? 'bg-white' : 'line-bg'}>
-                  {col.render ? col.render(item) : item[col.key]}
-                </td>
+      <div className='table-responsive rounded-3 shadow-sm'>
+        <table className="table table-hover rounded-5">
+          <thead className="table-bg">
+            <tr>
+              {columns.map((col, idx) => (
+                <th key={idx}>{col.label}</th>
               ))}
-              {actions && (
-                <td className={rowIndex % 2 == 0 ? 'bg-white' : 'line-bg'}>
-                  {actions(item)}
-                </td>
-              )}
+              {actions && <th>Ações</th>}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {currentData.map((item, rowIndex) => (
+              <tr key={rowIndex}>
+                {columns.map((col, colIndex) => (
+                  <td key={colIndex} className={rowIndex % 2 == 0 ? 'bg-white' : 'line-bg'}>
+                    {col.render ? col.render(item) : item[col.key]}
+                  </td>
+                ))}
+                {actions && (
+                  <td className={rowIndex % 2 == 0 ? 'bg-white' : 'line-bg'}>
+                    {actions(item)}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className="d-flex justify-content-center align-items-center px-2 py-2">
           <button className="btn btn-sm btn-outline-custom me-1 rounded-5" onClick={() => goToPage(currentPage - 1)} disabled={currentPage === 1}>
             <i className='bi bi-arrow-left'></i>
