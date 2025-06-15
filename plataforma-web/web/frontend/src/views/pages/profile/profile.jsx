@@ -300,7 +300,7 @@ const EditProfile = () => {
                                 src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
                                 onError={(e) => {
                                     e.target.onerror = null;
-                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(formData.nome_utilizador)}&background=random&bold=true`;
+                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`;
                                 }}
                                 alt="Imagem de perfil"
                                 className='w-100 img-profile rounded-2'
