@@ -2,7 +2,7 @@ import './Table.css';
 
 const Table = ({ columns, data, actions }) => {
   return (
-    <div className="table-responsive rounded-3 overflow-hidden shadow-sm">
+    <div className="table-responsive rounded-3 shadow-sm">
       <table className="table table-hover rounded-5">
         <thead className="table-bg">
           <tr>

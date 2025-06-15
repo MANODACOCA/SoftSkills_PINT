@@ -126,7 +126,6 @@ const HeaderAdmin = ({ toggleSidebar, collapsed }) => {
                             <hr />
                             <div className="d-flex flex-column align-items-center justify-content-between">
                                 <Link className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile /> Alterar dados pessoais <IoIosArrowForward /></Link>
-                                <Link className="dropdown-item" to={'my/cursos/terminados'} onClick={() => setShowProfileMenu(false)}><IoIosFlag /> Cursos Terminados <IoIosArrowForward /></Link>
                                 <Link className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey /> Informações de login <IoIosArrowForward /></Link>
                                 <Link className="dropdown-item text-danger" to="/login" onClick={() => { localStorage.removeItem('token'); setShowProfileMenu(false); }}><RxExit /> Encerrar sessão <IoIosArrowForward /></Link>
                             </div>
