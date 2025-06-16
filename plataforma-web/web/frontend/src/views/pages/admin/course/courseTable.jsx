@@ -23,12 +23,36 @@ const CourseTable = () => {
     };
 
     const HandleUpdate = async (id, estado) => {
-        try{
-            console.log(estado);
+        const result = await Swal.fire({
+            title: estado ? 'Deseja ocultar este curso' : 'Deseja mostrar este curso?',
+            text: estado ? 'O curso será escondido da lista' : 'O curso será tornado visível novamente!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-secondary me-2'
+            },
+            buttonsStyling: false
+        });
+
+        if(result.isConfirmed){
+            try{
             await update_cursos(id, {estado: !estado});
-            FetchCursos();
-        } catch(error){
-            console.error("Erro ao esconder curso", error);
+            await FetchCursos();
+            console.log(estado);
+            Swal.fire({
+                title: 'Sucesso',
+                text: `Curso ${estado ? 'True' : 'False'} com sucesso`,
+                icon: 'success',
+                time: 2000,
+                showConfirmButton: false,
+            });               
+            } catch(error){
+                Swal.fire('Erro', 'Ocorreu um erro ao atualziar o curso', 'error');
+                console.error("Erro ao esconder curso", error);
+            }
         }
     }
 
