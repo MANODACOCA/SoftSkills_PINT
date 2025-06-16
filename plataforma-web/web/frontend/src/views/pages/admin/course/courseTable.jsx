@@ -3,6 +3,7 @@ import { columnsCursos } from "../../../components/table/ColumnsCursos";
 import { useEffect, useState } from "react";
 import { getCourseAdminLista, update_cursos } from "../../../../api/cursos_axios";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const CourseTable = () => {
     const [cursos, setcursos] = useState([]);
@@ -29,10 +30,10 @@ const CourseTable = () => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sim',
-            cancelButtonText: 'Cancelar',
+            cancelButtonText: 'Não',
             customClass: {
-                confirmButton: 'btn btn-primary',
-                cancelButton: 'btn btn-secondary me-2'
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
             },
             buttonsStyling: false
         });
