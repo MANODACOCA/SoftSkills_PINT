@@ -1,9 +1,6 @@
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const conteudos_partilhado = require('../models/conteudos_partilhado');
-const topico = require('../models/topico');
-const categoria = require('../models/categoria');
-const { topico,  } = require('../models/init-models')(sequelize);
+const { topico, categoria, conteudos_partilhado, area} = require('../models/init-models')(sequelize);
 
 async function getForumAll () {
     try {
@@ -26,7 +23,7 @@ async function getForumAll () {
                     include: [
                         {
                         model: categoria,
-                        as: 'id_categoria_categoria',
+                        as: 'id_categoria_categorium',
                         attributes: ['nome_cat'],
                         }
                     ]

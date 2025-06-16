@@ -5,3 +5,30 @@
 .line-bg{
     background-color: var(--cor-secundaria-rgba) !important;
 }
+.btn-outline-custom {
+  color: var(--cor-secundaria);
+  border: 1px solid var(--cor-secundaria);
+  background-color: transparent;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-outline-custom:hover {
+  background-color: var(--cor-secundaria);
+  color: white;
+}
+.btn-outline-custom:disabled {
+    color: var(--cor-secundaria);
+    border: 1px solid var(--cor-secundaria);
+    background-color: transparent;
+}
+
+.btn-custom{
+  background-color: white;
+  color: var(--cor-principal);
+  border: 2px solid var(--cor-principal);
+  transition: background-color 0.2s ease-in-out;
+}
+.btn-custom:hover{
+  color: white;
+  background-color: var(--cor-principal);
+}

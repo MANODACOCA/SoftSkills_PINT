@@ -43,7 +43,7 @@ controllers.update = async (req, res) => {
   try {
     if (req.body) {
       const { id } = req.params;
-      const updated = await model.update(req.body, { where: { id: id } });
+      const updated = await model.update(req.body, { where: { id_curso: id } });
       if (updated) {
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
@@ -231,5 +231,8 @@ controllers.getAllInfoCursosAdmin = async (req, res) => {
     res.status(500).json({erro: 'Erro ao obter todos os cursos', desc: error.message });
   }
 }
+
+
+
 
 module.exports = controllers;

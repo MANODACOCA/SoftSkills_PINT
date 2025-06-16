@@ -5,7 +5,7 @@ const HomePageAdmin = () => {
     <div className="container py-4">
       <div className="row g-3">
         <div className="col-12 col-sm-6 col-md-4 col-lg-3">
-          <Link to="/admin/Forum" className="text-decoration-none">
+          <Link to="/admin/gerirforum" className="text-decoration-none">
             <div className="card h-100 shadow-sm rounded-4 text-center p-4 bg-light hover-shadow">
               <h5 className="mb-0 text-dark">Gerir Fórum</h5>
             </div>

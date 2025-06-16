@@ -5,20 +5,18 @@ const models = initModels(sequelize);
 const controllers = {};
 
 const conteudoPartilhadoService = require('../services/conteudo_partilhado.service');
+const ForumService = require("../services/forum.service");
 
 
 
 controllers.list = async (req,res)=>{
-  const data = await model.findAll({
-      include: [
-        {
-          model: sequelize.models.topico,
-          as: 'id_topico_topico',
-          attributes: ['nome_topico']
-        }
-      ]
-    });
-  res.status(200).json(data);
+  try{
+    const data = await ForumService.getForumAll();
+    res.status(200).json(data);
+  } catch(error){
+    res.status(500).json({erro: 'Erro ao carregar a lista do Forum', desc: error.message});
+    throw(error);
+  }
 };
 
 controllers.get = async (req,res)=>{

@@ -19,6 +19,22 @@ const { guardarCodigo, verificarCodigoCerto, apagarCodigo } = require('../utils/
 const utilizador = require("../models/utilizador");
 const { error } = require("console");
 
+const models = initModels(sequelize);
+const Comentario = models.comentario;
+const Denuncia = models.denuncia;
+const Post = models.post;
+const s_s_o = models.s_s_o;
+const TwofA = models.twofa;
+const NotificacoesCurso = models.notificacoes_curso;
+const NotificacoesComentariosPost = models.notificacoes_comentarios_post;
+const Favoritos = models.favoritos;
+const Formadores = models.formadores;
+const Formandos = models.formandos;
+const GestorAdministrador = models.gestor_administrador;
+
+
+
+
 controllers.list = async (req, res) => {
   const data = await model.findAll();
   res.status(200).json({ success: true, data: data });
@@ -144,12 +160,22 @@ controllers.alterarImgPerfil = async (req, res) => {
 controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await model.destroy({ where: { id: id } });
-    if (deleted) {
-      res.status(200).json({ msg: 'Utilizador apagado/a com sucesso!' });
-    } else {
-      res.status(404).json({ erro: 'Utilizador não foi apagado/a!' });
-    }
+
+   await NotificacoesComentariosPost.destroy({ where: { id_utilizador: id } });
+    await Comentario.destroy({ where: { id_utilizador: id } });
+    await Denuncia.destroy({ where: { id_utilizador: id } });
+    await Post.destroy({ where: { id_utilizador: id } });
+    await s_s_o.destroy({ where: { id_utilizador: id } });
+    await TwofA.destroy({ where: { id_utilizador: id } });
+    await NotificacoesCurso.destroy({ where: { id_utilizador: id } });
+    await Favoritos.destroy({ where: { id_formando: id } });
+    await Formadores.destroy({ where: { id_formador: id } });
+    await Formandos.destroy({ where: { id_formando: id } });
+    await GestorAdministrador.destroy({ where: { id_gestor_administrador: id } });
+
+    await model.destroy({ where: { id_utilizador: id } });
+
+    return res.status(200).json({ mensagem: 'Utilizador apagado com sucesso.' });
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao apagar o/a Utilizador!', desc: err.message });
   }
