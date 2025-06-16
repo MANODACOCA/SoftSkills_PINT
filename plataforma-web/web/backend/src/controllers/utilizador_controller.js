@@ -12,7 +12,6 @@ const config = require('../config/config');
 const path = require('path');
 const fs = require('fs');
 const uploadProfileImg = require('../middlewares/uploadUserProfileIMG');
-const formando = initModels(sequelize).formandos;
 
 const gerarPassword = require('../utils/gerarPassword');
 const { sendEmail, enviarEmailVerificaCode } = require("../utils/enviarEmail");
@@ -77,7 +76,7 @@ controllers.create = async (req, res) => {
         nome_utilizador
       });
 
-      await formando.create({
+      await Formandos.create({
         id_formando: data.id_utilizador,
       });
 
