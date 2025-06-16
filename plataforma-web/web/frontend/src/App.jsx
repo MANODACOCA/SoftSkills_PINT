@@ -37,7 +37,8 @@ import CourseTable from './views/pages/admin/course/courseTable.jsx';
 import UsersTables from './views/pages/admin/user/UserTable.jsx';
 import QueixasTables from './views/pages/admin/forum/queixasTable.jsx';
 import ForumTable from './views/pages/admin/forum/forumTable.jsx';
-
+import CreateCourse from './views/pages/admin/course/Criar_Course.jsx';
+import EditCourse from './views/pages/admin/course/Editar_Course.jsx';
 function App() {
 
   return (
@@ -86,6 +87,8 @@ function App() {
           <Route path='/admin/utilizadores' element={<UsersTables />}/>
           <Route path='/admin/queixas' element={<QueixasTables />}/>
           <Route path='/admin/gerirforum' element={<ForumTable />}/>
+          <Route path='/admin/cursos/criar' element={<CreateCourse />}/>
+          <Route path='/admin/cursos/editar/:id' element={<EditCourse />}/>
           {/* admin */}
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}

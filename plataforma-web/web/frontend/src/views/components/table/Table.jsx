@@ -1,7 +1,7 @@
 import './Table.css';
 import React, { useState } from 'react';
 
-const Table = ({ columns, data, actions }) => {
+const Table = ({ columns, data, actions, onAddClick  }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPag, setitemsPag] = useState(10);
 
@@ -48,10 +48,14 @@ const Table = ({ columns, data, actions }) => {
           placeholder="Pesquisar por id"
           aria-label="Pesquisar"
         />
-        <button className='btn btn-custom d-flex align-items-center justify-content-center rounded-5 col-2'>
-          <i className='bi bi-plus-lg fs-4 pe-2'></i>
-          <strong>Adicionar</strong>
-        </button>
+
+        {onAddClick && (
+          <button className='btn btn-custom d-flex align-items-center justify-content-center rounded-5 col-2' onClick={() => onAddClick(null)}>
+            <i className='bi bi-plus-lg fs-4'></i>
+            <strong className='ps-2 d-none d-md-block'>Adicionar</strong>
+          </button>
+        )}
+
       </div>
       <div className='table-responsive rounded-3 shadow-sm'>
         <table className="table table-hover rounded-5">
