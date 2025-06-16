@@ -60,6 +60,10 @@ controllers.create = async (req, res) => {
         nome_utilizador
       });
 
+      await formando.create({
+        id_formando: data.id_utilizador,
+      });
+
       await sendEmail(email, passwordTemporaria);
 
       res.status(201).json({ success: true, message: "Registado", data: data });
@@ -110,14 +114,17 @@ controllers.alterarImgPerfil = async (req, res) => {
         const user = await model.findByPk(id);
         if (!user) return res.status(404).json({ erro: 'Utilizador não encontrado.' });
 
-        const caminhoAntigo = path.resolve('src/uploads/usersProfilesImg', user.img_perfil);//apagar imagem antiga
-        if (fs.existsSync(caminhoAntigo)) {
-          fs.unlinkSync(caminhoAntigo);
+        if (user.img_perfil) {
+          const caminhoAntigo = path.resolve('src/uploads/usersProfilesImg', user.img_perfil);
+          if (fs.existsSync(caminhoAntigo)) {
+            fs.unlinkSync(caminhoAntigo);
+          }
         }
 
         if (!req.file) {
           return res.status(400).json({ erro: 'Nenhum ficheiro foi submetido.' });
         }
+
         user.img_perfil = req.file.filename;
         await user.save();
 
