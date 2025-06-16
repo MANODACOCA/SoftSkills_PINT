@@ -12,6 +12,7 @@ const config = require('../config/config');
 const path = require('path');
 const fs = require('fs');
 const uploadProfileImg = require('../middlewares/uploadUserProfileIMG');
+const formando = initModels(sequelize).formandos;
 
 const gerarPassword = require('../utils/gerarPassword');
 const { sendEmail, enviarEmailVerificaCode } = require("../utils/enviarEmail");
