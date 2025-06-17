@@ -20,11 +20,7 @@ const EditCourse = () => {
     const [materiais, setMateriais] = useState([]);
     const [formato, setFormato] = useState([]);
     const [catAreaTopico, setCatAreaTop] = useState([]);
-    const [cursos, setCursos] = useState([]);
-    const data_insc_fim = formatYearMonthDay(cursos.data_fim_inscricao);
-    const data_insc_ini = formatYearMonthDay(cursos.data_inicio_inscricao);
-    const data_curso_fim = formatYearMonthDay(cursos.data_fim_curso);
-    const data_curso_ini = formatYearMonthDay(cursos.data_inicio_curso);
+    const [cursos, setCursos] = useState({});
 
     const fetchCurso = async (id) => {
         try{
@@ -110,55 +106,55 @@ const EditCourse = () => {
 
                 <div className='mt-2'>
                     <label className='form-label'>Nome do Curso</label>
-                    <input type="text" name="nome_curso" className='form-control' value={cursos.nome_curso} onChange={handleChange} required />
+                    <input type="text" name="nome_curso" className='form-control' value={cursos.nome_curso || ""} onChange={handleChange} required />
                 </div>
 
                 <div className='mt-2'>
                     <label className='form-label'>Descrição do Curso</label>
-                    <textarea name="descricao_curso" className='form-control' rows="4" value={cursos.descricao_curso} onChange={handleChange} required />
+                    <textarea name="descricao_curso" className='form-control' rows="4" value={cursos.descricao_curso || ""} onChange={handleChange} required />
                 </div>
 
                 {/* DATAS */}
                 <div className='row mt-2'>
                     <div className='col'>
                         <label className='form-label'>Início da Inscrição</label>
-                        <input type="date" name="data_insc_ini" className='form-control' value={cursos.data_insc_ini} onChange={handleChange} required />
+                        <input type="date" name="data_insc_ini" className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required />
                     </div>
                     <div className='col'>
                         <label className='form-label'>Fim da Inscrição</label>
-                        <input type="date" name="data_insc_fim" className='form-control' value={cursos.data_insc_fim} onChange={handleChange} required />
+                        <input type="date" name="data_insc_fim" className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required />
                     </div>
                 </div>
 
                 <div className='row mt-2'>
                     <div className='col'>
                         <label className='form-label'>Início do Curso</label>
-                        <input type="date" name="data_curso_ini" className='form-control' value={cursos.data_curso_ini} onChange={handleChange} required />
+                        <input type="date" name="data_curso_ini" className='form-control' value={cursos.data_curso_inicio ? formatYearMonthDay(cursos.data_curso_inicio) : ""} onChange={handleChange} required />
                     </div>
                     <div className='col'>
                         <label className='form-label'>Fim do Curso</label>
-                        <input type="date" name="data_curso_fim" className='form-control' value={cursos.data_curso_fim} onChange={handleChange} required />
+                        <input type="date" name="data_curso_fim" className='form-control' value={cursos.data_curso_fim ? formatYearMonthDay(cursos.data_curso_fim) : ""} onChange={handleChange} required />
                     </div>
                 </div>
 
                 <div className='mt-2'>
                     <label className='form-label'>Idioma</label>
-                    <input type="text" name="idioma" className='form-control' value={cursos.idioma} onChange={handleChange} required />
+                    <input type="text" name="idioma" className='form-control' value={cursos.idioma || ""} onChange={handleChange} required />
                 </div>
 
                 <div className='mt-2'>
                     <label className='form-label'>Horas do Curso</label>
-                    <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso} onChange={handleChange} required />
+                    <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso || ""} onChange={handleChange} required />
                 </div>
 
                 <div className='mt-2'>
                     <label className='form-label'>Numero de Formandos</label>
-                    <input type="number" name="contador_formandos" className='form-control' value={cursos.contador_formandos} onChange={handleChange} required />
+                    <input type="number" name="contador_formandos" className='form-control' value={cursos.contador_formandos || ""} onChange={handleChange} required />
                 </div>
 
                 <div className='mt-2'>
                     <label className='form-label'>Imagem (URL ou nome de ficheiro)</label>
-                    <input type="text" name="imagem" className='form-control' value={cursos.imagem} onChange={handleChange} required />
+                    <input type="text" name="imagem" className='form-control' value={cursos.imagem || ""} onChange={handleChange} required />
                 </div>
 
                 {/* Tipo */}
@@ -177,8 +173,8 @@ const EditCourse = () => {
                                 <option key={f.id_formador} value={f.id_formador}>{f.nome}</option>
                             ))}
                         </select>
-                        <textarea name="descricao_formador" value={cursos.descricao_formador} onChange={handleChange} className='form-control mt-2' placeholder="Descrição do Formador" />
-                        <input type="number" name="numero_vagas" value={cursos.numero_vagas} onChange={handleChange} className='form-control mt-2' placeholder="Número de Vagas" />
+                        <textarea name="descricao_formador" value={cursos.descricao_formador || ""} onChange={handleChange} className='form-control mt-2' placeholder="Descrição do Formador" />
+                        <input type="number" name="numero_vagas" value={cursos.numero_vagas || ""} onChange={handleChange} className='form-control mt-2' placeholder="Número de Vagas" />
                     </div>
                 )}
 
