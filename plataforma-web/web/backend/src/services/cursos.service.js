@@ -9,14 +9,16 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   let cursosAssincronosDisponiveis = [];
   let cursosSincronosDisponiveis = [];
 
-  const baseWhereAssincrono = {
+  const baseWhereAssincrono = {//filtros
     estado: true,
     issincrono: false,
+    //data_inicio_inscricao: { [Op.gt]: today },
   };
 
-  const baseWhereSincrono = {
+  const baseWhereSincrono = {//filtros
     estado: true,
     issincrono: true,
+    //data_inicio_inscricao: { [Op.gt]: today },
   };
 
   if (id_curso) {
@@ -98,9 +100,8 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
       order: [['id_curso', 'ASC']]
     });
 
-    cursosSincronosDisponiveis = cursosSincronos.filter(curso => {
-      return curso.contador_formandos < (curso.sincrono?.numero_vagas || 0);
-    });
+    cursosSincronosDisponiveis = cursosSincronos;
+
   }
 
   const cursosTodos = [...cursosAssincronosDisponiveis, ...cursosSincronosDisponiveis];

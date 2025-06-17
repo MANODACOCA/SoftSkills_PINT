@@ -1,27 +1,38 @@
 import './CompletedCourses.css';
 import FeaturedCourseCard from '../../components/card_highlight/CardHighlight';
+import SpinnerBorder from '../../components/spinner-border/spinner-border';
 import { getCompletedCourses } from '../../../api/cursos_axios';
+import { useUser } from '../../../utils/userContext';
 import React, { useState, useEffect } from 'react';
 
 const CompletedCourses = () => {
+    const { user } = useUser();
     const [courses, setCourses] = useState([]);
     const [tipologia, setTipologia] = useState('todos');
-    const userId = 2;
+    const userId = user.id_utilizador;
+    const [loading, setLoading] = useState(true);
 
     const fetchCompletedCourses = async () => {
         try {
+            setLoading(true);
             const data = await getCompletedCourses(userId);
             setCourses(data);
         } catch (error) {
             console.error('Erro ao encontrar cursos terminados:', error);
             setCourses([]);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-         window.scrollTo(0, 0);
+        window.scrollTo(0, 0);
         fetchCompletedCourses();
-    }, []);
+    }, [tipologia, user]);
+
+    if (!user || loading) {
+        return <SpinnerBorder />;
+    }
 
     const filteredCourses = courses.filter(curso => {
         if (tipologia === 'todos') return true;
