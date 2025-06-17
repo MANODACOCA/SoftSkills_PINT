@@ -11,7 +11,7 @@ const NewPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const email = location.state?.email  || '';
+    const email = location.state?.email || '';
 
     const [error, setError] = useState('');
     const [novapassword, setNovapassword] = useState('');
@@ -19,25 +19,29 @@ const NewPassword = () => {
 
     const handleSubmitNewPassword = async () => {
         setError('');
+        try {
+            if (novapassword && repNovapassword) {
+                if (novapassword !== repNovapassword) {
+                    setError('As palavras-passe não coincidem.');
+                    return;
+                }
+                if (novapassword.length < 8 || novapassword.length > 16) {
+                    setError('A palavra-passe deve conter 8 e 16 caracteres.');
+                    return;
+                }
+            } else {
+                setError('Preencha ambos os campos com a sua nova palavra-passe.');
+                return;
+            }
 
-        if (novapassword && repNovapassword) {
-            if (novapassword !== repNovapassword) {
-                setError('As palavras-passe não coincidem.');
-                return;
+            const response = await alterarPassword(email, novapassword);
+            if (response) {
+                navigate('/login');
             }
-            if (novapassword.length < 8 || novapassword.length > 16) {
-                setError('A palavra-passe deve conter 8 e 16 caracteres.');
-                return;
-            }
-        } else {
-            setError('Preencha ambos os campos com a sua nova palavra-passe.');
-            return;
+        } catch (error) {
+            setError(error);
         }
-        console.log(`EMAIL : ${email}`);
-        const response = await alterarPassword(email, novapassword);
-        if(response){
-            navigate('/login');
-        }
+
     };
 
     return (

@@ -4,12 +4,12 @@ import { useUser } from '../../../utils/userContext';
 import { alterarPassword, update_utilizador } from '../../../api/utilizador_axios';
 
 const InfoProfile = () => {
-    const { user, roles, activeRole, setActiveRole } = useUser();
+    const { user, setUser, roles, activeRole, setActiveRole } = useUser();
     const [is2FAEnabled, setIs2FAEnabled] = useState(user?.aunten2fat || false);
     const [novapassword, setNovapassword] = useState('');
     const [repNovapassword, setRepNovapassword] = useState('');
     const [error, setError] = useState('');
-
+    console.log(user)
 
     const handleChangeRole = (role) => {
         if (role !== activeRole) {
@@ -18,32 +18,44 @@ const InfoProfile = () => {
     };
 
     const handleActive2FA = async () => {
-
+        const estadoNovo = !is2FAEnabled;
+        setIs2FAEnabled(estadoNovo);
+        try {
+            const response = await update_utilizador(user.id_utilizador, { auten2fat: estadoNovo });
+            setUser({ ...user, auten2fat: estadoNovo });
+        } catch (error) {
+            setIs2FAEnabled(!estadoNovo);
+        }
     };
 
-    const handleSubmitNewPassword = async () => {
+ const handleSubmitNewPassword = async () => {
         setError('');
-
-        if (novapassword && repNovapassword) {
-            if (novapassword !== repNovapassword) {
-                setError('As palavras-passe não coincidem.');
+        try {
+            if (novapassword && repNovapassword) {
+                if (novapassword !== repNovapassword) {
+                    setError('As palavras-passe não coincidem.');
+                    return;
+                }
+                if (novapassword.length < 8 || novapassword.length > 16) {
+                    setError('A palavra-passe deve conter 8 e 16 caracteres.');
+                    return;
+                }
+            } else {
+                setError('Preencha ambos os campos com a sua nova palavra-passe.');
                 return;
             }
-            if (novapassword.length < 8 || novapassword.length > 16) {
-                setError('A palavra-passe deve conter 8 e 16 caracteres.');
-                return;
-            }
-        } else {
-            setError('Preencha ambos os campos com a sua nova palavra-passe.');
-            return;
+
+            const response = await alterarPassword(user.email, novapassword);
+
+        } catch (error) {
+            setError(error.message);
         }
 
-        const response = await alterarPassword(user.email, novapassword);
-        if (response) {
-            navigate('/login');
-        }
     };
 
+    useEffect(() => {
+        setIs2FAEnabled(user?.auten2fat || false);
+    }, [user]);
 
     return (
         <div className="d-flex flex-wrap">
@@ -122,7 +134,7 @@ const InfoProfile = () => {
                 <div className="mb-5">
                     <h4 className="mb-3">Segurança</h4>
                     <div className="form-check form-switch d-flex align-items-center mb-2">
-                        <input className="form-check-input me-3" type="checkbox" role="switch" id="2faSwitch"  checked={is2FAEnabled} onChange={handleActive2FA}/>
+                        <input className="form-check-input me-3" type="checkbox" role="switch" id="2faSwitch" checked={is2FAEnabled} onChange={handleActive2FA} />
                         <label className="form-check-label" htmlFor="2faSwitch">
                             Autenticação Dois Fatores
                         </label>

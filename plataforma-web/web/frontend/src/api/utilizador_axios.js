@@ -56,7 +56,7 @@ export const alterarImgPerfil = async (id, file) => {
         });
         return response.data;
     } catch (error) {
-      console.error('Erro ao atualizar imagem de utilizador:', error?.response?.data || error.message);
+        console.error('Erro ao atualizar imagem de utilizador:', error?.response?.data || error.message);
         throw error;
     }
 };
@@ -103,8 +103,11 @@ export const esqueceuPassword = async (email) => {
 
         return response.data;
     } catch (error) {
-        console.error('Erro ao enviar solicitação de redefinição de password:', error);
-        throw error;
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error('Erro desconhecido ao alterar a password.');
+        }
     }
 };
 
