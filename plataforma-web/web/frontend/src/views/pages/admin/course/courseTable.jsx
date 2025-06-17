@@ -20,7 +20,7 @@ const CourseTable = () => {
     }
     
     const HandleEditCreate = async (id) => {
-        console.log(id);
+        //console.log(id);
         const result = await Swal.fire({
             title: id == null ? 'Tem a certeza que deseja adicionar curso?' : 'Tem a certeza que deseja editar curso?',
             icon: 'warning',
