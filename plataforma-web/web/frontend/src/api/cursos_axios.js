@@ -14,8 +14,11 @@ export const list_cursos = async () => {
 }
 
 export const get_cursos = async (id) => {
+    console.log(id);
     try {
+        console.log(id);
         const response = await axios.get(`${API_URL}/get/${id}`);
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Erro ao buscar Curso!');
