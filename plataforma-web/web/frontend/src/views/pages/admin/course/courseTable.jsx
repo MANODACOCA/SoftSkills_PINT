@@ -3,6 +3,7 @@ import { columnsCursos } from "../../../components/table/ColumnsCursos";
 import { useEffect, useState } from "react";
 import { getCourseAdminLista, update_cursos } from "../../../../api/cursos_axios";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const CourseTable = () => {
     const [cursos, setcursos] = useState([]);
@@ -18,8 +19,28 @@ const CourseTable = () => {
         }
     }
     
-    const HandleEdit = (id) => {
-        navigate(`/cursos/editar/${id}`);
+    const HandleEditCreate = async (id) => {
+        console.log(id);
+        const result = await Swal.fire({
+            title: id == null ? 'Tem a certeza que deseja adicionar curso?' : 'Tem a certeza que deseja editar curso?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+
+        if(result.isConfirmed) {
+            if(id != null || id != undefined) {
+                navigate(`/admin/cursos/editar/${id}`);
+            } else {
+                navigate(`/admin/cursos/criar`);
+            }
+        }  
     };
 
     const HandleUpdate = async (id, estado) => {
@@ -29,28 +50,36 @@ const CourseTable = () => {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sim',
-            cancelButtonText: 'Cancelar',
+            cancelButtonText: 'Não',
             customClass: {
-                confirmButton: 'btn btn-primary',
-                cancelButton: 'btn btn-secondary me-2'
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
             },
             buttonsStyling: false
         });
 
         if(result.isConfirmed){
             try{
-            await update_cursos(id, {estado: !estado});
-            await FetchCursos();
-            console.log(estado);
-            Swal.fire({
-                title: 'Sucesso',
-                text: `Curso ${estado ? 'True' : 'False'} com sucesso`,
-                icon: 'success',
-                time: 2000,
-                showConfirmButton: false,
-            });               
+                await update_cursos(id, {estado: !estado});
+                await FetchCursos();
+                console.log(estado);
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: `Curso ${estado ? 'ocultado' : 'visivel'} com sucesso`,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                }); 
             } catch(error){
-                Swal.fire('Erro', 'Ocorreu um erro ao atualziar o curso', 'error');
+                Swal.fire({
+                    title: 'Erro', 
+                    text: 'Ocorreu um erro ao atualizar o curso', 
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                    },
+                });
                 console.error("Erro ao esconder curso", error);
             }
         }
@@ -59,7 +88,7 @@ const CourseTable = () => {
     const renderActions = (item) => {
         return(
             <div className="d-flex">
-                <button className="btn btn-outline-primary me-2" onClick={() => HandleEdit(item.id_curso)}>
+                <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(item.id_curso)}>
                     <i className="bi bi-pencil"></i>
                 </button>
                 <button className="btn btn-outline-danger" onClick={() =>  HandleUpdate(item.id_curso, item.estado)}>
@@ -75,7 +104,7 @@ const CourseTable = () => {
 
     return(
         <div>
-            <Table columns={columnsCursos} data={cursos} actions={renderActions} />
+            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={HandleEditCreate}/>
         </div>
     );
 }
