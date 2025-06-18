@@ -88,39 +88,43 @@ const CreateAccount = () => {
             <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
             <h2 className="login-title text-start">Criar nova conta</h2>
             <p className="login-subtitle text-start">Preencha os 2 campos obrigatórios abaixo. Vai receber um e-mail com os seus dados de login.</p>
+            <form onSubmit={(e) => {
+                e.preventDefault(); // Previne reload da página
+                handleProviderSignIn({ id: 'credentials', name: 'Email and Password' });
+            }}>
+                <input
+                    id='nome_util'
+                    type="nome_util"
+                    placeholder="Nome de utilizador"
+                    value={nome_util}
+                    onChange={(e) => setNome_util(e.target.value)}
+                    className="login-input"
+                />
 
-            <input
-                id='nome_util'
-                type="nome_util"
-                placeholder="Nome de utilizador"
-                value={nome_util}
-                onChange={(e) => setNome_util(e.target.value)}
-                className="login-input"
-            />
+                <input
+                    id='email'
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="login-input"
+                />
 
-            <input
-                id='email'
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="login-input"
-            />
-
-            <div className="login-forgot d-flex justify-content-between text-start">
-                {error && <p className="login-error text-end">{error}</p>}
-            </div>
-            <div className="login-buttons">
-                <button
-                    type="button"
-                    className="login-button primary"
-                    onClick={() =>
-                        handleProviderSignIn({ id: 'credentials', name: 'Email and Password' })
-                    }
-                >
-                    Seguinte
-                </button>
-            </div>
+                <div className="login-forgot d-flex justify-content-between text-start">
+                    {error && <p className="login-error text-end">{error}</p>}
+                </div>
+                <div className="login-buttons">
+                    <button
+                        type="button"
+                        className="login-button primary"
+                        onClick={() =>
+                            handleProviderSignIn({ id: 'credentials', name: 'Email and Password' })
+                        }
+                    >
+                        Seguinte
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };

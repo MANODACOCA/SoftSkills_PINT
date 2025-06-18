@@ -29,9 +29,9 @@ export const UserProvider = ({ children }) => {
       setUser(userData);
       setRoles(userRoles);
 
-      if (userRoles.includes('admin')) setActiveRole('admin');
+      if (userRoles.includes('formando')) setActiveRole('formando');
       else if (userRoles.includes('formador')) setActiveRole('formador');
-      else setActiveRole('formando');
+      else setActiveRole('admin');
 
     } catch (err) {
       console.error("Erro ao carregar utilizador:", err);

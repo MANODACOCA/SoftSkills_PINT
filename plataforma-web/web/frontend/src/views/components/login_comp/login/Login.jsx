@@ -13,7 +13,7 @@ const providers = [
 ];
 
 const FirstLogin = () => {
-    
+
     const { refreshUser } = useUser();
 
     const navigate = useNavigate();

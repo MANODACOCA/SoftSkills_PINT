@@ -80,7 +80,7 @@ controllers.create = async (req, res) => {
         id_formando: data.id_utilizador,
       });
 
-      await sendEmail(email, passwordTemporaria);
+      sendEmail(email, passwordTemporaria);
 
       res.status(201).json({ success: true, message: "Registado", data: data });
     } else {
@@ -197,7 +197,7 @@ controllers.login = async (req, res) => {
     if (user.auten2fat) {
       const codigo = Math.floor(10000 + Math.random() * 90000).toString();
       await guardarCodigo(email, codigo);
-      await enviarEmailVerificaCode(email, codigo);
+      enviarEmailVerificaCode(email, codigo);
     }
 
     const roles = [];
@@ -250,7 +250,7 @@ controllers.esqueceuPassword = async (req, res) => {
     const codigo = Math.floor(10000 + Math.random() * 90000).toString();
 
     await guardarCodigo(email, codigo);
-    await enviarEmailVerificaCode(email, codigo);
+     enviarEmailVerificaCode(email, codigo);
 
     return res.status(200).json({ success: true, message: 'Código enviado com sucesso para o email.' });
   } catch (error) {
