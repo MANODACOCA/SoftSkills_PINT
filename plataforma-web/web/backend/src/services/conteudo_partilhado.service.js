@@ -2,8 +2,6 @@ const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
 const { conteudos_partilhado, topico, post, utilizador, area } = require('../models/init-models')(sequelize);
 
-
-
 async function getPostsByConteudoPartilhado (conteudoPartilhadoId) {
         try {
             // Verifica se o conteúdo partilhado existe
