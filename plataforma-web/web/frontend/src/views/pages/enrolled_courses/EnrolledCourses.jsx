@@ -43,10 +43,6 @@ const EnrolledCourses = () => {
     }
   }, [tipologia, user]);
 
-  if (!user || loading) {
-    return <SpinnerBorder />;
-  }
-
   const filteredCourses = courses.filter(course => {
     const c = course.id_curso_curso;
     if (!c) return false;
@@ -55,6 +51,10 @@ const EnrolledCourses = () => {
     if (tipologia === 'assincrono') return c.isassincrono;
     return false;
   });
+
+  if (!user || loading) {
+    return <SpinnerBorder />;
+  }
 
   return (
     <div className="enrolled-courses">

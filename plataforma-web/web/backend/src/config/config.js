@@ -1,5 +1,5 @@
 require('dotenv').config();
 
 module.exports = {
-    jwtSecret: 'chavesecreta'
+    jwtSecret: process.env.JWT_SECRET
 }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
 import { debounce } from 'lodash';
 import logo from '../../../../assets/images/logos/semfundo3.png';
 import './Header.css';
@@ -9,11 +9,12 @@ import { CgProfile } from "react-icons/cg";
 import { RxExit } from "react-icons/rx";
 import { useUser } from '../../../../utils/userContext';
 
-const HeaderFormador = ({ toggleSidebar, collapsed }) => {
+const HeaderFormando = ({ toggleSidebar, collapsed }) => {
+    const API_URL = 'http://localhost:3000/';
     const { user, activeRole } = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileRef = useRef(null);
-    
+
 
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
@@ -91,16 +92,17 @@ const HeaderFormador = ({ toggleSidebar, collapsed }) => {
                 <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
                     <button onClick={toggleProfileMenu} className="btn p-0 border-0 bg-transparent d-flex align-items-center gap-2">
                         <img
-                            src={
-                                user.img_perfil ||
-                                `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`
-                            }
+                            src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`;
+                            }}
                             alt="Imagem Perfil"
                             width={45}
                             height={45}
                             className="image-border rounded-circle"
                         />
-                        <div className="text-start">
+                        <div className="text-start d-md-none d-lg-block">
                             <p className="m-0">{user.nome_utilizador}</p>
                             <small>{activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}</small>
                         </div>
@@ -110,10 +112,11 @@ const HeaderFormador = ({ toggleSidebar, collapsed }) => {
                         <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg p-3 mt-2 z-3">
                             <div className="d-flex flex-column align-items-center text-center">
                                 <img
-                                    src={
-                                        user.img_perfil ||
-                                        `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`
-                                    }
+                                    src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`;
+                                    }}
                                     alt="Imagem Perfil"
                                     width={100}
                                     height={100}
@@ -125,9 +128,9 @@ const HeaderFormador = ({ toggleSidebar, collapsed }) => {
                             </div>
                             <hr />
                             <div className="d-flex flex-column align-items-center justify-content-between">
-                                <Link className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile /> Alterar dados pessoais <IoIosArrowForward /></Link>
-                                <Link className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey /> Informações de login <IoIosArrowForward /></Link>
-                                <Link className="dropdown-item text-danger" to="/login" onClick={() => { localStorage.removeItem('token'); setShowProfileMenu(false); }}><RxExit /> Encerrar sessão <IoIosArrowForward /></Link>
+                                <NavLink className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile /> Alterar dados pessoais <IoIosArrowForward /></NavLink>
+                                <NavLink className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey /> Informações de login <IoIosArrowForward /></NavLink>
+                                <NavLink className="dropdown-item text-danger" to="/login" onClick={() => { localStorage.removeItem('token'); setShowProfileMenu(false); }}><RxExit /> Encerrar sessão <IoIosArrowForward /></NavLink>
                             </div>
                         </div>
                     )}
@@ -137,4 +140,4 @@ const HeaderFormador = ({ toggleSidebar, collapsed }) => {
     );
 };
 
-export default HeaderFormador;
+export default HeaderFormando;
