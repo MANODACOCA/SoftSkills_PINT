@@ -130,7 +130,13 @@ const EditProfile = () => {
                 showDenyButton: true,
                 showCancelButton: true,
                 confirmButtonText: "Guardar",
-                denyButtonText: `Não Guardar`
+                denyButtonText: `Não Guardar`,
+                cancelButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    denyButton: 'btn btn-danger',
+                    cancelButton: 'btn btn-secondary',
+                },
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     await update_utilizador(user.id_utilizador, cleanedFormData);
@@ -172,6 +178,10 @@ const EditProfile = () => {
                 showCancelButton: true,
                 confirmButtonText: 'Pré-visualizar',
                 cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-2',
+                    cancelButton: 'btn btn-danger',
+                },
             });
             if (file) {
                 const reader = new FileReader();
@@ -185,6 +195,10 @@ const EditProfile = () => {
                         confirmButtonText: 'Sim, alterar!',
                         cancelButtonText: 'Cancelar',
                         reverseButtons: true,
+                        customClass: {
+                            confirmButton: 'btn btn-success me-2',
+                            cancelButton: 'btn btn-danger',
+                        },
 
                         willOpen: () => {
                             const img = document.querySelector('.swal2-image');

@@ -39,9 +39,12 @@ const NewPassword = () => {
                 navigate('/login');
             }
         } catch (error) {
-            setError(error);
+            if (error.message === 'Essa é a sua password antiga! Tente outra.') {
+                setError(error.message);
+            } else {
+                setError('Erro ao alterar a password.');
+            }
         }
-
     };
 
     return (
@@ -49,32 +52,38 @@ const NewPassword = () => {
             <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
             <h2 className="login-title text-start">Nova password</h2>
             <p className="login-subtitle text-start">Defina uma nova password para sua conta para que possa fazer login e aceder a todos os recursos.</p>
-            <input
-                type="password"
-                placeholder="Nova palavra-passe"
-                value={novapassword}
-                onChange={(e) => setNovapassword(e.target.value)}
-                className="login-input"
-                autoComplete="new-password"
-            />
+            <form onSubmit={(e) => {
+                e.preventDefault(); // Previne reload da página
+                handleSubmitNewPassword();
+            }}>
+                <input
+                    type="password"
+                    placeholder="Nova palavra-passe"
+                    value={novapassword}
+                    onChange={(e) => setNovapassword(e.target.value)}
+                    className="login-input"
+                    autoComplete="new-password"
+                />
 
-            <input
-                type="password"
-                placeholder="Repita nova palavra-passe"
-                value={repNovapassword}
-                onChange={(e) => setRepNovapassword(e.target.value)}
-                className="login-input"
-                autoComplete="new-password"
-            />
-            {error && <p className="login-error text-end">{error}</p>}
-            <div className="login-buttons">
-                <button
-                    className="login-button primary"
-                    onClick={handleSubmitNewPassword}
-                >
-                    Seguinte
-                </button>
-            </div>
+                <input
+                    type="password"
+                    placeholder="Repita nova palavra-passe"
+                    value={repNovapassword}
+                    onChange={(e) => setRepNovapassword(e.target.value)}
+                    className="login-input"
+                    autoComplete="new-password"
+                />
+                {error && <p className="login-error text-end">{error}</p>}
+                <div className="login-buttons">
+                    <button
+                        type='submit'
+                        className="login-button primary"
+                        onClick={handleSubmitNewPassword}
+                    >
+                        Seguinte
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };

@@ -161,7 +161,7 @@ controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
 
-   await NotificacoesComentariosPost.destroy({ where: { id_utilizador: id } });
+    await NotificacoesComentariosPost.destroy({ where: { id_utilizador: id } });
     await Comentario.destroy({ where: { id_utilizador: id } });
     await Denuncia.destroy({ where: { id_utilizador: id } });
     await Post.destroy({ where: { id_utilizador: id } });
@@ -212,21 +212,28 @@ controllers.login = async (req, res) => {
 
 controllers.alterarPassword = async (req, res) => {
   const { email, novaPassword } = req.body;
-
+  
   try {
     const utilizador = await model.findOne({ where: { email } });
     if (!utilizador) {
       return res.status(404).json({ success: false, message: 'Utilizador não encontrado.' });
     } else if (bcrypt.compareSync(novaPassword, utilizador.password_util)) {
-      return res.status(409).json({ success: false, message: 'Essa é a sua password atual! Tente outra.' });
+      return res.status(409).json({ success: false, message: 'Essa é a sua password antiga! Tente outra.' });
     }
 
     const hash = await bcrypt.hash(novaPassword, 10);
-    utilizador.password_util = hash;
+    
+    const updateData = { password_util: hash };
+    
+ 
+    if (utilizador.data_ativ_utili === null) {
+      updateData.data_ativ_utili = new Date();
+    }
 
-    utilizador.data_ativ_utili = new Date();
-
-    await utilizador.save();
+    await model.update(updateData, {
+      where: { email: email },
+      fields: Object.keys(updateData) 
+    });
 
     return res.json({ success: true, message: 'Password alterada' });
 
@@ -250,7 +257,7 @@ controllers.esqueceuPassword = async (req, res) => {
     const codigo = Math.floor(10000 + Math.random() * 90000).toString();
 
     await guardarCodigo(email, codigo);
-     enviarEmailVerificaCode(email, codigo);
+    enviarEmailVerificaCode(email, codigo);
 
     return res.status(200).json({ success: true, message: 'Código enviado com sucesso para o email.' });
   } catch (error) {

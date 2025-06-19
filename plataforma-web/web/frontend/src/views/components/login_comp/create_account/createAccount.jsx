@@ -115,7 +115,7 @@ const CreateAccount = () => {
                 </div>
                 <div className="login-buttons">
                     <button
-                        type="button"
+                        type="submit"
                         className="login-button primary"
                         onClick={() =>
                             handleProviderSignIn({ id: 'credentials', name: 'Email and Password' })

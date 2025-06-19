@@ -54,7 +54,7 @@ const TwoFA = () => {
         try {
             await verificarCodigo(email, codigo);
             localStorage.setItem('token', response_login.token);
-            await refreshUser();
+            if(redirectTo==='/home') await refreshUser();
             console.log('TwoFA feita com sucesso.');
             navigate(redirectTo, {
                 state: {
@@ -120,6 +120,7 @@ const TwoFA = () => {
                 <div className="login-buttons">
                     {timeLeft != 0 && (
                         <button
+                            type='submit'
                             className="login-button primary"
                             onClick={handleSubmitTwoFA}
                         >

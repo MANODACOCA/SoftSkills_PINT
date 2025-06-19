@@ -91,8 +91,11 @@ export const alterarPassword = async (email, novaPassword) => {
 
         return response.data;
     } catch (error) {
-        console.log('Erro ao efetuar alteração de nova password.', error);
-        throw error;
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        } else {
+            throw new Error('Erro ao alterar a password.', error);
+        }
     }
 };
 
@@ -103,11 +106,8 @@ export const esqueceuPassword = async (email) => {
 
         return response.data;
     } catch (error) {
-        if (error.response && error.response.data && error.response.data.message) {
-            throw new Error(error.response.data.message);
-        } else {
-            throw new Error('Erro desconhecido ao alterar a password.');
-        }
+        console.log('Erro ao efetuar esquecer password.', error);
+        throw error;
     }
 };
 

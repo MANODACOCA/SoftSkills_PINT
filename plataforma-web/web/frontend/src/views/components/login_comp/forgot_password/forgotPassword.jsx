@@ -76,29 +76,33 @@ const ForgotPassword = () => {
             <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
             <h2 className="login-title text-start">Esqueceu-se da sua palavra-passe?</h2>
             <p className="login-subtitle text-start">Digite aqui o seu email para receber um código para verificação de entidade</p>
+            <form onSubmit={(e) => {
+                e.preventDefault(); // Previne reload da página
+                handleProviderSignIn();
+            }}>
+                <input
+                    id='email'
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="login-input"
+                />
 
-            <input
-                id='email'
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="login-input"
-            />
+                {error && <p className="login-error text-end">{error}</p>}
 
-            {error && <p className="login-error text-end">{error}</p>}
-
-            <div className="login-buttons">
-                <button
-                    type="button"
-                    className="login-button primary"
-                    onClick={() =>
-                        handleProviderSignIn()
-                    }
-                >
-                    Seguinte
-                </button>
-            </div>
+                <div className="login-buttons">
+                    <button
+                        type="button"
+                        className="login-button primary"
+                        onClick={() =>
+                            handleProviderSignIn()
+                        }
+                    >
+                        Seguinte
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };

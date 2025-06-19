@@ -178,7 +178,7 @@ const FirstLogin = () => {
             </form>
             <div className="login-buttons">
                 <button
-                    type="button"
+                    type="submit"
                     onClick={() => navigate('/login/criar-conta')}
                     className="login-button social"
                 >
