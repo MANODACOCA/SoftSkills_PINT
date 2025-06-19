@@ -1,7 +1,11 @@
-//Aqui é imports!
+
 
 const CreateCourse = () => {
     
+    
+    const handleChange = () => {
+    }
+
     return (
     <div className='form-group'>
         {error && <div className="alert alert-danger mt-2">{error}</div>}
