@@ -60,6 +60,11 @@ const EditCourse = () => {
             id_topico: response.id_topico_topico?.id_topico,
             id_area: response.id_topico_topico?.id_area_area?.id_area,
             id_categoria: response.id_topico_topico?.id_area_area?.id_categoria_categorium?.id_categoria,
+            sincrono: {
+                ...response.sincrono,
+                nome_formador: response.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || '',
+                descricao_formador: response.sincrono?.id_formador_formadore?.descricao_formador || '',
+            }
             });
 
             if(response.idioma){
@@ -257,7 +262,7 @@ const EditCourse = () => {
                         {cursos.isassincrono === false && (
                             <div className='mt-2'>
                             <label className='mt-2 fw-bold'>Formador</label>
-                                <select name="id_formador" value={cursos.sincrono?.id_formador_formadore?.id_formador || ""} onChange={handleChange} className='form-select'>
+                                <select name="id_formador" value={cursos.sincrono?.id_formador || ""} onChange={handleChange} className='form-select'>
                                     <option value="">-- Selecionar Formador --</option>
                                     {formadores.map(f => (
                                         <option key={f.id_formador} value={f.id_formador}>{f.nome}</option>
