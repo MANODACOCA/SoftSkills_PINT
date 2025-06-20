@@ -9,10 +9,9 @@ const CompletedCourses = () => {
     const { user } = useUser();
     const [courses, setCourses] = useState([]);
     const [tipologia, setTipologia] = useState('todos');
-    const userId = user.id_utilizador;
     const [loading, setLoading] = useState(true);
 
-    const fetchCompletedCourses = async () => {
+    const fetchCompletedCourses = async (userId) => {
         try {
             setLoading(true);
             const data = await getCompletedCourses(userId);
@@ -26,13 +25,11 @@ const CompletedCourses = () => {
     };
 
     useEffect(() => {
-        window.scrollTo(0, 0);
-        fetchCompletedCourses();
+        if (user?.id_utilizador) {
+            window.scrollTo(0, 0);
+            fetchCompletedCourses(user.id_utilizador);
+        }
     }, [tipologia, user]);
-
-    if (!user || loading) {
-        return <SpinnerBorder />;
-    }
 
     const filteredCourses = courses.filter(curso => {
         if (tipologia === 'todos') return true;
@@ -40,6 +37,10 @@ const CompletedCourses = () => {
         if (tipologia === 'assincrono') return curso.tipo === 'assincrono';
         return false;
     });
+
+    if (!user || loading) {
+        return <SpinnerBorder />;
+    }
 
     return (
         <div className="completed-courses">
@@ -59,7 +60,7 @@ const CompletedCourses = () => {
                 <div className="course-list">
                     {filteredCourses.map(course => (
                         <FeaturedCourseCard
-                            key={`${userId}-${course.id_curso}`}
+                            key={`${user.id_utilizador}-${course.id_curso}`}
                             course={course}
                             showDescription={false}
                             showFormador={false}

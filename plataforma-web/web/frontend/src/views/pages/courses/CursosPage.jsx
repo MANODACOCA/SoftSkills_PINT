@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
 import { formatDayMonthYear, radomArray } from '../../components/shared_functions/FunctionsUtils';
+import SpinnerBorder from '../../components/spinner-border/spinner-border';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
@@ -13,6 +14,7 @@ const CursosPage = () => {
   const [showExplorarMenu, setShowExplorarMenu] = useState(false);
   const [courses, setCourses] = useState([]);
   const [tipologia, setTipologia] = useState('todos');
+  const [loading, setLoading] = useState(true);
 
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -22,6 +24,7 @@ const CursosPage = () => {
 
   const fetchCursosDisponiveisInscricao = async () => {//obter cursos disponiveis inscricao
     try {
+      setLoading(true);
       const cursosDisponiveis = await getCursosDisponiveisParaInscricao(tipologia, null, searchTerm, topicosIds);
 
       const cursosRadom = radomArray(cursosDisponiveis);
@@ -30,6 +33,8 @@ const CursosPage = () => {
 
     } catch (error) {
       console.error('Erro ao encontrar cursos disponiveis para inscricao:', error);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -39,6 +44,9 @@ const CursosPage = () => {
     fetchCursosDisponiveisInscricao();
   }, [tipologia, searchTerm, topicosIds]);
 
+  if (!courses || loading) {
+    return <SpinnerBorder />;
+  }
 
   return (
     <div className="enrolled-courses">
@@ -49,9 +57,9 @@ const CursosPage = () => {
             <button className="btn btn-primary">
               Explorar
             </button>
-            {showExplorarMenu && 
+            {showExplorarMenu &&
               <div className="position-absolute" style={{ zIndex: 10 }}>
-                <FilterMenu IdsTopicos={setTopicosIds}/>
+                <FilterMenu IdsTopicos={setTopicosIds} />
               </div>
             }
           </div>

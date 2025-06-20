@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 
 import ProtectedRoute from './views/components/rotasProtegidas/rotasProtegidas';
-import TokenChecker  from './utils/authService.js';
+import TokenChecker from './utils/authService.js';
 
 //components login
 import Login from './views/components/login_comp/login/Login';
@@ -82,13 +82,13 @@ function App() {
           <Route path='/perfil/info' element={<InfoProfile />} />
           <Route path="/aula/" element={<ClassPage />} />
           {/* admin */}
-          <Route path='/admin/home' element={<HomePageAdmin />}/>
-          <Route path='/admin/cursos' element={<CourseTable />}/>
-          <Route path='/admin/utilizadores' element={<UsersTables />}/>
-          <Route path='/admin/queixas' element={<QueixasTables />}/>
-          <Route path='/admin/gerirforum' element={<ForumTable />}/>
-          <Route path='/admin/cursos/criar' element={<CreateCourse />}/>
-          <Route path='/admin/cursos/editar/:id' element={<EditCourse />}/>
+          <Route path='/admin/home' element={<HomePageAdmin />} />
+          <Route path='/admin/cursos' element={<CourseTable />} />
+          <Route path='/admin/utilizadores' element={<UsersTables />} />
+          <Route path='/admin/queixas' element={<QueixasTables />} />
+          <Route path='/admin/gerirforum' element={<ForumTable />} />
+          <Route path='/admin/cursos/criar' element={<CreateCourse />} />
+          <Route path='/admin/cursos/editar/:id' element={<EditCourse />} />
           {/* admin */}
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './profile.css';
 import { useUser } from '../../../utils/userContext';
+import Swal from 'sweetalert2';
 import { alterarPassword, update_utilizador } from '../../../api/utilizador_axios';
 
 const InfoProfile = () => {
@@ -10,7 +11,6 @@ const InfoProfile = () => {
     const [repNovapassword, setRepNovapassword] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
-    console.log(user)
 
     const handleChangeRole = (role) => {
         if (role !== activeRole) {
@@ -46,12 +46,46 @@ const InfoProfile = () => {
                 return;
             }
 
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success me-2",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: true
+            });
+            swalWithBootstrapButtons.fire({
+                title: "Têm a certeza que quer alterar a sua password?",
+                text: "Não podes reverter esta alteração!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sim, alterar.",
+                cancelButtonText: "Não, cancelar!",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await alterarPassword(user.email, novapassword);
+                    setNovapassword('');
+                    setRepNovapassword('');
+                    setSuccessMessage('A sua password foi alterada com sucesso!');
+                    swalWithBootstrapButtons.fire({
+                        title: "Alteração realizada com sucesso!",
+                        icon: "success",
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                } else if (
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    setNovapassword('');
+                    setRepNovapassword('');
+                    swalWithBootstrapButtons.fire({
+                        title: "Alterção Cancelada",
+                        icon: "error",
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            });
 
-            
-            await alterarPassword(user.email, novapassword);
-            setNovapassword('');
-            setRepNovapassword('');
-            setSuccessMessage('A sua password foi alterada com sucesso!');
         } catch (error) {
             if (error.message === 'Essa é a sua password antiga! Tente outra.') {
                 setError(error.message);
@@ -76,7 +110,7 @@ const InfoProfile = () => {
                         <small className="text-muted d-block mb-4 text-center">
                             Aqui podes alterar a tua palavra-passe por motivos de segurança ou preferência pessoal.
                         </small>
-                        
+
                         <div className="mb-3">
                             <label htmlFor="novaPassword" className="form-label">Nova Password</label>
                             <input
@@ -155,7 +189,7 @@ const InfoProfile = () => {
                         </small>
                     </div>
 
-                    <hr />
+          {/*           <hr />
 
                     <div className="mb-3 d-flex align-items-center justify-content-between">
                         <h4 className="m-0">Queres ser Formador?</h4>
@@ -163,7 +197,7 @@ const InfoProfile = () => {
                     </div>
                     <small className="text-muted">
                         Se queres lecionar cursos, clica para solicitar a evolução da tua conta para Formador.
-                    </small>
+                    </small> */}
                 </div>
             </div>
         </div>

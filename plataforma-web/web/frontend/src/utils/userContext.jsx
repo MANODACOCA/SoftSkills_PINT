@@ -7,13 +7,21 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [roles, setRoles] = useState([]);
-  const [activeRole, setActiveRole] = useState('formando');
+  const [activeRole, setActiveRoleState] = useState(() => {
+    return localStorage.getItem('activeRole') || 'formando';
+  });
+
+  const setActiveRole = (role) => {
+    localStorage.setItem('activeRole', role);
+    setActiveRoleState(role);
+  };
 
   const loadUser = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
       setUser(null);
       setRoles([]);
+      setActiveRole('formando');
       return;
     }
 
@@ -29,9 +37,16 @@ export const UserProvider = ({ children }) => {
       setUser(userData);
       setRoles(userRoles);
 
-      if (userRoles.includes('formando')) setActiveRole('formando');
-      else if (userRoles.includes('formador')) setActiveRole('formador');
-      else setActiveRole('admin');
+      const storedRole = localStorage.getItem('activeRole');
+      if (userRoles.includes(storedRole)) {
+        setActiveRole(storedRole);
+      } else if (userRoles.includes('formando')) {
+        setActiveRole('formando');
+      } else if (userRoles.includes('formador')) {
+        setActiveRole('formador');
+      } else {
+        setActiveRole('admin');
+      }
 
     } catch (err) {
       console.error("Erro ao carregar utilizador:", err);
