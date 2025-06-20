@@ -2,21 +2,17 @@ import MaterialForm from '../../../components/courses_form/MaterialForm';
 import AulaForm from '../../../components/courses_form/AulaForm';
 import { useEffect, useState, useRef } from 'react';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
-import { getCategoriaAreaTopico } from '../../../../api/topico_axios';
-import { list_material_apoio } from '../../../../api/material_apoio_axios';
-import { list_aulas } from '../../../../api/aulas_axios';
-import { get_cursos } from '../../../../api/cursos_axios';
+import { getCategoriaAreaTopico, update_topico } from '../../../../api/topico_axios';
+import { list_material_apoio, update_material_apoio } from '../../../../api/material_apoio_axios';
+import { list_aulas, update_aulas } from '../../../../api/aulas_axios';
+import { get_cursos, update_cursos } from '../../../../api/cursos_axios';
 import { useParams } from 'react-router-dom';
 import { formatYearMonthDay } from '../../../components/shared_functions/FunctionsUtils';
 import { Tab, Tabs } from 'react-bootstrap';
 import './Editar_Course.css';
 import ISO6391 from 'iso-639-1';
 import Select from 'react-select';
-
-const formadores = [
-    { id_formador: 1, nome: 'João Silva' },
-    { id_formador: 2, nome: 'Ana Costa' },
-];
+import { list_formadores } from '../../../../api/formadores_axios';
 
 const EditCourse = () => {
     const {id} = useParams();
@@ -25,6 +21,7 @@ const EditCourse = () => {
     const [formato, setFormato] = useState([]);
     const [catAreaTopico, setCatAreaTop] = useState([]);
     const [cursos, setCursos] = useState({});
+    const [formadores, setFormadores] = useState([]);
     //const sentinelRef = useRef(null);
     const stopRef = useRef(null);
     const [isSticky, setIsSticky] = useState(false);
@@ -58,7 +55,19 @@ const EditCourse = () => {
         try{
             const response = await get_cursos(id);
             console.log(response);
-            setCursos(response);
+            setCursos({
+            ...response,
+            id_topico: response.id_topico_topico?.id_topico,
+            id_area: response.id_topico_topico?.id_area_area?.id_area,
+            id_categoria: response.id_topico_topico?.id_area_area?.id_categoria_categorium?.id_categoria,
+            });
+
+            if(response.idioma){
+                setSelectedLanguage({
+                    value: response.idioma,
+                    label: ISO6391.getNativeName(response.idioma)
+                });
+            }
         } catch (error) {
             console.log('Erro ao encontrar cursos');
         }
@@ -70,7 +79,7 @@ const EditCourse = () => {
             console.log(response);
             setFormato(response);
         } catch (error) {
-            console.log('Erro ao encontrar formatos');
+            console.log('Erro ao encontrar formatos', error);
         }
     };
 
@@ -80,7 +89,7 @@ const EditCourse = () => {
             console.log(response);
             setCatAreaTop(response);
         } catch (error) {
-            console.log('Erro ao encontrar Categorias, Áreas e Tópicos');
+            console.log('Erro ao encontrar Categorias, Áreas e Tópicos', error);
         }
     }
     
@@ -90,7 +99,7 @@ const EditCourse = () => {
             console.log(response);
             setMateriais(response);
         } catch(error) {
-            console.log('Erro ao listar Material de Apoio');
+            console.log('Erro ao listar Material de Apoio', error);
         }
     }
 
@@ -100,7 +109,17 @@ const EditCourse = () => {
             console.log(response);
             setAulas(response);
         } catch(error) {
-            console.log('Erro encontrar as Aulas');
+            console.log('Erro encontrar as Aulas', error);
+        }
+    }
+
+    const fetchFormadores = async () => {
+        try{
+            const response = await list_formadores();
+            console.log(response);
+            setFormadores(response);
+        } catch(error) {
+            console.log('Erro ao encontrar a lista de formadores', error);
         }
     }
 
@@ -118,6 +137,7 @@ const EditCourse = () => {
         fetchFormatos();
         fetchCategoriaArea();
         fetchMaterialApoio();
+        fetchFormadores();
         fetchAulas();
         fetchCurso(id);
     }, []);
@@ -126,9 +146,35 @@ const EditCourse = () => {
     const successMessage = null;
 
 
-    const handleChange = () => { };
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        let updateValue = value;
 
-    const handleSubmit = (e) => e.preventDefault();
+        if(name === "isassincrono"){
+            updateValue = value === "true";
+        }
+
+        setCursos(prev => ({
+            ...prev,
+            [name]: updateValue,
+        }));
+     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const dadosCurso = {
+            ...cursos,
+            idioma: selectedLanguage?.value || "",
+        }
+        try{
+            await update_cursos(id, dadosCurso);
+            await update_aulas(id, dadosCurso);
+            await update_material_apoio(id, dadosCurso);
+            await update_topico(id, dadosCurso);
+        } catch(error){
+            console.log("Erro ao atualziar o curso", error);
+        }
+    } 
 
     const addAula = () => {
         setAulas(prev => [...prev, { nome_aula: '', data_aula: '', caminhos_url: [''], conteudos: [] }]);
@@ -148,40 +194,40 @@ const EditCourse = () => {
                 <form onSubmit={handleSubmit}>
                     <div className='mx-5'>
                         <div className='mt-2'>
-                            <label className='form-label'>Nome do Curso</label>
+                            <label className='form-label fw-bold'>Nome do Curso</label>
                             <input type="text" name="nome_curso" className='form-control' value={cursos.nome_curso || ""} onChange={handleChange} required />
                         </div>
 
                         <div className='mt-2'>
-                            <label className='form-label'>Descrição do Curso</label>
+                            <label className='form-label fw-bold'>Descrição do Curso</label>
                             <textarea name="descricao_curso" className='form-control' rows="4" value={cursos.descricao_curso || ""} onChange={handleChange} required />
                         </div>
 
                         {/* DATAS */}
                         <div className='row mt-2'>
                             <div className='col'>
-                                <label className='form-label'>Início da Inscrição</label>
+                                <label className='form-label fw-bold'>Início da Inscrição</label>
                                 <input type="date" name="data_insc_ini" className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required />
                             </div>
                             <div className='col'>
-                                <label className='form-label'>Fim da Inscrição</label>
+                                <label className='form-label fw-bold'>Fim da Inscrição</label>
                                 <input type="date" name="data_insc_fim" className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required />
                             </div>
                         </div>
 
                         <div className='row mt-2'>
                             <div className='col'>
-                                <label className='form-label'>Início do Curso</label>
+                                <label className='form-label fw-bold'>Início do Curso</label>
                                 <input type="date" name="data_curso_ini" className='form-control' value={cursos.data_inicio_curso ? formatYearMonthDay(cursos.data_inicio_curso) : ""} onChange={handleChange} required />
                             </div>
                             <div className='col'>
-                                <label className='form-label'>Fim do Curso</label>
+                                <label className='form-label fw-bold'>Fim do Curso</label>
                                 <input type="date" name="data_curso_fim" className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required />
                             </div>
                         </div>
 
                         <div className='mt-2'>
-                            <label className='form-label'>Idioma</label>
+                            <label className='form-label fw-bold'>Idioma</label>
                             <Select
                             options={languageOptions}
                             value={selectedLanguage}
@@ -193,49 +239,52 @@ const EditCourse = () => {
                         </div>
 
                         <div className='mt-2'>
-                            <label className='form-label'>Horas do Curso</label>
+                            <label className='form-label fw-bold'>Horas do Curso</label>
                             <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso || ""} onChange={handleChange} required />
                         </div>
 
                         {/* Tipo */}
                         <div className='mt-2'>
-                            <label className='form-label'>Tipologia</label>
+                            <label className='form-label fw-bold'>Tipologia</label>
                             <select name="isassincrono" value={cursos.isassincrono} onChange={handleChange} className='form-select'>
                                 <option value="">-- Escolher Tipologia --</option>
-                                <option value={cursos.issincrono}>Síncrono</option>
-                                <option value={cursos.isassincrono}>Assíncrono</option>
+                                <option value="false">Síncrono</option>
+                                <option value="true">Assíncrono</option>
                             </select>    
                         </div>
 
                         {/* Se for síncrono, mostra formador */}
                         {cursos.isassincrono === false && (
                             <div className='mt-2'>
-                                <select name="id_formador" value={cursos.id_formador} onChange={handleChange} className='form-select'>
+                            <label className='mt-2 fw-bold'>Formador</label>
+                                <select name="id_formador" value={cursos.sincrono?.id_formador_formadore?.id_formador || ""} onChange={handleChange} className='form-select'>
                                     <option value="">-- Selecionar Formador --</option>
                                     {formadores.map(f => (
                                         <option key={f.id_formador} value={f.id_formador}>{f.nome}</option>
                                     ))}
                                 </select>
-                                <textarea name="descricao_formador" value={cursos.descricao_formador || ""} onChange={handleChange} className='form-control mt-2' placeholder="Descrição do Formador" />
-                                <input type="number" name="numero_vagas" value={cursos.numero_vagas || ""} onChange={handleChange} className='form-control mt-2' placeholder="Número de Vagas" />
+                                <label className='mt-2 fw-bold'>Descrição Formador</label>
+                                <textarea name="descricao_formador" value={cursos.sincrono?.id_formador_formadore?.descricao_formador || ""} onChange={handleChange} className='form-control mt-2' placeholder="Descrição do Formador" />
+                                <label className='mt-2 fw-bold'>Número Vagas</label>
+                                <input type="number" name="numero_vagas" value={cursos.sincrono?.numero_vagas || ""} onChange={handleChange} className='form-control mt-2' placeholder="Número de Vagas" />
                             </div>
                         )}
                         
                         {/* CATEGORIA */}
                         <div className='mt-2'>
-                            <label className='form-label'>Categoria</label>
-                            <select name="id_topico" className='form-select' value={cursos.id_topico} onChange={handleChange} required>
+                            <label className='form-label fw-bold'>Categoria</label>
+                            <select name="id_categoria" className='form-select' value={cursos.id_categoria || ""} onChange={handleChange} required>
                                 <option value="">--Escolher categoria--</option>
-                                {catAreaTopico.map(t => (
-                                    <option key={t.id_categoria} value={t.id_categoria}>{t.nome_cat}</option>
+                                {catAreaTopico.map(cat => (
+                                    <option key={cat.id_categoria} value={cat.id_categoria}>{cat.nome_cat}</option>
                                 ))}
                             </select>
                         </div>
 
                         {/* AREA */}
                         <div className='mt-2'>
-                            <label className='form-label'>Area</label>
-                            <select name="id_topico" className='form-select' value={cursos.id_topico} onChange={handleChange} required>
+                            <label className='form-label fw-bold'>Area</label>
+                            <select name="id_area" className='form-select' value={cursos.id_area || ""} onChange={handleChange} required>
                                 <option value="">--Escolher area--</option>
                                 {catAreaTopico?.areas?.map(t => (
                                     <option key={t.id_area} value={t.id_area}>{t.nome_area}</option>
@@ -245,7 +294,7 @@ const EditCourse = () => {
 
                         {/* TOPICO */}
                         <div ref={stopRef} className='mt-2'>
-                            <label className='form-label'>Tópico</label>
+                            <label className='form-label fw-bold'>Tópico</label>
                             <select name="id_topico" className='form-select' value={cursos.id_topico} onChange={handleChange} required>
                                 <option value="">--Escolher tópico--</option>
                                 {catAreaTopico?.areas?.topicos?.map(t => (

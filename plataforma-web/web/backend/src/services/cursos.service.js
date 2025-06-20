@@ -426,7 +426,7 @@ async function getAllCoursesWithAllInfo() {
             {
               model: formadores,
               as: 'id_formador_formadore',
-              attributes: ['id_formador'],
+              attributes: ['id_formador', 'descricao_formador'],
               include: [
                 {
                   model: utilizador,
@@ -482,6 +482,89 @@ async function getAllCoursesWithAllInfo() {
 }
 
 
+async function getCursoWithAllInfoOneCourse(id) {
+  try {
+    const curso = await cursos.findOne({
+      where: { id_curso: id },
+      attributes: [
+        'id_curso',
+        'nome_curso',
+        'data_inicio_curso',
+        'data_fim_curso',
+        'data_inicio_inscricao',
+        'data_fim_inscricao',
+        'issincrono',
+        'isassincrono',
+        'horas_curso',
+        'contador_formandos',
+        'estado',
+        'id_gestor_administrador',
+        'idioma',
+        'imagem',
+        'descricao_curso',
+        'id_topico'
+      ],
+      include: [
+        {
+          model: sincrono,
+          as: 'sincrono',
+          attributes: ['numero_vagas', 'id_formador'],
+          include: [
+            {
+              model: formadores,
+              as: 'id_formador_formadore',
+              attributes: ['id_formador', 'descricao_formador'],
+              include: [
+                {
+                  model: utilizador,
+                  as: 'id_formador_utilizador',
+                  attributes: ['nome_utilizador']
+                }
+              ]
+            }
+          ]
+        },
+        {
+          model: gestor_administrador,
+          as: 'id_gestor_administrador_gestor_administrador',
+          include: [
+            {
+              model: utilizador,
+              as: 'id_gestor_administrador_utilizador',
+              attributes: ['nome_utilizador']
+            }
+          ]
+        },
+        {
+          model: topico,
+          as: 'id_topico_topico',
+          attributes: ['nome_topico'],
+          include: [
+            {
+              model: area,
+              as: 'id_area_area',
+              attributes: ['nome_area'],
+              include: [
+                {
+                  model: categoria,
+                  as: 'id_categoria_categorium',
+                  attributes: ['nome_cat']
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    });
+
+    return curso;
+
+  } catch (error) {
+    console.error('Erro ao buscar o curso com info completa:', error);
+    throw error;
+  }
+}
+
 
 module.exports = {
   getCursosDiponiveisParaInscricao,
@@ -495,4 +578,5 @@ module.exports = {
   getCoursePopular,
   updateFormandosCounter,
   getAllCoursesWithAllInfo,
+  getCursoWithAllInfoOneCourse,
 };
