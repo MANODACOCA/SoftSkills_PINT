@@ -57,7 +57,7 @@ export const delete_conteudos_partilhado = async (id) => {
 
 export const getForuns = async (ordenar = "Mais Recentes") => {
     try{
-         let url = `${API_URL}/foruns?ordenar=${ordenar}`;
+        let url = `${API_URL}/foruns?ordenar=${ordenar}`;
          
         const response = await axios.get(url);
         return response.data;
@@ -67,37 +67,58 @@ export const getForuns = async (ordenar = "Mais Recentes") => {
     }
 }
 
-export const filtrarConteudosPartilhados = async (filtros) => {
+export const filtrarConteudosPartilhados = async (filtros = {}) => {
   try {
-    const response = await axios.get(`${API_URL}/filtros`, { // Corrigir o endpoint
-      params: {
-        id_area: filtros.id_area || undefined, // Envia undefined se vazio
-        id_topico: filtros.id_topico || undefined
-      }
-    });
-    return response.data.data;
+    console.log('Filtros enviados para o backend:', filtros); // Adicione este log
+    
+    const params = new URLSearchParams();
+    if (filtros.id_topico) params.append('id_topico', filtros.id_topico);
+    if (filtros.id_area) params.append('id_area', filtros.id_area);
+    if (filtros.id_categoria) params.append('id_categoria', filtros.id_categoria);
+
+    const response = await axios.get(`${API_URL}/filtros`, { params });
+    console.log('Resposta do backend:', response.data); // Adicione este log
+    
+    return response.data;
   } catch (error) {
     console.error('Erro ao filtrar conteúdos:', error);
     throw error;
   }
 };
 
-export const getAreas = async () => {
+// Métodos auxiliares para os filtros (versão melhorada)
+export const getAreas = async (idCategoria = null) => {
   try {
-    const response = await axios.get(`http://localhost:3000/area/list`);
-    return response.data.data;
+    const params = new URLSearchParams();
+    if (idCategoria) params.append('id_categoria', idCategoria);
+    
+    const response = await axios.get(`http://localhost:3000/area/list`, { params });
+    return response.data;
   } catch (error) {
     console.error('Erro ao buscar áreas:', error);
     throw error;
   }
 };
 
-export const getTopicos = async () => {
+export const getTopicos = async (idArea = null) => {
   try {
-    const response = await axios.get(`http://localhost:3000/topico/list`);
-    return response.data.data;
+    const params = new URLSearchParams();
+    if (idArea) params.append('id_area', idArea);
+    
+    const response = await axios.get(`http://localhost:3000/topico/list`, { params });
+    return response.data;
   } catch (error) {
     console.error('Erro ao buscar tópicos:', error);
+    throw error;
+  }
+};
+
+export const getCategorias = async () => {
+  try {
+    const response = await axios.get(`http://localhost:3000/categoria/list`);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar categorias:', error);
     throw error;
   }
 };

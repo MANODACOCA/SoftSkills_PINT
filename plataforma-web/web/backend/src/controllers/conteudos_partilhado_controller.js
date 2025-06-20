@@ -130,21 +130,30 @@ controllers.getForuns = async (req, res) => {
   }
 }
 
-controllers.filtrarConteudos = async (req, res) => {
+controllers.listarConteudosFiltrados = async (req, res) => {
   try {
-    const filtros = req.query;
-    
-    const resultados = await conteudoPartilhadoService.filtrarConteudosPartilhados(filtros);
-    
+    // Obter filtros da query string
+    const filtros = {
+      id_topico: req.query.id_topico ? parseInt(req.query.id_topico) : null,
+      id_area: req.query.id_area ? parseInt(req.query.id_area) : null,
+      id_categoria: req.query.id_categoria ? parseInt(req.query.id_categoria) : null
+    };
+
+    // Chamar o service
+    const conteudospartilhados = await conteudoPartilhadoService.filtrarConteudosPartilhados(filtros);
+
+    // Formatar resposta
     res.status(200).json({
       success: true,
-      data: resultados
+      count: conteudospartilhados.length,
+      data: conteudospartilhados
     });
+
   } catch (error) {
-    console.error('Erro no controlador:', error);
+    console.error('Erro no controller:', error);
     res.status(500).json({
       success: false,
-      message: 'Erro ao filtrar conteúdos partilhados',
+      message: 'Erro ao buscar conteúdos',
       error: error.message
     });
   }

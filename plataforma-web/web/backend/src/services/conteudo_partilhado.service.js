@@ -1,6 +1,6 @@
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { conteudos_partilhado, topico, post, utilizador, area } = require('../models/init-models')(sequelize);
+const { conteudos_partilhado, topico, post, utilizador, area, categoria } = require('../models/init-models')(sequelize);
 
 async function getPostsByConteudoPartilhado (conteudoPartilhadoId) {
         try {
@@ -76,33 +76,50 @@ async function filtrarConteudosPartilhados(filtros) {
     const whereClause = {};
     const include = [];
 
-    // Always include the topic information
+    // Estrutura base de includes (tópico -> área -> categoria)
     const includeTopico = {
       model: topico,
       as: 'id_topico_topico',
       attributes: ['id_topico', 'nome_topico', 'id_area'],
-      required: true // Use inner join for filtering
+      required: true
     };
 
-    // If filtering by area, include area model
-    if (filtros.id_area) {
-      includeTopico.include = [{
+    // Se filtro por área ou categoria, incluir o modelo área
+    if (filtros.id_area || filtros.id_categoria) {
+      const includeArea = {
         model: area,
         as: 'id_area_area',
-        attributes: ['id_area', 'nome_area'],
-        where: { id_area: filtros.id_area },
-        required: true // Use inner join for filtering
-      }];
+        attributes: ['id_area', 'nome_area', 'id_categoria'],
+        required: true
+      };
+
+      // Se filtro por categoria, incluir o modelo categoria
+      if (filtros.id_categoria) {
+        includeArea.include = [{
+          model: categoria,
+          as: 'id_categoria_categorium',
+          attributes: ['id_categoria', 'nome_cat'],
+          where: { id_categoria: filtros.id_categoria },
+          required: true
+        }];
+      }
+
+      // Se filtro por área, adicionar where ao modelo área
+      if (filtros.id_area) {
+        includeArea.where = { id_area: filtros.id_area };
+      }
+
+      includeTopico.include = [includeArea];
     }
 
-    // Filter by topic ID if provided
+    // Filtro por tópico (nível mais alto)
     if (filtros.id_topico) {
       whereClause.id_topico = filtros.id_topico;
     }
 
     include.push(includeTopico);
 
-    // Final query
+    // Consulta final
     const resultados = await conteudos_partilhado.findAll({
       where: whereClause,
       include: include,
