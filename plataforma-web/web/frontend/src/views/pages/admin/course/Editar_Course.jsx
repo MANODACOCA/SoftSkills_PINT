@@ -2,7 +2,7 @@ import MaterialForm from '../../../components/courses_form/MaterialForm';
 import AulaForm from '../../../components/courses_form/AulaForm';
 import { useEffect, useState, useRef } from 'react';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
-import { getCategoriaAreaTopico, update_topico } from '../../../../api/topico_axios';
+import { getCategoriaAreaTopico, list_topico, update_topico } from '../../../../api/topico_axios';
 import { list_material_apoio, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { list_aulas, update_aulas } from '../../../../api/aulas_axios';
 import { get_cursos, update_cursos } from '../../../../api/cursos_axios';
@@ -13,6 +13,8 @@ import './Editar_Course.css';
 import ISO6391 from 'iso-639-1';
 import Select from 'react-select';
 import { list_formadores } from '../../../../api/formadores_axios';
+import { list_area } from '../../../../api/area_axios';
+import { list_categoria } from '../../../../api/categoria_axios';
 
 const EditCourse = () => {
     const {id} = useParams();
@@ -21,6 +23,9 @@ const EditCourse = () => {
     const [formato, setFormato] = useState([]);
     const [catAreaTopico, setCatAreaTop] = useState([]);
     const [cursos, setCursos] = useState({});
+    const [categoria, setCategoria] =  useState([]);
+    const [area, setArea] =  useState([]);
+    const [topico, setTopico] =  useState([]);
     const [formadores, setFormadores] = useState([]);
     //const sentinelRef = useRef(null);
     const stopRef = useRef(null);
@@ -55,12 +60,7 @@ const EditCourse = () => {
         try{
             const response = await get_cursos(id);
             console.log(response);
-            setCursos({
-            ...response,
-            id_topico: response.id_topico_topico?.id_topico,
-            id_area: response.id_topico_topico?.id_area_area?.id_area,
-            id_categoria: response.id_topico_topico?.id_area_area?.id_categoria_categorium?.id_categoria,
-            });
+            setCursos(response);
 
             if(response.idioma){
                 setSelectedLanguage({
@@ -83,7 +83,7 @@ const EditCourse = () => {
         }
     };
 
-    const fetchCategoriaArea = async () => {
+    const fetchCategoriaAreaTopico = async () => {
         try {
             const response = await getCategoriaAreaTopico();
             console.log(response);
@@ -92,7 +92,37 @@ const EditCourse = () => {
             console.log('Erro ao encontrar Categorias, Áreas e Tópicos', error);
         }
     }
+
+    const fetchArea = async () => {
+        try{
+            const response = await list_area();
+            console.log(response);
+            setArea(response);
+        } catch (error) {
+            console.log('Erro ao encontrar Area', error);
+        }
+    }
+
+    const fetchTopico = async () => {
+        try{
+            const response = await list_topico();
+            console.log(response);
+            setTopico(response);
+        } catch (error) {
+            console.log('Erro ao encontrar Topico', error);
+        }
+    }
     
+    const fetchCategoria = async () => {
+        try {
+            const response = await list_categoria();
+            console.log(response);
+            setCategoria(response);
+        } catch (error) {
+            console.log('Erro ao listar Categorias!', error);
+        }
+    }
+     
     const fetchMaterialApoio = async () => {
         try {
             const response = await list_material_apoio();
@@ -135,8 +165,11 @@ const EditCourse = () => {
     
     useEffect(() => {
         fetchFormatos();
-        fetchCategoriaArea();
+        fetchCategoriaAreaTopico();
         fetchMaterialApoio();
+        fetchCategoria();
+        fetchArea();
+        fetchTopico();
         fetchFormadores();
         fetchAulas();
         fetchCurso(id);
@@ -257,10 +290,10 @@ const EditCourse = () => {
                         {cursos.isassincrono === false && (
                             <div className='mt-2'>
                             <label className='mt-2 fw-bold'>Formador</label>
-                                <select name="id_formador" value={cursos.sincrono?.id_formador_formadore?.id_formador || ""} onChange={handleChange} className='form-select'>
+                                <select name="id_formador" value={cursos?.sincrono?.id_formador_formadore?.id_formador_utilizador?.id_util || ""} onChange={handleChange} className='form-select'>
                                     <option value="">-- Selecionar Formador --</option>
-                                    {formadores.map(f => (
-                                        <option key={f.id_formador} value={f.id_formador}>{f.nome}</option>
+                                    {formadores.map((formador) => (
+                                        <option key={formador.id_formador} value={formador.id_formador}>{formador.id_formador_utilizador.nome_utilizador}</option>
                                     ))}
                                 </select>
                                 <label className='mt-2 fw-bold'>Descrição Formador</label>
@@ -273,9 +306,9 @@ const EditCourse = () => {
                         {/* CATEGORIA */}
                         <div className='mt-2'>
                             <label className='form-label fw-bold'>Categoria</label>
-                            <select name="id_categoria" className='form-select' value={cursos.id_categoria || ""} onChange={handleChange} required>
+                            <select name="id_categoria" className='form-select' value={cursos?.id_topico_topico?.id_area_area?.id_categoria || ""} onChange={handleChange} required>
                                 <option value="">--Escolher categoria--</option>
-                                {catAreaTopico.map(cat => (
+                                {categoria.map((cat) => (
                                     <option key={cat.id_categoria} value={cat.id_categoria}>{cat.nome_cat}</option>
                                 ))}
                             </select>
@@ -284,20 +317,20 @@ const EditCourse = () => {
                         {/* AREA */}
                         <div className='mt-2'>
                             <label className='form-label fw-bold'>Area</label>
-                            <select name="id_area" className='form-select' value={cursos.id_area || ""} onChange={handleChange} required>
+                            <select name="id_area" className='form-select' value={cursos.id_topico_topico?.id_area || ""} onChange={handleChange} required>
                                 <option value="">--Escolher area--</option>
-                                {catAreaTopico?.areas?.map(t => (
-                                    <option key={t.id_area} value={t.id_area}>{t.nome_area}</option>
+                                {area.map((area) => (
+                                    <option key={area.id_area} value={area.id_area}>{area.nome_area}</option>
                                 ))}
                             </select>
                         </div>
 
-                        {/* TOPICO */}
+                        {/* TOPICOO */}
                         <div ref={stopRef} className='mt-2'>
                             <label className='form-label fw-bold'>Tópico</label>
-                            <select name="id_topico" className='form-select' value={cursos.id_topico} onChange={handleChange} required>
+                            <select name="id_topico" className='form-select' value={cursos?.id_topico} onChange={handleChange} required>
                                 <option value="">--Escolher tópico--</option>
-                                {catAreaTopico?.areas?.topicos?.map(t => (
+                                {topico.map((t) => (
                                     <option key={t.id_topico} value={t.id_topico}>{t.nome_topico}</option>
                                 ))}
                             </select>
