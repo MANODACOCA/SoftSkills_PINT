@@ -325,7 +325,7 @@ const EditCourse = () => {
                             </select>
                         </div>
 
-                        {/* TOPICO */}
+                        {/* TOPICOO */}
                         <div ref={stopRef} className='mt-2'>
                             <label className='form-label fw-bold'>Tópico</label>
                             <select name="id_topico" className='form-select' value={cursos?.id_topico} onChange={handleChange} required>
