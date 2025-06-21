@@ -8,8 +8,12 @@ const controllers = {};
 
 
 controllers.list = async (req,res)=>{
-  const data = await model.findAll();
-  res.status(200).json(data);
+  try{
+    const data = await model.findAll();
+    res.status(200).json(data);
+  } catch(error) {
+    res.status(500).json({error: 'Erro ao procurar a lista de Categoria', desc: error.message});
+  }
 };
 
 controllers.get = async (req,res)=>{

@@ -4,12 +4,30 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).formadores;
 const controllers = {};
+const { utilizador } = require('../models/init-models')(sequelize);
+
 
 
 
 controllers.list = async (req,res)=>{
-  const data = await model.findAll();
-  res.status(200).json(data);
+  try{
+    const data = await model.findAll({
+      attributes: [
+        'id_formador',
+        'descricao_formador'        
+      ],
+      include: [
+        {
+          model: utilizador,
+          as: 'id_formador_utilizador',
+          attributes: ['nome_utilizador']
+        }
+      ]
+    });
+    res.status(200).json(data);
+  } catch(error) {
+    res.status(500).json({error: 'Erro ao listar utilizadores!', desc: error.message});
+  }
 };
 
 controllers.get = async (req,res)=>{

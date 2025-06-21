@@ -481,7 +481,6 @@ async function getAllCoursesWithAllInfo() {
   }
 }
 
-
 async function getCursoWithAllInfoOneCourse(id) {
   try {
     const curso = await cursos.findOne({
@@ -502,7 +501,7 @@ async function getCursoWithAllInfoOneCourse(id) {
         'idioma',
         'imagem',
         'descricao_curso',
-        'id_topico'
+        'id_topico',
       ],
       include: [
         {
@@ -541,17 +540,17 @@ async function getCursoWithAllInfoOneCourse(id) {
         {
           model: topico,
           as: 'id_topico_topico',
-          attributes: ['nome_topico'],
+          attributes: ['nome_topico', 'id_area'],
           include: [
             {
               model: area,
               as: 'id_area_area',
-              attributes: ['nome_area'],
+              attributes: ['nome_area', 'id_categoria'],
               include: [
                 {
                   model: categoria,
                   as: 'id_categoria_categorium',
-                  attributes: ['nome_cat']
+                  attributes: ['nome_cat'],
                 }
               ]
             }
