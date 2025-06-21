@@ -6,9 +6,6 @@ router.get('/',(req, res) => {
   res.send("<h1>Ups! Está vazio aqui...</h1><br><b>Caminhos:</b><br>/list<br>/get/{id}<br>/create<br>/update/{id}<br>/delete/{id}");
 });
 
-router.get('/get',(req, res) => {
-  res.json({erro: 'Sem id.'});
-});
 router.get('/update',(req, res) => {
   res.json({erro: 'Sem id.'});
 });
@@ -17,7 +14,7 @@ router.get('/delete',(req, res) => {
 });
 
 router.get('/list',controller.list);
-router.get('/get/:id',controller.get);
+router.get('/get',controller.get);
 router.post('/create',controller.create);
 router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);

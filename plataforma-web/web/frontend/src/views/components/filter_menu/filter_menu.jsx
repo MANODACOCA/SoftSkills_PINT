@@ -4,7 +4,7 @@ import "./filter_menu.css";
 import { getCategoriaAreaTopico } from '../../../api/topico_axios'
 
 
-const FilterMenu = ({IdsTopicos}) => {
+const FilterMenu = ({ IdsTopicos, closeMenu }) => {
   const [categoriasAreasTopicos, setCategoriasAreasTopicos] = useState([]);
 
   const [selectedCategoria, setSelectedCategoria] = useState(null);
@@ -29,6 +29,7 @@ const FilterMenu = ({IdsTopicos}) => {
   const handleCategoriaClick =  (categoria) => {
     const areas = categoria.areas
     handleAreaClick(areas);
+    closeMenu?.();
   }
 
   const handleAreaClick =  (areas) => {
@@ -36,10 +37,12 @@ const FilterMenu = ({IdsTopicos}) => {
 
     const setTopicosIds = allAreas.flatMap(area => area.topicos.map(t => t.id_topico));
     IdsTopicos(setTopicosIds);
+    closeMenu?.();
   }
 
   const handleTopicoClick =  (topico) => {
    IdsTopicos([topico.id_topico]);
+   closeMenu?.();
   }
 
 

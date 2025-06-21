@@ -79,8 +79,8 @@ function App() {
           <Route path="/cursos/:id" element={<CourseRegistration />} />
           <Route path="/perfil/editar" element={<EditProfile />} />
           <Route path="my/cursos/inscritos/curso/:cursoId/aula/:aulaId" element={<ClassPage />} />
+          <Route path="my/cursos/terminados/curso/:cursoId/aula/:aulaId" element={<ClassPage />} />
           <Route path='/perfil/info' element={<InfoProfile />} />
-          <Route path="/aula/" element={<ClassPage />} />
           {/* admin */}
           <Route path='/admin/home' element={<HomePageAdmin />} />
           <Route path='/admin/cursos' element={<CourseTable />} />

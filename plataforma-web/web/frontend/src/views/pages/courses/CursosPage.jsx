@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
 import { formatDayMonthYear, radomArray } from '../../components/shared_functions/FunctionsUtils';
 import SpinnerBorder from '../../components/spinner-border/spinner-border';
@@ -59,12 +60,16 @@ const CursosPage = () => {
             </button>
             {showExplorarMenu &&
               <div className="position-absolute" style={{ zIndex: 10 }}>
-                <FilterMenu IdsTopicos={setTopicosIds} />
+                <FilterMenu IdsTopicos={setTopicosIds} closeMenu={() => setShowExplorarMenu(false)} />
               </div>
             }
           </div>
+          {topicosIds.length > 0 && (
+            <button onClick={() => setTopicosIds([])} className="btn btn-danger d-flex align-items-center gap-2">
+              <FaRegTrashAlt /><span>Eliminar filtros</span>
+            </button>
+          )}
         </div>
-
         <select className='form-select w-auto' value={tipologia}
           onChange={(e) => setTipologia(e.target.value)}>
           <option value="todos">Todos</option>

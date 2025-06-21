@@ -29,7 +29,7 @@ async function sendEmail(destinatario, passwordTemporaria) {
 
     <p style="font-size: 15px; color: #333;">Para ativar a sua conta, clique no botão abaixo:</p>
     <div style="text-align: center; margin: 30px 0;">
-      <a href="http://localhost:5173/login?email=${destinatario}&password_util=${passwordTemporaria}" target="_blank" style="background-color: #3085d6; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Ativar Conta</a>
+      <a href="http://localhost:5173/login?email=${destinatario}&password_util=${passwordTemporaria}" target="_blank" style="background-color: #3b5b84; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Ativar Conta</a>
     </div>
 
     <p style="font-size: 14px; color: #888;">Se não foi você quem solicitou esta conta, por favor ignore este e-mail.</p>
@@ -66,5 +66,37 @@ async function enviarEmailVerificaCode(destinatario, codigo) {
   });
 }
 
+async function enviarEmailConfirmacaoInscricao(nome_formando, destinatario, nome_curso, data_inicio) {
+  return transporter.sendMail({
+    from: '"SoftSkills" <softskills.service@gmail.com>',
+    to: destinatario,
+    subject: `✅ Bem-vindo ao curso ${nome_curso}`,
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
+    <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+      <h2 style="color: #3085d6; text-align: center; margin-bottom: 20px;">🎓 Inscrição Confirmada</h2>
+      <p style="font-size: 16px; color: #333333; text-align: center;">Olá <strong>${nome_formando}</strong>, sua inscrição no curso <strong>${nome_curso}</strong> foi realizada com sucesso!</p>
+      
+      <div style="margin: 30px 0; text-align: center;">
+        <span style="font-size: 18px; font-weight: bold; background-color: #e6f7ff; color: #00A9E0; padding: 12px 20px; border-radius: 8px; display: inline-block;">
+          📅 Início do curso: ${data_inicio}
+        </span>
+      </div>
 
-module.exports = { sendEmail, enviarEmailVerificaCode };
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="https://softskills.pt" target="_blank" style="background-color: #3b5b84; color: #ffffff; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 8px; display: inline-block;">
+          Ir para a SoftSkills
+        </a>
+      </div>
+
+      <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
+      <p style="font-size: 12px; color: #999999; text-align: center;">Se você não realizou esta inscrição, pode ignorar este e-mail.</p>
+      <p style="font-size: 12px; color: #999999; text-align: center;">Equipe SoftSkills 💙</p>
+    </div>
+  </div>
+    `
+  });
+}
+
+
+module.exports = { sendEmail, enviarEmailVerificaCode, enviarEmailConfirmacaoInscricao };

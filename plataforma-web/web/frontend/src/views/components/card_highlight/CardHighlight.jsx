@@ -20,19 +20,23 @@ const FeaturedCourseCard = ({
   if (!course) return null;
 
   const goToCourse = async () => {
-      const verificacao = await verificar_acesso_aula(userId, course.id_curso);
-      
-      const now = new Date();
-      const dataInicioCurso = new Date(course.data_inicio_curso);
-      const dataFimCurso = new Date(course.data_fim_curso);
+    const verificacao = await verificar_acesso_aula(userId, course.id_curso);
 
-      if (verificacao.inscrito ) {
-        if ( now >= dataInicioCurso ) { //&& now <= dataFimCurso
-          navigate(`curso/${course.id_curso}/aula/${verificacao.todasAulas[0].id_aula}`);
-        } else {
-          navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
+    const now = new Date();
+    const dataInicioCurso = new Date(course.data_inicio_curso);
+    const dataFimCurso = new Date(course.data_fim_curso);
+
+    if (verificacao.inscrito) {
+      if (now >= dataInicioCurso) { //&& now <= dataFimCurso
+        if (location.pathname.startsWith('/my/cursos/inscritos')) {
+          navigate(`/my/cursos/inscritos/curso/${course.id_curso}/aula/${verificacao.todasAulas[0].id_aula}`);
+        } else if (location.pathname.startsWith('/my/cursos/terminados')) {
+          navigate(`/my/cursos/terminados/curso/${course.id_curso}/aula/${verificacao.todasAulas[0].id_aula}`);
         }
+      } else {
+        navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
       }
+    }
   };
 
 

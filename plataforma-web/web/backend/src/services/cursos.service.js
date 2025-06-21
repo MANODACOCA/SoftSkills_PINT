@@ -12,13 +12,13 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   const baseWhereAssincrono = {//filtros
     estado: true,
     issincrono: false,
-    //data_inicio_inscricao: { [Op.gt]: today },
+    data_inicio_inscricao: { [Op.gt]: today },
   };
 
   const baseWhereSincrono = {//filtros
     estado: true,
     issincrono: true,
-    //data_inicio_inscricao: { [Op.gt]: today },
+    data_inicio_inscricao: { [Op.gt]: today },
   };
 
   if (id_curso) {
@@ -222,6 +222,7 @@ async function getCourseDestaqueSincrono() {
 
 /*Esta funcao vai buscar todos os cursos em curso de um determinado formando*/
 async function getEnrolledCoursesForUser(userId, tipologia = null) {
+  const today = new Date();
   try {
     if (!userId) {
       console.log('ID do formando não fornecido');
@@ -236,10 +237,13 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
 
     const whereClause = {
       id_formando: userId,
-      status_inscricao: 1
+      status_inscricao: 1,
     };
 
-    let cursoWhere = {};
+    let cursoWhere = {
+      data_fim_curso: { [Op.gte]: today },
+    };
+
     if (tipologia === 'sincrono') {
       cursoWhere.issincrono = true;
     } else if (tipologia === 'assincrono') {
@@ -252,7 +256,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
         {
           model: cursos,
           as: 'id_curso_curso',
-          where: Object.keys(cursoWhere).length > 0 ? cursoWhere : undefined,
+          where: cursoWhere,
           attributes: [
             'id_curso', 'nome_curso', 'descricao_curso', 'data_inicio_curso',
             'data_fim_curso', 'imagem', 'issincrono', 'isassincrono',
@@ -294,79 +298,89 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
 
 /*Esta funcao vai buscar todos os cursos completosa de um determinado formando*/
 async function getCompleteCoursesFromUser(userId, tipologia = null) {
-  try {
-    if (!userId) {
-      console.log('ID do formando não fornecido');
-      return [];
+    const today = new Date();
+
+    try {
+        if (!userId) {
+            console.log('ID do formando não fornecido');
+            return [];
+        }
+
+        const formando = await formandos.findByPk(userId);
+        if (!formando) {
+            console.log(`Formando com ID ${userId} não encontrado`);
+            return [];
+        }
+
+        const whereClause = {
+            id_formando: userId,
+            status_inscricao: 1,
+        };
+
+        let cursoWhere = {
+            data_fim_curso: { [Op.lt]: today },
+        };
+
+        if (tipologia === 'sincrono') {
+            cursoWhere.issincrono = true;
+        } else if (tipologia === 'assincrono') {
+            cursoWhere.isassincrono = true;
+        }
+
+        const inscricoesComCursos = await inscricoes.findAll({//aqui vai buscar todas os cursos que tem inscricao daquele formando 
+            where: whereClause,
+            include: [
+                {
+                    model: cursos,
+                    as: 'id_curso_curso',
+                    where: cursoWhere,
+                    attributes: [
+                        'id_curso', 'nome_curso', 'descricao_curso', 'data_inicio_curso',
+                        'data_fim_curso', 'imagem', 'issincrono', 'isassincrono',
+                        'contador_formandos', 'horas_curso', 'idioma'
+                    ],
+                }
+            ],
+            order: [['data_inscricao', 'DESC']]
+        });
+
+        const cursosComNota = [];
+
+        for (const inscricao of inscricoesComCursos) {
+            const curso = inscricao.id_curso_curso;
+            if (!curso) continue;
+
+            const resultado = await resultados.findOne({ // Buscar resultado final do formando para esse curso
+                where: {
+                    id_curso_sincrono: curso.id_curso,
+                    id_formando: userId
+                },
+                attributes: ['resul']
+            });
+
+            cursosComNota.push({
+                id_curso: curso.id_curso,
+                nome_curso: curso.nome_curso,
+                descricao_curso: curso.descricao_curso,
+                data_inicio_curso: curso.data_inicio_curso,
+                data_fim_curso: curso.data_fim_curso,
+                imagem: curso.imagem,
+                tipo: curso.issincrono ? 'sincrono' : curso.isassincrono ? 'assincrono' : 'outro',
+                horas_curso: curso.horas_curso,
+                idioma: curso.idioma,
+                nota_final: resultado ? resultado.resul : null,
+                concluido: true
+            });
+        }
+
+        return cursosComNota;
+
+    } catch (error) {
+        console.error('Erro ao procurar cursos terminados para o utilizador:', error);
+        throw error;
     }
-
-    const formando = await formandos.findByPk(userId);
-    if (!formando) {
-      console.log(`Formando com ID ${userId} não encontrado`);
-      return [];
-    }
-
-    const resultadosDoFormando = await resultados.findAll({
-      where: {
-        id_formando: userId,
-      },
-    });
-
-    if (!resultadosDoFormando.length) {
-      console.log(`Nenhum resultado encontrado para o formando ${userId}`);
-      return [];
-    }
-
-
-    const idsCursos = resultadosDoFormando.map(r => r.id_curso_sincrono).filter(Boolean);
-
-    if (!idsCursos.length) {
-      console.log("Nenhum curso síncrono encontrado nos resultados.");
-      return [];
-    }
-
-    let cursoWhere = {
-      id_curso: { [Op.in]: idsCursos },
-      data_fim_curso: { [Op.lt]: new Date() },
-    };
-
-    if (tipologia === 'sincrono') {
-      cursoWhere.issincrono = true;
-    } else if (tipologia === 'assincrono') {
-      cursoWhere.isassincrono = true;
-    }
-
-    const cursosEncontrados = await cursos.findAll({
-      where: cursoWhere,
-    });
-
-    const formattedCourses = cursosEncontrados.map(curso => {
-      const resultado = resultadosDoFormando.find(r => r.id_curso_sincrono === curso.id_curso);
-      const tipo = curso.issincrono ? 'sincrono' : curso.isassincrono ? 'assincrono' : 'outro';
-
-      return {
-        id_curso: curso.id_curso,
-        nome_curso: curso.nome_curso,
-        descricao_curso: curso.descricao_curso,
-        data_inicio_curso: curso.data_inicio_curso,
-        data_fim_curso: curso.data_fim_curso,
-        imagem: curso.imagem,
-        tipo,
-        horas_curso: curso.horas_curso,
-        idioma: curso.idioma,
-        nota_final: resultado ? resultado.resul : null,
-        concluido: true
-      };
-    });
-
-    console.log(`Foram encontrados ${formattedCourses.length} cursos concluídos com base nos resultados do formando ${userId}.`);
-
-    return formattedCourses;
-  } catch (error) {
-    console.error('Erro ao procurar cursos terminados para o utilizador:', error);
-    throw error;
-  }
 }
+
 
 
 /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
