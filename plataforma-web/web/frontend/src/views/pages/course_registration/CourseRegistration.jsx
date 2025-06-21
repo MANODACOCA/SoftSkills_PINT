@@ -40,7 +40,12 @@ const CourseRegistration = () => {
     };
   }, [id]);
 
-
+  const atualizarContadorFormandos = () => {
+    setCourse(prev => ({
+      ...prev,
+      contador_formandos: (prev?.contador_formandos || 0) + 1
+    }));
+  };
 
   const fetchCourseData = async (courseId) => {
     try {
@@ -70,7 +75,7 @@ const CourseRegistration = () => {
     if (id) {
       fetchCourseData(id);
     }
-  }, [id]);
+  }, [id, course?.contador_formandos]);
 
 
   const handleEnroll = async (courseId) => {
@@ -172,6 +177,7 @@ const CourseRegistration = () => {
             <EnrollmentCard
               course={course}
               onEnroll={() => handleEnroll(course.id_curso)}
+              onContadorUpdate={atualizarContadorFormandos}
             />
           </div>
           </div>
