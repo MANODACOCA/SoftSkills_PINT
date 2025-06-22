@@ -37,8 +37,12 @@ export const create_cursos = async (data) => {
 };
 
 export const update_cursos = async (id, data) => {
+    console.log(id);
+    console.log(data);
     try {
         const response = await axios.put(`${API_URL}/update/${id}`, data);
+        console.log(id);
+    console.log(data);
         return response.data;
     } catch (error) {
         console.error('Erro ao atualizar Curso!');

@@ -568,6 +568,57 @@ async function getCursoWithAllInfoOneCourse(id) {
 }
 
 
+async function createCursoCompleto(reqBody){
+  try{
+  const { cursoData, sincrono: sincronoBody } = reqBody;
+
+  const curso = await cursos.create(cursoData);
+
+  if(cursoData.issincrono && sincronoBody) {
+    await sincrono.create({
+      id_curso_sincrono: curso.id_curso,
+      id_formador: sincronoBody.id_formador,
+      numero_vagas: sincronoBody.numero_vagas,
+    });
+  }
+  
+  return curso;
+  } catch(error) {
+    console.error('Erro no service ao criar curso:', error);
+    throw error;
+  }
+}
+
+async function updateCursoCompleto(reqBody) {
+  try {
+    const { cursoData, sincrono: sincronoBody } = reqBody;
+
+    const { id_curso, ...dataToUpdate } = cursoData; 
+
+    await cursos.update(dataToUpdate, {
+      where: { id_curso }
+    });
+
+    if (cursoData.issincrono === true && sincronoBody) {
+      await sincrono.update(
+        {
+          id_formador: sincronoBody.id_formador,
+          numero_vagas: sincronoBody.numero_vagas
+        },
+        {
+          where: { id_curso_sincrono: id_curso }
+        }
+      );
+    }
+
+    return await cursos.findByPk(id_curso);
+  } catch (error) {
+    console.error('Erro no service ao atualizar curso:', error);
+    throw error;
+  }
+}
+
+
 module.exports = {
   getCursosDiponiveisParaInscricao,
   getCourseDestaqueSincrono,
@@ -581,4 +632,6 @@ module.exports = {
   updateFormandosCounter,
   getAllCoursesWithAllInfo,
   getCursoWithAllInfoOneCourse,
+  createCursoCompleto,
+  updateCursoCompleto,
 };

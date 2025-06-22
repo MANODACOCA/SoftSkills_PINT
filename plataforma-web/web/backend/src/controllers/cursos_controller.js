@@ -29,8 +29,8 @@ controllers.get = async (req, res) => {
 
 controllers.create = async (req, res) => {
   try {
-    if (req.body) {
-      const data = await model.create(req.body);
+     if (req.body) {
+      const data = await cursosService.createCursoCompleto(req.body);
       res.status(201).json(data);
     } else {
       res.status(400).json({ erro: 'Erro ao criar Curso!', desc: 'Corpo do pedido esta vazio.' });
@@ -40,22 +40,41 @@ controllers.create = async (req, res) => {
   }
 };
 
+// controllers.update = async (req, res) => {
+//   try {
+//     if (req.body) {
+//       const updated = await cursosService.updateCursoCompleto(req.body);
+//       if (updated) {
+//         res.status(200).json(updated);
+//       } else {
+//         res.status(404).json({ erro: 'Curso nao foi atualizado/a!' });
+//       }
+//     } else {
+//       res.status(400).json({ erro: 'Erro ao atualizar o/a Curso!', desc: 'Corpo do pedido esta vazio.' });
+//     }
+//   } catch (err) {
+//     res.status(500).json({ erro: 'Erro ao atualizar o/a Curso!', desc: err.message });
+//   }
+// };
+
 controllers.update = async (req, res) => {
   try {
-    if (req.body) {
-      const { id } = req.params;
-      const updated = await model.update(req.body, { where: { id_curso: id } });
-      if (updated) {
-        const modelUpdated = await model.findByPk(id);
-        res.status(200).json(modelUpdated);
-      } else {
-        res.status(404).json({ erro: 'Curso nao foi atualizado/a!' });
-      }
+    const id = Number(req.params.id);
+
+    const reqBody = {
+      cursoData: { ...req.body, id_curso: id }, 
+      sincrono: req.body.sincrono || null
+    };
+
+    const updated = await cursosService.updateCursoCompleto(reqBody);
+
+    if (updated) {
+      res.status(200).json(updated);
     } else {
-      res.status(400).json({ erro: 'Erro ao atualizar o/a Curso!', desc: 'Corpo do pedido esta vazio.' });
+      res.status(404).json({ erro: 'Curso não foi atualizado!' });
     }
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao atualizar o/a Curso!', desc: err.message });
+    res.status(500).json({ erro: 'Erro ao atualizar o Curso!', desc: err.message });
   }
 };
 

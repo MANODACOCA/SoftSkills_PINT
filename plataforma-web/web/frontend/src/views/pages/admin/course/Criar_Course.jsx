@@ -1,107 +1,357 @@
-
+import { useEffect, useState } from "react";
+import { list_formadores } from "../../../../api/formadores_axios";
+import { getCategoriaAreaTopico } from "../../../../api/topico_axios";
+import { create_cursos } from "../../../../api/cursos_axios";
+import ISO6391 from 'iso-639-1';
+import Select from 'react-select';
+import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const CreateCourse = () => {
-    
-    
-    const handleChange = () => {
+    const navigate = useNavigate();
+    const [formadores, setFormadores] = useState([]);
+    const [formadorSelecionado, setFormadorSelecionado] = useState("");
+    const [isSincrono, setIsSincrono] = useState("");
+    const [categoria, setCategoria] = useState("");
+    const [area, setArea] = useState("");
+    const [topico, setTopico] = useState("");
+    const [catAreaTop, setCatAreaTop] = useState([]);
+    const [selectedLanguage, setSelectedLanguage] = useState(null);
+    const [sincrono, setSincrono] = useState({
+        id_formador: null,
+        numero_vagas: null,
+    })
+    const [cursos, setCursos] = useState({
+        nome_curso: "",
+        id_gestor_administrador: 9,
+        id_topico: "",
+        descricao_curso: "",
+        data_inicio_inscricao: "",
+        data_fim_inscricao: "",
+        data_inicio_curso: "",
+        data_fim_curso: "",
+        idioma: "",
+        horas_curso: "",
+        imagem: "",
+        issincrono: false,
+        isassincrono: false,
+        estado: true,
+        contador_formandos: 0,
+    });
+
+    const fetchFormadores = async () => {
+        try {
+            const response = await list_formadores();
+            console.log(response);
+            setFormadores(response);
+        } catch (error) {
+            console.log('Erro ao ir buscar os formadores');
+        }
     }
 
+    const fetchCategoriaAreaTopico = async () => {
+        try {
+            const response = await getCategoriaAreaTopico();
+            console.log(response);
+            setCatAreaTop(response);
+        } catch (error) {
+            console.log('Erro ao ir buscar os categoria, área e tópico');
+        }
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const result = await Swal.fire({
+            title: 'Pretende criar curso?',
+            text: 'Irá adicionar um novo curso',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        if(result.isConfirmed){
+            try {
+                console.log({ cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
+                await create_cursos({cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: `Criado com sucesso`,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                }); 
+                navigate('/admin/cursos');
+            } catch (error) {
+                Swal.fire({
+                    title: 'Erro', 
+                    text: 'Erro ao cancelar operação', 
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                    },
+                });
+                console.log('Erro ao adicionar curso!');
+            }  
+        }
+    }
+
+    const handleCancel = async () => {
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja cancelar?',
+            text: 'Os curso não será criado',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        if(result.isConfirmed){
+            try{
+                navigate('/admin/cursos');
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: `Cancelado com sucesso`,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                }); 
+            } catch(error){
+                Swal.fire({
+                    title: 'Erro', 
+                    text: 'Erro ao cancelar operação', 
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                    },
+                });
+                console.error("Erro ao cancelar criação de curso", error);
+            }
+        }
+    }
+
+    const languageOptions = ISO6391.getAllCodes().map(code => ({
+        value: code,
+        label: ISO6391.getNativeName(code),
+    }));
+
+    const handleLanguageChange = (selectedOption) => {
+        setSelectedLanguage(selectedOption);
+        setCursos(prev => ({ ...prev, idioma: selectedOption?.value || "" }));
+    };
+
+
+
+    const handleSubmitCursoImg = async (e) => {
+        e.preventDefault();
+        try {
+            const { value: url } = await Swal.fire({
+                title: "Insere o URL da imagem do curso",
+                input: "url",
+                inputLabel: "Link direto da imagem",
+                inputPlaceholder: "https://exemplo.com/imagem.jpg",
+                showCancelButton: true,
+                confirmButtonText: 'Pré-visualizar',
+                cancelButtonText: 'Cancelar',
+                inputValidator: (value) => {
+                    if(!value) return 'Tem de inserir um URL valido!';
+                    if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/.test(value))
+                    return 'Insira um link de imagem válido (.jpg, .png, etc)';
+                return null;
+                }
+                // customClass: {
+                //     confirmButton: 'btn btn-primary me-2',
+                //     cancelButton: 'btn btn-danger',
+                // },
+            });
+            if (url) {
+                const preview = await Swal.fire({
+                    title: "Pré-visualizar",
+                    imageUrl: url,
+                    imageAlt: "Imagem de curso",
+                    showCancelButton: true,
+                    confirmButtonText: 'Sim, utilizar',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                });
+
+                if (preview.isConfirmed) {
+                setCursos(prev => ({ ...prev, imagem: url }));
+                Swal.fire({
+                    text: "Imagem definida com sucesso!",
+                    icon: "success",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+            }
+        } catch (error) {
+            Swal.fire({
+                text: 'Erro ao definir o URL da imagem',
+                icon: 'error'
+            });
+        }
+    }
+
+
+    useEffect(() => {
+        fetchFormadores();
+        fetchCategoriaAreaTopico();
+    }, [])
+
     return (
-    <div className='form-group'>
-        {error && <div className="alert alert-danger mt-2">{error}</div>}
-        {successMessage && <div className="alert alert-success mt-2">{successMessage}</div>}
+        <div className='form-group'>
+            <div className='d-flex'>
+                <div className='col-md-9 pe-4 col-sm-10'>
+                    <form onSubmit={handleSubmit}>
+                        <div className='mx-5'>
+                            <div className='mt-2'>
+                                <label className='form-label fw-bold'>Nome do Curso</label>
+                                <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." onChange={(e) => setCursos(prev => ({...prev, nome_curso: e.target.value}))} required />
+                            </div>
 
-        <form onSubmit={handleSubmit}>
-        <div className='col-md-10 mx-auto'>
+                            <div className='mt-2'>
+                                <label className='form-label fw-bold'>Descrição do Curso</label>
+                                <textarea name="descricao_curso" className='form-control' rows="4" placeholder="Descrição do curso..." onChange={(e) => setCursos(prev => ({...prev, descricao_curso: e.target.value}))} required />
+                            </div>
 
-            <div className='mt-2'>
-            <label className='form-label'>Nome do Curso</label>
-            <input type="text" name="nome_curso" className='form-control' value={formData.nome_curso} onChange={handleChange} required />
-            </div>
+                            <div className='row mt-2'>
+                                <div className='col'>
+                                    <label className='form-label fw-bold'>Início da Inscrição</label>
+                                    <input type="date" name="data_insc_ini" className='form-control' onChange={(e) => setCursos(prev => ({...prev, data_inicio_inscricao: e.target.value}))} required />
+                                </div>
+                                <div className='col'>
+                                    <label className='form-label fw-bold'>Fim da Inscrição</label>
+                                    <input type="date" name="data_insc_fim" className='form-control' onChange={(e) => setCursos(prev => ({...prev, data_fim_inscricao: e.target.value}))} required />
+                                </div>
+                            </div>
 
-            <div className='mt-2'>
-            <label className='form-label'>Descrição do Curso</label>
-            <textarea name="descricao_curso" className='form-control' rows="4" value={formData.descricao_curso} onChange={handleChange} required />
-            </div>
+                            <div className='row mt-2'>
+                                <div className='col'>
+                                    <label className='form-label fw-bold'>Início do Curso</label>
+                                    <input type="date" name="data_curso_ini" className='form-control' onChange={(e) => setCursos(prev => ({...prev, data_inicio_curso: e.target.value}))} required />
+                                </div>
+                                <div className='col'>
+                                    <label className='form-label fw-bold'>Fim do Curso</label>
+                                    <input type="date" name="data_curso_fim" className='form-control' onChange={(e) => setCursos(prev => ({...prev, data_fim_curso: e.target.value}))} required />
+                                </div>
+                            </div>
 
-            <div className='row mt-2'>
-            <div className='col'>
-                <label className='form-label'>Início da Inscrição</label>
-                <input type="date" name="data_inicio_inscricao" className='form-control' value={formData.data_inicio_inscricao} onChange={handleChange} required />
-            </div>
-            <div className='col'>
-                <label className='form-label'>Fim da Inscrição</label>
-                <input type="date" name="data_fim_inscricao" className='form-control' value={formData.data_fim_inscricao} onChange={handleChange} required />
-            </div>
-            </div>
+                            <div className='mt-2'>
+                                <label className='form-label fw-bold'>Idioma</label>
+                                <Select
+                                    options={languageOptions}
+                                    value={selectedLanguage}
+                                    onChange={handleLanguageChange}
+                                    isClearable
+                                    placeholder="--Escolha o idioma--"
+                                    name="idioma"
+                                />
+                            </div>
 
-            <div className='row mt-2'>
-            <div className='col'>
-                <label className='form-label'>Início do Curso</label>
-                <input type="date" name="data_inicio_curso" className='form-control' value={formData.data_inicio_curso} onChange={handleChange} required />
-            </div>
-            <div className='col'>
-                <label className='form-label'>Fim do Curso</label>
-                <input type="date" name="data_fim_curso" className='form-control' value={formData.data_fim_curso} onChange={handleChange} required />
-            </div>
-            </div>
+                            <div className='mt-2'>
+                                <label className='form-label fw-bold'>Horas do Curso</label>
+                                <input type="number" step="0.5" min="0.5" name="horas_curso" className='form-control' placeholder="Horas do curso..." onChange={(e) => setCursos(prev => ({...prev, horas_curso: parseInt(e.target.value)}))} required />
+                            </div>
 
-            <div className='mt-2'>
-            <label className='form-label'>Idioma</label>
-            <input type="text" name="idioma" className='form-control' value={formData.idioma} onChange={handleChange} required />
-            </div>
+                            <div className='mt-2'>
+                                <label className='form-label fw-bold' >Tipologia</label>
+                                <select className='form-select' value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean }));}}>
+                                    <option value="">-- Escolher Tipologia --</option>
+                                    <option value="true">Síncrono</option>
+                                    <option value="false">Assíncrono</option>
+                                </select>
+                            </div>
 
-            <div className='mt-2'>
-            <label className='form-label'>Horas do Curso</label>
-            <input type="number" step="0.5" name="horas_curso" className='form-control' value={formData.horas_curso} onChange={handleChange} required />
-            </div>
+                            {cursos.isassincrono == false && (
+                                <div className='mt-2'>
+                                <label className='mt-2 fw-bold'>Formador</label>
+                                    <select name="id_formador" className='form-select' value={formadorSelecionado} onChange={(e) => {setFormadorSelecionado(parseInt(e.target.value)); setSincrono(prev => ({...prev, id_formador: parseInt(e.target.value)}))}}>
+                                        <option value="">-- Selecionar Formador --</option>
+                                        {formadores.map((f) => {
+                                            return(
+                                                <option key={f.id_formador} value={f.id_formador}>{f.id_formador_utilizador.nome_utilizador}</option>
+                                            );
+                                        })}
+                                    </select>
+                                    <label className='mt-2 fw-bold'>Descrição Formador</label>
+                                    <textarea name="descricao_formador" value={formadores.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly />
+                                    <label className='mt-2 fw-bold'>Número Vagas</label>
+                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({...prev, numero_vagas: parseInt(e.target.value)}))}/>
+                                </div>
+                            )}        
 
-            <div className='mt-2'>
-            <label className='form-label'>Contador de Formandos</label>
-            <input type="number" name="contador_formandos" className='form-control' value={formData.contador_formandos} onChange={handleChange} required />
-            </div>
+                            <div className='mt-2'>
+                                <label className='form-label fw-bold'>Categoria</label>
+                                <select className="form-select" value={categoria.toString()} onChange={(e) => setCategoria(e.target.value)}>
+                                    <option value="">--Escolher Categoria--</option>
+                                    {catAreaTop.map((c) => {
+                                        return (
+                                            <option key={c?.id_categoria} value={c?.id_categoria}>{c?.nome_cat}</option>
+                                        );
+                                    })}
+                                </select>
+                            </div>
 
-            <div className='mt-2'>
-            <label className='form-label'>Imagem (URL ou nome de ficheiro)</label>
-            <input type="text" name="imagem" className='form-control' value={formData.imagem} onChange={handleChange} required />
-            </div>
+                            <div className='mt-2'>
+                                <label className='form-label fw-bold'>Área</label>
+                                <select className="form-select" value={area.toString()} onChange={(e) => setArea(e.target.value)}>
+                                    <option value="">--Escolher Área--</option>
+                                    {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.map((a) => {
+                                        return (
+                                            <option key={a?.id_area} value={a?.id_area}>{a?.nome_area}</option>
+                                        );
+                                    })}
+                                </select>
+                            </div>
 
-            <div className='row mt-2'>
-            <div className='col'>
-                <label className='form-label'>Curso Assíncrono</label>
-                <select name="isassincrono" className='form-select' value={formData.isassincrono} onChange={handleChange}>
-                <option value="">--Escolher--</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
-                </select>
+                            <div className='mt-2'>
+                                <label className='form-label fw-bold'>Tópico</label>
+                                <select className="form-select" value={topico.toString()} onChange={(e) => { setTopico(parseInt(e.target.value)); setCursos(prev => ({ ...prev, id_topico: parseInt(e.target.value) })); }}>
+                                    <option value="">--Escolher Tópico--</option>
+                                    {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.find((ar) => ar.id_area.toString() == area)?.topicos?.map((t) => {
+                                        return (
+                                            <option key={t?.id_topico} value={t?.id_topico}>{t?.nome_topico}</option>
+                                        );
+                                    })}
+                                </select>
+                            </div>
+                            <div className="d-flex justify-content-between">
+                                <button type="submit" className='btn btn-success mt-3'>Criar Curso</button>
+                                <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Curso</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div className='d-flex min-vh-100 flex-column mt-3'>
+                    <div className='sticky-card'>
+                        <div className='col-md-3 col-sm-2 bg-custom-light d-flex align-items-center flex-column h-100 w-100 p-3 rounded'>
+                            <img
+                                src={cursos?.imagem || "https://ui-avatars.com/api/?name=Novo+Curso&background=random&bold=true"}
+                                alt="Imagem de perfil"
+                                className='w-100 img-profile rounded-2 mb-2'
+                            />
+                            <div className='d-flex flex-column align-items-center'>
+                                <h5 className='m-1 mb-3'>{cursos?.nome_curso || 'Novo Curso'}</h5>
+                            </div>
+                            <button type="button" onClick={handleSubmitCursoImg} className='btn btn-color text-white w-100 mt-4'>Adicionar Imagem</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className='col'>
-                <label className='form-label'>Curso Síncrono</label>
-                <select name="issincrono" className='form-select' value={formData.issincrono} onChange={handleChange}>
-                <option value="">--Escolher--</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
-                </select>
-            </div>
-            </div>
-
-            <div className='mt-2'>
-            <label className='form-label'>Tópico</label>
-            <select name="id_topico" className='form-select' value={formData.id_topico} onChange={handleChange} required>
-                <option value="">--Escolher tópico--</option>
-                {topicos.map(t => (
-                <option key={t.id_topico} value={t.id_topico}>{t.nome_topico}</option>
-                ))}
-            </select>
-            </div>
-
-            {/* Este campo depende de autenticação */}
-            <input type="hidden" name="id_gestor_administrador" value={formData.id_gestor_administrador} />
-
-            <button type="submit" className='btn btn-success mt-3'>Criar Curso</button>
         </div>
-        </form>
-    </div>
     );
 
 }

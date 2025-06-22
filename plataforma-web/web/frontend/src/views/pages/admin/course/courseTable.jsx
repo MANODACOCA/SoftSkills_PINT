@@ -45,8 +45,8 @@ const CourseTable = () => {
 
     const HandleUpdate = async (id, estado) => {
         const result = await Swal.fire({
-            title: estado ? 'Deseja ocultar este curso' : 'Deseja mostrar este curso?',
-            text: estado ? 'O curso será escondido da lista' : 'O curso será tornado visível novamente!',
+            title: estado ? 'Deseja ocultar este curso?' : 'Deseja mostrar este curso?',
+            text: estado ? 'O curso será escondido da lista!' : 'O curso será tornado visível novamente!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sim',
