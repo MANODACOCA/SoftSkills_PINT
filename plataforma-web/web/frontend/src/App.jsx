@@ -78,8 +78,8 @@ function App() {
           <Route path="/forum/posts/:postId/conteudos" element={<ConteudosList />} />
           <Route path="/cursos/:id" element={<CourseRegistration />} />
           <Route path="/perfil/editar" element={<EditProfile />} />
-          <Route path="my/cursos/inscritos/curso/:cursoId/aula/:aulaId" element={<ClassPage />} />
-          <Route path="my/cursos/terminados/curso/:cursoId/aula/:aulaId" element={<ClassPage />} />
+          <Route path="my/cursos/inscritos/curso/:cursoId" element={<ClassPage />} />
+          <Route path="my/cursos/terminados/curso/:cursoId" element={<ClassPage />} />
           <Route path='/perfil/info' element={<InfoProfile />} />
           {/* admin */}
           <Route path='/admin/home' element={<HomePageAdmin />} />

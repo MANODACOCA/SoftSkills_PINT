@@ -34,5 +34,6 @@ router.get('/cursos-disponiveis-inscricao', controller.getCursosDisponiveisParaI
 router.get('/users/:userId/enrolled-courses',controller.getUserEnrolledCourses);
 router.get('/users/:userId/completed-courses',controller.getCompleteCourses);
 router.get('/all-info',controller.getAllInfoCursosAdmin);
+router.get('/verificar/:userId/:cursoId',controller.verificarInscricao);
 
 module.exports = router;

@@ -5,7 +5,7 @@ import ClassHeader from '../../components/class_header/ClassHeader';
 import VideoPlayer from '../../components/video_player/VideoPlayer';
 import CourseModule from '../../components/course_module/CourseModule';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
-import { get_aulas, verificar_acesso_aula } from '../../../api/aulas_axios';
+import { get_aulas } from '../../../api/aulas_axios';
 import { FaFilePdf, FaFileAlt, FaLink, FaUserTie } from 'react-icons/fa';
 
 

@@ -71,19 +71,4 @@ controllers.delete = async (req,res)=>{
   }
 };
 
-controllers.verificarAula = async (req,res) => {
-  try{
-    const { userId, cursoId } = req.params;
-    const resultado = await aulasService.getClassByCurso(userId, cursoId);
-    res.status(200).json(resultado);
-  }catch(error){
-    console.error('Erro ao verificar inscrição:', error);
-    res.status(500).json({
-      erro: 'Erro ao verificar inscrição',
-      desc: error.message
-    });
-  }
-};
-
-
 module.exports = controllers;

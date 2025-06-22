@@ -97,25 +97,25 @@ const CourseRegistration = () => {
       {/* Header com fundo azul de largura completa */}
       <div className="row bg-custom-light rounded-4">
         <div className="col-md-8">
-            <h1 className="fs-2 fw-bold text-break w-100">{course.nome_curso}</h1>
-            <div className="d-flex flex-column flex-md-row gap-3 mt-3">
-              <div className="d-flex align-items-center flex-md-row">
-                <FaVideo className="text-primary me-2 fs-4" />
-                <span className="fw-bold">Tipologia: {course.issincrono ? 'Síncrono' : course.isassincrono ? 'Assíncrono' : 'Outro'}</span>
-              </div>
-              {course.issincrono === true && (
-                <div className="d-flex align-items-center">
-                  <FaUsers className="text-primary me-2 fs-4" />
-                  <span className="fw-bold">Vagas: {course.contador_formandos} / {course.issincrono ? course.sincrono?.numero_vagas : null}</span>
-                </div>
-              )}
-              <div className="d-flex align-items-center">
-                <FaCalendarAlt className="text-primary me-2 fs-4" />
-                <span className="fw-bold">
-                  Inscrições: {formatDayMonthYear(course.data_inicio_inscricao)} - {formatDayMonthYear(course.data_fim_inscricao)}
-                </span>
-              </div>
+          <h1 className="fs-2 fw-bold text-break w-100">{course.nome_curso}</h1>
+          <div className="d-flex flex-column flex-md-row gap-3 mt-3">
+            <div className="d-flex align-items-center flex-md-row">
+              <FaVideo className="text-primary me-2 fs-4" />
+              <span className="fw-bold">Tipologia: {course.issincrono ? 'Síncrono' : course.isassincrono ? 'Assíncrono' : 'Outro'}</span>
             </div>
+            {course.issincrono === true && (
+              <div className="d-flex align-items-center">
+                <FaUsers className="text-primary me-2 fs-4" />
+                <span className="fw-bold">Vagas: {course.contador_formandos} / {course.issincrono ? course.sincrono?.numero_vagas : null}</span>
+              </div>
+            )}
+            <div className="d-flex align-items-center">
+              <FaCalendarAlt className="text-primary me-2 fs-4" />
+              <span className="fw-bold">
+                Inscrições: {formatDayMonthYear(course.data_inicio_inscricao)} - {formatDayMonthYear(course.data_fim_inscricao)}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* O espaço da coluna direita também faz parte do header com fundo azul */}
@@ -172,7 +172,6 @@ const CourseRegistration = () => {
 
         {/* Coluna Direita - Card Sticky (sobreposto ao header) */}
         <div className="col-md-4">
-          <div className="card-container">
           <div className="sticky-card">
             <EnrollmentCard
               course={course}
@@ -180,7 +179,7 @@ const CourseRegistration = () => {
               onContadorUpdate={atualizarContadorFormandos}
             />
           </div>
-          </div>
+
         </div>
       </div>
 

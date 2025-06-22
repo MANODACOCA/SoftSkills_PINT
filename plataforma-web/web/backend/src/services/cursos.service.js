@@ -581,6 +581,32 @@ async function getCursoWithAllInfoOneCourse(id) {
   }
 }
 
+//Aqui vamos verificar se o utilizador esta inscrito
+async function verifyInscription(userId, cursoId) {
+    try {
+         
+        const inscricaoUser = await inscricoes.findOne({
+            where: {
+                id_formando: userId,
+                id_curso: cursoId,
+                status_inscricao: 1
+            }
+        });
+        
+        if (!inscricaoUser) {
+            return { inscrito: false };
+        }
+        
+
+        return {
+            inscrito: true,
+        };
+
+    } catch (error) {
+        console.error('Erro ao verificar inscricao', error);
+        throw error;
+    }
+}
 
 module.exports = {
   getCursosDiponiveisParaInscricao,
@@ -595,4 +621,5 @@ module.exports = {
   updateFormandosCounter,
   getAllCoursesWithAllInfo,
   getCursoWithAllInfoOneCourse,
+  verifyInscription,
 };
