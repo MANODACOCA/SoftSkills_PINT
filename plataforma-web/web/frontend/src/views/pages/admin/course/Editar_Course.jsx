@@ -37,7 +37,7 @@ const EditCourse = () => {
     const [isSincrono, setIsSincrono] = useState(false);
     const [sincrono, setSincrono] = useState({
         id_formador: null,
-        numero_vagas: null,
+        numero_vagas: "",
     })
 
     useEffect(() => {
@@ -218,7 +218,7 @@ const EditCourse = () => {
         const { name, value } = e.target;
         let updateValue = value;
 
-        if (name === "isassincrono") {
+        if (name === "issincrono") {
             updateValue = value === "true";
         }
 
@@ -230,6 +230,16 @@ const EditCourse = () => {
 
     const handleSubmitCurso = async (e) => {
         e.preventDefault();
+
+        if(cursos.isassincrono === false && !sincrono.id_formador){
+            Swal.fire({
+                icon: "error",
+                title: "Erro",
+                text: "Para cursos síncronos, é obrigatorio selecionar um formador"
+            });
+            return;
+        }
+
         const result = await Swal.fire({
             title: 'Tem a certeza que deseja alterar Curso?',
             text: 'Os curso será alterado',
@@ -401,7 +411,7 @@ const EditCourse = () => {
                             {/* Tipo */}
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Tipologia</label>
-                                <select name="issincrono" value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean})); handleChange(e)}} className='form-select'>
+                                <select name="issincrono" value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(valorBoolean); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean})); handleChange(e)}} className='form-select'>
                                     <option value="">-- Escolher Tipologia --</option>
                                     <option value="true">Síncrono</option>
                                     <option value="false">Assíncrono</option>
@@ -409,10 +419,16 @@ const EditCourse = () => {
                             </div>
 
                             {/* Se for síncrono, mostra formador */}
-                            {cursos.isassincrono == false && (
+                            {isSincrono == true && (
                                 <div className='mt-2'>
                                     <label className='mt-2 fw-bold'>Formador</label>
-                                    <select name="id_formador" value={formadorSelecionado} onChange={(e) => {setSincrono(prev => ({...prev, id_formador: parseInt(e.target.value)})); setFormadorSelecionado(parseInt(e.target.value)); handleChange(e)}} className='form-select'>
+                                    <select name="id_formador" value={formadorSelecionado} onChange={(e) => {
+                                            const valor = parseInt(e.target.value);
+                                            
+                                            setSincrono(prev => ({...prev, id_formador: valor})); 
+                                            setFormadorSelecionado(valor); 
+                                            handleChange(e);}} 
+                                        className='form-select'>
                                         <option value="">-- Selecionar Formador --</option>
                                         {formadores.map((f) => {
                                             return(
