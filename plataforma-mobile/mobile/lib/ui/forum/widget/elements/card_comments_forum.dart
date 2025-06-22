@@ -5,7 +5,7 @@ import 'package:like_button/like_button.dart';
 import 'package:mobile/ui/core/shared/export.dart';
 
 // ignore: must_be_immutable
-class Post extends StatelessWidget {
+class Post extends StatefulWidget {
   Post({
     super.key,
     required this.forumName,
@@ -22,17 +22,28 @@ class Post extends StatelessWidget {
   final String description;
   final String photo;
   final bool selectComment;
+
+  @override
+  State<Post> createState() => _PostState();
+}
+
+class _PostState extends State<Post> {
+  late int likes;
   final TextEditingController _copiar = TextEditingController();
-  final TextEditingController _denunciar = TextEditingController();
+  final TextEditingController _denunciar = TextEditingController(); // Ainda falta implementar a lógica de denúncia
 
-  late int likes = forumLike;
-
+  @override
   void initState() {
-    likes = forumLike;
+    super.initState();
+    likes = widget.forumLike;
   }
 
+  @override
   void dispose() {
+    _copiar.dispose();
+    _denunciar.dispose();
     //Guardar na database o novo valor de likes
+    super.dispose();
   }
 
   @override
@@ -52,11 +63,11 @@ class Post extends StatelessWidget {
           SizedBox(
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage(photo),
+                backgroundImage: AssetImage(widget.photo),
                 radius: 30,
               ),
               title: Text(
-                forumName,
+                widget.forumName,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
@@ -72,9 +83,9 @@ class Post extends StatelessWidget {
                   icon: Icon(Icons.more_vert, color: Colors.grey),
                   onSelected: (value) {
                     if (value == 'copiar') {
-                      _copiar.text = description;
+                      _copiar.text = widget.description;
                       Clipboard.setData(ClipboardData(text: _copiar.text));
-                    } else if (value == 'denunciar') {}
+                    } else if (value == 'denunciar') {} // Implementar lógica de denúncia
                   },
                   itemBuilder:
                       (BuildContext context) => [
@@ -106,7 +117,7 @@ class Post extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Text(
-              description,
+              widget.description,
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
           ),
@@ -124,11 +135,13 @@ class Post extends StatelessWidget {
                     );
                   },
                   onTap: (isLiked) async {
-                    if (isLiked) {
-                      likes++;
-                    } else {
-                      likes--;
-                    }
+                    setState(() {
+                      if (isLiked) {
+                        likes--;
+                      } else {
+                        likes++;
+                      }
+                    });
                     return !isLiked;
                   },
                 ),
@@ -136,21 +149,21 @@ class Post extends StatelessWidget {
                 Column(
                   children: [
                     IconButton(
-                      isSelected: selectComment,
+                      isSelected: widget.selectComment,
                       icon: Icon(
                         Icons.comment,
                         color:
-                            selectComment ? AppColors.secondary : Colors.grey,
+                            widget.selectComment ? AppColors.secondary : Colors.grey,
                       ),
                       onPressed: () {
                         context.push(
                           '/commentPage',
                           extra: {
-                            'postName': forumName,
-                            'description': description,
+                            'postName': widget.forumName,
+                            'description': widget.description,
                             'likes': likes,
-                            'comments': forumComments,
-                            'photo': photo,
+                            'comments': widget.forumComments,
+                            'photo': widget.photo,
                           },
                         );
                       },
