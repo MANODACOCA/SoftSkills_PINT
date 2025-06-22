@@ -62,6 +62,7 @@ const CompletedCourses = () => {
                         <FeaturedCourseCard
                             key={`${user.id_utilizador}-${course.id_curso}`}
                             course={course}
+                            userId={user.id_utilizador}
                             showDescription={false}
                             showFormador={false}
                             variant="evaluation"

@@ -191,3 +191,13 @@ export const getCourseAdminLista = async () => {
         throw error;
     }
 }
+
+export const verificar_acesso_curso = async (userId, cursoId) => {
+    try {
+        const response = await axios.get(`${API_URL}/verificar/${userId}/${cursoId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao verificar acesso ao curso:', error);
+        throw error;
+    }
+}

@@ -13,21 +13,37 @@ const Card = ({ image, title, type, startDate, endDate, courseId, membrosAtual, 
   return (
     <div
       className="card rounded-4 overflow-hidden card-clickable custom-card"
-      onClick={handleClick}>
-      <img src={image} className="card-img-top imgage-card" alt={`Imagem do curso ${title}`} />
+      onClick={handleClick}
+    >
+      {type === 'Síncrono' && membrosAtual >= membrosMax && (
+        <div
+          className="position-absolute top-0 start-0 m-2 px-3 py-1 bg-danger text-white fw-semibold rounded-3"
+          style={{ zIndex: 1 }}
+        >
+          Curso Lotado
+        </div>
+      )}
+      <img
+        src={image}
+        className="card-img-top imgage-card"
+        alt={`Imagem do curso ${title}`}
+      />
+
       <div className="card-body p-3 d-flex flex-column justify-content-between">
         <div className="d-flex justify-content-between align-items-start mb-2">
           <h4 className="card-title mb-0">{title}</h4>
-          <span className="badge  rounded-pill px-3 py-2 no-pointer custom-badge">
+          <span className="badge rounded-pill px-3 py-2 no-pointer custom-badge">
             {type}
           </span>
         </div>
+
         <div className="d-flex justify-content-between align-items-center">
           <div className="d-flex align-items-center gap-2 text-muted">
             <FaCalendarAlt /> <span>{startDate} - {endDate}</span>
           </div>
+
           {type === 'Síncrono' && (
-            <div className="d-flex align-items-center gap-2 text-muted" >
+            <div className="d-flex align-items-center gap-2 text-muted">
               <FaUsers />
               <span>{membrosAtual} / {membrosMax}</span>
             </div>
@@ -36,6 +52,7 @@ const Card = ({ image, title, type, startDate, endDate, courseId, membrosAtual, 
       </div>
     </div>
   );
+
 };
 
 export default Card;

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
 import { FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
-import { verificar_acesso_aula } from '../../../api/aulas_axios';
+import { verificar_acesso_curso } from '../../../api/cursos_axios';
 
 
 const FeaturedCourseCard = ({
@@ -20,19 +20,22 @@ const FeaturedCourseCard = ({
   if (!course) return null;
 
   const goToCourse = async () => {
-      const verificacao = await verificar_acesso_aula(userId, course.id_curso);
-      
-      const now = new Date();
-      const dataInicioCurso = new Date(course.data_inicio_curso);
-      const dataFimCurso = new Date(course.data_fim_curso);
+    const verificacao = await verificar_acesso_curso(userId, course.id_curso);//verifica se o formando tem acesso ao curso
 
-      if (verificacao.inscrito ) {
-        if ( now >= dataInicioCurso ) { //&& now <= dataFimCurso
-          navigate(`curso/${course.id_curso}/aula/${verificacao.todasAulas[0].id_aula}`);
-        } else {
-          navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
+    const now = new Date();
+    const dataInicioCurso = new Date(course.data_inicio_curso);
+    
+    if (verificacao.inscrito) {
+      if (now >= dataInicioCurso) {
+        if (location.pathname.startsWith('/my/cursos/inscritos')) {
+          navigate(`/my/cursos/inscritos/curso/${course.id_curso}`);
+        } else if (location.pathname.startsWith('/my/cursos/terminados')) {
+          navigate(`/my/cursos/terminados/curso/${course.id_curso}`);
         }
+      } else {
+        navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
       }
+    }
   };
 
 

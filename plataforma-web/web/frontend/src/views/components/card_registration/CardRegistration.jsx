@@ -3,11 +3,12 @@ import { FaCalendarAlt, FaClock, FaLanguage } from 'react-icons/fa';
 import { GrStatusGood } from "react-icons/gr";
 import { VscError } from "react-icons/vsc";
 import { useUser } from '../../../utils/userContext';
-import { create_inscricoes } from '../../../api/inscricoes_axios';
+import { create_inscricoes, get_inscricoes } from '../../../api/inscricoes_axios';
 import { update_cursos } from '../../../api/cursos_axios';
+import Swal from 'sweetalert2';
 import './CardRegistration.css';
 
-const EnrollmentCard = ({ course }) => {
+const EnrollmentCard = ({ course, onContadorUpdate }) => {
   if (!course) return null;
 
   const duration = course.horas_curso || 0;
@@ -15,7 +16,8 @@ const EnrollmentCard = ({ course }) => {
   const { user, setUser } = useUser();
   const [dadosInscricao, setDadosInscricao] = useState(null);
   const [inscrito, setInscrito] = useState(false);
-  console.log(course);
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
     if (user && course) {
@@ -26,18 +28,62 @@ const EnrollmentCard = ({ course }) => {
       });
 
       setDadosInscricao(inscricaoData);
+      checkInscricao(user?.id_utilizador, course?.id_curso);
     }
   }, [user, course]);
+
+
+  const checkInscricao = async (id_utilizador, id_curso) => {
+    try {
+      await get_inscricoes(id_utilizador, id_curso);
+      setInscrito(true);
+    } catch (error) {
+      console.error("Erro ao buscar inscrição:", error);
+    }
+  }
 
   const handleSubmitInscricao = async () => {//vai realizar a inscricao
     if (!dadosInscricao) return;
     try {
-      await create_inscricoes(dadosInscricao);
+      Swal.fire({
+        title: "Tens a certeza de que queres inscrever-te no curso?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sim, inscrever-me!",
+        cancelButtonText: "Cancelar",
+        customClass: {
+          confirmButton: 'btn btn-success me-2',
+          cancelButton: 'btn btn-danger',
+        },
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          await create_inscricoes({
+            ...dadosInscricao,
+            nome_formando: user?.nome_utilizador,
+            destinatario: user?.email,
+            nome_curso: course?.nome_curso,
+            data_inicio: new Date(course.data_inicio_curso).toLocaleDateString()
+          });
 
-      const atualizarContador = (course.contador_formandos || 0) + 1;
-      await update_cursos(course.id_curso, { contador_formandos: atualizarContador });
+          const atualizarContador = (course.contador_formandos || 0) + 1;
+          await update_cursos(course.id_curso, { contador_formandos: atualizarContador });
 
-      setInscrito(true);
+          if (typeof onContadorUpdate === 'function') {//vai dar update do contador de formandos
+            onContadorUpdate();
+          }
+
+          setInscrito(true);
+          Swal.fire({
+            title: "Inscrito com sucesso!",
+            icon: "success",
+            timer: 3000,
+            showConfirmButton: false
+          });
+        }
+      });
+
     } catch (error) {
       console.error("Erro ao realizar inscrição:", error);
     }
