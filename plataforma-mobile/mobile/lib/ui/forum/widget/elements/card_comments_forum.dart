@@ -1,10 +1,11 @@
 // ignore_for_file: avoid_print
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:like_button/like_button.dart';
 import 'package:mobile/ui/core/shared/export.dart';
 
 // ignore: must_be_immutable
-class Post extends StatelessWidget {
+class Post extends StatefulWidget {
   Post({
     super.key,
     required this.forumName,
@@ -22,14 +23,27 @@ class Post extends StatelessWidget {
   final String photo;
   final bool selectComment;
 
-  late int likes = forumLike;
+  @override
+  State<Post> createState() => _PostState();
+}
 
+class _PostState extends State<Post> {
+  late int likes;
+  final TextEditingController _copiar = TextEditingController();
+  final TextEditingController _denunciar = TextEditingController(); // Ainda falta implementar a lógica de denúncia
+
+  @override
   void initState() {
-    likes = forumLike;
+    super.initState();
+    likes = widget.forumLike;
   }
 
+  @override
   void dispose() {
+    _copiar.dispose();
+    _denunciar.dispose();
     //Guardar na database o novo valor de likes
+    super.dispose();
   }
 
   @override
@@ -49,11 +63,11 @@ class Post extends StatelessWidget {
           SizedBox(
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage(photo),
+                backgroundImage: AssetImage(widget.photo),
                 radius: 30,
               ),
               title: Text(
-                forumName,
+                widget.forumName,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
@@ -61,19 +75,56 @@ class Post extends StatelessWidget {
                 '${DateTime.now().toLocal().toString().substring(0, 10)}', //Change to database date
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
+              trailing: Transform.translate(
+                offset: Offset(-16, 0), // Ajusta horizontalmente
+                child: PopupMenuButton<String>(
+                  offset: Offset(-20, 0.5), // Ajusta verticalmente
+                  position: PopupMenuPosition.under,
+                  icon: Icon(Icons.more_vert, color: Colors.grey),
+                  onSelected: (value) {
+                    if (value == 'copiar') {
+                      _copiar.text = widget.description;
+                      Clipboard.setData(ClipboardData(text: _copiar.text));
+                    } else if (value == 'denunciar') {} // Implementar lógica de denúncia
+                  },
+                  itemBuilder:
+                      (BuildContext context) => [
+                        PopupMenuItem(
+                          value: 'copiar',
+                          child: Row(
+                            children: [
+                              Icon(Icons.copy, color: Colors.grey),
+                              SizedBox(width: 8),
+                              Text('Copy'),
+                            ],
+                          ),
+                        ),
+                        PopupMenuItem(
+                          value: 'denunciar',
+                          child: Row(
+                            children: [
+                              Icon(Icons.flag, color: Colors.grey),
+                              SizedBox(width: 8),
+                              Text('Report'),
+                            ],
+                          ),
+                        ),
+                      ],
+                ),
+              ),
             ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Text(
-              description,
+              widget.description,
               style: TextStyle(fontSize: 16, color: Colors.grey[700]),
             ),
           ),
           SizedBox(
             child: Row(
               children: [
-                SizedBox(width: 15,),
+                SizedBox(width: 15),
                 LikeButton(
                   size: 30,
                   likeCount: likes,
@@ -84,11 +135,13 @@ class Post extends StatelessWidget {
                     );
                   },
                   onTap: (isLiked) async {
-                    if (isLiked) {
-                      likes++;
-                    } else {
-                      likes--;
-                    }
+                    setState(() {
+                      if (isLiked) {
+                        likes--;
+                      } else {
+                        likes++;
+                      }
+                    });
                     return !isLiked;
                   },
                 ),
@@ -96,24 +149,27 @@ class Post extends StatelessWidget {
                 Column(
                   children: [
                     IconButton(
-                      isSelected: selectComment,
-                      icon: Icon(Icons.comment, color: selectComment ? AppColors.secondary : Colors.grey,),
+                      isSelected: widget.selectComment,
+                      icon: Icon(
+                        Icons.comment,
+                        color:
+                            widget.selectComment ? AppColors.secondary : Colors.grey,
+                      ),
                       onPressed: () {
-                        context.push('/commentPage', extra: {
-                          'postName': forumName,
-                          'description': description,
-                          'likes': likes,
-                          'comments': forumComments,
-                          'photo': photo,
-                        });
+                        context.push(
+                          '/commentPage',
+                          extra: {
+                            'postName': widget.forumName,
+                            'description': widget.description,
+                            'likes': likes,
+                            'comments': widget.forumComments,
+                            'photo': widget.photo,
+                          },
+                        );
                       },
                     ),
                     SizedBox(height: 5),
                   ],
-                ),
-                Text(
-                  '$forumComments',
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
               ],
             ),
