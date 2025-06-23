@@ -5,20 +5,22 @@ const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, 
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
 async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null, search = "", topicosIDs = []) {
-  const today = new Date();
+
   let cursosAssincronosDisponiveis = [];
   let cursosSincronosDisponiveis = [];
 
   const baseWhereAssincrono = {//filtros
     estado: true,
     issincrono: false,
-    data_inicio_inscricao: { [Op.gt]: today },
+    data_inicio_inscricao: { [Op.lte]: Sequelize.literal('CURRENT_DATE') },
+    data_fim_inscricao: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
   };
 
   const baseWhereSincrono = {//filtros
     estado: true,
     issincrono: true,
-    data_inicio_inscricao: { [Op.gt]: today },
+    data_inicio_inscricao: { [Op.lte]: Sequelize.literal('CURRENT_DATE') },
+    data_fim_inscricao: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
   };
 
   if (id_curso) {
@@ -222,7 +224,6 @@ async function getCourseDestaqueSincrono() {
 
 /*Esta funcao vai buscar todos os cursos em curso de um determinado formando*/
 async function getEnrolledCoursesForUser(userId, tipologia = null) {
-  const today = new Date();
   try {
     if (!userId) {
       console.log('ID do formando não fornecido');
@@ -241,7 +242,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
     };
 
     let cursoWhere = {
-      data_fim_curso: { [Op.gte]: today },
+      data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE')},
     };
 
     if (tipologia === 'sincrono') {
@@ -298,87 +299,86 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
 
 /*Esta funcao vai buscar todos os cursos completosa de um determinado formando*/
 async function getCompleteCoursesFromUser(userId, tipologia = null) {
-    const today = new Date();
 
-    try {
-        if (!userId) {
-            console.log('ID do formando não fornecido');
-            return [];
-        }
-
-        const formando = await formandos.findByPk(userId);
-        if (!formando) {
-            console.log(`Formando com ID ${userId} não encontrado`);
-            return [];
-        }
-
-        const whereClause = {
-            id_formando: userId,
-            status_inscricao: 1,
-        };
-
-        let cursoWhere = {
-            data_fim_curso: { [Op.lt]: today },
-        };
-
-        if (tipologia === 'sincrono') {
-            cursoWhere.issincrono = true;
-        } else if (tipologia === 'assincrono') {
-            cursoWhere.isassincrono = true;
-        }
-
-        const inscricoesComCursos = await inscricoes.findAll({//aqui vai buscar todas os cursos que tem inscricao daquele formando 
-            where: whereClause,
-            include: [
-                {
-                    model: cursos,
-                    as: 'id_curso_curso',
-                    where: cursoWhere,
-                    attributes: [
-                        'id_curso', 'nome_curso', 'descricao_curso', 'data_inicio_curso',
-                        'data_fim_curso', 'imagem', 'issincrono', 'isassincrono',
-                        'contador_formandos', 'horas_curso', 'idioma'
-                    ],
-                }
-            ],
-            order: [['data_inscricao', 'DESC']]
-        });
-
-        const cursosComNota = [];
-
-        for (const inscricao of inscricoesComCursos) {
-            const curso = inscricao.id_curso_curso;
-            if (!curso) continue;
-
-            const resultado = await resultados.findOne({ // Buscar resultado final do formando para esse curso
-                where: {
-                    id_curso_sincrono: curso.id_curso,
-                    id_formando: userId
-                },
-                attributes: ['resul']
-            });
-
-            cursosComNota.push({
-                id_curso: curso.id_curso,
-                nome_curso: curso.nome_curso,
-                descricao_curso: curso.descricao_curso,
-                data_inicio_curso: curso.data_inicio_curso,
-                data_fim_curso: curso.data_fim_curso,
-                imagem: curso.imagem,
-                tipo: curso.issincrono ? 'sincrono' : curso.isassincrono ? 'assincrono' : 'outro',
-                horas_curso: curso.horas_curso,
-                idioma: curso.idioma,
-                nota_final: resultado ? resultado.resul : null,
-                concluido: true
-            });
-        }
-
-        return cursosComNota;
-
-    } catch (error) {
-        console.error('Erro ao procurar cursos terminados para o utilizador:', error);
-        throw error;
+  try {
+    if (!userId) {
+      console.log('ID do formando não fornecido');
+      return [];
     }
+
+    const formando = await formandos.findByPk(userId);
+    if (!formando) {
+      console.log(`Formando com ID ${userId} não encontrado`);
+      return [];
+    }
+
+    const whereClause = {
+      id_formando: userId,
+      status_inscricao: 1,
+    };
+
+    let cursoWhere = {
+      data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE')},
+    };
+
+    if (tipologia === 'sincrono') {
+      cursoWhere.issincrono = true;
+    } else if (tipologia === 'assincrono') {
+      cursoWhere.isassincrono = true;
+    }
+
+    const inscricoesComCursos = await inscricoes.findAll({//aqui vai buscar todas os cursos que tem inscricao daquele formando 
+      where: whereClause,
+      include: [
+        {
+          model: cursos,
+          as: 'id_curso_curso',
+          where: cursoWhere,
+          attributes: [
+            'id_curso', 'nome_curso', 'descricao_curso', 'data_inicio_curso',
+            'data_fim_curso', 'imagem', 'issincrono', 'isassincrono',
+            'contador_formandos', 'horas_curso', 'idioma'
+          ],
+        }
+      ],
+      order: [['data_inscricao', 'DESC']]
+    });
+
+    const cursosComNota = [];
+
+    for (const inscricao of inscricoesComCursos) {
+      const curso = inscricao.id_curso_curso;
+      if (!curso) continue;
+
+      const resultado = await resultados.findOne({ // Buscar resultado final do formando para esse curso
+        where: {
+          id_curso_sincrono: curso.id_curso,
+          id_formando: userId
+        },
+        attributes: ['resul']
+      });
+
+      cursosComNota.push({
+        id_curso: curso.id_curso,
+        nome_curso: curso.nome_curso,
+        descricao_curso: curso.descricao_curso,
+        data_inicio_curso: curso.data_inicio_curso,
+        data_fim_curso: curso.data_fim_curso,
+        imagem: curso.imagem,
+        tipo: curso.issincrono ? 'sincrono' : curso.isassincrono ? 'assincrono' : 'outro',
+        horas_curso: curso.horas_curso,
+        idioma: curso.idioma,
+        nota_final: resultado ? resultado.resul : null,
+        concluido: true
+      });
+    }
+
+    return cursosComNota;
+
+  } catch (error) {
+    console.error('Erro ao procurar cursos terminados para o utilizador:', error);
+    throw error;
+  }
 }
 
 
@@ -582,22 +582,22 @@ async function getCursoWithAllInfoOneCourse(id) {
 }
 
 
-async function createCursoCompleto(reqBody){
-  try{
-  const { cursoData, sincrono: sincronoBody } = reqBody;
+async function createCursoCompleto(reqBody) {
+  try {
+    const { cursoData, sincrono: sincronoBody } = reqBody;
 
-  const curso = await cursos.create(cursoData);
+    const curso = await cursos.create(cursoData);
 
-  if(cursoData.issincrono && sincronoBody) {
-    await sincrono.create({
-      id_curso_sincrono: curso.id_curso,
-      id_formador: sincronoBody.id_formador,
-      numero_vagas: sincronoBody.numero_vagas,
-    });
-  }
-  
-  return curso;
-  } catch(error) {
+    if (cursoData.issincrono && sincronoBody) {
+      await sincrono.create({
+        id_curso_sincrono: curso.id_curso,
+        id_formador: sincronoBody.id_formador,
+        numero_vagas: sincronoBody.numero_vagas,
+      });
+    }
+
+    return curso;
+  } catch (error) {
     console.error('Erro no service ao criar curso:', error);
     throw error;
   }
@@ -607,7 +607,7 @@ async function updateCursoCompleto(reqBody) {
   try {
     const { cursoData, sincrono: sincronoBody } = reqBody;
 
-    const { id_curso, ...dataToUpdate } = cursoData; 
+    const { id_curso, ...dataToUpdate } = cursoData;
 
     await cursos.update(dataToUpdate, {
       where: { id_curso }
@@ -634,29 +634,29 @@ async function updateCursoCompleto(reqBody) {
 
 //Aqui vamos verificar se o utilizador esta inscrito
 async function verifyInscription(userId, cursoId) {
-    try {
-         
-        const inscricaoUser = await inscricoes.findOne({
-            where: {
-                id_formando: userId,
-                id_curso: cursoId,
-                status_inscricao: 1
-            }
-        });
-        
-        if (!inscricaoUser) {
-            return { inscrito: false };
-        }
-        
+  try {
 
-        return {
-            inscrito: true,
-        };
+    const inscricaoUser = await inscricoes.findOne({
+      where: {
+        id_formando: userId,
+        id_curso: cursoId,
+        status_inscricao: 1
+      }
+    });
 
-    } catch (error) {
-        console.error('Erro ao verificar inscricao', error);
-        throw error;
+    if (!inscricaoUser) {
+      return { inscrito: false };
     }
+
+
+    return {
+      inscrito: true,
+    };
+
+  } catch (error) {
+    console.error('Erro ao verificar inscricao', error);
+    throw error;
+  }
 }
 
 module.exports = {

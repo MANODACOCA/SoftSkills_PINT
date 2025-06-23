@@ -24,7 +24,7 @@ const FeaturedCourseCard = ({
 
     const now = new Date();
     const dataInicioCurso = new Date(course.data_inicio_curso);
-    
+
     if (verificacao.inscrito) {
       if (now >= dataInicioCurso) {
         if (location.pathname.startsWith('/my/cursos/inscritos')) {
@@ -124,14 +124,18 @@ const FeaturedCourseCard = ({
               <FaCalendarAlt className="me-2" />
               {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
             </p>
-            <p className={`mb-0 fw-semibold ${avaliado ? 'text-success' : 'text-warning'}`}>
-              {avaliado ? 'Já avaliado' : 'Por avaliar'}
-            </p>
+            {course.tipo === 'sincrono' &&
+              <p className={`mb-0 fw-semibold ${avaliado ? 'text-success' : 'text-warning'}`}>
+                {avaliado ? 'Já avaliado' : 'Por avaliar'}
+              </p>
+            }
           </div>
 
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <span className="fw-medium">{concluido}</span>
-            <span className="fw-semibold">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
+            <span className="fw-medium text-success">{concluido}</span>
+            {course.tipo === 'sincrono' &&
+              <span className="fw-semibold">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
+            }
             <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
               Ver Curso
             </button>

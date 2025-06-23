@@ -6,68 +6,83 @@ const model = initModels(sequelize).aulas;
 const controllers = {};
 const aulasService = require('../services/aulas.service')
 
-controllers.list = async (req,res)=>{
+controllers.list = async (req, res) => {
   const data = await model.findAll();
   res.status(200).json(data);
 };
 
-controllers.get = async (req,res)=>{
-  try{
-    const {id} = req.params;
+controllers.get = async (req, res) => {
+  try {
+    const { id } = req.params;
     const data = await model.findByPk(id);
-    if(data){
+    if (data) {
       res.status(200).json(data);
-    }else{
-      res.status(404).json({erro: 'Aula nao encontrado/a!'});
+    } else {
+      res.status(404).json({ erro: 'Aula nao encontrado/a!' });
     }
-  }catch (err){
-    res.status(500).json({erro: 'Erro ao procurar Aula!',desc: err.message});
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao procurar Aula!', desc: err.message });
   }
 };
 
-controllers.create = async (req,res)=>{
-  try{
-    if(req.body){
+controllers.create = async (req, res) => {
+  try {
+    if (req.body) {
       const data = await model.create(req.body);
       res.status(201).json(data);
-    }else{
-      res.status(400).json({erro: 'Erro ao criar Aula!',desc: 'Corpo do pedido esta vazio.'});
+    } else {
+      res.status(400).json({ erro: 'Erro ao criar Aula!', desc: 'Corpo do pedido esta vazio.' });
     }
-  }catch(err){
-    res.status(500).json({erro: 'Erro ao criar Aula!',desc: err.message});
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao criar Aula!', desc: err.message });
   }
 };
 
-controllers.update = async (req,res)=>{
+controllers.update = async (req, res) => {
   try {
-    if(req.body){
-      const {id} = req.params;
-      const updated = await model.update(req.body,{where:{id:id}});
-      if(updated){
+    if (req.body) {
+      const { id } = req.params;
+      const updated = await model.update(req.body, { where: { id: id } });
+      if (updated) {
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
-      }else{
-        res.status(404).json({erro:'Aula nao foi atualizado/a!'});
+      } else {
+        res.status(404).json({ erro: 'Aula nao foi atualizado/a!' });
       }
-    }else{
-      res.status(400).json({erro: 'Erro ao atualizar o/a Aula!',desc: 'Corpo do pedido esta vazio.'});
+    } else {
+      res.status(400).json({ erro: 'Erro ao atualizar o/a Aula!', desc: 'Corpo do pedido esta vazio.' });
     }
-  }catch(err){
-    res.status(500).json({erro: 'Erro ao atualizar o/a Aula!',desc: err.message});
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao atualizar o/a Aula!', desc: err.message });
   }
 };
 
-controllers.delete = async (req,res)=>{
+controllers.delete = async (req, res) => {
   try {
-    const {id} = req.params;
-    const deleted = await model.destroy({where:{id:id}});
-    if(deleted){
-      res.status(200).json({msg:'Aula apagado/a com sucesso!'});
-    }else{
-      res.status(404).json({erro:'Aula não foi apagado/a!'});
+    const { id } = req.params;
+    const deleted = await model.destroy({ where: { id: id } });
+    if (deleted) {
+      res.status(200).json({ msg: 'Aula apagado/a com sucesso!' });
+    } else {
+      res.status(404).json({ erro: 'Aula não foi apagado/a!' });
     }
-  }catch(err) {
-    res.status(500).json({erro:'Erro ao apagar o/a Aula!',desc: err.message});
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao apagar o/a Aula!', desc: err.message });
+  }
+};
+
+controllers.getAulasAndMateriaApoioForCurso = async (req, res) => {
+  try {
+    const { cursoId } = req.params;
+
+    const data = await aulasService.getAulasAndMateriaApoioForCurso(cursoId);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Erro ao verificar aulas e material da apoio:', error);
+    res.status(500).json({
+      erro: 'Erro ao verificar aulas e material de apoio',
+      desc: error.message,
+    })
   }
 };
 

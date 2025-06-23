@@ -10,11 +10,11 @@ const VideoPlayer = ({ videoUrl }) => {
     const videoSrc = videoUrl && videoUrl.trim() !== '' ? videoUrl : DEFAULT_VIDEO_URL;
     console.log(videoUrl);
     return (
-        <div className="ratio ratio-16x9 rounded-4 overflow-hidden">
+        <div className=" rounded-4 overflow-hidden">
             <ReactPlayer
                 url={DEFAULT_VIDEO_URL}
                 width="100%"
-                height="100%"
+                height="575px"
                 controls
                 playing={false}
                 onReady={() => setLoading(false)}

@@ -53,12 +53,12 @@ export const delete_aulas = async (id) => {
 };
 
 
-export const getClassWithCourse = async (userId, cursoId) => {
+export const getAulasAndMateriaApoioForCurso = async (cursoId) => {
     try {
-        const response = await axios.get(`${API_URL}/verificar/${userId}/${cursoId}`);
+        const response = await axios.get(`${API_URL}/aulas/mat-apoio/${cursoId}`);
         return response.data;
     } catch (error) {
-        console.error('Erro ao procurar detalhes da aula e curso:', error);
+        console.error('Erro ao procurar detalhes das aulas e do material de apoio:', error);
         throw error;
     }
 };

@@ -5,7 +5,7 @@ import ClassHeader from '../../components/class_header/ClassHeader';
 import VideoPlayer from '../../components/video_player/VideoPlayer';
 import CourseModule from '../../components/course_module/CourseModule';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
-import { get_aulas } from '../../../api/aulas_axios';
+import { getAulasAndMateriaApoioForCurso } from '../../../api/aulas_axios';
 import { FaFilePdf, FaFileAlt, FaLink, FaUserTie } from 'react-icons/fa';
 
 
@@ -16,31 +16,30 @@ const ClassPage = () => {
     const [aulaAtual, setAulaAtual] = useState(null); // Add state for current class
     const [materialApoio, setMaterialApoio] = useState([]);
     const [carregar, setCarregar] = useState(true);
-    const [erro, setErro] = useState(null); 
+    const [erro, setErro] = useState(null);
 
-    const userId = 4;
-    const { cursoId, aulaId } = useParams();
+    const { cursoId } = useParams();
 
-    const carregarAula = async () => {
+    const carregarAulasEMaterialApoio = async () => {
         try {
             setCarregar(true);
 
             // Log the API call parameters
-            console.log(`Chamando API com userId=${userId}, cursoId=${cursoId}`);
-            
-            const dados = await verificar_acesso_aula(userId, cursoId);
+            console.log(`Chamando API com cursoId=${cursoId}`);
+
+            const dados = await getAulasAndMateriaApoioForCurso(cursoId);
             console.log("Dados recebidos da API:", dados);
-            
-            setCurso(dados.curso || null);
+
+            setCurso(dados.dadosCurso || null);
             setAulas(dados.todasAulas || []);
             setMaterialApoio(dados.materialApoio || []);
-            
+
             // Find the current aula from the list of aulas
             if (dados.todasAulas && dados.todasAulas.length > 0) {
-                const aulaEncontrada = dados.todasAulas.find(aula => 
+                const aulaEncontrada = dados.todasAulas.find(aula =>
                     aula.id_aula.toString() === aulaId.toString()
                 );
-                
+
                 if (aulaEncontrada) {
                     console.log("Aula encontrada:", aulaEncontrada);
                     setAulaAtual(aulaEncontrada);
@@ -51,7 +50,7 @@ const ClassPage = () => {
             } else {
                 setErro("Nenhuma aula disponível para este curso");
             }
-                
+
         } catch (error) {
             console.error("Erro ao carregar aula:", error);
             setErro("Ocorreu um erro ao carregar a aula. Tente novamente.");
@@ -62,7 +61,7 @@ const ClassPage = () => {
 
     const handlePrevious = () => {
         if (!aulaAtual || !aulas.length) return;
-        
+
         const index = aulas.findIndex(a => a.id_aula.toString() === aulaAtual.id_aula.toString());
         console.log("aulaAtual.id_aula:", aulaAtual?.id_aula);
         console.log("IDs das aulas:", aulas.map(a => a.id_aula));
@@ -76,7 +75,7 @@ const ClassPage = () => {
 
     const handleNext = () => {
         if (!aulaAtual || !aulas.length) return;
-        
+
         const index = aulas.findIndex(a => a.id_aula.toString() === aulaAtual.id_aula.toString());
         if (index < aulas.length - 1) {
             const proxima = aulas[index + 1];
@@ -84,7 +83,7 @@ const ClassPage = () => {
             console.log("Navegando para próxima aula:", proxima.id_aula);
         }
     };
-    
+
     const moduleData = aulaAtual ? {
         title: aulaAtual.nome_aula,
         aulas: aulaAtual.conteudos ? aulaAtual.conteudos.map(c => ({
@@ -96,6 +95,7 @@ const ClassPage = () => {
     } : { title: "Aula não disponível", aulas: [] };
 
     const nomeCurso = curso ? curso.nome_curso : "Curso não encontrado";
+    const imagemCurso = curso ? curso.imagem : `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCurso)}&background=random&bold=true`;
     const tipoCurso = curso ? (curso.issincrono ? 'Síncrono' : 'Assíncrono') : "N/D";
     const numeroAulas = aulas ? aulas.length : 0;
     const tempoTotal = curso ? (curso.horas_curso || "N/D") : "N/D";
@@ -116,14 +116,14 @@ const ClassPage = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (cursoId && aulaId) {
-            carregarAula();
+        if (cursoId) {
+            carregarAulasEMaterialApoio();
         }
-    }, [cursoId, aulaId]);
+    }, [cursoId]);
 
     return (
         <div className="container-fluid pt-4">
-           
+
             <div className="row">
                 <div className="col-12">
                     <ClassHeader
@@ -144,10 +144,19 @@ const ClassPage = () => {
                     </div>
                 ) : (
                     <>
-                        <VideoPlayer
-                            videoUrl={videoUrl}
-                            erro={erro}
-                        />
+                        {tipoCurso === 'Assíncrono' && (
+                            <VideoPlayer
+                                videoUrl={videoUrl}
+                                erro={erro}
+                            />
+                        )}
+                        {tipoCurso === 'Síncrono' && (
+                            <img 
+                            className='rounded-4' 
+                            src={imagemCurso} alt="imagem do curso" 
+                            style={{width:"100%",height:"575px", objectFit: "cover"}}
+                            />
+                        )}
 
                         <h1 className="mb-3 mt-3">{tituloAula}</h1>
 
@@ -206,7 +215,7 @@ const ClassPage = () => {
                                 <div className="mt-4">
                                     <h2>Eventos</h2>
                                     <p>Não há eventos programados para esta aula no momento.</p>
-                                    Quando a tabela de trabalhos estiver disponível, substituir por conteúdo dinâmico 
+                                    Quando a tabela de trabalhos estiver disponível, substituir por conteúdo dinâmico
                                 </div>
                             </Tab>
 
