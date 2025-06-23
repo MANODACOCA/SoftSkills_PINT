@@ -6,7 +6,7 @@ import 'package:mobile/ui/core/shared/export.dart';
 
 // ignore: must_be_immutable
 class Post extends StatefulWidget {
-  Post({
+  const Post({
     super.key,
     required this.forumName,
     required this.forumComments,
@@ -30,7 +30,7 @@ class Post extends StatefulWidget {
 class _PostState extends State<Post> {
   late int likes;
   final TextEditingController _copiar = TextEditingController();
-  final TextEditingController _denunciar = TextEditingController(); // Ainda falta implementar a lógica de denúncia
+  String _denunciar = '';
 
   @override
   void initState() {
@@ -41,7 +41,6 @@ class _PostState extends State<Post> {
   @override
   void dispose() {
     _copiar.dispose();
-    _denunciar.dispose();
     //Guardar na database o novo valor de likes
     super.dispose();
   }
@@ -85,7 +84,9 @@ class _PostState extends State<Post> {
                     if (value == 'copiar') {
                       _copiar.text = widget.description;
                       Clipboard.setData(ClipboardData(text: _copiar.text));
-                    } else if (value == 'denunciar') {} // Implementar lógica de denúncia
+                    } else if (value == 'denunciar') {
+                      denunciar();
+                    }
                   },
                   itemBuilder:
                       (BuildContext context) => [
@@ -153,7 +154,9 @@ class _PostState extends State<Post> {
                       icon: Icon(
                         Icons.comment,
                         color:
-                            widget.selectComment ? AppColors.secondary : Colors.grey,
+                            widget.selectComment
+                                ? AppColors.secondary
+                                : Colors.grey,
                       ),
                       onPressed: () {
                         context.push(
@@ -176,6 +179,80 @@ class _PostState extends State<Post> {
           ),
         ],
       ),
+    );
+  }
+
+  void denunciar() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Container(
+            width: double.infinity,
+            height: 250,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Denunciar Por que motivo?',
+                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                ),
+                SizedBox(height: 5),
+                Row(
+                  children: <Widget>[
+                    TextButton(
+                      child: Text('Conteúdo Inapropriado', style: TextStyle(fontSize: 13)),
+                      onPressed: () {
+                        _denunciar = 'Conteúdo Inapropriado';
+                        print('Denunciar: $_denunciar');
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    TextButton(
+                      child: Text('Spam', style: TextStyle(fontSize: 13)),
+                      onPressed: () {
+                        _denunciar = 'Spam';
+                        print('Denunciar: $_denunciar');
+                      },
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    TextButton(
+                      child: Text('Informação Falsa', style: TextStyle(fontSize: 13)),
+                      onPressed: () {
+                        _denunciar = 'Informação Falsa';
+                        print('Denunciar: $_denunciar');
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {
+                    print('Denunciar: $_denunciar');
+                    // Envia para a base de dados uma denúncia com o motivo selecionado
+                  },
+                  child: Text('Denunciar', style: TextStyle(fontSize: 13, color: Colors.white)),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
