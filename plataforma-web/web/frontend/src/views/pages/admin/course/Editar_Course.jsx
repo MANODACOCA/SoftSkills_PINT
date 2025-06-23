@@ -3,8 +3,8 @@ import AulaForm from '../../../components/courses_form/AulaForm';
 import { useEffect, useState, useRef } from 'react';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
 import { getCategoriaAreaTopico, list_topico, update_topico } from '../../../../api/topico_axios';
-import { list_material_apoio, update_material_apoio } from '../../../../api/material_apoio_axios';
-import { list_aulas, update_aulas } from '../../../../api/aulas_axios';
+import { create_material_apoio, delete_material_apoio, get_material_apoio, list_material_apoio, update_material_apoio } from '../../../../api/material_apoio_axios';
+import { list_aulas, update_aulas, create_aulas } from '../../../../api/aulas_axios';
 import { get_cursos, update_cursos } from '../../../../api/cursos_axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatYearMonthDay } from '../../../components/shared_functions/FunctionsUtils';
@@ -13,11 +13,14 @@ import './Editar_Course.css';
 import ISO6391 from 'iso-639-1';
 import Select from 'react-select';
 import { list_formadores } from '../../../../api/formadores_axios';
-import { list_area } from '../../../../api/area_axios';
-import { list_categoria } from '../../../../api/categoria_axios';
 import Swal from 'sweetalert2';
+import Table from '../../../components/table/Table';
+import { columnsAulas } from '../../../components/table/ColumnsAula';
+import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterialApoio';
 
 const EditCourse = () => {
+    //#region Variaveis
+
     const { id } = useParams();
     const [aulas, setAulas] = useState([]);
     const [materiais, setMateriais] = useState([]);
@@ -37,9 +40,13 @@ const EditCourse = () => {
     const [isSincrono, setIsSincrono] = useState(false);
     const [sincrono, setSincrono] = useState({
         id_formador: null,
-        numero_vagas: null,
+        numero_vagas: "",
     })
+    const error = null;
+    const successMessage = null;
 
+    //#endregion
+    
     useEffect(() => {
         window.scrollTo(0, 0);
 
@@ -64,6 +71,7 @@ const EditCourse = () => {
         };
     }, [id]);
 
+    //#region curso
     const fetchCurso = async (id) => {
         try {
             const response = await get_cursos(id);
@@ -91,79 +99,6 @@ const EditCourse = () => {
             console.log('Erro ao encontrar cursos');
         }
     }
-
-    const fetchFormatos = async () => {
-        try {
-            const response = await list_tipo_formato();
-            console.log(response);
-            setFormato(response);
-        } catch (error) {
-            console.log('Erro ao encontrar formatos', error);
-        }
-    };
-
-    const fetchCategoriaAreaTopico = async () => {
-        try {
-            const response = await getCategoriaAreaTopico();
-            console.log(response);
-            setCatAreaTop(response);
-        } catch (error) {
-            console.log('Erro ao encontrar Categorias, Áreas e Tópicos', error);
-        }
-    }
-
-    const fetchMaterialApoio = async () => {
-        try {
-            const response = await list_material_apoio();
-            console.log(response);
-            setMateriais(response);
-        } catch (error) {
-            console.log('Erro ao listar Material de Apoio', error);
-        }
-    }
-
-    const fetchAulas = async () => {
-        try {
-            const response = await list_aulas();
-            console.log(response);
-            setAulas(response);
-        } catch (error) {
-            console.log('Erro encontrar as Aulas', error);
-        }
-    }
-
-    const fetchFormadores = async () => {
-        try {
-            const response = await list_formadores();
-            console.log(response);
-            setFormadores(response);
-        } catch (error) {
-            console.log('Erro ao encontrar a lista de formadores', error);
-        }
-    }
-
-    const languageOptions = ISO6391.getAllCodes().map(code => ({
-        value: code,
-        label: ISO6391.getNativeName(code),
-    }));
-
-    const handleLanguageChange = (selectedOption) => {
-        setSelectedLanguage(selectedOption);
-        setCursos(prev => ({ ...prev, idioma: selectedOption?.value || "" }));
-    };
-
-    useEffect(() => {
-        fetchFormatos();
-        fetchCategoriaAreaTopico();
-        fetchMaterialApoio();
-        fetchFormadores();
-        fetchAulas();
-        fetchCurso(id);
-    }, []);
-
-    const error = null;
-    const successMessage = null;
-
 
     const handleSubmitCursoImg = async (e) => {
         e.preventDefault();
@@ -214,22 +149,38 @@ const EditCourse = () => {
         }
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        let updateValue = value;
+    const fetchFormadores = async () => {
+        try {
+            const response = await list_formadores();
+            console.log(response);
+            setFormadores(response);
+        } catch (error) {
+            console.log('Erro ao encontrar a lista de formadores', error);
+        }
+    }
 
-        if (name === "isassincrono") {
-            updateValue = value === "true";
+    const fetchCategoriaAreaTopico = async () => {
+        try {
+            const response = await getCategoriaAreaTopico();
+            console.log(response);
+            setCatAreaTop(response);
+        } catch (error) {
+            console.log('Erro ao encontrar Categorias, Áreas e Tópicos', error);
+        }
+    }
+
+     const handleSubmitCurso = async (e) => {
+        e.preventDefault();
+
+        if(cursos.isassincrono === false && !sincrono.id_formador){
+            Swal.fire({
+                icon: "error",
+                title: "Erro",
+                text: "Para cursos síncronos, é obrigatorio selecionar um formador"
+            });
+            return;
         }
 
-        setCursos(prev => ({
-            ...prev,
-            [name]: updateValue,
-        }));
-    };
-
-    const handleSubmitCurso = async (e) => {
-        e.preventDefault();
         const result = await Swal.fire({
             title: 'Tem a certeza que deseja alterar Curso?',
             text: 'Os curso será alterado',
@@ -264,30 +215,6 @@ const EditCourse = () => {
                     text: "Não foi possível atualizar o curso. Verifica os dados e tenta novamente."
                 });
             }
-        }
-    }
-
-    const handleSubmitAulas = async (e) => {
-        e.preventDefault();
-        const dadosAulas = {
-            ...aulas
-        }
-        try {
-            await update_aulas(dadosAulas);
-        } catch (error) {
-            console.log("Erro ao atualizar Aula", error);
-        }
-    }
-
-    const handleSubmitMaterialApoio = async (e) => {
-        e.preventDefault();
-        const dadosMaterialApoio = {
-            ...materiais
-        }
-        try {
-            await update_material_apoio(dadosMaterialApoio);
-        } catch (error) {
-            console.log("Erro ao atualizar o material apoio", error);
         }
     }
 
@@ -330,14 +257,512 @@ const EditCourse = () => {
             }
         }
     }
+    //#endregion
 
-    const addAula = () => {
-        setAulas(prev => [...prev, { nome_aula: '', data_aula: '', caminhos_url: [''], conteudos: [] }]);
+
+    //#region Aula
+    const fetchAulas = async () => {
+        try {
+            const response = await list_aulas();
+            console.log(response);
+            setAulas(response);
+        } catch (error) {
+            console.log('Erro encontrar as Aulas', error);
+        }
+    }
+
+    const renderActionsAula = (item) => {
+        return(
+            <div className="d-flex">
+                <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreateAula(item.id_aula, item)}>
+                    <i className="bi bi-pencil"></i>
+                </button>
+                <button className="btn btn-outline-danger" onClick={()=> handleDeleteAula(item.id_aula)}>
+                    <i className="bi bi-trash"></i>
+                </button>
+            </div>
+        );
+    }
+
+    const HandleEditCreateAula = async (id, aulaData) => {
+        const result = await Swal.fire({
+            title: id == null ? 'Tem a certeza que deseja adicionar aula?' : 'Tem a certeza que deseja trocar aula?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+
+        if(result.isConfirmed) {
+            try{
+                if(id){
+                    const editarAula = await Swal.fire({
+                        title: 'Editar Aula',
+                        html: `
+                            <label for="nome" class="form-label">Aula</label>
+                            <input id="nomeAula" class="form-control mb-3" placeholder="Nome da Aula" value="${aulaData?.nome_aula || ''}">
+                            <label for="conteudo" class="form-label">URL</label>
+                            <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Editar',
+                        cancelButtonText: 'Cancelar',
+                        inputValidator: (value) => {
+                            if(!value) return 'O URL é obrigatório';
+                            if (!/^https?:\/\/.+/.test(value)) return 'Insira um URL válido';
+                            return null;
+                        },
+                        customClass: {
+                            confirmButton: 'btn btn-success me-2',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        preConfirm: () => {
+                            const nome = document.getElementById('nomeAula').value;
+                            const url = document.getElementById('urlAula').value;
+                            
+                            if(!nome || !url) {
+                                Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                                return;
+                            }
+
+                            if (!/^https?:\/\/.+/.test(url)) {
+                                Swal.showValidationMessage('Insira um URL válido!');
+                                return;
+                            }
+                            
+                            return {nome, url};
+                        }
+                    });
+                    if(editarAula.isConfirmed){
+                        try {
+                            const aulaEditada = {
+                                ...aulaData,
+                                nome_aula: editarAula.value.nome,
+                                caminho_url: [editarAula.value.url]
+                            };
+
+                            await update_aulas(id, aulaEditada);
+                            await fetchAulas();
+
+                            Swal.fire({
+                                icon: "success",
+                                title: "Aula editada com sucesso!",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } catch(error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Erro",
+                                text: "Não foi possível editar a aula",
+                                timer: 2000,
+                                showConfirmButton: false,
+                            });                            
+                        }
+                    }
+                }else{    
+                    const adicionarAula = await Swal.fire({
+                        title: 'Adicionar Aula',
+                        html: `
+                            <label for="nome" class="form-label">Aula</label>
+                            <input id="nomeAula" class="form-control mb-3" placeholder="Nome da Aula" value="${aulaData?.nome_aula || ''}">
+                            <label for="conteudo" class="form-label">URL</label>
+                            <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url?.[0] || ''}">
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Adicionar Aula',
+                        cancelButtonText: 'Cancelar',
+                        inputValidator: (value) => {
+                            if (!value) return 'O URL é obrigatório!';
+                            if (!/^https?:\/\/.+/.test(value)) return 'Insira um URL válido';
+                            return null;
+                        },
+                        customClass: {
+                            confirmButton: 'btn btn-success me-2',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        preConfirm: () => {
+                            const nome = document.getElementById('nomeAula').value;
+                            const url = document.getElementById('urlAula').value;
+
+                            if (!nome || !url) {
+                                Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                                return;
+                            }
+
+                            if (!/^https?:\/\/.+/.test(url)) {
+                                Swal.showValidationMessage('Insira um URL válido!');
+                                return;
+                            }
+
+                            return { nome, url };
+                        }
+                    });
+                    if(adicionarAula.isConfirmed){
+                        try {
+                            const novaAula = {
+                                ...aulaData,
+                                nome_aula: adicionarAula.value.nome,
+                                caminho_url: [adicionarAula.value.url]
+                            };
+
+                            await create_aulas(novaAula);
+                            await fetchAulas();
+                            
+                            Swal.fire({
+                                icon: "success",
+                                title: "Aula adicionada com sucesso!",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } catch(error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Erro",
+                                text: "Não foi possível adicionar a aula",
+                                timer: 2000,
+                                showConfirmButton: false,
+                            });
+                        }
+                    }
+                }
+            }catch(error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Não foi possível guardar a aula",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            }
+        } 
+    }
+
+    const handleSubmitAulas = async (e) => {
+        e.preventDefault();
+        const dadosAulas = aulas;
+        try {
+            await update_aulas(dadosAulas);
+        } catch (error) {
+            console.log("Erro ao atualizar Aula", error);
+        }
+    }
+
+    const handleDeleteAula = async (id) => {
+        const result = await Swal.fire({
+            title: "Tem certeza que deseja excluir esta aula?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonColor: "Cancelar",
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+
+        if(result.isConfirmed) {
+            try{
+                await delete_aulas(id);
+                Swal.fire({
+                    icon: "success",
+                    title: "Aula excluída com sucesso!",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+
+                await fetchAulas(); 
+
+            } catch (error) {
+                console.error("Erro ao excluir aula:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Não foi possível excluir a aula",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            }
+        }
     };
 
-    const addMaterial = () => {
-        setMateriais(prev => [...prev, { id_formato: '', conteudo: '' }]);
+    //#endregion
+
+
+    //#region MateriaApoio
+    
+    const fetchMaterialApoio = async () => {
+        try {
+            const response = await list_material_apoio();
+            console.log(response);
+            setMateriais(response);
+        } catch (error) {
+            console.log('Erro ao listar Material de Apoio', error);
+        }
+    }
+
+    const fetchFormatos = async () => {
+        try {
+            const response = await list_tipo_formato();
+            console.log(response);
+            setFormato(response);
+        } catch (error) {
+            console.log('Erro ao encontrar formatos', error);
+        }
     };
+
+    const renderActionsMaterialApoio = (item) => {
+        return(
+        <div className="d-flex">
+            <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreateMaterialApoio(item.id_material_apoio)}>
+                <i className="bi bi-pencil"></i>
+            </button>
+            <button className="btn btn-outline-danger" onClick={()=> HandleDeleteMaterialApoio(item.id_material_apoio)}>
+                <i className="bi bi-trash"></i>
+            </button>
+        </div>
+        );
+    }
+
+    
+    const HandleEditCreateMaterialApoio = async (id) => {
+        const result = await Swal.fire({
+            title: id == null ? 'Tem a certeza que deseja adicionar Material de apoio?' : 'Tem a certeza que deseja editar Material de apoio?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+
+        if(result.isConfirmed) {
+            try {
+                if(id != null || id != undefined) {
+                    const material = await get_material_apoio(id);
+                    const formatos = await list_tipo_formato();
+                    const editarMaterialApoio = await Swal.fire({
+                        title: 'Editar Material de apoio',
+                        html: `
+                            <label for="formato" class="form-label">Formato</label>
+                            <select id="formato" class="form-control mb-3">
+                                ${formatos.map(f => `
+                                    <option value="${f.id_formato}" ${f.id_formato == material.id_formato ? 'selected' : ''}>${f.id_formato}</option>
+                                `).join('')}
+                            </select>
+                            <label for="nome" class="form-label">Nome</label>
+                            <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" value="${material.id_curso || ''}" />
+                            <label for="conteudo" class="form-label">Conteúdo</label>
+                            <input id="conteudo" class="form-control" placeholder="https://example.com/material.pdf" value="${material.conteudo || ''}" />
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Editar Material de Apoio',
+                        cancelButtonText: 'Cancelar',
+                        customClass: {
+                            confirmButton: 'btn btn-success me-2',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        preConfirm: () => {
+                            const id_formato = document.getElementById("formato").value;
+                            const conteudo = document.getElementById("conteudo").value;
+                            const nome = document.getElementById("nome").value;
+                            if(!id_formato || !conteudo || !nome) {
+                                Swal.showValidationMessage("Todos os campos são obrigatórios!");
+                                return false;
+                            }
+                            return {
+                                id_formato: parseInt(id_formato),
+                                conteudo
+                            };
+                        }
+                    })
+                    if(editarMaterialApoio.isConfirmed && editarMaterialApoio.value){
+                        try {
+                            await update_material_apoio(id, editarMaterialApoio.value);
+                            await fetchMaterialApoio();
+                            Swal.fire({
+                                icon: "success",
+                                title: "Material de apoio editado com sucesso!",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } catch(error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Erro",
+                                text: "Não foi possível editar a material de apoio",
+                                timer: 2000,
+                                showConfirmButton: false,
+                            });                            
+                        }
+                    }
+                } else {
+                    const formatos = await list_tipo_formato();
+                    const adicionarMaterialApoio = await Swal.fire({
+                        title: 'Adicionar Material de apoio',
+                        html: `
+                            <label for="formato" class="form-label">Formato</label>
+                            <select id="formato" class="form-control mb-3">
+                            <option value="">-- Selecionar Formato --</option>
+                                ${formatos.map(f => `
+                                    <option value="${f.id_formato}">${f.id_formato}</option>
+                                `).join('')}
+                            </select>
+                            <label for="nome" class="form-label">Nome</label>
+                            <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" />
+                            <label for="conteudo" class="form-label">Conteúdo</label>
+                            <input id="conteudo" class="form-control" placeholder="https://example.com/material.pdf" />
+                        `,
+                        showCancelButton: true,
+                        confirmButtonText: 'Adicionar Material de Apoio',
+                        cancelButtonText: 'Cancelar',
+                        customClass: {
+                            confirmButton: 'btn btn-success me-2',
+                            cancelButton: 'btn btn-danger',
+                        },
+                        preConfirm: () => {
+                            const id_formato = document.getElementById("formato").value;
+                            const conteudo = document.getElementById("conteudo").value;
+                            const nome = document.getElementById("nome").value;
+                            if(!id_formato || !conteudo || !nome) {
+                                Swal.showValidationMessage("Todos os campos são obrigatórios!");
+                                return false;
+                            }
+                            return {
+                                id_formato: parseInt(id_formato),
+                                conteudo
+                            };
+                        }
+                    })
+                    if(adicionarMaterialApoio.isConfirmed && adicionarMaterialApoio.value){
+                        try {
+                            await create_material_apoio(adicionarMaterialApoio.value);
+                            await fetchMaterialApoio();
+                            Swal.fire({
+                                icon: "success",
+                                title: "Material de apoio adicionado com sucesso!",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } catch(error) {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Erro",
+                                text: "Não foi possível adicionar a material de apoio",
+                                timer: 2000,
+                                showConfirmButton: false,
+                            });
+                        }
+                    }
+                }
+            }catch(error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Não foi possível adicionar ou editar material de apoio",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            }
+        } 
+    }
+
+
+    const HandleDeleteMaterialApoio = async (id) => {
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja eliminar Material de apoio?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        })
+
+        if(result.isConfirmed) {
+            try {
+                await delete_material_apoio(id);
+                Swal.fire({
+                    icon: "success",
+                    title: "Material de apoio excluído com sucesso!",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } catch(error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Não foi possível excluir a aula",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+                console.log('Erro ao eliminar material de apoio!');
+            }
+        }
+    }
+
+    const handleSubmitMaterialApoio = async (e) => {
+        e.preventDefault();
+        const dadosMaterialApoio = {
+            ...materiais
+        }
+        try {
+            await update_material_apoio(dadosMaterialApoio);
+        } catch (error) {
+            console.log("Erro ao atualizar o material apoio", error);
+        }
+    }
+
+    //#endregion
+    
+
+    //#region extra
+    const languageOptions = ISO6391.getAllCodes().map(code => ({
+        value: code,
+        label: ISO6391.getNativeName(code),
+    }));
+
+    const handleLanguageChange = (selectedOption) => {
+        setSelectedLanguage(selectedOption);
+        setCursos(prev => ({ ...prev, idioma: selectedOption?.value || "" }));
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        let updateValue = value;
+
+        if (name === "issincrono") {
+            updateValue = value === "true";
+        }
+
+        setCursos(prev => ({
+            ...prev,
+            [name]: updateValue,
+        }));
+    };
+    //#endregion
+    
+
+    useEffect(() => {
+        fetchFormatos();
+        fetchCategoriaAreaTopico();
+        fetchMaterialApoio();
+        fetchFormadores();
+        fetchAulas();
+        fetchCurso(id);
+    }, []);
 
     return (
         <div className='form-group'>
@@ -401,7 +826,7 @@ const EditCourse = () => {
                             {/* Tipo */}
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Tipologia</label>
-                                <select name="issincrono" value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean})); handleChange(e)}} className='form-select'>
+                                <select name="issincrono" value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(valorBoolean); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean})); handleChange(e)}} className='form-select'>
                                     <option value="">-- Escolher Tipologia --</option>
                                     <option value="true">Síncrono</option>
                                     <option value="false">Assíncrono</option>
@@ -409,10 +834,16 @@ const EditCourse = () => {
                             </div>
 
                             {/* Se for síncrono, mostra formador */}
-                            {cursos.isassincrono == false && (
+                            {isSincrono == true && (
                                 <div className='mt-2'>
                                     <label className='mt-2 fw-bold'>Formador</label>
-                                    <select name="id_formador" value={formadorSelecionado} onChange={(e) => {setSincrono(prev => ({...prev, id_formador: parseInt(e.target.value)})); setFormadorSelecionado(parseInt(e.target.value)); handleChange(e)}} className='form-select'>
+                                    <select name="id_formador" value={formadorSelecionado} onChange={(e) => {
+                                            const valor = parseInt(e.target.value);
+                                            
+                                            setSincrono(prev => ({...prev, id_formador: valor})); 
+                                            setFormadorSelecionado(valor); 
+                                            handleChange(e);}} 
+                                        className='form-select'>
                                         <option value="">-- Selecionar Formador --</option>
                                         {formadores.map((f) => {
                                             return(
@@ -497,78 +928,20 @@ const EditCourse = () => {
                     <Tabs defaultActiveKey="aulas" className="my-4 nav-justified custom-tabs">
                         <Tab eventKey="aulas" title="Aulas">
                             <div className="mt-4">
-                                <h2>Aulas</h2>
                                 {/* Aulas */}
                                 {cursos.isassincrono === true && (
                                     <div className='mt-4'>
-                                        <h5>Aulas</h5>
-                                        {aulas.map((aulas, idx) => (
-                                            <AulaForm
-                                                key={idx}
-                                                aula={aulas}
-                                                formatos={formato}
-                                                onChange={(field, value) => {
-                                                    const updated = [...aulas];
-                                                    updated[idx][field] = value;
-                                                    setAulas(updated);
-                                                }}
-                                                onChangeUrl={(urlIdx, value) => {
-                                                    const updated = [...aulas];
-                                                    updated[idx].caminhos_url[urlIdx] = value;
-                                                    setAulas(updated);
-                                                }}
-                                                onAddUrl={() => {
-                                                    const updated = [...aulas];
-                                                    updated[idx].caminhos_url.push('');
-                                                    setAulas(updated);
-                                                }}
-                                                onAddConteudo={() => {
-                                                    const updated = [...aulas];
-                                                    updated[idx].conteudos.push({
-                                                        nome_conteudo: '',
-                                                        conteudo: '',
-                                                        tempo_duracao: '',
-                                                        id_formato: ''
-                                                    });
-                                                    setAulas(updated);
-                                                }}
-                                                onChangeConteudo={(conteudoIdx, field, value) => {
-                                                    const updated = [...aulas];
-                                                    updated[idx].conteudos[conteudoIdx][field] = value;
-                                                    setAulas(updated);
-                                                }}
-                                            />
-                                        ))}
-                                        <button type="button" className='btn btn-outline-primary' onClick={handleSubmitAulas}>+ Adicionar Aula</button>
+                                        <Table columns={columnsAulas} data={aulas} actions={renderActionsAula} onAddClick={HandleEditCreateAula} />
                                     </div>
                                 )}
                             </div>
                         </Tab>
                         <Tab eventKey="material_apoio" title="Material Apoio">
                             <div className="mt-4">
-                                <h2>Material Apoio</h2>
                                 {/* Material de Apoio */}
                                 {cursos.isassincrono === true && (
                                     <div className='mt-4'>
-                                        <h5>Material de Apoio</h5>
-                                        {materiais.map((mat, idx) => (
-                                            <MaterialForm
-                                                key={idx}
-                                                material={mat}
-                                                formatos={formato}
-                                                onChangeFormato={(e) => {
-                                                    const updated = [...materiais];
-                                                    updated[idx].id_formato = e.target.value;
-                                                    setMateriais(updated);
-                                                }}
-                                                onChangeConteudo={(e) => {
-                                                    const updated = [...materiais];
-                                                    updated[idx].conteudo = e.target.value;
-                                                    setMateriais(updated);
-                                                }}
-                                            />
-                                        ))}
-                                        <button type="button" className='btn btn-outline-primary' onClick={handleSubmitMaterialApoio}>+ Adicionar Material</button>
+                                        <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={HandleEditCreateMaterialApoio} />
                                     </div>
                                 )}
                             </div>
