@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
     conteudo: {
       type: DataTypes.STRING(1024),
       allowNull: false
+    },
+    nome_material: {
+      type: DataTypes.STRING(300),
+      allowNull: false
     }
   }, {
     sequelize,

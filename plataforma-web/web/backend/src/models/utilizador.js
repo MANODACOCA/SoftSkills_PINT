@@ -48,7 +48,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     data_nasc: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true
     },
     data_ativ_utili: {
@@ -58,6 +58,11 @@ module.exports = function(sequelize, DataTypes) {
     auten2fat: {
       type: DataTypes.BOOLEAN,
       allowNull: true
+    },
+    estado_utilizador: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
     },
     isformando: {
       type: DataTypes.BOOLEAN,
@@ -88,7 +93,7 @@ module.exports = function(sequelize, DataTypes) {
     ]
   });
 
-  Utilizador.beforeCreate(async (user, options) => {
+    Utilizador.beforeCreate(async (user, options) => {
     const hash = await bcrypt.hash(user.password_util, 10);
     user.password_util = hash;
   });

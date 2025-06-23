@@ -28,6 +28,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: Sequelize.Sequelize.fn('now')
+    },
+    conteudo_notif_curso: {
+      type: DataTypes.STRING(500),
+      allowNull: false
     }
   }, {
     sequelize,
