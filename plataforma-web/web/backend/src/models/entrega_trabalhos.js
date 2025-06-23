@@ -1,22 +1,30 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('conteudos', {
-    id_conteudo: {
+  return sequelize.define('entrega_trabalhos', {
+    id_entrega_trabalho: {
       autoIncrement: true,
       autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    id_aula: {
+    id_trabalho_et: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'aulas',
-        key: 'id_aula'
+        model: 'trabalhos',
+        key: 'id_trabalho'
       }
     },
-    id_formato: {
+    id_formando_et: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'formandos',
+        key: 'id_formando'
+      }
+    },
+    id_formato_et: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -24,25 +32,25 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_formato'
       }
     },
-    nome_conteudo: {
-      type: DataTypes.STRING(255),
+    nome_et: {
+      type: DataTypes.STRING(300),
       allowNull: false
     },
-    conteudo: {
-      type: DataTypes.STRING(200),
+    caminho_et: {
+      type: DataTypes.STRING(1024),
       allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'conteudos',
+    tableName: 'entrega_trabalhos',
     schema: 'public',
     timestamps: false,
     indexes: [
       {
-        name: "pk_conteudo",
+        name: "pk_entrega_trabalhos",
         unique: true,
         fields: [
-          { name: "id_conteudo" },
+          { name: "id_entrega_trabalho" },
         ]
       },
     ]

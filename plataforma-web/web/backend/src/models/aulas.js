@@ -27,6 +27,10 @@ module.exports = function(sequelize, DataTypes) {
     caminho_url: {
       type: DataTypes.STRING(1024),
       allowNull: true
+    },
+    tempo_duracao: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     sequelize,

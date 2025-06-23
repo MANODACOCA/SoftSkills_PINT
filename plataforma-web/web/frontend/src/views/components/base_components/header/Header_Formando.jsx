@@ -107,7 +107,6 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                             <small>{activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}</small>
                         </div>
                     </button>
-
                     {showProfileMenu && (
                         <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg p-3 mt-2 z-3">
                             <div className="d-flex flex-column align-items-center text-center">
