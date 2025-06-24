@@ -111,7 +111,7 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                         <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg p-3 mt-2 z-3">
                             <div className="d-flex flex-column align-items-center text-center">
                                 <img
-                                    src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
+                                    src={`${API_URL}${user.img_perfil}`}
                                     onError={(e) => {
                                         e.target.onerror = null;
                                         e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`;

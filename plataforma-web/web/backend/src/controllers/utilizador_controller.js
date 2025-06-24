@@ -133,7 +133,7 @@ controllers.alterarImgPerfil = async (req, res) => {
         const path = `uploads/usersProfilesImg/${req.file.filename}`
 
         if (user.img_perfil) {
-          const caminhoAntigo = path.resolve(`src/${user.img_perfil}`);
+          const caminhoAntigo = `src/${user.img_perfil}`;
           if (fs.existsSync(caminhoAntigo)) {
             fs.unlinkSync(caminhoAntigo);
           }
