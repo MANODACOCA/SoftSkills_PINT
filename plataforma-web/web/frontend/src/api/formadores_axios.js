@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/formadores';
+const API_URL = 'https://softskills-api.onrender.com/formadores';
 
 
 export const list_formadores = async () => {

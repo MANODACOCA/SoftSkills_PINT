@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/gestor_administrador';
+const API_URL = 'https://softskills-api.onrender.com/gestor_administrador';
 
 
 export const list_gestor_administrador = async () => {

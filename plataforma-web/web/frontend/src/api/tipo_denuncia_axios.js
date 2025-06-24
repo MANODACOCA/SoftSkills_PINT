@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/tipo_denuncia';
+const API_URL = 'https://softskills-api.onrender.com/tipo_denuncia';
 
 
 export const list_tipo_denuncia = async () => {

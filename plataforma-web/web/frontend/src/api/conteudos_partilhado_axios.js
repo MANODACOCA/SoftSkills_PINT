@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/conteudos_partilhado';
+const API_URL = 'https://softskills-api.onrender.com/conteudos_partilhado';
 
 
 export const list_conteudos_partilhado = async () => {

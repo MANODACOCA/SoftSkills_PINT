@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/formandos';
+const API_URL = 'https://softskills-api.onrender.com/formandos';
 
 
 export const list_formandos = async () => {

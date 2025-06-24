@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/favoritos';
+const API_URL = 'https://softskills-api.onrender.com/favoritos';
 
 
 export const list_favoritos = async () => {

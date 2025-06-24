@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/sincrono';
+const API_URL = 'https://softskills-api.onrender.com/sincrono';
 
 
 export const list_sincrono = async () => {

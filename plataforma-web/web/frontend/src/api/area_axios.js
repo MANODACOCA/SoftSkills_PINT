@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/area';
+const API_URL = 'https://softskills-api.onrender.com/area';
 
 
 export const list_area = async () => {

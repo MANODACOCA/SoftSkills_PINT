@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/conteudos_forum';
+const API_URL = 'https://softskills-api.onrender.com/conteudos_forum';
 
 
 export const list_conteudos_forum = async () => {

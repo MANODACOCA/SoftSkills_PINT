@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/twofa';
+const API_URL = 'https://softskills-api.onrender.com/twofa';
 
 
 export const list_twofa = async () => {

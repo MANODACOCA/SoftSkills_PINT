@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/modelo_certificado';
+const API_URL = 'https://softskills-api.onrender.com/modelo_certificado';
 
 
 export const list_modelo_certificado = async () => {

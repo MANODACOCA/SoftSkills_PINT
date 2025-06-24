@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/notificacoes_comentarios_post';
+const API_URL = 'https://softskills-api.onrender.com/notificacoes_comentarios_post';
 
 
 export const list_notificacoes_comentarios_post = async () => {

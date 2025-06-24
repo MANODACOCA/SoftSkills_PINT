@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3000/tipo_formato';
+const API_URL = 'https://softskills-api.onrender.com/tipo_formato';
 
 
 export const list_tipo_formato = async () => {
