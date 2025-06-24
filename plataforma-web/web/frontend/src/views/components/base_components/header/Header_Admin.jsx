@@ -10,7 +10,7 @@ import { RxExit } from "react-icons/rx";
 import { useUser } from '../../../../utils/userContext';
 
 const HeaderFormando = ({ toggleSidebar, collapsed }) => {
-    const API_URL = 'http://localhost:3000/';
+    const API_URL = 'https://softskills-api.onrender.com/';
     const { user, activeRole } = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileRef = useRef(null);

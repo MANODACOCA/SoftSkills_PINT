@@ -10,7 +10,7 @@ import { update_utilizador, alterarImgPerfil } from '../../../api/utilizador_axi
 import { useUser } from '../../../utils/userContext';
 
 const EditProfile = () => {
-    const API_URL = 'http://localhost:3000/';
+    const API_URL = 'https://softskills-api.onrender.com/';
     const { user, setUser } = useUser();
     const [successMessage, setSuccessMessage] = useState('');
     const [error, setError] = useState('');
