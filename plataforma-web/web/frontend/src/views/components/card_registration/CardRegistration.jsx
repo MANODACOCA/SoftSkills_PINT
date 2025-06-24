@@ -5,6 +5,7 @@ import { VscError } from "react-icons/vsc";
 import { useUser } from '../../../utils/userContext';
 import { create_inscricoes, get_inscricoes } from '../../../api/inscricoes_axios';
 import { update_cursos } from '../../../api/cursos_axios';
+import ISO6391 from 'iso-639-1';
 import Swal from 'sweetalert2';
 import './CardRegistration.css';
 
@@ -117,7 +118,7 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
             <FaLanguage className="detail-icon" />
             <div>
               <span className="detail-label">Idioma:</span>
-              <span className="detail-value">{course.idioma || "Português"}</span>
+              <span className="detail-value">{ISO6391.getNativeName(course.idioma)}</span>
             </div>
           </div>
         </div>

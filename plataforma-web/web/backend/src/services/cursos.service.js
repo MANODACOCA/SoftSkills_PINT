@@ -45,7 +45,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
         {
           model: aulas,
           as: "aulas",
-          attributes: ['id_aula', 'data_aula', 'nome_aula', 'caminho_url'],
+          attributes: ['id_aula', 'data_aula', 'nome_aula', 'caminho_url', 'tempo_duracao'],
           include: [
             {
               model: conteudos,
@@ -66,7 +66,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
         {
           model: aulas,
           as: "aulas",
-          attributes: ['id_aula', 'data_aula', 'nome_aula', 'caminho_url'],
+          attributes: ['id_aula', 'data_aula', 'nome_aula', 'caminho_url', 'tempo_duracao'],
           include: [
             {
               model: conteudos,

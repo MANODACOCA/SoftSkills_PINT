@@ -6,7 +6,19 @@ import VideoPlayer from '../../components/video_player/VideoPlayer';
 import CourseModule from '../../components/course_module/CourseModule';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../api/aulas_axios';
-import { FaFilePdf, FaFileAlt, FaLink, FaUserTie } from 'react-icons/fa';
+import {
+    FaVideo,
+    FaFileAlt,
+    FaFilePowerpoint,
+    FaFileImage,
+    FaFileAudio,
+    FaFilePdf,
+    FaLink,
+    FaFile,
+    FaInfoCircle,
+    FaUserTie
+} from 'react-icons/fa';
+
 
 
 const ClassPage = () => {
@@ -24,65 +36,49 @@ const ClassPage = () => {
         try {
             setCarregar(true);
 
-            // Log the API call parameters
             console.log(`Chamando API com cursoId=${cursoId}`);
 
             const dados = await getAulasAndMateriaApoioForCurso(cursoId);
             console.log("Dados recebidos da API:", dados);
 
-            setCurso(dados.dadosCurso || null);
+            setCurso(dados.dadosCurso || []);
             setAulas(dados.todasAulas || []);
             setMaterialApoio(dados.materialApoio || []);
-
-            // Find the current aula from the list of aulas
-            if (dados.todasAulas && dados.todasAulas.length > 0) {
-                const aulaEncontrada = dados.todasAulas.find(aula =>
-                    aula.id_aula.toString() === aulaId.toString()
-                );
-
-                if (aulaEncontrada) {
-                    console.log("Aula encontrada:", aulaEncontrada);
-                    setAulaAtual(aulaEncontrada);
-                } else {
-                    console.error("Aula não encontrada com ID:", aulaId);
-                    setErro("Aula não encontrada");
-                }
-            } else {
-                setErro("Nenhuma aula disponível para este curso");
-            }
+            setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
+            console.log("Dados AULA ATUAL:", aulaAtual);
 
         } catch (error) {
-            console.error("Erro ao carregar aula:", error);
-            setErro("Ocorreu um erro ao carregar a aula. Tente novamente.");
+            console.error("Erro ao carregar aula, conteudos e material de apoio:", error);
+            setErro("Ocorreu um erro ao carregar a aula. Tente novamente mais tarde.");
         } finally {
             setCarregar(false);
         }
     };
 
+    //vai andar uma aula para atrás
     const handlePrevious = () => {
         if (!aulaAtual || !aulas.length) return;
 
         const index = aulas.findIndex(a => a.id_aula.toString() === aulaAtual.id_aula.toString());
-        console.log("aulaAtual.id_aula:", aulaAtual?.id_aula);
-        console.log("IDs das aulas:", aulas.map(a => a.id_aula));
 
         if (index > 0) {
             const anterior = aulas[index - 1];
-            navigate(`/my/cursos/inscritos/curso/${cursoId}/aula/${anterior.id_aula}`);
+            setAulaAtual(anterior);
             console.log("Navegando para aula anterior:", anterior.id_aula);
         }
     };
 
+    //vai andar uma aula para frente
     const handleNext = () => {
         if (!aulaAtual || !aulas.length) return;
 
         const index = aulas.findIndex(a => a.id_aula.toString() === aulaAtual.id_aula.toString());
         if (index < aulas.length - 1) {
             const proxima = aulas[index + 1];
-            navigate(`/my/cursos/inscritos/curso/${cursoId}/aula/${proxima.id_aula}`);
-            console.log("Navegando para próxima aula:", proxima.id_aula);
+            setAulaAtual(proxima);
         }
     };
+
 
     const moduleData = aulaAtual ? {
         title: aulaAtual.nome_aula,
@@ -101,17 +97,20 @@ const ClassPage = () => {
     const tempoTotal = curso ? (curso.horas_curso || "N/D") : "N/D";
     const videoUrl = aulaAtual ? aulaAtual.caminho_url : "";
     const tituloAula = aulaAtual ? aulaAtual.nome_aula : "Aula não disponível";
-    const descricaoAula = aulaAtual ? aulaAtual.descricao || "Sem descrição disponível." : "";
 
-    const renderIconoFormato = (idFormato) => {
-        switch (idFormato) {
-            case 1: // PDF
-                return <FaFilePdf className="fs-4 me-2 text-danger" />;
-            case 2: // Link
-                return <FaLink className="fs-4 me-2 text-primary" />;
-            default: // Outros documentos
-                return <FaFileAlt className="fs-4 me-2 text-secondary" />;
-        }
+    const iconMapById = {
+        1: <FaVideo className="text-primary" />,
+        2: <FaFilePdf className="text-danger" />,
+        3: <FaFilePowerpoint className="text-warning" />,
+        4: <FaFileAlt className="text-success" />,
+        5: <FaFileImage className="text-pink-500" />,
+        6: <FaFileAudio className="text-indigo-500" />,
+        7: <FaInfoCircle className="text-cyan-600" />,
+        8: <FaLink className="text-blue-500" />,
+    };
+
+    const renderIconoFormato = (id) => {
+        return iconMapById[id] || <FaFile className="text-secondary" />;
     };
 
     useEffect(() => {
@@ -120,6 +119,13 @@ const ClassPage = () => {
             carregarAulasEMaterialApoio();
         }
     }, [cursoId]);
+
+    useEffect(() => {
+        if (aulaAtual) {
+            console.log("Aula atual mudou:", aulaAtual);
+        }
+    }, [aulaAtual]);
+
 
     return (
         <div className="container-fluid pt-4">
@@ -146,15 +152,16 @@ const ClassPage = () => {
                     <>
                         {tipoCurso === 'Assíncrono' && (
                             <VideoPlayer
+                                key={videoUrl}
                                 videoUrl={videoUrl}
                                 erro={erro}
                             />
                         )}
                         {tipoCurso === 'Síncrono' && (
-                            <img 
-                            className='rounded-4' 
-                            src={imagemCurso} alt="imagem do curso" 
-                            style={{width:"100%",height:"575px", objectFit: "cover"}}
+                            <img
+                                className='rounded-4'
+                                src={imagemCurso} alt="imagem do curso"
+                                style={{ width: "100%", height: "575px", objectFit: "cover" }}
                             />
                         )}
 
@@ -165,10 +172,23 @@ const ClassPage = () => {
 
                                 <div className="mt-4">
                                     <h1>Conteúdos</h1>
-                                    <CourseModule
-                                        module={moduleData}
-                                        index={0}
-                                    />
+                                    {aulas && aulas.length > 0 ? aulas.map((aula, index) => (
+                                        <CourseModule
+                                            key={aula.id_aula}
+                                            module={{
+                                                id: aula.id_aula,
+                                                title: aula.nome_aula,
+                                                tempo_duracao: aula.tempo_duracao,
+                                                aulas: aula.conteudos.map(c => ({
+                                                    id: c.id_conteudo,
+                                                    titulo: c.nome_conteudo,
+                                                    tipo: c.id_formato
+                                                }))
+                                            }}
+                                            index={index}
+                                            aulaAtualId={aulaAtual?.id_aula}
+                                        />
+                                    )) : "Sem aulas disponíveis para este curso."}
                                 </div>
                             </Tab>
 
@@ -183,7 +203,7 @@ const ClassPage = () => {
                                                         <Card.Body>
                                                             <div className="d-flex align-items-center mb-3">
                                                                 {renderIconoFormato(material.id_formato)}
-                                                                <h5 className="mb-0">
+                                                                <h5 className="mb-0 ms-2">
                                                                     Material {material.id_material_apoio}
                                                                 </h5>
                                                             </div>
@@ -211,13 +231,15 @@ const ClassPage = () => {
                                 )}
                             </Tab>
 
-                            <Tab eventKey="eventos" title="Eventos">
-                                <div className="mt-4">
-                                    <h2>Eventos</h2>
-                                    <p>Não há eventos programados para esta aula no momento.</p>
-                                    Quando a tabela de trabalhos estiver disponível, substituir por conteúdo dinâmico
-                                </div>
-                            </Tab>
+                            {curso.issincrono && (
+                                <Tab eventKey="eventos" title="Eventos">
+                                    <div className="mt-4">
+                                        <h2>Eventos</h2>
+                                        <p>Não há eventos programados para esta aula no momento.</p>
+                                        Quando a tabela de trabalhos estiver disponível, substituir por conteúdo dinâmico
+                                    </div>
+                                </Tab>
+                            )}
 
                             <Tab eventKey="sobre" title="Sobre">
                                 {curso ? (

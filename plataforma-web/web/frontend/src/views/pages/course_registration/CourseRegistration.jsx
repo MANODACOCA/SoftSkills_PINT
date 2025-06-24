@@ -128,23 +128,27 @@ const CourseRegistration = () => {
         <div className="col-md-8 mt-4">
           <h2>Descrição</h2>
           <p>{course.descricao_curso || "Sem descrição disponível para este curso."}</p>
-
-          <h2 className="mt-4">Conteúdo</h2>
-          {course.aulas && course.aulas.length > 0 ? course.aulas.map((aula, index) => (
-            <CourseModule
-              key={aula.id_aula}
-              module={{
-                title: aula.nome_aula,
-                aulas: aula.conteudos.map(c => ({
-                  id: c.id_conteudo,
-                  titulo: c.nome_conteudo,
-                  tipo: c.id_formato === 1 ? 'video' : 'documento',
-                  duracao: c.id_formato === 1 ? `${c.tempo_duracao} min` : ''
-                }))
-              }}
-              index={index}
-            />
-          )) : "Sem conteúdo disponível para este curso."}
+          
+          {course.isassincrono && (
+            <>
+              <h2 className="mt-4">Aulas</h2>
+              {course.aulas && course.aulas.length > 0 ? course.aulas.map((aula, index) => (
+                <CourseModule
+                  key={aula.id_aula}
+                  module={{
+                    title: aula.nome_aula,
+                    tempo_duracao: aula.tempo_duracao,
+                    aulas: aula.conteudos.map(c => ({
+                      id: c.id_conteudo,
+                      titulo: c.nome_conteudo,
+                      tipo: c.id_formato
+                    }))
+                  }}
+                  index={index}
+                />
+              )) : "Sem aulas disponíveis para este curso."}
+            </>
+          )}
 
           {/* Seção de Formador - apenas para cursos síncronos */}
           {course.issincrono && course.sincrono && (

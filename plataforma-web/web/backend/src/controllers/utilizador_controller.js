@@ -130,8 +130,10 @@ controllers.alterarImgPerfil = async (req, res) => {
         const user = await model.findByPk(id);
         if (!user) return res.status(404).json({ erro: 'Utilizador não encontrado.' });
 
+        const path = `uploads/usersProfilesImg/${req.file.filename}`
+
         if (user.img_perfil) {
-          const caminhoAntigo = path.resolve('src/uploads/usersProfilesImg', user.img_perfil);
+          const caminhoAntigo = path.resolve(`src/${user.img_perfil}`);
           if (fs.existsSync(caminhoAntigo)) {
             fs.unlinkSync(caminhoAntigo);
           }
@@ -141,12 +143,12 @@ controllers.alterarImgPerfil = async (req, res) => {
           return res.status(400).json({ erro: 'Nenhum ficheiro foi submetido.' });
         }
 
-        user.img_perfil = req.file.filename;
+        user.img_perfil = path
         await user.save();
 
         res.status(200).json({
           mesagem: 'Imagem de perfil guardada com sucesso!',
-          ficheiro: req.file.filename
+          ficheiro: path
         });
       } else {
         res.status(400).json({ erro: 'Erro ao atualizar o/a Utilizador!', desc: 'Corpo do pedido esta vazio.' });
