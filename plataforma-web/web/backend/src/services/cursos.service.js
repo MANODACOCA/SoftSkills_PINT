@@ -12,15 +12,15 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   const baseWhereAssincrono = {//filtros
     estado: true,
     issincrono: false,
-    data_inicio_inscricao: { [Op.lte]: Sequelize.literal('CURRENT_DATE') },
-    data_fim_inscricao: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
+    //data_inicio_inscricao: { [Op.lte]: Sequelize.literal('CURRENT_DATE') },
+    //data_fim_inscricao: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
   };
 
   const baseWhereSincrono = {//filtros
     estado: true,
     issincrono: true,
-    data_inicio_inscricao: { [Op.lte]: Sequelize.literal('CURRENT_DATE') },
-    data_fim_inscricao: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
+    //data_inicio_inscricao: { [Op.lte]: Sequelize.literal('CURRENT_DATE') },
+    //data_fim_inscricao: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
   };
 
   if (id_curso) {
