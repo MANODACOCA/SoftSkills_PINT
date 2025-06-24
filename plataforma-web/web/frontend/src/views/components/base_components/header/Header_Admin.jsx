@@ -92,7 +92,7 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                 <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
                     <button onClick={toggleProfileMenu} className="btn p-0 border-0 bg-transparent d-flex align-items-center gap-2">
                         <img
-                            src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
+                            src={`${API_URL}${user.img_perfil}`}
                             onError={(e) => {
                                 e.target.onerror = null;
                                 e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`;
@@ -107,12 +107,11 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                             <small>{activeRole.charAt(0).toUpperCase() + activeRole.slice(1)}</small>
                         </div>
                     </button>
-
                     {showProfileMenu && (
                         <div className="position-absolute top-100 end-0 profile-dropdown bg-white shadow-lg p-3 mt-2 z-3">
                             <div className="d-flex flex-column align-items-center text-center">
                                 <img
-                                    src={`${API_URL}uploads/usersProfilesImg/${user.img_perfil}`}
+                                    src={`${API_URL}${user.img_perfil}`}
                                     onError={(e) => {
                                         e.target.onerror = null;
                                         e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.nome_utilizador)}&background=random&bold=true`;
