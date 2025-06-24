@@ -24,6 +24,7 @@ export const get_aulas = async (id) => {
 
 export const create_aulas = async (data) => {
     try {
+        console.log(data);
         const response = await axios.post(`${API_URL}/create`, data);
         return response.data;
     } catch (error) {
@@ -59,6 +60,16 @@ export const getAulasAndMateriaApoioForCurso = async (cursoId) => {
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar detalhes das aulas e do material de apoio:', error);
+        throw error;
+    }
+};
+
+export const getAulas_Curso = async (cursoID) => {
+    try{
+        const response = await axios.get(`${API_URL}/aulas/${cursoID}`);
+        return response.data;
+    } catch(error) {
+        console.error('Erro ao procurar detalhes das aulas:', error);
         throw error;
     }
 };

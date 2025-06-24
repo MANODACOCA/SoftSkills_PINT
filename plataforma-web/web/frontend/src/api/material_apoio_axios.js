@@ -25,6 +25,7 @@ export const get_material_apoio  = async (id) => {
 
 export const create_material_apoio = async (data) => {
     try{
+        console.log(data);
         const response = await axios.post(`${API_URL}/create`, data);
         return response.data;
     }catch(error){
@@ -52,3 +53,13 @@ export const delete_material_apoio = async (id) => {
         throw error;
     }
 };
+
+export const get_material_apoio_curso = async (cursoID) => {
+    try{
+        const response = await axios.get(`${API_URL}/material-apoio/${cursoID}`);
+        return response.data;
+    }catch(error){
+        console.error('Erro ao excluir Material de Apoio!');
+        throw error;
+    }
+}

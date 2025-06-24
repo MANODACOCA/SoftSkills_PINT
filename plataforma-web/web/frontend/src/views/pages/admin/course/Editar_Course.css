@@ -13,3 +13,8 @@
   z-index: 10; 
   transition: all 0.2s ease;
 }
+
+
+.line-bg{
+    background-color: var(--cor-secundaria-rgba) !important;
+}
