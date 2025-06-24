@@ -1,11 +1,8 @@
 //const model = require('../models/conteudos');;
-
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).conteudos;
 const controllers = {};
-
-
 
 controllers.list = async (req,res)=>{
   const data = await model.findAll();
