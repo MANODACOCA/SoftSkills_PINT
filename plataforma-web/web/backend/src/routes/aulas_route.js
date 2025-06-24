@@ -22,5 +22,6 @@ router.post('/create',controller.create);
 router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 router.get('/aulas/mat-apoio/:cursoId', controller.getAulasAndMateriaApoioForCurso);
+router.get('/aulas/:cursoID', controller.getAulasCurso);
 
 module.exports = router;

@@ -43,7 +43,7 @@ controllers.update = async (req,res)=>{
   try {
     if(req.body){
       const {id} = req.params;
-      const updated = await model.update(req.body,{where:{id:id}});
+      const updated = await model.update(req.body,{where:{id_conteudo:id}});
       if(updated){
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
@@ -61,7 +61,7 @@ controllers.update = async (req,res)=>{
 controllers.delete = async (req,res)=>{
   try {
     const {id} = req.params;
-    const deleted = await model.destroy({where:{id:id}});
+    const deleted = await model.destroy({where:{id_conteudo:id}});
     if(deleted){
       res.status(200).json({msg:'conteudos apagado/a com sucesso!'});
     }else{

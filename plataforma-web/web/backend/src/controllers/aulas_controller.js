@@ -42,7 +42,7 @@ controllers.update = async (req, res) => {
   try {
     if (req.body) {
       const { id } = req.params;
-      const updated = await model.update(req.body, { where: { id: id } });
+      const updated = await model.update(req.body, { where: { id_aula : id } });
       if (updated) {
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
@@ -60,7 +60,7 @@ controllers.update = async (req, res) => {
 controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await model.destroy({ where: { id: id } });
+    const deleted = await model.destroy({ where: { id_aula: id } });
     if (deleted) {
       res.status(200).json({ msg: 'Aula apagado/a com sucesso!' });
     } else {
@@ -85,5 +85,19 @@ controllers.getAulasAndMateriaApoioForCurso = async (req, res) => {
     })
   }
 };
+
+controllers.getAulasCurso = async (req, res) => {
+  try{
+    const {cursoID} = req.params;
+    const data = await aulasService.getAulas(cursoID);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Erro ao carregar aulas:', error);
+    res.status(500).json({
+      erro: 'Erro ao carregar aulas',
+      desc: error.message,
+    })
+  }
+}
 
 module.exports = controllers;

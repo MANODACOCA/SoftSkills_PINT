@@ -52,3 +52,5 @@ export const delete_conteudos = async (id) => {
         throw error;
     }
 };
+
+
