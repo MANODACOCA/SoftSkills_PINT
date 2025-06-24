@@ -1,5 +1,12 @@
 //Funções uteis para todas as pages 
 
+export const toIntervalFormat = (seconds) => {
+  const hrs = Math.floor(seconds / 3600).toString().padStart(2, "0");
+  const mins = Math.floor((seconds % 3600) / 60).toString().padStart(2, "0");
+  const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+  return `${hrs}:${mins}:${secs}`;
+};
+
 export const formatDayMonthYear = (isoDate) => {
   const date = new Date(isoDate);
   return date.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
