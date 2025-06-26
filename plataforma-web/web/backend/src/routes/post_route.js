@@ -18,4 +18,7 @@ router.post('/create', controller.create);
 router.put('/update/:id', controller.update);
 router.delete('/delete/:id', controller.delete);
 
+router.post('/:postId/like', controller.incrementLike);
+router.post('/:postId/dislike', controller.decrementLike);
+
 module.exports = router;

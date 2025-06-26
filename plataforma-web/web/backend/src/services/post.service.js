@@ -80,4 +80,59 @@ async function getConteudosByPost(postId) {
         }
 };
 
-module.exports = { getCommentsByPost, getConteudosByPost};
+async function incrementPostLike(postId) {
+    try {
+        const result = await models.post.increment('contador_likes_post', {
+            where: { id_post: postId },
+            by: 1
+        });
+        
+        if (result[0][0] === 0) {
+            throw new Error('Post não encontrado');
+        }
+        
+        // Retorna o novo valor do contador
+        const updatedPost = await models.post.findByPk(postId);
+        return {
+            success: true,
+            likeCount: updatedPost.contador_likes_post
+        };
+    } catch (error) {
+        console.error('Erro no serviço incrementPostLike:', error);
+        throw error;
+    }
+}
+
+async function decrementPostLike(postId) {
+    try {
+        // Primeiro verifica se o contador é maior que 0 para evitar valores negativos
+        const post = await models.post.findByPk(postId);
+        if (!post) {
+            throw new Error('Post não encontrado');
+        }
+        if (post.contador_likes_post <= 0) {
+            return {
+                success: true,
+                likeCount: 0,
+                message: 'Contador de likes já está em zero'
+            };
+        }
+
+        const result = await models.post.decrement('contador_likes_post', {
+            where: { id_post: postId },
+            by: 1
+        });
+        
+        // Retorna o novo valor do contador
+        const updatedPost = await models.post.findByPk(postId);
+        return {
+            success: true,
+            likeCount: updatedPost.contador_likes_post
+        };
+    } catch (error) {
+        console.error('Erro no serviço decrementPostLike:', error);
+        throw error;
+    }
+}
+
+module.exports = { getCommentsByPost, getConteudosByPost, incrementPostLike, decrementPostLike};
