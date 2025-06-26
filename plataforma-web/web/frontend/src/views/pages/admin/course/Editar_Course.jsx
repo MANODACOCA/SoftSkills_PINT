@@ -49,6 +49,7 @@ const EditCourse = () => {
     const [isSticky, setIsSticky] = useState(false);
     const [selectedLanguage, setSelectedLanguage] = useState(null);
     const navigate = useNavigate();
+    const todayStr = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" });
     const [isSincrono, setIsSincrono] = useState(false);
     const [sincrono, setSincrono] = useState({
         id_formador: null,
@@ -193,12 +194,54 @@ const EditCourse = () => {
 
      const handleSubmitCurso = async (e) => {
         e.preventDefault();
-
+        
+        const dToday = new Date(`${todayStr}T00:00:00`);
+        const dInscIni = new Date(`${cursos.data_inicio_inscricao}T00:00:00`);
+        const dInscFim = new Date(`${cursos.data_fim_inscricao}T00:00:00`);
+        const dCursoIni = new Date(`${cursos.data_inicio_curso}T00:00:00`);
+        const dCursoFim = new Date(`${cursos.data_fim_curso}T00:00:00`);
+        
         if(cursos.isassincrono === false && !sincrono.id_formador){
             Swal.fire({
                 icon: "error",
                 title: "Erro",
                 text: "Para cursos síncronos, é obrigatorio selecionar um formador"
+            });
+            return;
+        }
+
+        if([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "Nenhuma data pode ser anterior a hoje",
+            });
+            return;
+        }
+
+        if(dInscIni > dInscFim) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "A data de fim da inscrição deve ser posterior ao início",
+            });
+            return;
+        }
+
+        if(dCursoIni > dCursoFim) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "A data de fim do curso deve ser posterior ao início.",
+            });
+            return;
+        }
+
+        if(dCursoIni < dInscFim) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "O curso deve começar depois de terminar a inscrição",
             });
             return;
         }
@@ -546,7 +589,7 @@ const EditCourse = () => {
                     </div>
                     <div id="file2InputWrapper" class="d-none">
                     <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg" />
+                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
                     </div>
                 `,
                 didOpen: () => {
@@ -591,6 +634,7 @@ const EditCourse = () => {
                     }
                     return{
                         id_aula,
+                        id_curso: cursos.id_curso,
                         nome_conteudo: nome,
                         conteudo: url,
                         id_formato: parseInt(formato),
@@ -999,22 +1043,22 @@ const EditCourse = () => {
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início da Inscrição</label>
-                                    <input type="date" name="data_insc_ini" className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required />
+                                    <input type="date" name="data_inicio_inscricao" min={todayStr} className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required />
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim da Inscrição</label>
-                                    <input type="date" name="data_insc_fim" className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required />
+                                    <input type="date" name="data_fim_inscricao" min={cursos.data_inicio_inscricao || todayStr} className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required />
                                 </div>
                             </div>
 
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início do Curso</label>
-                                    <input type="date" name="data_curso_ini" className='form-control' value={cursos.data_inicio_curso ? formatYearMonthDay(cursos.data_inicio_curso) : ""} onChange={handleChange} required />
+                                    <input type="date" name="data_inicio_curso" min={cursos.data_fim_inscricao || todayStr} className='form-control' value={cursos.data_inicio_curso ? formatYearMonthDay(cursos.data_inicio_curso) : ""} onChange={handleChange} required />
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim do Curso</label>
-                                    <input type="date" name="data_curso_fim" className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required />
+                                    <input type="date" name="data_fim_curso" min={cursos.data_inicio_curso || todayStr} className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required />
                                 </div>
                             </div>
 
@@ -1103,7 +1147,7 @@ const EditCourse = () => {
                                 </select>
                             </div>
                             <div className='d-flex justify-content-between'>
-                                <button type="submit" className='btn btn-success mt-3' onClick={handleSubmitCurso}>Submeter Alterações</button>
+                                <button type="submit" className='btn btn-success mt-3'>Submeter Alterações</button>
                                 <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Alterações</button>
                             </div>
                         </div>
