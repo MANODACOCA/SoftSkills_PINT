@@ -351,6 +351,8 @@ const EditCourse = () => {
                                     {conteudo.nome_conteudo}    
                                 </div>
                                 <div>
+                                    <a href={conteudo}  className="btn btn-outline-primary" target="_blank">
+                                        <i className='bi bi-folder2-open'></i></a>
                                     <button className="btn btn-outline-danger" onClick={()=> handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
                                         <i className="bi bi-trash"></i>
                                     </button>

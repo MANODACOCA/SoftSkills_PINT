@@ -33,9 +33,16 @@ controllers.create = async (req,res)=>{
       });
     }
 
-    const ficheiroPath = req.file ? req.file.path.replace('/uploads', '') : null;
+    const ficheiroRelativo = req.file
+      ? req.file.path.replace(/^.*[\\/]uploads[\\/]/, '')
+      : null;
 
-    if(!ficheiroPath && !conteudo) {
+
+    const ficheiroURL = ficheiroRelativo
+      ? `${req.protocol}://${req.get('host')}/uploads/${ficheiroRelativo}`
+      : null;
+
+    if(!ficheiroURL && !conteudo) {
       return res.status(400).json({
         erro: 'Falta ficheiro ou URL',
         desc: 'Envie um ficheiro (campo "ficheiro") ou o campo "conteudo" com o link externo'
@@ -46,13 +53,13 @@ controllers.create = async (req,res)=>{
       id_aula: Number(id_aula),
       id_formato: Number(id_formato),
       nome_conteudo,
-      conteudo: ficheiroPath || conteudo
+      conteudo: ficheiroURL || conteudo
     };
 
       const data = await model.create(payload);
       res.status(201).json(data);
   }catch(err){
-    if(err === 'LIMIT_FILE_SIZE') {
+    if(err.code === 'LIMIT_FILE_SIZE') {
       return res.status(413).json({
         erro: 'Ficheiro execede o limite',
         desc: 'O ficheiro não pode ultrapassar 1 GB'
