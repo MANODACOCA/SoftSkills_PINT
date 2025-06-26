@@ -20,7 +20,10 @@ const CreateCourse = () => {
     const [sincrono, setSincrono] = useState({
         id_formador: null,
         numero_vagas: null,
-    })
+    });
+
+    const todayStr = new Date().toLocaleDateString("en-CA", {timeZone: "Europe/Lisbon"});
+
     const [cursos, setCursos] = useState({
         nome_curso: "",
         id_gestor_administrador: 9,
@@ -61,6 +64,56 @@ const CreateCourse = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const { 
+            data_inicio_inscricao,
+            data_fim_inscricao,
+            data_inicio_curso,
+            data_fim_curso,
+        } = cursos;
+
+        const dToday = new Date(`${todayStr}T00:00:00`);
+        const dInscIni = new Date(`${data_inicio_inscricao}T00:00:00`);
+        const dInscFim = new Date(`${data_fim_inscricao}T00:00:00`);
+        const dCursoIni = new Date(`${data_inicio_curso}T00:00:00`);
+        const dCursoFim = new Date(`${data_fim_curso}T00:00:00`);
+
+        if([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "Nenhuma data pode ser anterior a hoje",
+            });
+            return;
+        }
+
+        if(dInscIni > dInscFim) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "A data de fim da inscrição deve ser posterior ao início",
+            });
+            return;
+        }
+
+        if(dCursoIni > dCursoFim) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "A data de fim do curso deve ser posterior ao início.",
+            });
+            return;
+        }
+
+        if(dCursoIni < dInscFim) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "O curso deve começar depois de terminar a inscrição",
+            });
+            return;
+        }
+
         const result = await Swal.fire({
             title: 'Pretende criar curso?',
             text: 'Irá adicionar um novo curso',
@@ -230,22 +283,22 @@ const CreateCourse = () => {
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início da Inscrição</label>
-                                    <input type="date" name="data_insc_ini" className='form-control' onChange={(e) => setCursos(prev => ({...prev, data_inicio_inscricao: e.target.value}))} required />
+                                    <input type="date" name="data_insc_ini" className='form-control' min={todayStr} onChange={(e) => setCursos(prev => ({...prev, data_inicio_inscricao: e.target.value}))} required />
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim da Inscrição</label>
-                                    <input type="date" name="data_insc_fim" className='form-control' onChange={(e) => setCursos(prev => ({...prev, data_fim_inscricao: e.target.value}))} required />
+                                    <input type="date" name="data_insc_fim" className='form-control' min={cursos.data_inicio_inscricao || todayStr} onChange={(e) => setCursos(prev => ({...prev, data_fim_inscricao: e.target.value}))} required />
                                 </div>
                             </div>
 
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início do Curso</label>
-                                    <input type="date" name="data_curso_ini" className='form-control' onChange={(e) => setCursos(prev => ({...prev, data_inicio_curso: e.target.value}))} required />
+                                    <input type="date" name="data_curso_ini" className='form-control' min={cursos.data_fim_inscricao || todayStr} onChange={(e) => setCursos(prev => ({...prev, data_inicio_curso: e.target.value}))} required />
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim do Curso</label>
-                                    <input type="date" name="data_curso_fim" className='form-control' onChange={(e) => setCursos(prev => ({...prev, data_fim_curso: e.target.value}))} required />
+                                    <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} onChange={(e) => setCursos(prev => ({...prev, data_fim_curso: e.target.value}))} required />
                                 </div>
                             </div>
 

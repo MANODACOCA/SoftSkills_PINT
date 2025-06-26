@@ -121,4 +121,5 @@ app.use('/utilizador',utilizadorRouter);
 
 
 //para ir buscar as imagens ao backend
-app.use('/uploads/usersProfilesImg/', express.static(path.join(__dirname, 'uploads/usersProfilesImg/')));
+//app.use('/uploads/usersProfilesImg/', express.static(path.join(__dirname, 'uploads/usersProfilesImg/')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

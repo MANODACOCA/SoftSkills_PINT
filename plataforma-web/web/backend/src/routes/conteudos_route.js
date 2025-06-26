@@ -1,6 +1,7 @@
 const express = require('express');
 const controller = require('../controllers/conteudos_controller.js')
 const router = express.Router();
+const uploadConteudos = require('../middlewares/uploadConteudos.js');
 
 router.get('/',(req, res) => {
   res.send("<h1>Ups! Está vazio aqui...</h1><br><b>Caminhos:</b><br>/list<br>/get/{id}<br>/create<br>/update/{id}<br>/delete/{id}");
@@ -18,7 +19,7 @@ router.get('/delete',(req, res) => {
 
 router.get('/list',controller.list);
 router.get('/get/:id',controller.get);
-router.post('/create',controller.create);
+router.post('/create',uploadConteudos.single('ficheiro'),controller.create);
 router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 
