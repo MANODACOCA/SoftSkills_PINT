@@ -210,9 +210,15 @@ async function getCourseDestaqueSincrono() {
 
     if (cursosDisponiveis.length === 0) return null;
 
-    const maxFormandos = Math.max(...cursosDisponiveis.map(c => c.contador_formandos));
+    const cursosComVagas = cursosDisponiveis.filter(
+      curso => curso.contador_formandos < curso.sincrono.numero_vagas
+    );
 
-    const cursosEmpatados = cursosDisponiveis.filter(c => c.contador_formandos === maxFormandos);
+    if (cursosComVagas.length === 0) return null;
+
+    const maxFormandos = Math.max(...cursosComVagas.map(c => c.contador_formandos));
+
+    const cursosEmpatados = cursosComVagas.filter(c => c.contador_formandos === maxFormandos);
 
     return cursosEmpatados[Math.floor(Math.random() * cursosEmpatados.length)];
   } catch (error) {

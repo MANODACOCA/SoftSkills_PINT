@@ -36,16 +36,12 @@ const ClassPage = () => {
         try {
             setCarregar(true);
 
-            console.log(`Chamando API com cursoId=${cursoId}`);
-
             const dados = await getAulasAndMateriaApoioForCurso(cursoId);
-            console.log("Dados recebidos da API:", dados);
 
             setCurso(dados.dadosCurso || []);
             setAulas(dados.todasAulas || []);
             setMaterialApoio(dados.materialApoio || []);
             setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
-            console.log("Dados AULA ATUAL:", aulaAtual);
 
         } catch (error) {
             console.error("Erro ao carregar aula, conteudos e material de apoio:", error);
@@ -126,7 +122,7 @@ const ClassPage = () => {
         }
     }, [aulaAtual]);
 
-
+                  console.log(aulas);
     return (
         <div className="container-fluid pt-4">
 
@@ -166,9 +162,9 @@ const ClassPage = () => {
                         )}
 
                         <h1 className="mb-3 mt-3">{tituloAula}</h1>
-
+      
                         <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs">
-                            <Tab eventKey="aulas" title="Aulas">
+                            <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
 
                                 <div className="mt-4">
                                     <h1>Conteúdos</h1>
@@ -182,11 +178,17 @@ const ClassPage = () => {
                                                 aulas: aula.conteudos.map(c => ({
                                                     id: c.id_conteudo,
                                                     titulo: c.nome_conteudo,
-                                                    tipo: c.id_formato
+                                                    tipo: c.id_formato,
+                                                    conteudo: c.conteudo
                                                 }))
                                             }}
                                             index={index}
                                             aulaAtualId={aulaAtual?.id_aula}
+                                            usarAulaAtualId
+                                            onChangeAula={() => {
+                                                setAulaAtual(aula), 
+                                                window.scrollTo(0, 0)
+                                            }}
                                         />
                                     )) : "Sem aulas disponíveis para este curso."}
                                 </div>
@@ -210,7 +212,7 @@ const ClassPage = () => {
                                                             <Card.Text>
                                                                 {material.conteudo}
                                                             </Card.Text>
-                                                            {material.id_formato === 2 && (
+                                                            <div className='text-end'>
                                                                 <a
                                                                     href={material.conteudo}
                                                                     target="_blank"
@@ -219,7 +221,7 @@ const ClassPage = () => {
                                                                 >
                                                                     Acessar Link
                                                                 </a>
-                                                            )}
+                                                            </div>
                                                         </Card.Body>
                                                     </Card>
                                                 </div>

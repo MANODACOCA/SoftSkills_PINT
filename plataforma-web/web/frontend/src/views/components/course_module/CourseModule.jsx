@@ -10,7 +10,8 @@ import {
   FaFile,
   FaChevronDown,
   FaInfoCircle,
-  FaPlayCircle
+  FaPlayCircle,
+  FaDownload
 } from 'react-icons/fa';
 import { IoTimeSharp } from "react-icons/io5";
 import './CourseModule.css';
@@ -27,9 +28,7 @@ const iconMapById = {
   8: <FaLink className="text-blue-500" />,
 };
 
-const CourseModule = ({ module, index, aulaAtualId }) => {
-
-
+const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onChangeAula }) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -38,27 +37,32 @@ const CourseModule = ({ module, index, aulaAtualId }) => {
   };
 
   useEffect(() => {
-    if (module.id === aulaAtualId) {
-      setIsExpanded(true);
+    if (usarAulaAtualId) {
+      setIsExpanded(module.id === aulaAtualId);
     } else {
       setIsExpanded(false);
     }
-  }, [aulaAtualId, module.id]);
+  }, [aulaAtualId, module.id, usarAulaAtualId]);
 
   return (
     <div className="mb-3 border rounded-4 shadow-sm">
       <button
-        className="w-100 text-start bg-light border-0 px-3 py-3 d-flex justify-content-between align-items-center rounded-top-4 rounded-bottom-4"
+        className={`w-100 text-start border-0 px-3 py-3 d-flex justify-content-between align-items-center rounded-top-4 ${usarAulaAtualId && module.id === aulaAtualId ? 'bg-secondary text-white' : 'bg-light rounded-bottom-4'}`}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="d-flex align-items-center gap-3">
-          <div className="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center" style={{ width: '32px', height: '32px' }}>
+          <div className="btn btn-primary rounded-circle d-flex justify-content-center align-items-center p-0"
+            style={{ width: '32px', height: '32px' }}
+            onClick={(e) => {
+              e.stopPropagation();
+              onChangeAula();
+            }}>
             <FaPlayCircle />
           </div>
           <strong>{index + 1}. {module.title}</strong>
         </div>
         <div className='d-flex justify-content-between align-items-center gap-4'>
-          <div className="bg-primary text-white rounded-5 p-2 d-flex align-items-center gap-1">
+          <div className="text-white rounded-5 p-2 d-flex align-items-center gap-1" style={{ backgroundColor: '#3b5b84' }}>
             <IoTimeSharp />
             <strong>{module.tempo_duracao.minutes}min</strong>
           </div>
@@ -71,14 +75,17 @@ const CourseModule = ({ module, index, aulaAtualId }) => {
           {module.aulas && module.aulas.length > 0 ? (
             <div className="list-group">
               {module.aulas.map((aula) => (
-                <div key={aula.id} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
-                  <div className="d-flex align-items-center">
-                    <span className="me-3 fs-5">
-                      {getIconById(aula.tipo)}
-                    </span>
-                    <span>{aula.titulo}</span>
+                <a href={aula.conteudo} target='blank' className='text-decoration-none'>
+                  <div key={aula.id} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+                    <div className="d-flex  align-items-center">
+                      <span className="me-3 fs-5">
+                        {getIconById(aula.tipo)}
+                      </span>
+                      <span>{aula.titulo}</span>
+                    </div>
+                    <div className="d-flex justify-content-end align-items-end"><span><FaDownload /></span></div>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           ) : (

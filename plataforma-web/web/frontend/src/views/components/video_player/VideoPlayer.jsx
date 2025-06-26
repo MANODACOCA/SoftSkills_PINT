@@ -1,12 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import './VideoPlayer.css';
 
-const DEFAULT_VIDEO_URL = "https://www.youtube.com/watch?v=rhvF2_JkDhQ";
+const DEFAULT_VIDEO_URL = "https://www.youtube.com/watch?v=qxOkaU6RVz4&ab";
 
 const VideoPlayer = ({ videoUrl }) => {
+
+    const [videoSrc, setVideoSrc] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [verificarLink, setVerificarLink] = useState(false);
+
+    const isInvalidYoutubeURL = (url) => {
+        try {
+            const parsed = new URL(url);
+            return (
+                parsed.hostname.includes('youtube.com') && parsed.searchParams.get('v')
+            );
+        } catch (e) {
+            return false;
+        }
+    };
 
     const getCleanVideoUrl = (url) => {
         try {
@@ -19,14 +33,26 @@ const VideoPlayer = ({ videoUrl }) => {
         }
     };
 
-    const videoSrc = getCleanVideoUrl(videoUrl);
+
+    useEffect(() => {
+        if (isInvalidYoutubeURL(videoUrl)) {
+            const validURL = getCleanVideoUrl(videoUrl);
+            setVideoSrc(validURL);
+            setVerificarLink(true);
+            setError(null);
+        }else{
+            setVerificarLink(false);
+            setError("Erro: URL inválida!");
+        }
+
+
+    }, [videoUrl]);
 
     return (
         <div className="rounded-4 overflow-hidden">
-            {error ? (
+            {!verificarLink ? (
                 <div className="text-center p-5 bg-light border rounded">
-                    <p className="text-danger">{error}</p>
-                    <p>Não foi possível carregar o vídeo. Verifique o link ou tente novamente mais tarde.</p>
+                    <p>Não foi possível carregar o vídeo. Tente novamente mais tarde.</p>
                 </div>
             ) : (
                 <ReactPlayer
@@ -40,6 +66,7 @@ const VideoPlayer = ({ videoUrl }) => {
                         console.error('Error loading video:', e);
                         setError('Error loading video');
                         setLoading(false);
+                        setVerificarLink(false);
                     }}
                     config={{
                         youtube: {
