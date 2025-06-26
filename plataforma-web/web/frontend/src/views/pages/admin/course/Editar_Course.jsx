@@ -348,11 +348,11 @@ const EditCourse = () => {
                             <div className='d-flex align-items-center justify-content-between'>
                                 <div>
                                     <span className='me-2'>{getIconById(conteudo.id_formato)}</span>
-                                    {conteudo.nome_conteudo}    
+                                    {conteudo.nome_conteudo}   
                                 </div>
                                 <div>
-                                    <a href={conteudo}  className="btn btn-outline-primary" target="_blank">
-                                        <i className='bi bi-folder2-open'></i></a>
+                                    <a href={conteudo.conteudo}  className="btn btn-outline-primary me-2" target="_blank">
+                                        <i className='bi bi-box-arrow-up-right'></i></a>
                                     <button className="btn btn-outline-danger" onClick={()=> handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
                                         <i className="bi bi-trash"></i>
                                     </button>

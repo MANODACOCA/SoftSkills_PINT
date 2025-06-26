@@ -3,6 +3,8 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).conteudos;
 const controllers = {};
+const fs = require('fs').promises;
+const path = require('path');
 
 controllers.list = async (req,res)=>{
   const data = await model.findAll();
@@ -92,14 +94,32 @@ controllers.update = async (req,res)=>{
 controllers.delete = async (req,res)=>{
   try {
     const {id} = req.params;
-    const deleted = await model.destroy({where:{id_conteudo:id}});
-    if(deleted){
-      res.status(200).json({msg:'conteudos apagado/a com sucesso!'});
-    }else{
-      res.status(404).json({erro:'conteudos não foi apagado/a!'});
+
+    const conteudo = await model.findByPk(id);
+
+    if(!conteudo) {
+      return res.status(404).json({erro: 'Conteudo não encontrado'});
     }
+
+    const isLocal = conteudo.conteudo && !/^https?:\/\//i.test(conteudo.conteudo);
+
+    if (isLocal) {
+      const filePath = path.join(__dirname, '..', 'uploads', conteudo.conteudo);
+      try {
+        await fs.unlink(filePath);     
+        console.log('Ficheiro apagado:', filePath);
+      } catch (e) {
+        if (e.code !== 'ENOENT') {    
+          console.warn('Erro ao apagar ficheiro:', e.message);
+        }
+      }
+    }
+
+    await conteudo.destroy();
+    
+    res.status(200).json({ msg: 'Conteudo apagado com sucesso!'});
   }catch(err) {
-    res.status(500).json({erro:'Erro ao apagar o/a conteudos!',desc: err.message});
+    res.status(500).json({erro:'Erro ao apagar o conteudo!',desc: err.message});
   }
 };
 
