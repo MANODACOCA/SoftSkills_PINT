@@ -103,3 +103,27 @@ export const radomArray = (array) => {
   }
   return shuffled;
 };
+
+export const calcularHorasCurso = (aulas) => {
+  let hrsAula = 0;
+  let minAulas = 0;
+  let secAulas = 0;
+  for(let i = 0; i < aulas.length; i++) {
+    const aula = aulas[i];
+    const tempo = aula?.tempo_duracao
+    if (tempo != undefined) {
+      if (tempo.hours != undefined) {
+        hrsAula += tempo.hours;
+      }
+      if (tempo.minutes != undefined) {
+        minAulas += tempo.minutes;
+      }
+      if (tempo.seconds != undefined) {
+        secAulas += tempo.seconds;
+      }      
+    }
+  }
+  hrsAula = hrsAula + (minAulas/60) + (secAulas/3600);
+
+  return parseFloat(hrsAula.toFixed(2));
+}

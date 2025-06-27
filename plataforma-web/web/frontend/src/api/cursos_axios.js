@@ -16,11 +16,8 @@ export const list_cursos = async () => {
 }
 
 export const get_cursos = async (id) => {
-    console.log(id);
     try {
-        console.log(id);
         const response = await axios.get(`${API_URL}/get/${id}`, getAuthHeader());
-        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Erro ao buscar Curso!');
@@ -39,12 +36,9 @@ export const create_cursos = async (data) => {
 };
 
 export const update_cursos = async (id, data) => {
-    console.log(id);
     console.log(data);
     try {
         const response = await axios.put(`${API_URL}/update/${id}`, data, getAuthHeader());
-        console.log(id);
-    console.log(data);
         return response.data;
     } catch (error) {
         console.error('Erro ao atualizar Curso!');

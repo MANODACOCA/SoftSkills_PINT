@@ -21,7 +21,7 @@ const UsersTables = () => {
     }
 
     const HandleEdit = (id) => {
-        navigate(`/utilizadores/editar/${id}`);
+        navigate(`/admin/utilizadores/editar/${id}`);
     };
 
     const HandleBlock = async (id, estado) => {
@@ -41,7 +41,7 @@ const UsersTables = () => {
 
         if(result.isConfirmed){
             try{
-                //await update_utilizador(id, {estado: !estado});
+                await update_utilizador(id, {estado_utilizador: !estado});
                 await FetchUtilizadores();
                 console.log(estado);
                 Swal.fire({
@@ -67,14 +67,13 @@ const UsersTables = () => {
     }
 
     const renderActions = (item) => {
-        const estado = false;
         return(
             <div className="d-flex">
                 <button className="btn btn-outline-primary me-2" onClick={() => HandleEdit(item.id_utilizador)}>
                     <i className="bi bi-pencil"></i>
                 </button>
-                <button className="btn btn-outline-danger" onClick={() => HandleBlock(item.id_utilizador, estado)}>
-                    <i className={`bi ${estado ? 'bi-lock' : 'bi-unlock'}`}></i>
+                <button className="btn btn-outline-danger" onClick={() => HandleBlock(item.id_utilizador, item.estado_utilizador)}>
+                    <i className={`bi ${item.estado_utilizador ? 'bi-unlock' :  'bi-lock'}`}></i>
                 </button>
             </div>
         );
