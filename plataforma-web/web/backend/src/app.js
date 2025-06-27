@@ -18,7 +18,6 @@ app.get('/', (req, res) => {
 app.use(cors());
 // Mensagem para mostrar que o servidor está a correr
 app.listen(port, async() => {
-  console.log(`Servidor a correr: http://localhost:${port}`);
   /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
   try{
     await cursosService.updateFormandosCounter();
@@ -119,6 +118,11 @@ app.use('/twofa',twofaRouter);
 const utilizadorRouter = require('./routes/utilizador_route.js');
 app.use('/utilizador',utilizadorRouter);
 
+const trabalhosRouter = require('./routes/trabalhos_route.js');
+app.use('/trabalhos',trabalhosRouter);
+
+const entregaTrabalhosRouter = require('./routes/entrega_trabalhos_route.js');
+app.use('/entrega-trabalhos',entregaTrabalhosRouter);
 
 //para ir buscar as imagens ao backend
 //app.use('/uploads/usersProfilesImg/', express.static(path.join(__dirname, 'uploads/usersProfilesImg/')));
