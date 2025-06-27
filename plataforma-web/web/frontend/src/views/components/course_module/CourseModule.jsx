@@ -64,33 +64,44 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
             </div>
           )}
           {cursoTipo === 'sincrono' && (
-            <a href={module.conteudo} target='blank' className='text-black'>
-              <div className="btn btn-primary rounded-circle d-flex justify-content-center align-items-center p-0"
-                style={{ width: '32px', height: '32px' }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onChangeAula();
-                }}>
-                <FaChalkboardTeacher />
-              </div>
-            </a>
-          )}
-          {cursoTipo === 'sincrono' && (
             <>
-              <a href={module.conteudo}
-                target='blank'
-                className='text-black'
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onChangeAula();
-                }}><div><strong>{index + 1}. {module.title}</strong></div></a>
               {new Date(module.dataAula) < new Date() && (
-                <div className="bg-success text-white rounded-5 p-2 d-flex justify-content-between align-items-center gap-3" style={{ backgroundColor: '#3b5b84' }}>
-                  <div className='d-flex justify-content-between align-items-center gap-1'>
-                    <strong>Realizada</strong>
+                <div className="bg-success text-white rounded-5 p-2 d-flex justify-content-between align-items-center gap-3"
+                  style={{ backgroundColor: '#3b5b84' }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onChangeAula();
+                  }}>
+                  <div className='d-flex justify-content-between align-items-center gap-2'>
+                    <FaChalkboardTeacher /><strong>Realizada</strong>
                   </div>
                 </div>
               )}
+              {new Date(module.dataAula) === new Date() && module.conteudo != null && (
+                <a href={module.conteudo} target='blank' className='text-black text-decoration-none'>
+                  <div className="btn btn-primary text-white rounded-5 p-2 d-flex justify-content-between align-items-center gap-3"
+                    style={{ backgroundColor: '#3b5b84' }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onChangeAula();
+                    }}>
+                    <div className='d-flex justify-content-between align-items-center gap-2'>
+                      <FaChalkboardTeacher /><strong>Participar</strong>
+                    </div>
+                  </div>
+                </a>
+              )}
+              {new Date(module.dataAula) > new Date() && module.conteudo != null && (
+                <div className="text-white rounded-circle d-flex justify-content-center align-items-center p-0"
+                  style={{ width: '32px', height: '32px', backgroundColor: '#3b5b84' }}>
+                  <FaChalkboardTeacher />
+                </div>
+              )}
+            </>
+          )}
+          {cursoTipo === 'sincrono' && (
+            <>
+              <strong>{index + 1}. {module.title}</strong>
             </>
           )}
           {cursoTipo === 'assincrono' && (

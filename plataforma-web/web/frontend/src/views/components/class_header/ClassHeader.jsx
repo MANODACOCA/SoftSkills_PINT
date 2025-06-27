@@ -10,19 +10,20 @@ const ClassHeader = ({ nomeCurso, tipo, totalAulas, tempoTotal, onPrevious, onNe
             <div>
                 <h2 className="fw-bold mb-2">{nomeCurso}</h2>
                 <div className="d-flex flex-wrap gap-3 text-muted small">
-                    <span><strong>Tipologia:</strong> {tipo}</span>
-                    <span><strong>Total de aulas:</strong> {totalAulas}</span>
-                    <span className="d-flex align-items-center">
+                    <h6><strong>Tipologia:</strong> {tipo}</h6>
+                    <h6><strong>Total de aulas:</strong> {totalAulas}</h6>
+                    <h6><span className="d-flex align-items-center">
                         <FaClock className="me-1" /> {tempoTotal}
                     </span>
+                    </h6>
                 </div>
             </div>
             {cursoTipo === 'assincrono' && (
-                <div className="mt-3 mt-md-0 d-flex gap-2">
-                    <Button variant="outline-secondary" size="sm" onClick={onPrevious}>
+                <div className="mt-3 mt-md-0 d-flex gap-3">
+                    <Button variant="outline-secondary" size="ls" onClick={onPrevious}>
                         <FaChevronLeft className="me-1" /> Aula anterior
                     </Button>
-                    <Button variant="primary" size="sm" onClick={onNext}>
+                    <Button variant="primary" size="ls" onClick={onNext}>
                         Próxima aula <FaChevronRight className="ms-1" />
                     </Button>
                 </div>
