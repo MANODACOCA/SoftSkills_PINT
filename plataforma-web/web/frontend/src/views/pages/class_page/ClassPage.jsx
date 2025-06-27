@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ClassHeader from '../../components/class_header/ClassHeader';
 import VideoPlayer from '../../components/video_player/VideoPlayer';
 import CourseModule from '../../components/course_module/CourseModule';
-import TrabalhosList from '../../components/envents_(trabalhos)/trabalhos_list';
+//import TrabalhosList from '../../components/envents_(trabalhos)/trabalhos_list';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../api/aulas_axios';
 import {
