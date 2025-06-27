@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ClassHeader from '../../components/class_header/ClassHeader';
 import VideoPlayer from '../../components/video_player/VideoPlayer';
 import CourseModule from '../../components/course_module/CourseModule';
-//import TrabalhosList from '../../components/envents_(trabalhos)/trabalhos_list';
+import TrabalhosList from '../../components/envents_(trabalhos)/trabalhos_list';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../api/aulas_axios';
 import {
@@ -162,7 +162,7 @@ const ClassPage = () => {
                             />
                         )}
 
-                        <h1 className="mb-3 mt-3">{tituloAula}</h1>
+                        <h3 className="mb-3 mt-3">{tituloAula}</h3>
 
                         <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs">
                             <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
@@ -247,7 +247,7 @@ const ClassPage = () => {
                                     <div className="mt-4">
                                         <h3>Trabalhos</h3>
                                         {trabalhos && trabalhos.length > 0 ? (
-                                            <h3>Trabalhos</h3>
+                                            <TrabalhosList />
                                         ) : (
                                             <p>Não há trabalhos programados para este curso no momento.</p>
                                         )
@@ -259,7 +259,7 @@ const ClassPage = () => {
                             <Tab eventKey="sobre" title={<span className='fw-bold'>SOBRE</span>}>
                                 {curso ? (
                                     <div className="mt-4">
-                                        <h2>Sobre o Curso</h2>
+                                        <h3>Sobre o Curso</h3>
                                         <p className="mt-3">{curso.descricao_curso}</p>
 
                                         {curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore && (

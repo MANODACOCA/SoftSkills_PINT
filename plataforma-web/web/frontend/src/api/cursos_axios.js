@@ -1,11 +1,13 @@
 import axios from 'axios';
 
+import {getAuthHeader} from '../utils/getToken';
+
 const API_URL = 'https://softskills-api.onrender.com/cursos';
 
 
 export const list_cursos = async () => {
     try {
-        const response = await axios.get(`${API_URL}/list`);
+        const response = await axios.get(`${API_URL}/list`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao ir buscar lista de Curso!');
@@ -17,7 +19,7 @@ export const get_cursos = async (id) => {
     console.log(id);
     try {
         console.log(id);
-        const response = await axios.get(`${API_URL}/get/${id}`);
+        const response = await axios.get(`${API_URL}/get/${id}`, getAuthHeader());
         console.log(response.data);
         return response.data;
     } catch (error) {
@@ -28,7 +30,7 @@ export const get_cursos = async (id) => {
 
 export const create_cursos = async (data) => {
     try {
-        const response = await axios.post(`${API_URL}/create`, data);
+        const response = await axios.post(`${API_URL}/create`, data, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao criar Curso!');
@@ -40,7 +42,7 @@ export const update_cursos = async (id, data) => {
     console.log(id);
     console.log(data);
     try {
-        const response = await axios.put(`${API_URL}/update/${id}`, data);
+        const response = await axios.put(`${API_URL}/update/${id}`, data, getAuthHeader());
         console.log(id);
     console.log(data);
         return response.data;
@@ -52,7 +54,7 @@ export const update_cursos = async (id, data) => {
 
 export const delete_cursos = async (id) => {
     try {
-        const response = await axios.delete(`${API_URL}/delete/${id}`);
+        const response = await axios.delete(`${API_URL}/delete/${id}`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao excluir Curso!');
@@ -78,7 +80,7 @@ export const getCursosDisponiveisParaInscricao = async (tipo = "todos", id_curso
             url += `&idstopicos=${id_topico.map(encodeURIComponent).join(',')}`;
         }
 
-        const response = await axios.get(url);
+        const response = await axios.get(url, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos disponiveis para inscricao!');
@@ -88,7 +90,7 @@ export const getCursosDisponiveisParaInscricao = async (tipo = "todos", id_curso
 
 export const getCourseDestaqueAssincrono = async () => {
     try {
-        const response = await axios.get(`${API_URL}/curso-destaque/assincrono`);
+        const response = await axios.get(`${API_URL}/curso-destaque/assincrono`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar curso de destaque sincrono!');
@@ -98,7 +100,7 @@ export const getCourseDestaqueAssincrono = async () => {
 
 export const getCourseDestaqueSincrono = async () => {
     try {
-        const response = await axios.get(`${API_URL}/curso-destaque/sincrono`);
+        const response = await axios.get(`${API_URL}/curso-destaque/sincrono`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar curso de destaque assincrono!');
@@ -108,7 +110,7 @@ export const getCourseDestaqueSincrono = async () => {
 
 export const getCousesWithMoreFormandos = async () => {
     try {
-        const response = await axios.get(`${API_URL}/curso-destaque/topcurso`);
+        const response = await axios.get(`${API_URL}/curso-destaque/topcurso`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar curso com mais formandos!');
@@ -120,7 +122,7 @@ export const getCousesWithMoreFormandos = async () => {
 export const getCompletedCourses = async (userId, tipologia = null) => {
     try {
         const params = tipologia !== 'todos' ? { tipologia } : {};
-        const response = await axios.get(`${API_URL}/users/${userId}/completed-courses`, { params });
+        const response = await axios.get(`${API_URL}/users/${userId}/completed-courses`, getAuthHeader({ params }));
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos terminados!');
@@ -131,7 +133,7 @@ export const getCompletedCourses = async (userId, tipologia = null) => {
 export const getEnrolledCourses = async (userId, tipologia = 'todos') => {
     try {
         const params = tipologia !== 'todos' ? { tipologia } : {};
-        const response = await axios.get(`${API_URL}/users/${userId}/enrolled-courses`, { params });
+        const response = await axios.get(`${API_URL}/users/${userId}/enrolled-courses`, getAuthHeader({ params }));
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos inscritos!');
@@ -142,7 +144,7 @@ export const getEnrolledCourses = async (userId, tipologia = 'todos') => {
 //POR ACABAR!!! FALTA TABELA FAVORITOS
 export const getFavoriteCourses = async (userId) => {
     try {
-        const response = await axios.get(`${API_URL}/users/${userId}/favorite-courses`);
+        const response = await axios.get(`${API_URL}/users/${userId}/favorite-courses`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos favoritos!');
@@ -153,7 +155,7 @@ export const getFavoriteCourses = async (userId) => {
 
 export const getCourseForYou = async () => {
     try {
-        const response = await axios.get(`${API_URL}/cursos-destaque/top8foryou`);
+        const response = await axios.get(`${API_URL}/cursos-destaque/top8foryou`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos ForYou!');
@@ -163,7 +165,7 @@ export const getCourseForYou = async () => {
 
 export const getCourseNews = async () => {
     try {
-        const response = await axios.get(`${API_URL}/cursos-destaque/top8news`);
+        const response = await axios.get(`${API_URL}/cursos-destaque/top8news`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos News!');
@@ -173,7 +175,7 @@ export const getCourseNews = async () => {
 
 export const getCoursePopular = async () => {
     try {
-        const response = await axios.get(`${API_URL}/cursos-destaque/top8popular`);
+        const response = await axios.get(`${API_URL}/cursos-destaque/top8popular`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos Popular!');
@@ -184,7 +186,7 @@ export const getCoursePopular = async () => {
 
 export const getCourseAdminLista = async () => {
     try {
-        const response = await axios.get(`${API_URL}/all-info`);
+        const response = await axios.get(`${API_URL}/all-info`, getAuthHeader());
         return response.data;
     } catch(error) {
         console.error('Erro ao carregar cursos para lista Admin!');
@@ -194,7 +196,7 @@ export const getCourseAdminLista = async () => {
 
 export const verificar_acesso_curso = async (userId, cursoId) => {
     try {
-        const response = await axios.get(`${API_URL}/verificar/${userId}/${cursoId}`);
+        const response = await axios.get(`${API_URL}/verificar/${userId}/${cursoId}`, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao verificar acesso ao curso:', error);
