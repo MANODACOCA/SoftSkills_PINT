@@ -782,7 +782,7 @@ const EditCourse = () => {
     const renderActionsMaterialApoio = (item) => {
         return(
         <div className="d-flex">
-            <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreateMaterialApoio(item.id_material_apoio)}>
+            <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateMaterialApoio(item.id_material_apoio)}>
                 <i className="bi bi-pencil"></i>
             </button>
             <button className="btn btn-outline-danger" onClick={()=> HandleDeleteMaterialApoio(item.id_material_apoio)}>
@@ -792,7 +792,7 @@ const EditCourse = () => {
         );
     }
     
-    const HandleEditCreateMaterialApoio = async (id) => {
+    const handleEditCreateMaterialApoio = async (id) => {
         const result = await Swal.fire({
             title: id == null ? 'Tem a certeza que deseja adicionar Material de apoio?' : 'Tem a certeza que deseja editar Material de apoio?',
             icon: 'warning',
@@ -808,7 +808,7 @@ const EditCourse = () => {
 
         if(result.isConfirmed) {
             try {
-                if(id != null || id != undefined) {
+                if(id != null) {
                     const material = await get_material_apoio(id);
                     const formatos = await list_tipo_formato();
                     const editarMaterialApoio = await Swal.fire({
@@ -822,20 +822,46 @@ const EditCourse = () => {
                             </select>
                             <label for="nome" class="form-label">Nome</label>
                             <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" value="${material.nome_material || ''}" />
-                            <label for="conteudo" class="form-label">Conteúdo</label>
-                            <input id="conteudo" class="form-control" placeholder="https://example.com/material.pdf" value="${material.conteudo || ''}" />
+                            <div id="file1InputWrapper" class="d-none">
+                            <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
+                            <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
+                            </div>
+                            <div id="file2InputWrapper" class="d-none">
+                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
+                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                            </div>
                         `,
-                        showCancelButton: true,
-                        confirmButtonText: 'Editar Material de Apoio',
-                        cancelButtonText: 'Cancelar',
-                        customClass: {
-                            confirmButton: 'btn btn-success me-2',
-                            cancelButton: 'btn btn-danger',
+                        didOpen: () => {
+                            const select = document.getElementById('formato');
+                            const file2Wrapper = document.getElementById('file2InputWrapper');
+                            const file1Wrapper = document.getElementById('file1InputWrapper');
+                            const label2 = document.getElementById('ficheiro2Label');
+                            const label1 = document.getElementById('ficheiro1Label');
+                            const formatosComFicheiro = [2, 3, 5, 6, 7];
+
+                            select.addEventListener('change', () => {
+                            const selectedId = parseInt(select.value);
+                            const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+
+                            if (formatosComFicheiro.includes(selectedId)) {
+                                file2Wrapper.classList.remove('d-none');
+                                file1Wrapper.classList.add('d-none');
+                                label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                label1.textContent = 'Ficheiro';
+                            } else {
+                                file2Wrapper.classList.add('d-none');
+                                file1Wrapper.classList.remove('d-none');
+                                label2.textContent = 'Ficheiro';
+                                label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                            }
+                            });
                         },
                         preConfirm: () => {
                             const id_formato = document.getElementById("formato").value;
-                            const conteudo = document.getElementById("conteudo").value;
+                            const url = document.getElementById("urlConteudo").value;
                             const nome = document.getElementById("nome").value;
+                            const ficheiro = document.getElementById('ficheiroConteudo').files[0];
+                            
                             if(!id_formato || !conteudo || !nome) {
                                 Swal.showValidationMessage("Todos os campos são obrigatórios!");
                                 return false;
@@ -843,11 +869,20 @@ const EditCourse = () => {
                             return {
                                 id_curso: cursos.id_curso,
                                 id_formato: parseInt(id_formato),
-                                conteudo,
-                                nome_material: nome
+                                conteudo : url,
+                                nome_material: nome,
+                                ficheiro: ficheiro || null
                             };
-                        }
-                    })
+                        },           
+                        showCancelButton: true,
+                        confirmButtonText: 'Editar Material de Apoio',
+                        cancelButtonText: 'Cancelar',
+                        customClass: {
+                            confirmButton: 'btn btn-success me-2',
+                            cancelButton: 'btn btn-danger',
+                        },
+                    });
+
                     if(editarMaterialApoio.isConfirmed && editarMaterialApoio.value){
                         try {
                             console.log(editarMaterialApoio.value);
@@ -876,27 +911,52 @@ const EditCourse = () => {
                         html: `
                             <label for="formato" class="form-label">Formato</label>
                             <select id="formato" class="form-control mb-3">
-                            <option value="">-- Selecionar Formato --</option>
                                 ${formatos.map(f => `
-                                    <option value="${f.id_formato}">${f.formato}</option>
+                                    <option value="${f.id_formato}" ${f.id_formato == material.id_formato ? 'selected' : ''}>${f.formato}</option>
                                 `).join('')}
                             </select>
                             <label for="nome" class="form-label">Nome</label>
-                            <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" />
-                            <label for="conteudo" class="form-label">Conteúdo</label>
-                            <input id="conteudo" class="form-control" placeholder="https://example.com/material.pdf" />
+                            <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" value="${material.nome_material || ''}" />
+                            <div id="file1InputWrapper" class="d-none">
+                            <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
+                            <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
+                            </div>
+                            <div id="file2InputWrapper" class="d-none">
+                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
+                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                            </div>
                         `,
-                        showCancelButton: true,
-                        confirmButtonText: 'Adicionar Material de Apoio',
-                        cancelButtonText: 'Cancelar',
-                        customClass: {
-                            confirmButton: 'btn btn-success me-2',
-                            cancelButton: 'btn btn-danger',
+                            didOpen: () => {
+                            const select = document.getElementById('formato');
+                            const file2Wrapper = document.getElementById('file2InputWrapper');
+                            const file1Wrapper = document.getElementById('file1InputWrapper');
+                            const label2 = document.getElementById('ficheiro2Label');
+                            const label1 = document.getElementById('ficheiro1Label');
+                            const formatosComFicheiro = [2, 3, 5, 6, 7];
+
+                            select.addEventListener('change', () => {
+                            const selectedId = parseInt(select.value);
+                            const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+
+                            if (formatosComFicheiro.includes(selectedId)) {
+                                file2Wrapper.classList.remove('d-none');
+                                file1Wrapper.classList.add('d-none');
+                                label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                label1.textContent = 'Ficheiro';
+                            } else {
+                                file2Wrapper.classList.add('d-none');
+                                file1Wrapper.classList.remove('d-none');
+                                label2.textContent = 'Ficheiro';
+                                label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                            }
+                            });
                         },
                         preConfirm: () => {
                             const id_formato = document.getElementById("formato").value;
-                            const conteudo = document.getElementById("conteudo").value;
+                            const url = document.getElementById("urlConteudo").value;
                             const nome = document.getElementById("nome").value;
+                            const ficheiro = document.getElementById('ficheiroConteudo').files[0];
+                            
                             if(!id_formato || !conteudo || !nome) {
                                 Swal.showValidationMessage("Todos os campos são obrigatórios!");
                                 return false;
@@ -904,11 +964,19 @@ const EditCourse = () => {
                             return {
                                 id_curso: cursos.id_curso,
                                 id_formato: parseInt(id_formato),
-                                conteudo,
-                                nome_material: nome
+                                conteudo : url,
+                                nome_material: nome,
+                                ficheiro: ficheiro || null
                             };
-                        }
-                    })
+                        },  
+                            showCancelButton: true,
+                            confirmButtonText: 'Adicionar Material de Apoio',
+                            cancelButtonText: 'Cancelar',
+                            customClass: {
+                                confirmButton: 'btn btn-success me-2',
+                                cancelButton: 'btn btn-danger',
+                            },
+                    });
                     if(adicionarMaterialApoio.isConfirmed && adicionarMaterialApoio.value){
                         try {
                             await create_material_apoio(adicionarMaterialApoio.value);
@@ -1199,7 +1267,7 @@ const EditCourse = () => {
                                 {/* Material de Apoio */}
                                 {cursos.isassincrono === true && (
                                     <div className='mt-4'>
-                                        <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={HandleEditCreateMaterialApoio} />
+                                        <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={handleEditCreateMaterialApoio} />
                                     </div>
                                 )}
                             </div>

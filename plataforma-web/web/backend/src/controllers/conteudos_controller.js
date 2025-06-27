@@ -64,7 +64,7 @@ controllers.create = async (req,res)=>{
     if(err.code === 'LIMIT_FILE_SIZE') {
       return res.status(413).json({
         erro: 'Ficheiro execede o limite',
-        desc: 'O ficheiro não pode ultrapassar 1 GB'
+        desc: 'O ficheiro não pode ultrapassar 100 MB'
       });
     }
 
