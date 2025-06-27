@@ -18,16 +18,13 @@ async function getVideoDuration(youtubeUrl) {
   const id = getYouTubeVideoId(youtubeUrl);
   if (!id) throw new Error('ID do vídeo inválido');
 
-  const apiKey = YT_API_KEY;   
-  if (!apiKey) throw new Error('YT_API_KEY não definido no .env');
-
   const { data } = await axios.get(
     'https://www.googleapis.com/youtube/v3/videos',
     {
       params: {
         id,
         part: 'contentDetails',
-        key: apiKey,
+        key: YT_API_KEY,
       },
     }
   );
