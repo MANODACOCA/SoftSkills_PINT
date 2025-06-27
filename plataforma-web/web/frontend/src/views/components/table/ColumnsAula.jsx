@@ -12,10 +12,16 @@ export const columnsAulas = [
     { label: 'Tempo Duracao', render: (item) => {
         let minutos = item.tempo_duracao.minutes;
         let segundos = item.tempo_duracao.seconds;
-        if(minutos == undefined || segundos == undefined) {
+        let horas = item.tempo_duracao.hours;
+        if(segundos == undefined) {
             segundos = 0;
+        }
+        if(minutos == undefined) {
             minutos = 0;
         }
-        return minutos + 'min ' + segundos + 'seg'; 
+        if(horas == undefined) {
+            horas = 0;
+        }
+        return horas.toString().padStart(2, '0') + ':' + minutos.toString().padStart(2, '0') + ':' + segundos.toString().padStart(2, '0'); 
     }},
 ];
