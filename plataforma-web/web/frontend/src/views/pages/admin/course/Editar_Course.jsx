@@ -351,7 +351,7 @@ const EditCourse = () => {
                                     {conteudo.nome_conteudo}   
                                 </div>
                                 <div>
-                                    <a href={conteudo.conteudo}  className="btn btn-outline-primary me-2" target="_blank">
+                                    <a href={conteudo.conteudo}  className="btn btn-outline-success me-2" target="_blank">
                                         <i className='bi bi-box-arrow-up-right'></i></a>
                                     <button className="btn btn-outline-danger" onClick={()=> handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
                                         <i className="bi bi-trash"></i>
@@ -782,9 +782,11 @@ const EditCourse = () => {
     const renderActionsMaterialApoio = (item) => {
         return(
         <div className="d-flex">
+                   <a href={item.conteudo}  className="btn btn-outline-success me-2" target="_blank">
+                <i className='bi bi-box-arrow-up-right'></i></a>
             <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateMaterialApoio(item.id_material_apoio)}>
                 <i className="bi bi-pencil"></i>
-            </button>
+            </button> 
             <button className="btn btn-outline-danger" onClick={()=> HandleDeleteMaterialApoio(item.id_material_apoio)}>
                 <i className="bi bi-trash"></i>
             </button>
@@ -862,7 +864,7 @@ const EditCourse = () => {
                             const nome = document.getElementById("nome").value;
                             const ficheiro = document.getElementById('ficheiroConteudo').files[0];
                             
-                            if(!id_formato || !conteudo || !nome) {
+                            if(!id_formato || (!url && !ficheiro) || !nome) {
                                 Swal.showValidationMessage("Todos os campos são obrigatórios!");
                                 return false;
                             }
@@ -912,11 +914,11 @@ const EditCourse = () => {
                             <label for="formato" class="form-label">Formato</label>
                             <select id="formato" class="form-control mb-3">
                                 ${formatos.map(f => `
-                                    <option value="${f.id_formato}" ${f.id_formato == material.id_formato ? 'selected' : ''}>${f.formato}</option>
+                                    <option value="${f.id_formato}" ${f.id_formato}>${f.formato}</option>
                                 `).join('')}
                             </select>
                             <label for="nome" class="form-label">Nome</label>
-                            <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" value="${material.nome_material || ''}" />
+                            <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio"/>
                             <div id="file1InputWrapper" class="d-none">
                             <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
@@ -957,7 +959,7 @@ const EditCourse = () => {
                             const nome = document.getElementById("nome").value;
                             const ficheiro = document.getElementById('ficheiroConteudo').files[0];
                             
-                            if(!id_formato || !conteudo || !nome) {
+                            if(!id_formato || (!url && !ficheiro) || !nome) {
                                 Swal.showValidationMessage("Todos os campos são obrigatórios!");
                                 return false;
                             }
