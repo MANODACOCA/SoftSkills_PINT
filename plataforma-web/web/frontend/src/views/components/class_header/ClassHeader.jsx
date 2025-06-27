@@ -8,7 +8,7 @@ const ClassHeader = ({ nomeCurso, tipo, totalAulas, tempoTotal, onPrevious, onNe
     return (
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
             <div>
-                <h4 className="fw-bold mb-2">{nomeCurso}</h4>
+                <h2 className="fw-bold mb-2">{nomeCurso}</h2>
                 <div className="d-flex flex-wrap gap-3 text-muted small">
                     <span><strong>Tipologia:</strong> {tipo}</span>
                     <span><strong>Total de aulas:</strong> {totalAulas}</span>

@@ -28,6 +28,7 @@ const ClassPage = () => {
     const [aulas, setAulas] = useState([]);
     const [aulaAtual, setAulaAtual] = useState(null); // Add state for current class
     const [materialApoio, setMaterialApoio] = useState([]);
+    const [trabalhos, setTrabalhos] = useState([]);
     const [carregar, setCarregar] = useState(true);
     const [erro, setErro] = useState(null);
 
@@ -167,7 +168,7 @@ const ClassPage = () => {
                             <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
 
                                 <div className="mt-4">
-                                    <h1>Conteúdos</h1>
+                                    <h3>Conteúdos</h3>
                                     {aulas && aulas.length > 0 ? aulas.map((aula, index) => (
                                         <CourseModule
                                             key={aula.id_aula}
@@ -189,7 +190,7 @@ const ClassPage = () => {
                                             usarAulaAtualId
                                             onChangeAula={() => {
                                                 if (curso.issincrono) {
-                                                    setAulaAtual(aula); 
+                                                    setAulaAtual(aula);
                                                 } else {
                                                     setAulaAtual(aula);
                                                     window.scrollTo(0, 0);
@@ -204,7 +205,7 @@ const ClassPage = () => {
                             <Tab eventKey="material" title={<span className='fw-bold'>MATERIAL DE APOIO</span>}>
                                 {materialApoio && materialApoio.length > 0 ? (
                                     <div className="mt-4">
-                                        <h2>Material de Apoio</h2>
+                                        <h3>Material de Apoio</h3>
                                         <div className="row g-4 mt-3">
                                             {materialApoio.map((material) => (
                                                 <div className="col-md-6 col-lg-4" key={material.id_material_apoio}>
@@ -242,11 +243,16 @@ const ClassPage = () => {
 
                             {curso.issincrono && (
                                 <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>}>
-                                    
+
                                     <div className="mt-4">
-                                        <h2>Trabalhos</h2>
-                                        <p>Não há trabalhos programados para este curso no momento.</p>
-                                    </div> 
+                                        <h3>Trabalhos</h3>
+                                        {trabalhos && trabalhos.length > 0 ? (
+                                            <h3>Trabalhos</h3>
+                                        ) : (
+                                            <p>Não há trabalhos programados para este curso no momento.</p>
+                                        )
+                                        }
+                                    </div>
                                 </Tab>
                             )}
 
@@ -258,7 +264,7 @@ const ClassPage = () => {
 
                                         {curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore && (
                                             <div className="mt-4">
-                                                <h2>Formador</h2>
+                                                <h3>Formador</h3>
                                                 <div className="d-flex align-items-start mt-3">
                                                     <div className="me-3">
                                                         <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
@@ -288,7 +294,7 @@ const ClassPage = () => {
                     </>
                 )}
             </div>
-        </div>
+        </div >
     );
 };
 
