@@ -11,6 +11,6 @@ export const columnsAulas = [
         }
         else return 'Não contém aula';
     }},
-    { label: 'Tempo Duracao', render: (item) => { return item.tempo_duracao;}},
+    { label: 'Tempo Duracao', render: (item) => { return item.tempo_duracao.minutos;}},
 ];
 

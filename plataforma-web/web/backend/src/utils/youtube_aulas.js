@@ -11,8 +11,15 @@ function getYouTubeVideoId(url) {
 
 function parseISODuration(iso) {
   const re = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-  const [, h = 0, m = 0, s = 0] = (iso.match(re) || []).map(Number);
-  return { hours: h, minutes: m, seconds: s };
+  const match = iso.match(re);
+  
+  if (!match) throw new Error('Formato de duração ISO-8601 inválido');
+
+  const hours   = parseInt(match[1] || '0', 10);
+  const minutes = parseInt(match[2] || '0', 10);
+  const seconds = parseInt(match[3] || '0', 10);
+
+  return { hours, minutes, seconds };
 }
 
 async function getVideoDuration(youtubeUrl) {
