@@ -4,7 +4,9 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).aulas;
 const controllers = {};
-const aulasService = require('../services/aulas.service')
+const aulasService = require('../services/aulas.service');
+const { getVideoDuration } = require('../utils/youtube_aulas');
+
 
 controllers.list = async (req, res) => {
   const data = await model.findAll();
@@ -27,14 +29,29 @@ controllers.get = async (req, res) => {
 
 controllers.create = async (req, res) => {
   try {
-    if (req.body) {
-      const data = await model.create(req.body);
-      res.status(201).json(data);
-    } else {
-      res.status(400).json({ erro: 'Erro ao criar Aula!', desc: 'Corpo do pedido esta vazio.' });
+    if (!req.body) {
+      return res.status(400).json({ erro: 'Erro ao criar Aula!', desc: 'Corpo do pedido está vazio.' });
     }
+
+    if (req.body.caminho_url) {
+      try {
+        const { hours, minutes, seconds } = await getVideoDuration(req.body.caminho_url);
+
+        req.body.tempo_duracao =
+          `${String(hours).padStart(2, '0')}:` +
+          `${String(minutes).padStart(2, '0')}:` +
+          `${String(seconds).padStart(2, '0')}`;
+      } catch (err) {
+        return res.status(400).json({ erro: 'Não consegui obter a duração do vídeo.', desc: err.message });
+      }
+    }
+
+    const data = await model.create(req.body);
+    return res.status(201).json(data);
+
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao criar Aula!', desc: err.message });
+    console.error(err);
+    return res.status(500).json({ erro: 'Erro ao criar Aula!', desc: err.message });
   }
 };
 
