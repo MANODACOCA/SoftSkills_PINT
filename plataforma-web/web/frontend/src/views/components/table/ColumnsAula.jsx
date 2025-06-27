@@ -6,11 +6,9 @@ export const columnsAulas = [
     { label: 'Nº', key: 'id_aula'},
     { label: 'Nome Aula', render: (item) => { return item.nome_aula; }},
     { label: 'Video', render: (item) => {
-        if(item.caminho_url != null) {
-            return 'Já contém aula';
-        }
-        else return 'Não contém aula';
+        if(item.caminho_url != null) { return 'Já contém aula';
+        } else return 'Não contém aula';
     }},
-    { label: 'Tempo Duracao', render: (item) => { return item.tempo_duracao;}},
+    { label: 'Tempo Duracao', render: (item) => item.tempo_duracao.minutos || '-'},
 ];
 
