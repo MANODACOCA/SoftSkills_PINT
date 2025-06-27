@@ -1,6 +1,7 @@
-
-require('dotenv').config();        
+require('dotenv').config();
 const axios = require('axios');
+
+const { YT_API_KEY } = process.env;                
 
 function getYouTubeVideoId(url) {
   const re = /(?:\?v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/;
@@ -24,13 +25,12 @@ async function getVideoDuration(youtubeUrl) {
       params: {
         id,
         part: 'contentDetails',
-        key: YT_API_KEY,
+        key: YT_API_KEY,                     
       },
     }
   );
 
-  if (!data.items || data.items.length === 0)
-    throw new Error('Vídeo não encontrado');
+  if (!data.items?.length) throw new Error('Vídeo não encontrado');
 
   return parseISODuration(data.items[0].contentDetails.duration);
 }
