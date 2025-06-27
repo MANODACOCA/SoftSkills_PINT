@@ -1,1 +1,9 @@
-/* */
+.custom-tabs .nav-link {
+  color: #00A9E0;
+}
+
+.custom-tabs .nav-link.active {
+  background-color: #3b5b84; 
+  color: white;
+  border-color: #3b5b84 #fff;
+}

@@ -120,6 +120,10 @@ async function getCourseWithMoreFormandos() {
 
     if (cursosDisponiveis.length === 0) return null;
 
+    const cursosComVagas = cursosDisponiveis.filter(
+      curso => curso.contador_formandos < curso.sincrono.numero_vagas
+    );
+
     const maxFormandos = Math.max(...cursosDisponiveis.map(c => c.contador_formandos));
     const cursosTop = cursosDisponiveis.filter(c => c.contador_formandos === maxFormandos);
 
@@ -248,7 +252,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
     };
 
     let cursoWhere = {
-      data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE')},
+      data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
     };
 
     if (tipologia === 'sincrono') {
@@ -324,7 +328,7 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
     };
 
     let cursoWhere = {
-      data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE')},
+      data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE') },
     };
 
     if (tipologia === 'sincrono') {
