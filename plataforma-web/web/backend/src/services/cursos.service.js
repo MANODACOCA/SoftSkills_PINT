@@ -116,13 +116,16 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
 //vai retornar o curso com mais formandos, se houve mais que um faz um radom e seleciona um deles
 async function getCourseWithMoreFormandos() {
   try {
-    const cursosDisponiveis = await getCursosDiponiveisParaInscricao("todos");
+    const cursosDisponiveiSincronos = await getCursosDiponiveisParaInscricao("sincrono");
+    const cursosDisponiveiAssincronos = await getCursosDiponiveisParaInscricao("assincrono");
 
-    if (cursosDisponiveis.length === 0) return null;
-
-    const cursosComVagas = cursosDisponiveis.filter(
+    const cursosComVagas = cursosDisponiveiSincronos.filter(
       curso => curso.contador_formandos < curso.sincrono.numero_vagas
     );
+
+    const cursosDisponiveis = [...cursosComVagas, ...cursosDisponiveiAssincronos];
+
+    if (cursosDisponiveis.length === 0) return null;
 
     const maxFormandos = Math.max(...cursosDisponiveis.map(c => c.contador_formandos));
     const cursosTop = cursosDisponiveis.filter(c => c.contador_formandos === maxFormandos);
