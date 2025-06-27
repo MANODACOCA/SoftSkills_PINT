@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ClassHeader from '../../components/class_header/ClassHeader';
 import VideoPlayer from '../../components/video_player/VideoPlayer';
 import CourseModule from '../../components/course_module/CourseModule';
+import TrabalhosList from '../../components/envents_(trabalhos)/trabalhos_list';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../api/aulas_axios';
 import {
@@ -240,12 +241,12 @@ const ClassPage = () => {
                             </Tab>
 
                             {curso.issincrono && (
-                                <Tab eventKey="eventos" title={<span className='fw-bold'>EVENTOS</span>}>
+                                <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>}>
+                                    
                                     <div className="mt-4">
-                                        <h2>Eventos</h2>
-                                        <p>Não há eventos programados para esta aula no momento.</p>
-                                        Quando a tabela de trabalhos estiver disponível, substituir por conteúdo dinâmico
-                                    </div>
+                                        <h2>Trabalhos</h2>
+                                        <p>Não há trabalhos programados para este curso no momento.</p>
+                                    </div> 
                                 </Tab>
                             )}
 
