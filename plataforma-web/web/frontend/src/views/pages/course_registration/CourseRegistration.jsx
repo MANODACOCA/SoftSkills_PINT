@@ -145,6 +145,7 @@ const CourseRegistration = () => {
                     }))
                   }}
                   index={index}
+                  cursoTipo={course.issincrono ? 'sincrono' : 'assincrono'}
                 />
               )) : "Sem aulas disponíveis para este curso."}
             </>

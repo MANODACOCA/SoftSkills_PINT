@@ -11,9 +11,11 @@ import {
   FaChevronDown,
   FaInfoCircle,
   FaPlayCircle,
-  FaDownload
+  FaDownload,
+  FaChalkboardTeacher
 } from 'react-icons/fa';
 import { IoTimeSharp } from "react-icons/io5";
+import { MdDateRange } from "react-icons/md";
 import './CourseModule.css';
 
 
@@ -28,8 +30,8 @@ const iconMapById = {
   8: <FaLink className="text-blue-500" />,
 };
 
-const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onChangeAula }) => {
-
+const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onChangeAula, cursoTipo }) => {
+  console.log(module);
   const [isExpanded, setIsExpanded] = useState(false);
 
   const getIconById = (id) => {
@@ -47,28 +49,76 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
   return (
     <div className="mb-3 border rounded-4 shadow-sm">
       <button
-        className={`w-100 text-start border-0 px-3 py-3 d-flex justify-content-between align-items-center rounded-top-4 ${usarAulaAtualId && module.id === aulaAtualId ? 'bg-secondary text-white' : 'bg-light rounded-bottom-4'}`}
+        className={`w-100 text-start border-0 px-3 py-3 d-flex justify-content-between align-items-center rounded-top-4 ${usarAulaAtualId && module.id === aulaAtualId ? 'bg-secondary bg-opacity-75 text-white' : 'bg-light rounded-bottom-4'}`}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="d-flex align-items-center gap-3">
-          <div className="btn btn-primary rounded-circle d-flex justify-content-center align-items-center p-0"
-            style={{ width: '32px', height: '32px' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onChangeAula();
-            }}>
-            <FaPlayCircle />
-          </div>
-          <strong>{index + 1}. {module.title}</strong>
+          {cursoTipo === 'assincrono' && (
+            <div className="btn btn-primary rounded-circle d-flex justify-content-center align-items-center p-0"
+              style={{ width: '32px', height: '32px' }}
+              onClick={(e) => {
+                e.stopPropagation();
+                onChangeAula();
+              }}>
+              <FaPlayCircle />
+            </div>
+          )}
+          {cursoTipo === 'sincrono' && (
+            <a href={module.conteudo} target='blank' className='text-black'>
+              <div className="btn btn-primary rounded-circle d-flex justify-content-center align-items-center p-0"
+                style={{ width: '32px', height: '32px' }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onChangeAula();
+                }}>
+                <FaChalkboardTeacher />
+              </div>
+            </a>
+          )}
+          {cursoTipo === 'sincrono' && (
+            <>
+              <a href={module.conteudo}
+                target='blank'
+                className='text-black'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onChangeAula();
+                }}><div><strong>{index + 1}. {module.title}</strong></div></a>
+              {new Date(module.dataAula) < new Date() && (
+                <div className="bg-success text-white rounded-5 p-2 d-flex justify-content-between align-items-center gap-3" style={{ backgroundColor: '#3b5b84' }}>
+                  <div className='d-flex justify-content-between align-items-center gap-1'>
+                    <strong>Realizada</strong>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+          {cursoTipo === 'assincrono' && (
+            <strong>{index + 1}. {module.title}</strong>
+          )}
         </div>
         <div className='d-flex justify-content-between align-items-center gap-4'>
-          <div className="text-white rounded-5 p-2 d-flex align-items-center gap-1" style={{ backgroundColor: '#3b5b84' }}>
-            <IoTimeSharp />
-            <strong>{module.tempo_duracao.minutes}min</strong>
+          <div className="text-white rounded-5 p-2 d-flex justify-content-between align-items-center gap-3" style={{ backgroundColor: '#3b5b84' }}>
+            {cursoTipo === 'sincrono' && (
+              <div className='d-flex justify-content-between align-items-center gap-1'>
+                <MdDateRange />
+                <strong>{new Date(module.dataAula).toLocaleString('pt-BR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}</strong>
+              </div>
+            )}
+            <div className='d-flex justify-content-between align-items-center gap-1'>
+              <IoTimeSharp />
+              <strong>{module.tempo_duracao.minutes}min</strong>
+            </div>
           </div>
           <FaChevronDown className={`chevron-icon ${isExpanded ? 'rotate-180' : ''}`} />
         </div>
-      </button>
+      </button >
 
       {isExpanded && (
         <div className="bg-white border-top px-4 py-3 rounded-bottom-4">
@@ -83,7 +133,11 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
                       </span>
                       <span>{aula.titulo}</span>
                     </div>
-                    <div className="d-flex justify-content-end align-items-end"><span><FaDownload /></span></div>
+                    {usarAulaAtualId && (
+                      <div className="d-flex justify-content-end align-items-end">
+                        <span><FaDownload /></span>
+                      </div>
+                    )}
                   </div>
                 </a>
               ))}
@@ -93,7 +147,7 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
           )}
         </div>
       )}
-    </div>
+    </div >
   );
 };
 

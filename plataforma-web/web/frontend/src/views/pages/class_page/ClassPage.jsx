@@ -60,7 +60,6 @@ const ClassPage = () => {
         if (index > 0) {
             const anterior = aulas[index - 1];
             setAulaAtual(anterior);
-            console.log("Navegando para aula anterior:", anterior.id_aula);
         }
     };
 
@@ -118,11 +117,10 @@ const ClassPage = () => {
 
     useEffect(() => {
         if (aulaAtual) {
-            console.log("Aula atual mudou:", aulaAtual);
+            console.log(aulaAtual);
         }
     }, [aulaAtual]);
 
-                  console.log(aulas);
     return (
         <div className="container-fluid pt-4">
 
@@ -135,6 +133,7 @@ const ClassPage = () => {
                         tempoTotal={tempoTotal}
                         onPrevious={handlePrevious}
                         onNext={handleNext}
+                        cursoTipo={curso?.issincrono ? 'sincrono' : 'assincrono'}
                     />
                 </div>
             </div>
@@ -162,7 +161,7 @@ const ClassPage = () => {
                         )}
 
                         <h1 className="mb-3 mt-3">{tituloAula}</h1>
-      
+
                         <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs">
                             <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
 
@@ -175,6 +174,8 @@ const ClassPage = () => {
                                                 id: aula.id_aula,
                                                 title: aula.nome_aula,
                                                 tempo_duracao: aula.tempo_duracao,
+                                                conteudo: aula.caminho_url,
+                                                dataAula: aula.data_aula,
                                                 aulas: aula.conteudos.map(c => ({
                                                     id: c.id_conteudo,
                                                     titulo: c.nome_conteudo,
@@ -186,15 +187,20 @@ const ClassPage = () => {
                                             aulaAtualId={aulaAtual?.id_aula}
                                             usarAulaAtualId
                                             onChangeAula={() => {
-                                                setAulaAtual(aula), 
-                                                window.scrollTo(0, 0)
+                                                if (curso.issincrono) {
+                                                    setAulaAtual(aula); 
+                                                } else {
+                                                    setAulaAtual(aula);
+                                                    window.scrollTo(0, 0);
+                                                }
                                             }}
+                                            cursoTipo={curso.issincrono ? 'sincrono' : 'assincrono'}
                                         />
                                     )) : "Sem aulas disponíveis para este curso."}
                                 </div>
                             </Tab>
 
-                            <Tab eventKey="material" title="Material de Apoio">
+                            <Tab eventKey="material" title={<span className='fw-bold'>MATERIAL DE APOIO</span>}>
                                 {materialApoio && materialApoio.length > 0 ? (
                                     <div className="mt-4">
                                         <h2>Material de Apoio</h2>
@@ -234,7 +240,7 @@ const ClassPage = () => {
                             </Tab>
 
                             {curso.issincrono && (
-                                <Tab eventKey="eventos" title="Eventos">
+                                <Tab eventKey="eventos" title={<span className='fw-bold'>EVENTOS</span>}>
                                     <div className="mt-4">
                                         <h2>Eventos</h2>
                                         <p>Não há eventos programados para esta aula no momento.</p>
@@ -243,7 +249,7 @@ const ClassPage = () => {
                                 </Tab>
                             )}
 
-                            <Tab eventKey="sobre" title="Sobre">
+                            <Tab eventKey="sobre" title={<span className='fw-bold'>SOBRE</span>}>
                                 {curso ? (
                                     <div className="mt-4">
                                         <h2>Sobre o Curso</h2>

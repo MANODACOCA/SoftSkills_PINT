@@ -116,7 +116,14 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
 //vai retornar o curso com mais formandos, se houve mais que um faz um radom e seleciona um deles
 async function getCourseWithMoreFormandos() {
   try {
-    const cursosDisponiveis = await getCursosDiponiveisParaInscricao("todos");
+    const cursosDisponiveiSincronos = await getCursosDiponiveisParaInscricao("sincrono");
+    const cursosDisponiveiAssincronos = await getCursosDiponiveisParaInscricao("assincrono");
+
+    const cursosComVagas = cursosDisponiveiSincronos.filter(
+      curso => curso.contador_formandos < curso.sincrono.numero_vagas
+    );
+
+    const cursosDisponiveis = [...cursosComVagas, ...cursosDisponiveiAssincronos];
 
     if (cursosDisponiveis.length === 0) return null;
 
@@ -248,7 +255,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
     };
 
     let cursoWhere = {
-      data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE')},
+      data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
     };
 
     if (tipologia === 'sincrono') {
@@ -324,7 +331,7 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
     };
 
     let cursoWhere = {
-      data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE')},
+      data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE') },
     };
 
     if (tipologia === 'sincrono') {
