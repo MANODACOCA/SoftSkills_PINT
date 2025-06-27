@@ -1,14 +1,20 @@
 
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { aulas, material_apoio, conteudos, tipo_formato, cursos } = require('../models/init-models')(sequelize);
+const { aulas, material_apoio, conteudos, tipo_formato, cursos, trabalhos } = require('../models/init-models')(sequelize);
 
 //Vamos aos cursos inscritos para ir para a pagina de curso com aula ->  
 async function getAulasAndMateriaApoioForCurso(cursoId) {
     try {
-         const dadosCurso = await cursos.findOne({
-            where: {id_curso: cursoId},
-         });
+        const dadosCurso = await cursos.findOne({
+            where: { id_curso: cursoId },
+            include: [
+                {
+                    model: trabalhos,
+                    as: 'trabalhos',
+                }
+            ],
+        });
 
 
         const todasAulas = await aulas.findAll({
@@ -23,7 +29,7 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                             as: 'id_formato_tipo_formato',
                             attributes: ['id_formato', 'formato']
                         }
-                    ]
+                    ],
                 }
             ],
             order: [['id_aula', 'ASC']]
@@ -57,17 +63,17 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
 
 async function getAulas(cursoID) {
     const cursoSincrono = await cursos.findOne({
-        where: {id_curso: cursoID}
+        where: { id_curso: cursoID }
     });
 
-    if(!cursoSincrono) {
+    if (!cursoSincrono) {
         throw new Error('Curso não econtrado');
     }
 
-    if(cursoSincrono.issincrono){
+    if (cursoSincrono.issincrono) {
         return [];
     }
-    
+
     const todasAulas = await aulas.findAll({
         where: { id_curso: cursoID },
         include: [

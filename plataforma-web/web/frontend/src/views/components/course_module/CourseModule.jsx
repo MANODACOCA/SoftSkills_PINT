@@ -124,7 +124,16 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
             )}
             <div className='d-flex justify-content-between align-items-center gap-1'>
               <IoTimeSharp />
-              <strong>{module.tempo_duracao.minutes}min</strong>
+              <strong>
+                {module.tempo_duracao?.hours > 0
+                ? `${module.tempo_duracao.hours} : ${String(module.tempo_duracao.minutes || 0).padStart(2, '0')} : ${String(module.tempo_duracao.seconds || 0).padStart(2, '0')}`
+                : module.tempo_duracao?.minutes > 0
+                ? `${module.tempo_duracao.minutes} : ${String(module.tempo_duracao.seconds || 0).padStart(2, '0')}`
+                : module.tempo_duracao?.seconds > 0
+                ? `${module.tempo_duracao.seconds}`
+                : `Tempo Inválido`
+                } 
+              </strong>
             </div>
           </div>
           <FaChevronDown className={`chevron-icon ${isExpanded ? 'rotate-180' : ''}`} />
