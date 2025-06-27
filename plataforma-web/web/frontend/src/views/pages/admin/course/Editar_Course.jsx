@@ -451,13 +451,13 @@ const EditCourse = () => {
                                 data_aula: materiais.data_aula,
                                 nome_aula: nome, 
                                 caminho_url: url,
-                                tempo_duracao: 0
+                                tempo_duracao: 0,
                             };
                         }
                     });
                     if(editarAula.isConfirmed && editarAula.value){
                         try {
-                            await update_aulas(id, aulaEditada);
+                            await update_aulas(id, editarAula.value);
                             await fetchAulas(cursos.id_curso);
 
                             Swal.fire({

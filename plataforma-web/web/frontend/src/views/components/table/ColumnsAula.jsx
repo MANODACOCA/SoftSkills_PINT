@@ -9,6 +9,13 @@ export const columnsAulas = [
         if(item.caminho_url != null) { return 'Já contém aula';
         } else return 'Não contém aula';
     }},
-    { label: 'Tempo Duracao', render: (item) => item.tempo_duracao.minutos || '-'},
+    { label: 'Tempo Duracao', render: (item) => {
+        let minutos = item.tempo_duracao.minutes;
+        let segundos = item.tempo_duracao.seconds;
+        if(minutos == undefined || segundos == undefined) {
+            segundos = 0;
+            minutos = 0;
+        }
+        return minutos + 'min ' + segundos + 'seg'; 
+    }},
 ];
-

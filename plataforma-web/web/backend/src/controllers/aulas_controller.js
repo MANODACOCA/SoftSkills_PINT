@@ -59,6 +59,20 @@ controllers.update = async (req, res) => {
   try {
     if (req.body) {
       const { id } = req.params;
+      
+      if (req.body.caminho_url) {
+        try {
+          const { hours, minutes, seconds } = await getVideoDuration(req.body.caminho_url);
+
+          req.body.tempo_duracao =
+            `${String(hours).padStart(2, '0')}:` +
+            `${String(minutes).padStart(2, '0')}:` +
+            `${String(seconds).padStart(2, '0')}`;
+        } catch (err) {
+          return res.status(400).json({ erro: 'Não consegui obter a duração do vídeo.', desc: err.message });
+        }
+      }
+      
       const updated = await model.update(req.body, { where: { id_aula : id } });
       if (updated) {
         const modelUpdated = await model.findByPk(id);
