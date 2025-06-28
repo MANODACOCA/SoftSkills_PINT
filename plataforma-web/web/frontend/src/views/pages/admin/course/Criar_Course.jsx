@@ -406,7 +406,6 @@ const CreateCourse = () => {
             </div>
         </div>
     );
-
 }
 
 export default CreateCourse;

@@ -66,7 +66,7 @@ controllers.update = async (req,res)=>{
 controllers.delete = async (req,res)=>{
   try {
     const {id} = req.params;
-    const deleted = await model.destroy({where:{id:id}});
+    const deleted = await model.destroy({where:{id_denuncia : id}});
     if(deleted){
       res.status(200).json({msg:'Denuncia apagado/a com sucesso!'});
     }else{
