@@ -13,7 +13,6 @@ const CourseTable = () => {
         try {
             const response = await getCourseAdminLista(); 
             setcursos(response);
-            console.log(response);
         } catch(error) {
             console.log('Erro ao listar Cursos')
         }

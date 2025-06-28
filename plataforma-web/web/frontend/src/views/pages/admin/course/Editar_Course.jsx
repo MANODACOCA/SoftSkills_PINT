@@ -3,9 +3,9 @@ import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
 import { getCategoriaAreaTopico, list_topico, update_topico } from '../../../../api/topico_axios';
 import { create_material_apoio, delete_material_apoio, get_material_apoio, get_material_apoio_curso, list_material_apoio, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { getAulas_Curso, update_aulas, create_aulas, delete_aulas } from '../../../../api/aulas_axios';
-import { get_cursos, update_cursos } from '../../../../api/cursos_axios';
+import { get_cursos, getCoursePopular, update_cursos } from '../../../../api/cursos_axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { formatYearMonthDay } from '../../../components/shared_functions/FunctionsUtils';
+import { calcularHorasCurso, formatYearMonthDay } from '../../../components/shared_functions/FunctionsUtils';
 import { Tab, Tabs } from 'react-bootstrap';
 import './Editar_Course.css';
 import ISO6391 from 'iso-639-1';
@@ -58,14 +58,14 @@ const EditCourse = () => {
     const error = null;
     const successMessage = null;
     const iconMapById = {
-    1: <FaVideo className="text-primary" />,
-    2: <FaFilePdf className="text-danger" />,
-    3: <FaFilePowerpoint className="text-warning" />,
-    4: <FaFileAlt className="text-success" />,
-    5: <FaFileImage className="text-pink-500" />,
-    6: <FaFileAudio className="text-indigo-500" />,
-    7: <FaInfoCircle className="text-cyan-600" />,
-    8: <FaLink className="text-blue-500" />,
+        1: <FaVideo className="text-primary" />,
+        2: <FaFilePdf className="text-danger" />,
+        3: <FaFilePowerpoint className="text-warning" />,
+        4: <FaFileAlt className="text-success" />,
+        5: <FaFileImage className="text-pink-500" />,
+        6: <FaFileAudio className="text-indigo-500" />,
+        7: <FaInfoCircle className="text-cyan-600" />,
+        8: <FaLink className="text-blue-500" />,
     };
 
     //#endregion
@@ -94,6 +94,7 @@ const EditCourse = () => {
         };
     }, [id]);
 
+
     //#region curso
     const fetchCurso = async (id) => {
         try {
@@ -109,15 +110,14 @@ const EditCourse = () => {
                     numero_vagas: response.sincrono.numero_vagas,}));
             }
             console.log(sincrono.numero_vagas);
-            console.log(response);
             setCursos(response);
-
             if (response.idioma) {
                 setSelectedLanguage({
                     value: response.idioma,
                     label: ISO6391.getNativeName(response.idioma)
                 });
             }
+            return response;
         } catch (error) {
             console.log('Erro ao encontrar cursos');
         }
@@ -175,7 +175,6 @@ const EditCourse = () => {
     const fetchFormadores = async () => {
         try {
             const response = await list_formadores();
-            console.log(response);
             setFormadores(response);
         } catch (error) {
             console.log('Erro ao encontrar a lista de formadores', error);
@@ -185,7 +184,6 @@ const EditCourse = () => {
     const fetchCategoriaAreaTopico = async () => {
         try {
             const response = await getCategoriaAreaTopico();
-            console.log(response);
             setCatAreaTop(response);
         } catch (error) {
             console.log('Erro ao encontrar Categorias, Áreas e Tópicos', error);
@@ -329,8 +327,8 @@ const EditCourse = () => {
     const fetchAulas = async (id) => {
         try {
             const response = await getAulas_Curso(id);
-            console.log(response);
             setAulas(response);
+            return response;
         } catch (error) {
             console.log('Erro encontrar as Aulas', error);
         }
@@ -379,7 +377,6 @@ const EditCourse = () => {
     }
 
     const renderActionsAula = (item) => {
-        console.log(item);
         return(
             <div className="d-flex">
                 <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreateAula(item.id_aula, item)}>
@@ -458,8 +455,11 @@ const EditCourse = () => {
                     if(editarAula.isConfirmed && editarAula.value){
                         try {
                             await update_aulas(id, editarAula.value);
-                            await fetchAulas(cursos.id_curso);
-
+                            const aulasCarregadas = await fetchAulas(cursos.id_curso);
+                            if (aulasCarregadas && aulasCarregadas?.length > 0) {
+                                let horas_curso = calcularHorasCurso(aulasCarregadas);
+                                atualizarHorasCursoBD(cursos.id_curso, horas_curso);
+                            }
                             Swal.fire({
                                 icon: "success",
                                 title: "Aula editada com sucesso!",
@@ -523,10 +523,12 @@ const EditCourse = () => {
                     });
                     if(adicionarAula.isConfirmed && adicionarAula.value){
                         try {
-                            console.log(adicionarAula.value);
                             await create_aulas(adicionarAula.value);
-                            await fetchAulas(cursos.id_curso);
-                            
+                            const aulasCarregadas = await fetchAulas(cursos.id_curso);
+                            if (aulasCarregadas && aulasCarregadas?.length > 0) {
+                                let horas_curso = calcularHorasCurso(aulasCarregadas);
+                                atualizarHorasCursoBD(cursos.id_curso, horas_curso);
+                            }
                             Swal.fire({
                                 icon: "success",
                                 title: "Aula adicionada com sucesso!",
@@ -694,7 +696,11 @@ const EditCourse = () => {
         if(result.isConfirmed) {
             try{
                 await delete_aulas(id);
-                await fetchAulas(cursos.id_curso);
+                const aulasCarregadas = await fetchAulas(cursos.id_curso);
+                if (aulasCarregadas && aulasCarregadas?.length > 0) {
+                    let horas_curso = calcularHorasCurso(aulasCarregadas);
+                    atualizarHorasCursoBD(cursos.id_curso, horas_curso);
+                }
                 Swal.fire({
                     icon: "success",
                     title: "Aula excluída com sucesso!",
@@ -705,7 +711,7 @@ const EditCourse = () => {
                 console.error("Erro ao excluir aula:", error);
                 Swal.fire({
                     icon: "error",
-                    title: "Erro",
+                    title: "Elimine os conteúdos!",
                     text: "Não foi possível excluir a aula",
                     timer: 2000,
                     showConfirmButton: false,
@@ -762,7 +768,6 @@ const EditCourse = () => {
     const fetchMaterialApoio = async (id) => {
         try {
             const response = await get_material_apoio_curso(id);
-            console.log(response);
             setMateriais(response);
         } catch (error) {
             console.log('Erro ao listar Material de Apoio', error);
@@ -772,7 +777,6 @@ const EditCourse = () => {
     const fetchFormatos = async () => {
         try {
             const response = await list_tipo_formato();
-            console.log(response);
             setFormato(response);
         } catch (error) {
             console.log('Erro ao encontrar formatos', error);
@@ -1083,13 +1087,34 @@ const EditCourse = () => {
     //#endregion
     
 
+    const atualizarHorasCursoBD = async (id, horas_curso) => {
+        try {
+            await update_cursos(id, {horas_curso: horas_curso});
+            await fetchCurso(id);
+        } catch (error) {
+            console.log('Erro ao atualizar tabela');
+        }
+    }
+
+
     useEffect(() => {
-        fetchFormatos();
-        fetchCategoriaAreaTopico();
-        fetchMaterialApoio(id);
-        fetchFormadores();
-        fetchAulas(id);
-        fetchCurso(id);
+        const carregarDados = async () => {
+            await fetchFormatos();
+            await fetchCategoriaAreaTopico();
+            await fetchMaterialApoio(id);
+            await fetchFormadores();
+            const cursosCarregados = await fetchCurso(id);
+            const aulasCarregadas = await fetchAulas(id);
+            console.log(aulasCarregadas);
+            console.log(cursosCarregados);
+            if (cursosCarregados?.isassincrono && aulasCarregadas && aulasCarregadas?.length > 0) {
+                let horas_curso = calcularHorasCurso(aulasCarregadas);
+                atualizarHorasCursoBD(id, horas_curso);
+            } else if (cursosCarregados?.isassincrono) {
+                atualizarHorasCursoBD(id, 0);
+            }
+        }
+        carregarDados();
     }, []);
 
     return (
@@ -1244,6 +1269,7 @@ const EditCourse = () => {
                             <div className='d-flex flex-column align-items-center'>
                                 <h5 className='m-1 mb-3'>{cursos.nome_curso || 'Nome'}</h5>
                                 <small>Número de inscritos: {cursos.contador_formandos}</small>
+                                <small>Horas de curso: {cursos.horas_curso}</small>
                             </div>
                             <button onClick={handleSubmitCursoImg} type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
                         </div>
