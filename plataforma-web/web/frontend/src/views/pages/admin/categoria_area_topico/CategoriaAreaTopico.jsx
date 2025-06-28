@@ -71,14 +71,11 @@ const CategoriaAreaTopicoTable = () => {
     }, []);
 
     return (
-        <div>
+        <div className="">
             <Table columns={catColumns} data={CatAreaTop} actions={renderActionsCategoria} onAddClick={handleAddEditCategoria} conteudos={renderAreas}/>
-           
+            {/*<Table columns={catColumns} data={} actions={} onAddClick={} conteudos={} /> */}
         </div>
         
-        // <div>
-        //     <Table columns={} data={} actions={} onAddClick={} conteudos={} />
-        // </div>
     );
 }
 

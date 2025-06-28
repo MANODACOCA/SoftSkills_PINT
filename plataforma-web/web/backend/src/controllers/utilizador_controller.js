@@ -171,19 +171,6 @@ controllers.alterarImgPerfil = async (req, res) => {
 controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
-
-    // await NotificacoesComentariosPost.destroy({ where: { id_utilizador: id } });
-    // await Comentario.destroy({ where: { id_utilizador: id } });
-    // await Denuncia.destroy({ where: { id_utilizador: id } });
-    // await Post.destroy({ where: { id_utilizador: id } });
-    // await s_s_o.destroy({ where: { id_utilizador: id } });
-    // await TwofA.destroy({ where: { id_utilizador: id } });
-    // await NotificacoesCurso.destroy({ where: { id_utilizador: id } });
-    // await Favoritos.destroy({ where: { id_formando: id } });
-    // await Formadores.destroy({ where: { id_formador: id } });
-    // await Formandos.destroy({ where: { id_formando: id } });
-    // await GestorAdministrador.destroy({ where: { id_gestor_administrador: id } });
-
     await model.destroy({ where: { id_utilizador: id } });
 
     return res.status(200).json({ mensagem: 'Utilizador apagado com sucesso.' });
