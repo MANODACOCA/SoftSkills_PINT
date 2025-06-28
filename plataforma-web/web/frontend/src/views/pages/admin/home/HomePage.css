@@ -1,0 +1,41 @@
+.card-stat {
+  color: white;
+  height: 100%;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-cursos {
+  background: linear-gradient(135deg, #ffa07a, #ff69b4);
+}
+
+.card-utilizadores {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+}
+
+.card-forum {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+}
+
+.card-queixas {
+    background: linear-gradient(135deg, #43e97b, #38f9d7);
+}
+
+.card-stat::before {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  top: -50px;
+  right: -50px;
+  z-index: 0;
+}
+
+/* garante que o texto aparece a frente da bolinha */
+.card-stat > * {
+  position: relative;
+  z-index: 1;
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { list_utilizador } from "../../../../api/utilizador_axios";
-import { getEnrolledCourses } from "../../../../api/cursos_axios";
+import { getCompletedCourses, getEnrolledCourses } from "../../../../api/cursos_axios";
 import { useParams } from "react-router-dom";
 import { Tab, Tabs } from 'react-bootstrap';
 
@@ -35,7 +35,7 @@ const HistoryUser = () => {
 
     const fetchCompletedCourses = async (userId) => {
         try {
-            const data = await getEnrolledCourses(userId);
+            const data = await getCompletedCourses(userId);
             setCursosTerminados(data);
             console.log(data);
         } catch (error) {
@@ -59,16 +59,22 @@ const HistoryUser = () => {
                             {cursosInscrito.map((cu, index) => {
                                 return(
                                     <div key={index}>
-                                        {cu.data_inscricao}
+                                        {cu.id_curso_curso.nome_curso}
                                     </div>
                                 );
                             })}    
                         </div>
                     </Tab>
-                    <Tab eventKey="cursoTerminado" title="Curso Terminado">
+                    <Tab eventKey="cursoTerminado" title="Cursos Terminados">
                         <div className="mt-4">
                             {/* Terminado */}
-                            
+                            {cursosTerminados.map((cu, index) => {
+                                return(
+                                    <div key={index}>
+                                        {cu.nome_curso}
+                                    </div>
+                                );
+                            })} 
                         </div>
                     </Tab>
                 </Tabs>
