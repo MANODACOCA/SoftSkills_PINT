@@ -13,6 +13,12 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                 {
                     model: sincrono,
                     as: 'sincrono',
+                    include: [
+                        {
+                            model: formadores,
+                            as: 'id_formador_formadore',
+                        }
+                    ]
                 },
                 {
                     model: trabalhos,
