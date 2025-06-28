@@ -1092,7 +1092,7 @@ const EditCourse = () => {
             const cursoAtualizado = await fetchCurso(id);
             let hora = Math.floor(cursoAtualizado.horas_curso);
             let minuto = Math.floor((cursoAtualizado.horas_curso - hora) * 60);
-            const formato = hora + 'h' + minuto + 'min';
+            const formato = hora !== 0 && minuto !== 0 ? `${hora}h ${minuto}min` : hora !== 0 ? `${hora}h` : minuto !== 0 ? `${minuto}h` : 'Tempo inválido';
             setHorasCursoFormato(formato);
         } catch (error) {
             console.log('Erro ao atualizar tabela');

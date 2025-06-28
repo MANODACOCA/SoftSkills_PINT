@@ -5,25 +5,18 @@ import { create_utilizador, delete_utilizador, list_utilizador, update_utilizado
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
-
 const UsersTables = () => {
     const [user, setuser] = useState([]);
     const navigate = useNavigate();
-    const [formador, setFormador] = useState(false);
 
     const FetchUtilizadores = async() => {
         try {
             const response = await list_utilizador();
             setuser(response.data);
-            console.log(response.data);
         } catch(error) {
             console.log('Erro ao aceder a tabela de utilizador');
         }
     }
-
-    const HandleEdit = (id) => {
-        navigate(`/admin/utilizadores/editar/${id}`);
-    };
 
     const HandleBlock = async (id, estado) => {
         const result = await Swal.fire({
@@ -67,15 +60,86 @@ const UsersTables = () => {
         }
     }
 
-    const HistoryUser = (id) => {
-        navigate(`/admin/utilizadores/historico/${id}`);
+    const HistoryUser = async (id, utilizador) => {
+        const result = await Swal.fire({
+            title: `Tem a certeza que deseja consultar o historico de ${utilizador}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        if(result.isConfirmed) {
+            try {
+                navigate(`/admin/utilizadores/historico/${id}`);
+            } catch (error) {
+                Swal.fire({
+                    title: 'Erro',
+                    text: `Ocorreu um erro ao tentar aceder ao historico de utilizador ${utilizador}`,
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                    },
+                });
+            }
+        }
+    }
+
+    const HandleType = async (id, utilizador) => {
+        const result = await Swal.fire({
+            title: `Tem a certeza que deseja alterar ${utilizador} para formador?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        if(result.isConfirmed) {
+            try {
+                await update_utilizador(id, {isformador: true});
+                FetchUtilizadores();
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: `O utilizador passou a ser formador com sucesso`,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                }); 
+            } catch (error) {
+                Swal.fire({
+                    title: 'Erro', 
+                    text: 'Ocorreu um erro atualizar utilizador para formador', 
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                    },
+                });
+            }
+        }
     }
 
     const renderActions = (item) => {
         return(
             <div className="d-flex">
-                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser(item.id_utilizador)}>
-                    <i className="bi bi-clock-history"></i>
+                <button className='btn btn-outline-primary me-2'
+                    disabled={item.isformador}
+                    onClick={() => HandleType(item.id_utilizador, item.nome_utilizador)}>
+                    <i className='bi bi-person-fill-up fs-5'></i>
+                </button>
+                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser(item.id_utilizador, item.nome_utilizador)}>
+                    <i className="bi bi-person-lines-fill fs-5"></i>
                 </button>
                 <button className="btn btn-outline-danger" onClick={() => HandleBlock(item.id_utilizador, item.estado_utilizador)}>
                     <i className={`bi ${item.estado_utilizador ? 'bi-unlock' :  'bi-lock'}`}></i>
@@ -105,11 +169,21 @@ const UsersTables = () => {
                     <input id="nome" class="form-control mb-3" placeholder= "Nome do utilizador">
                     <label for="email" class="form-label">Email do utilizador</label>
                     <input id="email" class="form-control mb-3" placeholder="exemplo@email.com">
+                    <div class="mb-3 text-center">
+                        <h4 class="mb-3">Tipo de Utilizador</h4>
+                        <div class="form-check form-switch d-inline-flex align-items-center justify-content-center mb-2">
+                            <input class="form-check-input me-3" type="checkbox" role="switch" id="formadorSwitch">
+                            <label class="form-check-label" for="formadorSwitch">
+                                Formador
+                            </label>
+                        </div>
+                    </div>
                 `,
                 preConfirm: () => {
                     const nome = document.getElementById('nome').value;
                     const email = document.getElementById('email').value;
-
+                    const formador = document.getElementById('formadorSwitch').checked;
+                    
                     if (!nome || !email) {
                         Swal.showValidationMessage('Todos os campos são obrigatórios!');
                         return;
@@ -118,6 +192,7 @@ const UsersTables = () => {
                     return{
                         nome_utilizador: nome,
                         email,
+                        isformador: formador
                     };
                 },
                 showCancelButton: true,
@@ -130,26 +205,23 @@ const UsersTables = () => {
             });
             if (adicionarUtilizador.isConfirmed && adicionarUtilizador.value) {
                 try {
+                    const formador = adicionarUtilizador.value.isformador;
                     const nome_utilizador = adicionarUtilizador.value.nome_utilizador;
                     const email = adicionarUtilizador.value.email
                     const data = await create_utilizador(nome_utilizador, email);
-                    //const cargo = await update_utilizador(id, {isformador: formador});
-                    console.log(data);
-                    //console.log(cargo);
-                    const users = await FetchUtilizadores();
-                    console.log(users);
+                    await update_utilizador(data.data.id_utilizador, {isformador: formador});
+                    FetchUtilizadores();
                     Swal.fire({
                         icon: "success",
-                        title: "Conteudo adicionado com sucesso!",
+                        title: "Utilizador adicionado com sucesso!",
                         timer: 2000,
                         showConfirmButton: false
                     });
                 } catch (error) {
-                    console.log('Erro ao criar Utlizador');
                     Swal.fire({
                         icon: "error",
                         title: "Erro",
-                        text: "Não foi possível adicionar o conteudo",
+                        text: "Não foi possível adicionar o utilizador",
                         timer: 2000,
                         showConfirmButton: false,
                     });
@@ -164,7 +236,7 @@ const UsersTables = () => {
 
     return(
         <div>
-            <Table columns={columnsUtilizadores} data={user} actions={renderActions} onAddClick={HandleCreate} />
+            <Table columns={columnsUtilizadores} data={user ?? []} actions={renderActions} onAddClick={HandleCreate} />
         </div>
     );
 }

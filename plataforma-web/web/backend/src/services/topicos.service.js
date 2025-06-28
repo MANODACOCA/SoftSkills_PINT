@@ -14,7 +14,7 @@ async function getCategoriaAreaTopico() {
                     {
                         model: topico,
                         as: "topicos",
-                        attributes: ['id_topico', 'id_area', 'nome_topico'],
+                        attributes: ['id_topico', 'id_area', 'nome_topico', 'descricao_top'],
                     }
                 ]
             }

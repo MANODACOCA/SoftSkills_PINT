@@ -77,7 +77,7 @@ controllers.delete = async (req,res)=>{
 controllers.getCategoriaAreaTopico = async (req, res) => {
   try{
     const categoria_area_topico = await topicosService.getCategoriaAreaTopico();
-
+    
     if(categoria_area_topico && categoria_area_topico.length > 0){
       res.status(200).json(categoria_area_topico);
     } else {
