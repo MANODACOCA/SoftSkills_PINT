@@ -5,18 +5,32 @@ import { areaColumns } from "../../../components/table/ColumnsCatAreaTopico";
 import { useParams } from "react-router-dom";
 import { create_topico, getCategoriaAreaTopico, update_topico } from "../../../../api/topico_axios";
 import { create_area } from "../../../../api/area_axios";
+import { get_categoria } from "../../../../api/categoria_axios";
 
 const EditarCategoria = () => {
     const {id}  = useParams();
     const [areas, setAreas] = useState([]);
+    const [categoria, setCategoria] = useState([]);
+
     const fetchCatAreaTop = async () => {
         try {
             const response = await getCategoriaAreaTopico();
+            setCategoria(response);
             const area = response.find((a) => a.id_categoria.toString() == id.toString())?.areas;
             setAreas(area);
             console.log(area);
         } catch (error) {
             console.log('Erro na lista de categoria area e topico!');
+        }
+    }
+
+    const fetchCategoria = async () => {
+        try {
+            const response = await get_categoria(id);
+            setCategoria(response);
+            console.log(response);
+        } catch (error) {
+            console.log('Erro ao carregar Categorias');
         }
     }
 
@@ -290,19 +304,85 @@ const EditarCategoria = () => {
         }
     }
 
-    const handleEditArea = async () => {
-        
+    const handleEditArea = async (areas) => {
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja editar a área?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+        if (result.isConfirmed) {
+            const editarArea = await Swal.fire({
+                title: 'Editar Área',
+                html: ` 
+                    <label for="nome" class="form-label">Nome da Área</label>
+                    <input id="nome" class="form-control mb-3" placeholder= value="${areas.nome_area}">
+                `,
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+
+                    if (!nome) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+
+                    return{
+                        nome_area: nome,
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Editar Área',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+            if (editarArea.isConfirmed && editarArea.value) {
+                try {
+                    const id_area = id;
+                    const nome_area = editarArea.value.nome_area;
+                    await update_area(id_area, { nome_area});
+                    fetchCatAreaTop();
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: `Editado com sucesso`,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Erro ao editar área',
+                        icon: 'error',
+                        confirmButtonText: 'Fechar',
+                        customClass: {
+                            confirmButton: 'btn btn-danger',
+                        },
+                    });
+                    console.error("Erro ao editar área", error);
+                }
+            }
+        } 
     }
     
     useEffect(() => {
         fetchCatAreaTop();
+        fetchCategoria();
     }, []);
 
     return (
         <div className="">
             <div className="mb-4">
                 <label className="form-label fw-bold">Nome da Categoria</label>
-                <input className="form-control" type="text" />    
+                <input className="form-control" type="text" key={categoria.nome_cat} />    
             </div>
             <div>
                 <Table columns={areaColumns} data={areas ?? []} actions={renderActions} onAddClick={handleAddArea} conteudos={renderTopicos} />
