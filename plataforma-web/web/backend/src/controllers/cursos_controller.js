@@ -40,23 +40,6 @@ controllers.create = async (req, res) => {
   }
 };
 
-// controllers.update = async (req, res) => {
-//   try {
-//     if (req.body) {
-//       const updated = await cursosService.updateCursoCompleto(req.body);
-//       if (updated) {
-//         res.status(200).json(updated);
-//       } else {
-//         res.status(404).json({ erro: 'Curso nao foi atualizado/a!' });
-//       }
-//     } else {
-//       res.status(400).json({ erro: 'Erro ao atualizar o/a Curso!', desc: 'Corpo do pedido esta vazio.' });
-//     }
-//   } catch (err) {
-//     res.status(500).json({ erro: 'Erro ao atualizar o/a Curso!', desc: err.message });
-//   }
-// };
-
 controllers.update = async (req, res) => {
   try {
     const id = Number(req.params.id);
@@ -95,6 +78,14 @@ controllers.delete = async (req, res) => {
 
 /*------------------------------------------------------------------------------------------------------------*/
 
+controllers.countCursos = async (req, res) => {
+  try{
+    const total = await model.count();
+    res.status(200).json(total);
+  } catch (error) {
+    res.status(500).json('Erro ao contar cursos');
+  }
+}
 
 controllers.getCursosDisponiveisParaInscricao = async (req, res) => {
   try {

@@ -122,3 +122,15 @@ export const getCategorias = async () => {
     throw error;
   }
 };
+
+
+
+export const forum_contagem = async () => {
+    try{
+        const response = await axios.get(`${API_URL}/count`);
+        return response.data;
+    } catch(error) {
+        console.error('Erro ao contar o numero de topicos no forum criados', error);
+        throw error;
+    }
+}

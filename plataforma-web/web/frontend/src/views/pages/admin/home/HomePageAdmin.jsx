@@ -1,7 +1,24 @@
 import { Link } from 'react-router-dom';
 import './HomePage.css'; 
+import { useEffect, useState } from 'react';
+import { cursos_contagem } from '../../../../api/cursos_axios';
 
 const HomePageAdmin = () => {
+  const [totalCurso, setTotalCurso] = useState(null);
+
+  const countCursos = async () => {
+    try{
+      const response = await cursos_contagem();
+      setTotalCurso(response);
+    } catch (error) {
+      console.log('Erro ao calcular numero cursos!');
+    }
+  }
+
+  useEffect(() => {
+    countCursos();
+  }, [])
+
   return (
     <div className="container py-4">
       <div className="row g-3">
@@ -15,7 +32,7 @@ const HomePageAdmin = () => {
                 </div>
                 <i className="bi bi-graph-up"></i> 
               </div>          
-              <p className="mb-0 opacity-75">Numero de cursos 45%</p>
+              <p className="mb-0 opacity-75">Numero de cursos {totalCurso}</p>
             </div>
           </Link>
         </div>

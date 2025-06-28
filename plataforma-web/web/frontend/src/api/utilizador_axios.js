@@ -123,3 +123,12 @@ export const verificarCodigo = async (email, codigo) => {
     }
 };
 
+export const utilizadores_contagem = async () => {
+    try{
+        const response = await axios.get(`${API_URL}/count`);
+        return response.data;
+    } catch(error) {
+        console.error('Erro ao contar o numero de utilizadores', error);
+        throw error;
+    }
+}
