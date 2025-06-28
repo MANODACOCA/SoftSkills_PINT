@@ -54,3 +54,12 @@ export const delete_denuncia = async (id) => {
 };
 
 
+export const denuncias_contagem = async () => {
+    try{
+        const response = await axios.get(`${API_URL}/count`);
+        return response.data;
+    } catch(error) {
+        console.error('Erro ao contar o numero de denuncias', error);
+        throw error;
+    }
+}
