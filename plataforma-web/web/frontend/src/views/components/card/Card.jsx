@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUsers, FaCalendarAlt } from 'react-icons/fa';
 import './Card.css';
@@ -8,6 +8,13 @@ const Card = ({ image, title, type, startDate, endDate, courseId, membrosAtual, 
 
   const handleClick = () => {
     navigate(`/cursos/${courseId}`);
+  };
+
+  const [img, setImg] = useState(image);
+
+  const handleError = () => {
+    const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(title)}&background=random&bold=true`;
+    setImg(fallback);
   };
 
   return (
@@ -24,9 +31,10 @@ const Card = ({ image, title, type, startDate, endDate, courseId, membrosAtual, 
         </div>
       )}
       <img
-        src={image}
+        src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(title)}&background=random&bold=true`}
         className="card-img-top imgage-card"
         alt={`Imagem do curso ${title}`}
+        onError={handleError}
       />
 
       <div className="card-body p-3 d-flex flex-column justify-content-between">

@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { Card, Button } from 'react-bootstrap';
+import { FaFileAlt, FaInfoCircle } from 'react-icons/fa';
 
-
-const WorkCard = ({ trabalho }) => {
+const WorkCard = ({ trabalho, index, onSubmit }) => {
+    
     return (
-        <Card className="flex items-center justify-between p-6 mb-4 bg-white shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-200">
-            <div className="flex items-center space-x-4">
-                <div className="p-3 bg-blue-50 rounded-lg">
-                    <FileText className="h-6 w-6 text-blue-600" />
+        <Card className="d-flex flex-row align-items-center justify-content-between p-3 mb-4 shadow-sm border">
+            <div className="d-flex align-items-center gap-3">
+                <div className="p-3 bg-light rounded-circle d-flex align-items-center justify-content-center">
+                    <FaFileAlt className="text-primary fs-4" />
                 </div>
                 <div>
-                    <h3 className="font-semibold text-gray-900">{index+1}</h3>
-                    <p className="text-gray-600 text-sm">{trabalho.nome_tr}</p>
+                    <h5 className="mb-1">Trabalho {index + 1}</h5>
+                    <p className="text-muted mb-0">{trabalho.nome_tr}</p>
                 </div>
             </div>
-
-            <Button
-                onClick={onSubmit}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-200"
-            >
-                Entregar
-            </Button>
+            <div>
+                <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm' onClick={onSubmit} variant="primary">
+                    <FaInfoCircle />Mais Informações
+                </Button>
+            </div>
         </Card>
     );
 };

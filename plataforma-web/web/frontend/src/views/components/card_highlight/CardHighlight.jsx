@@ -1,5 +1,6 @@
 import './CardHighlight.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
 import { FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
@@ -38,6 +39,11 @@ const FeaturedCourseCard = ({
     }
   };
 
+  const [img, setImg] = useState(course.imagem);
+  const handleError = () => {
+    const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(title)}&background=random&bold=true`;
+    setImg(fallback);
+  };
 
   const nameFormador = course.nome_formador || "Formador";
   const imageFormador = course.imagem_utilizador && course.imagem_utilizador.trim() !== ''
@@ -59,11 +65,11 @@ const FeaturedCourseCard = ({
     return (
       <div className="card flex-row rounded-4 card-highlight favorite-card position-relative">
         <img
-          src={course.imagem}
+          src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
           className="rounded-start-4 highlight-image"
           alt="imagem curso"
+          onError={handleError}
         />
-
         <div className="card-body d-flex flex-column justify-content-between">
           <div>
             <div className="d-flex justify-content-between align-items-start mb-2">
@@ -109,8 +115,12 @@ const FeaturedCourseCard = ({
 
     return (
       <div className="card flex-row rounded-4 card-highlight evaluation-card">
-        <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" />
-
+      <img
+          src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
+          className="rounded-start-4 highlight-image"
+          alt="imagem curso"
+          onError={handleError}
+        />
         <div className="card-body d-flex flex-column justify-content-between w-100">
           <div className="d-flex justify-content-between align-items-start">
             <h4 className="card-title mb-2">{course.nome_curso}</h4>
@@ -158,7 +168,12 @@ const FeaturedCourseCard = ({
 
     return (
       <div className="card flex-row rounded-4 card-highlight enrolled-card">
-        <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" />
+        <img
+          src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
+          className="rounded-start-4 highlight-image"
+          alt="imagem curso"
+          onError={handleError}
+        />
         <div className="card-body d-flex flex-column justify-content-between w-100">
           <div className="d-flex justify-content-between align-items-start">
             <h4 className="card-title mb-2">{course.nome_curso}</h4>
@@ -198,7 +213,12 @@ const FeaturedCourseCard = ({
   //CARD PARA CURSOS NA HOMEPAGE
   return (
     <div className="card flex-row rounded-4 card-highlight">
-      <img src={course.imagem} className="rounded-start-4 highlight-image" alt="imagem curso" />
+     <img
+          src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
+          className="rounded-start-4 highlight-image"
+          alt="imagem curso"
+          onError={handleError}
+        />
       <div className="card-body d-flex flex-column justify-content-between">
         <div>
           <h4 className="card-title">{course.nome_curso}</h4>
