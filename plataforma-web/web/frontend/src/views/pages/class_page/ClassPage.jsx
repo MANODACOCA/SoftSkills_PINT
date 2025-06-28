@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ClassHeader from '../../components/class_header/ClassHeader';
 import VideoPlayer from '../../components/video_player/VideoPlayer';
 import CourseModule from '../../components/course_module/CourseModule';
-//import TrabalhosList from '../../components/envents_(trabalhos)/trabalhos_list';
+import TrabalhosList from '../../components/envents_(trabalhos)/trabalhos_list';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../api/aulas_axios';
 import {
@@ -44,6 +44,7 @@ const ClassPage = () => {
             setAulas(dados.todasAulas || []);
             setMaterialApoio(dados.materialApoio || []);
             setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
+            setTrabalhos(dados.dadosCurso.trabalhos || []);
 
         } catch (error) {
             console.error("Erro ao carregar aula, conteudos e material de apoio:", error);
@@ -168,7 +169,7 @@ const ClassPage = () => {
                             <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
 
                                 <div className="mt-4">
-                                    <h3>Conteúdos</h3>
+                                    <h3 className='mb-4'>Conteúdos</h3>
                                     {aulas && aulas.length > 0 ? aulas.map((aula, index) => (
                                         <CourseModule
                                             key={aula.id_aula}
@@ -206,7 +207,7 @@ const ClassPage = () => {
                                 {materialApoio && materialApoio.length > 0 ? (
                                     <div className="mt-4">
                                         <h3>Material de Apoio</h3>
-                                        <div className="row g-4 mt-3">
+                                        <div className="row g-4 mt-1">
                                             {materialApoio.map((material) => (
                                                 <div className="col-md-6 col-lg-4" key={material.id_material_apoio}>
                                                     <Card className="h-100 shadow-sm">
@@ -245,10 +246,14 @@ const ClassPage = () => {
                                 <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>}>
 
                                     <div className="mt-4">
-                                        <h3>Trabalhos</h3>
-                                        {trabalhos && trabalhos.length > 0 ? (
-                                            {/* <TrabalhosList /> */}
-                                        ) : (
+                                        <h3 className='mb-4'>Trabalhos</h3>
+                                        {trabalhos && trabalhos.length > 0 ? trabalhos.map((trabalho, index) => (
+                                            <TrabalhosList
+                                                key={trabalho.id_trabalho}
+                                                trabalho={trabalho}
+                                                index={index}
+                                            />
+                                        )) : (
                                             <p>Não há trabalhos programados para este curso no momento.</p>
                                         )
                                         }
@@ -259,7 +264,7 @@ const ClassPage = () => {
                             <Tab eventKey="sobre" title={<span className='fw-bold'>SOBRE</span>}>
                                 {curso ? (
                                     <div className="mt-4">
-                                        <h3>Sobre o Curso</h3>
+                                        <h3 className='mb-4'>Sobre o Curso</h3>
                                         <p className="mt-3">{curso.descricao_curso}</p>
 
                                         {curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore && (

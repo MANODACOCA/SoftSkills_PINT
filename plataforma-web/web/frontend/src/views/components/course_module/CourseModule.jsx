@@ -31,7 +31,7 @@ const iconMapById = {
 };
 
 const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onChangeAula, cursoTipo }) => {
-  console.log(module);
+
   const [isExpanded, setIsExpanded] = useState(false);
 
   const getIconById = (id) => {
@@ -49,7 +49,7 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
   return (
     <div className="mb-3 border rounded-4 shadow-sm">
       <button
-        className={`w-100 text-start border-0 px-3 py-3 d-flex justify-content-between align-items-center rounded-top-4 ${usarAulaAtualId && module.id === aulaAtualId ? 'bg-secondary bg-opacity-75 text-white' : 'bg-light rounded-bottom-4'}`}
+        className={`w-100 text-start border-0 px-3 py-3 d-flex justify-content-between align-items-center rounded-4 ${usarAulaAtualId && module.id === aulaAtualId ? 'bg-secondary bg-opacity-75 text-white' : 'bg-light'}`}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="d-flex align-items-center gap-3">
@@ -126,13 +126,13 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
               <IoTimeSharp />
               <strong>
                 {module.tempo_duracao?.hours > 0
-                ? `${module.tempo_duracao.hours} : ${String(module.tempo_duracao.minutes || 0).padStart(2, '0')} : ${String(module.tempo_duracao.seconds || 0).padStart(2, '0')}`
-                : module.tempo_duracao?.minutes > 0
-                ? `${module.tempo_duracao.minutes} : ${String(module.tempo_duracao.seconds || 0).padStart(2, '0')}`
-                : module.tempo_duracao?.seconds > 0
-                ? `${module.tempo_duracao.seconds}`
-                : `Tempo Inválido`
-                } 
+                  ? `${module.tempo_duracao.hours} : ${String(module.tempo_duracao.minutes || 0).padStart(2, '0')} : ${String(module.tempo_duracao.seconds || 0).padStart(2, '0')}`
+                  : module.tempo_duracao?.minutes > 0
+                    ? `${module.tempo_duracao.minutes} : ${String(module.tempo_duracao.seconds || 0).padStart(2, '0')}`
+                    : module.tempo_duracao?.seconds > 0
+                      ? `${module.tempo_duracao.seconds}`
+                      : `Tempo Inválido`
+                }
               </strong>
             </div>
           </div>
@@ -145,8 +145,8 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
           {module.aulas && module.aulas.length > 0 ? (
             <div className="list-group">
               {module.aulas.map((aula) => (
-                <a href={aula.conteudo} target='blank' className='text-decoration-none'>
-                  <div key={aula.id} className="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
+                <a key={aula.id} href={aula.conteudo} target='blank' className='text-decoration-none'>
+                  <div className="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3">
                     <div className="d-flex  align-items-center">
                       <span className="me-3 fs-5">
                         {getIconById(aula.tipo)}

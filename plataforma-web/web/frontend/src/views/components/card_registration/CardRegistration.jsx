@@ -18,6 +18,12 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
   const [dadosInscricao, setDadosInscricao] = useState(null);
   const [inscrito, setInscrito] = useState(false);
 
+  const [img, setImg] = useState(course?.imagem);
+
+  const handleError = () => {
+    const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
+    setImg(fallback);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -92,7 +98,11 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
 
   return (
     <div className="enrollment-card rounded-4">
-      <img src={course.imagem} alt={`Imagem do curso ${course.nome_curso}`} className="card-img-top enrollment-image-vertical" />
+      <img src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
+        alt={`Imagem do curso ${course.nome_curso}`} 
+        className="card-img-top enrollment-image-vertical"
+        onError={handleError}
+      />
 
       <div className="card-body d-flex flex-column">
         <div className="enrollment-details">
