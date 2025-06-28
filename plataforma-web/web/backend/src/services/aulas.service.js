@@ -1,7 +1,7 @@
 
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { aulas, material_apoio, conteudos, tipo_formato, cursos, trabalhos } = require('../models/init-models')(sequelize);
+const { aulas, material_apoio, conteudos, tipo_formato, cursos, trabalhos, formadores, sincrono, utilizador } = require('../models/init-models')(sequelize);
 
 //Vamos aos cursos inscritos para ir para a pagina de curso com aula ->  
 async function getAulasAndMateriaApoioForCurso(cursoId) {
@@ -9,6 +9,29 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
         const dadosCurso = await cursos.findOne({
             where: { id_curso: cursoId },
             include: [
+                {
+                    model: sincrono,
+                    as: 'sincrono',
+                    include: [
+                        {
+                            model: formadores,
+                            as: 'id_formador_formadore',
+                            include: [
+                                {
+                                    model: utilizador,
+                                    as: 'id_formador_utilizador',
+                                    attributes: [
+                                        [sequelize.col('id_utilizador'), 'id_util'],
+                                        [sequelize.col('nome_utilizador'), 'nome_util'],
+                                        'email',
+                                        [sequelize.col('telemovel'), 'tel_util'],
+                                        [sequelize.col('img_perfil'), 'img_util'],
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     model: trabalhos,
                     as: 'trabalhos',

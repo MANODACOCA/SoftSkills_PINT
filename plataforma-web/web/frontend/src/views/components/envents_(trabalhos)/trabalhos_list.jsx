@@ -1,8 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
 import { FaFileAlt, FaInfoCircle } from 'react-icons/fa';
 
 const WorkCard = ({ trabalho, index, onSubmit }) => {
+    const navigate = useNavigate();
+
+    const onClick = () => {
+        navigate(`?tab=eventos&trabalho=${trabalho.id_trabalho}`);
+    };
     
     return (
         <Card className="d-flex flex-row align-items-center justify-content-between p-3 mb-4 shadow-sm border">
@@ -16,7 +22,7 @@ const WorkCard = ({ trabalho, index, onSubmit }) => {
                 </div>
             </div>
             <div>
-                <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm' onClick={onSubmit} variant="primary">
+                <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm' onClick={onClick} variant="primary">
                     <FaInfoCircle />Mais Informações
                 </Button>
             </div>

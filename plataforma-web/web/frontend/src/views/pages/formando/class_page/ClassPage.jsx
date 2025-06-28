@@ -1,10 +1,11 @@
 import './ClassPage.css';
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import ClassHeader from '../../../components/class_header/ClassHeader';
 import VideoPlayer from '../../../components/video_player/VideoPlayer';
 import CourseModule from '../../../components/course_module/CourseModule';
 import TrabalhosList from '../../../components/envents_(trabalhos)/trabalhos_list';
+import TrabalhosEntrega from '../../../components/envents_(trabalhos)/trabalhos_entrega';
 import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../../api/aulas_axios';
 import {
@@ -23,10 +24,11 @@ import {
 
 
 const ClassPage = () => {
+
     const navigate = useNavigate();
     const [curso, setCurso] = useState(null);
     const [aulas, setAulas] = useState([]);
-    const [aulaAtual, setAulaAtual] = useState(null); // Add state for current class
+    const [aulaAtual, setAulaAtual] = useState(null);//aula atual
     const [materialApoio, setMaterialApoio] = useState([]);
     const [trabalhos, setTrabalhos] = useState([]);
     const [carregar, setCarregar] = useState(true);
@@ -34,12 +36,18 @@ const ClassPage = () => {
 
     const { cursoId } = useParams();
 
+    const [searchParams, setSearchParams] = useSearchParams();
+    const activeTab = searchParams.get('tab');
+
+    const trabalhoIdSelecionado = searchParams.get('trabalho');
+    const trabalhoSelecionado = trabalhos.find(t => t.id_trabalho.toString() === trabalhoIdSelecionado);
+
     const carregarAulasEMaterialApoio = async () => {
         try {
             setCarregar(true);
 
             const dados = await getAulasAndMateriaApoioForCurso(cursoId);
-
+            console.log(dados);
             setCurso(dados.dadosCurso || []);
             setAulas(dados.todasAulas || []);
             setMaterialApoio(dados.materialApoio || []);
@@ -125,181 +133,200 @@ const ClassPage = () => {
     }, [aulaAtual]);
 
     return (
-        <div className="container-fluid pt-4">
-
-            <div className="row">
-                <div className="col-12">
-                    <ClassHeader
-                        nomeCurso={nomeCurso}
-                        tipo={tipoCurso}
-                        totalAulas={numeroAulas}
-                        tempoTotal={tempoTotal}
-                        onPrevious={handlePrevious}
-                        onNext={handleNext}
-                        cursoTipo={curso?.issincrono ? 'sincrono' : 'assincrono'}
-                    />
+        <>
+            {carregar ? (
+                <div className="text-center py-5">
+                    <Spinner animation="border" />
                 </div>
-            </div>
+            ) : (
+                <div className="container-fluid pt-4">
 
-            <div className="col-12">
-                {carregar ? (
-                    <div className="text-center py-5">
-                        <Spinner animation="border" />
+                    <div className="row">
+                        <div className="col-12">
+                            <ClassHeader
+                                nomeCurso={nomeCurso}
+                                tipo={tipoCurso}
+                                totalAulas={numeroAulas}
+                                tempoTotal={tempoTotal}
+                                onPrevious={handlePrevious}
+                                onNext={handleNext}
+                                cursoTipo={curso?.issincrono ? 'sincrono' : 'assincrono'}
+                            />
+                        </div>
                     </div>
-                ) : (
-                    <>
-                        {tipoCurso === 'Assíncrono' && (
-                            <VideoPlayer
-                                key={videoUrl}
-                                videoUrl={videoUrl}
-                                erro={erro}
-                            />
-                        )}
-                        {tipoCurso === 'Síncrono' && (
-                            <img
-                                className='rounded-4'
-                                src={imagemCurso} alt="imagem do curso"
-                                style={{ width: "100%", height: "575px", objectFit: "cover" }}
-                            />
-                        )}
 
-                        <h3 className="mb-3 mt-3">{tituloAula}</h3>
-
-                        <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs">
-                            <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
-
-                                <div className="mt-4">
-                                    <h3 className='mb-4'>Conteúdos</h3>
-                                    {aulas && aulas.length > 0 ? aulas.map((aula, index) => (
-                                        <CourseModule
-                                            key={aula.id_aula}
-                                            module={{
-                                                id: aula.id_aula,
-                                                title: aula.nome_aula,
-                                                tempo_duracao: aula.tempo_duracao,
-                                                conteudo: aula.caminho_url,
-                                                dataAula: aula.data_aula,
-                                                aulas: aula.conteudos.map(c => ({
-                                                    id: c.id_conteudo,
-                                                    titulo: c.nome_conteudo,
-                                                    tipo: c.id_formato,
-                                                    conteudo: c.conteudo
-                                                }))
-                                            }}
-                                            index={index}
-                                            aulaAtualId={aulaAtual?.id_aula}
-                                            usarAulaAtualId
-                                            onChangeAula={() => {
-                                                if (curso.issincrono) {
-                                                    setAulaAtual(aula);
-                                                } else {
-                                                    setAulaAtual(aula);
-                                                    window.scrollTo(0, 0);
-                                                }
-                                            }}
-                                            cursoTipo={curso.issincrono ? 'sincrono' : 'assincrono'}
-                                        />
-                                    )) : "Sem aulas disponíveis para este curso."}
-                                </div>
-                            </Tab>
-
-                            <Tab eventKey="material" title={<span className='fw-bold'>MATERIAL DE APOIO</span>}>
-                                {materialApoio && materialApoio.length > 0 ? (
-                                    <div className="mt-4">
-                                        <h3>Material de Apoio</h3>
-                                        <div className="row g-4 mt-1">
-                                            {materialApoio.map((material) => (
-                                                <div className="col-md-6 col-lg-4" key={material.id_material_apoio}>
-                                                    <Card className="h-100 shadow-sm">
-                                                        <Card.Body>
-                                                            <div className="d-flex align-items-center mb-3">
-                                                                {renderIconoFormato(material.id_formato)}
-                                                                <h5 className="mb-0 ms-2">
-                                                                    Material {material.id_material_apoio}
-                                                                </h5>
-                                                            </div>
-                                                            <Card.Text>
-                                                                {material.conteudo}
-                                                            </Card.Text>
-                                                            <div className='text-end'>
-                                                                <a
-                                                                    href={material.conteudo}
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    className="btn btn-primary btn-sm mt-2"
-                                                                >
-                                                                    Acessar Link
-                                                                </a>
-                                                            </div>
-                                                        </Card.Body>
-                                                    </Card>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <p className="mt-4">Não há material de apoio disponível para esta aula.</p>
+                    <div className="col-12">
+                        {carregar ? (
+                            <div className="text-center py-5">
+                                <Spinner animation="border" />
+                            </div>
+                        ) : (
+                            <>
+                                {tipoCurso === 'Assíncrono' && (
+                                    <VideoPlayer
+                                        key={videoUrl}
+                                        videoUrl={videoUrl}
+                                        erro={erro}
+                                    />
                                 )}
-                            </Tab>
+                                {tipoCurso === 'Síncrono' && (
+                                    <img
+                                        className='rounded-4'
+                                        src={imagemCurso} alt="imagem do curso"
+                                        style={{ width: "100%", height: "575px", objectFit: "cover" }}
+                                    />
+                                )}
 
-                            {curso.issincrono && (
-                                <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>}>
+                                <h3 className="mb-3 mt-3">{tituloAula}</h3>
 
-                                    <div className="mt-4">
-                                        <h3 className='mb-4'>Trabalhos</h3>
-                                        {trabalhos && trabalhos.length > 0 ? trabalhos.map((trabalho, index) => (
-                                            <TrabalhosList
-                                                key={trabalho.id_trabalho}
-                                                trabalho={trabalho}
-                                                index={index}
-                                            />
-                                        )) : (
-                                            <p>Não há trabalhos programados para este curso no momento.</p>
-                                        )
-                                        }
-                                    </div>
-                                </Tab>
-                            )}
+                                <Tabs defaultActiveKey="aulas"
+                                    className="mb-4 nav-justified custom-tabs"
+                                    activeKey={activeTab}
+                                    onSelect={(tab) => setSearchParams({ tab: tab })}
+                                >
+                                    <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
 
-                            <Tab eventKey="sobre" title={<span className='fw-bold'>SOBRE</span>}>
-                                {curso ? (
-                                    <div className="mt-4">
-                                        <h3 className='mb-4'>Sobre o Curso</h3>
-                                        <p className="mt-3">{curso.descricao_curso}</p>
+                                        <div className="mt-4">
+                                            <h3 className='mb-4'>Conteúdos</h3>
+                                            {aulas && aulas.length > 0 ? aulas.map((aula, index) => (
+                                                <CourseModule
+                                                    key={aula.id_aula}
+                                                    module={{
+                                                        id: aula.id_aula,
+                                                        title: aula.nome_aula,
+                                                        tempo_duracao: aula.tempo_duracao,
+                                                        conteudo: aula.caminho_url,
+                                                        dataAula: aula.data_aula,
+                                                        aulas: aula.conteudos.map(c => ({
+                                                            id: c.id_conteudo,
+                                                            titulo: c.nome_conteudo,
+                                                            tipo: c.id_formato,
+                                                            conteudo: c.conteudo
+                                                        }))
+                                                    }}
+                                                    index={index}
+                                                    aulaAtualId={aulaAtual?.id_aula}
+                                                    usarAulaAtualId
+                                                    onChangeAula={() => {
+                                                        if (curso.issincrono) {
+                                                            setAulaAtual(aula);
+                                                        } else {
+                                                            setAulaAtual(aula);
+                                                            window.scrollTo(0, 0);
+                                                        }
+                                                    }}
+                                                    cursoTipo={curso.issincrono ? 'sincrono' : 'assincrono'}
+                                                />
+                                            )) : "Sem aulas disponíveis para este curso."}
+                                        </div>
+                                    </Tab>
 
-                                        {curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore && (
+                                    <Tab eventKey="material" title={<span className='fw-bold'>MATERIAL DE APOIO</span>}>
+                                        {materialApoio && materialApoio.length > 0 ? (
                                             <div className="mt-4">
-                                                <h3>Formador</h3>
-                                                <div className="d-flex align-items-start mt-3">
-                                                    <div className="me-3">
-                                                        <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
-                                                            <FaUserTie className="text-white fs-3" />
+                                                <h3>Material de Apoio</h3>
+                                                <div className="row g-4 mt-1">
+                                                    {materialApoio.map((material) => (
+                                                        <div className="col-md-6 col-lg-4" key={material.id_material_apoio}>
+                                                            <Card className="h-100 shadow-sm">
+                                                                <Card.Body>
+                                                                    <div className="d-flex align-items-center mb-3">
+                                                                        {renderIconoFormato(material.id_formato)}
+                                                                        <h5 className="mb-0 ms-2">
+                                                                            Material {material.id_material_apoio}
+                                                                        </h5>
+                                                                    </div>
+                                                                    <Card.Text>
+                                                                        {material.conteudo}
+                                                                    </Card.Text>
+                                                                    <div className='text-end'>
+                                                                        <a
+                                                                            href={material.conteudo}
+                                                                            target="_blank"
+                                                                            rel="noopener noreferrer"
+                                                                            className="btn btn-primary btn-sm mt-2"
+                                                                        >
+                                                                            Acessar Link
+                                                                        </a>
+                                                                    </div>
+                                                                </Card.Body>
+                                                            </Card>
                                                         </div>
-                                                    </div>
-                                                    <div>
-                                                        <h4>
-                                                            {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
-                                                        </h4>
-                                                        <p className="text-muted mb-3">
-                                                            {curso.sincrono.id_formador_formadore.email_formador || ""}
-                                                        </p>
-                                                        <p>
-                                                            {curso.sincrono.id_formador_formadore.descricao_formador || "Sem descrição disponível para este formador."}
-                                                        </p>
-                                                    </div>
+                                                    ))}
                                                 </div>
                                             </div>
+                                        ) : (
+                                            <p className="mt-4">Não há material de apoio disponível para esta aula.</p>
                                         )}
-                                    </div>
-                                ) : (
-                                    <p className="mt-4">Informações não disponíveis para este curso.</p>
-                                )}
-                            </Tab>
-                        </Tabs>
-                    </>
-                )}
-            </div>
-        </div >
+                                    </Tab>
+
+                                    {curso.issincrono && (
+                                        <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>}>
+                                            <div className="mt-4">
+                                                <h3 className='mb-4'>Trabalhos</h3>
+                                                {trabalhoIdSelecionado ? (
+                                                    <TrabalhosEntrega
+                                                        trabalho={trabalhoSelecionado}
+                                                    />
+                                                ) : (
+                                                    <>
+                                                        {trabalhos && trabalhos.length > 0 ? trabalhos.map((trabalho, index) => (
+                                                            <TrabalhosList
+                                                                key={trabalho.id_trabalho}
+                                                                trabalho={trabalho}
+                                                                index={index}
+                                                            />
+                                                        )) : (
+                                                            <p>Não há trabalhos programados para este curso no momento.</p>
+                                                        )
+                                                        }
+                                                    </>
+                                                )}
+                                            </div>
+                                        </Tab>
+                                    )}
+
+                                    <Tab eventKey="sobre" title={<span className='fw-bold'>SOBRE</span>}>
+                                        {curso ? (
+                                            <div className="mt-4">
+                                                <h3 className='mb-4'>Sobre o Curso</h3>
+                                                <p className="mt-3">{curso.descricao_curso}</p>
+
+                                                {curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore && (
+                                                    <div className="mt-4">
+                                                        <h3>Formador</h3>
+                                                        <div className="d-flex align-items-start mt-3">
+                                                            <div className="me-3">
+                                                                <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
+                                                                    <FaUserTie className="text-white fs-3" />
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <h4>
+                                                                    {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
+                                                                </h4>
+                                                                <p className="text-muted mb-3">
+                                                                    {curso.sincrono.id_formador_formadore.email_formador || ""}
+                                                                </p>
+                                                                <p>
+                                                                    {curso.sincrono.id_formador_formadore.descricao_formador || "Sem descrição disponível para este formador."}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <p className="mt-4">Informações não disponíveis para este curso.</p>
+                                        )}
+                                    </Tab>
+                                </Tabs>
+                            </>
+                        )}
+                    </div>
+                </div >
+            )}
+        </>
     );
 };
 
