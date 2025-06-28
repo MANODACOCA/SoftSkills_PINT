@@ -93,7 +93,7 @@ function App() {
           <Route path='/admin/cursos/criar' element={<CreateCourse />} />
           <Route path='/admin/cursos/editar/:id' element={<EditCourse />} />
           <Route path='/admin/utilizadores/historico/:id' element={<HistoryUser />} />
-          <Route path= '/categoria' element={<CategoriaAreaTopicoTable />}/>
+          <Route path= '/admin/categorias' element={<CategoriaAreaTopicoTable />}/>
           {/* admin */}
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
