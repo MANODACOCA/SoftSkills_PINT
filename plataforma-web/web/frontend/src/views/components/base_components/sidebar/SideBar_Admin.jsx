@@ -93,20 +93,6 @@ const SidebarAdmin = ({ toggleSidebar, collapsed }) => {
                             </div>
                         }
                     </NavLink>
-                    {/* <NavLink to="/forum" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
-                        {!effectiveCollapsed && 
-                            <div className='d-flex align-items-center'>
-                                <i className="bi bi-chat-dots fs-4 px-2"></i>
-                                Estatísticas
-                            </div>
-                        }
-                        {effectiveCollapsed && 
-                            <div className='d-flex flex-column align-items-center m-0'>
-                                <i className="bi bi-chat-dots fs-4 px-2"></i>
-                                <small className='text-truncate d-inline-block text-ellipsis'>Estatísticas</small>
-                            </div>
-                        }
-                    </NavLink> */}
                     <NavLink to="/admin/utilizadores" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
                             <div className='d-fl-center'>
@@ -121,6 +107,22 @@ const SidebarAdmin = ({ toggleSidebar, collapsed }) => {
                             </div>
                         }
                     </NavLink>
+                    <hr />
+                    { <NavLink to="/dddddd" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
+                        {!effectiveCollapsed && 
+                            <div className='d-flex align-items-center'>
+                                <i className="bi bi-tag fs-4 px-2"></i>
+                            Categorias   
+                            </div>
+                        }
+                        {effectiveCollapsed && 
+                            <div className='d-flex flex-column align-items-center m-0'>
+                                <i className="bi bi-tag fs-4 px-2"></i>
+                                <small className='text-truncate d-inline-block text-ellipsis'>Categorias</small>
+                            </div>
+                        }
+                    </NavLink>}
+                    <hr />
                     {/* <hr />
                     <NavLink to="/forum" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
