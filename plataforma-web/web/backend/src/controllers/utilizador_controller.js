@@ -117,6 +117,15 @@ controllers.update = async (req, res) => { // atualizar e isnerir um novo utiliz
   }
 };
 
+controllers.countUtilizadores = async (req, res) => {
+  try{
+    const total = await model.count();
+    res.status(200).json(total);
+  } catch (error) {
+    res.status(500).json('Erro ao contar utilizadores');
+  }
+}
+
 controllers.alterarImgPerfil = async (req, res) => {
   uploadProfileImg.single('imagem')(req, res, async (error) => {
     try {

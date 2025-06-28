@@ -1,6 +1,6 @@
 import './FavoriteCourses.css';
-import FeaturedCourseCard from '../../components/card_highlight/CardHighlight';
-import { getFavoriteCourses } from '../../../api/cursos_axios';
+import FeaturedCourseCard from '../../../components/card_highlight/CardHighlight';
+import { getFavoriteCourses } from '../../../../api/cursos_axios';
 import React, { useState, useEffect } from 'react';
 
 const FavoriteCourses = () => {

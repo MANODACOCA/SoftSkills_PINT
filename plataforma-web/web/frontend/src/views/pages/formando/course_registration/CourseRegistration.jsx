@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import EnrollmentCard from '../../components/card_registration/CardRegistration';
-import CourseModule from '../../components/course_module/CourseModule';
-import ScrollableSection from '../../components/scrollable_section/ScrollableSection';
-import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
+import EnrollmentCard from '../../../components/card_registration/CardRegistration';
+import CourseModule from '../../../components/course_module/CourseModule';
+import ScrollableSection from '../../../components/scrollable_section/ScrollableSection';
+import { formatDayMonthYear } from '../../../components/shared_functions/FunctionsUtils';
 import { FaVideo, FaUsers, FaCalendarAlt } from 'react-icons/fa';
-import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
+import { getCursosDisponiveisParaInscricao } from '../../../../api/cursos_axios';
 import './CourseRegistration.css';
 
 const CourseRegistration = () => {

@@ -81,6 +81,15 @@ controllers.delete = async (req,res)=>{
 
 /*------------------------------------------------------------------------------------------------------------*/
 
+controllers.countForum = async (req, res) => {
+  try{
+    const total = await model.count();
+    res.status(200).json(total);
+  } catch (error) {
+    res.status(500).json('Erro ao contar Foruns');
+  }
+}
+
 controllers.getPostsByConteudoPartilhado = async (req, res) => {
     try {
         const { id } = req.params;

@@ -77,4 +77,13 @@ controllers.delete = async (req,res)=>{
   }
 };
 
+controllers.countDenuncias = async (req, res) => {
+  try{
+    const total = await model.count();
+    res.status(200).json(total);
+  } catch (error) {
+    res.status(500).json('Erro ao contar denuncias');
+  }
+}
+
 module.exports = controllers;

@@ -26,5 +26,6 @@ router.delete('/delete/:id',controller.delete);
 router.get('/filtros', controller.listarConteudosFiltrados);
 router.get('/foruns', controller.getForuns);
 router.get('/:id/posts', controller.getPostsByConteudoPartilhado);
+router.get('/count', controller.countForum);
 
 module.exports = router;

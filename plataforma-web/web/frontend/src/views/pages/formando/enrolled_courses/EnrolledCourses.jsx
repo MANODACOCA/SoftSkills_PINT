@@ -1,8 +1,8 @@
 import './EnrolledCourses.css';
-import FeaturedCourseCard from '../../components/card_highlight/CardHighlight';
-import SpinnerBorder from '../../components/spinner-border/spinner-border';
-import { getEnrolledCourses } from '../../../api/cursos_axios';
-import { useUser } from '../../../utils/userContext';
+import FeaturedCourseCard from '../../../components/card_highlight/CardHighlight';
+import SpinnerBorder from '../../../components/spinner-border/spinner-border';
+import { getEnrolledCourses } from '../../../../api/cursos_axios';
+import { useUser } from '../../../../utils/userContext';
 import React, { useState, useEffect } from 'react';
 
 const EnrolledCourses = () => {

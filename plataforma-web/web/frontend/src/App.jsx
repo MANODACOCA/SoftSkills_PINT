@@ -13,23 +13,23 @@ import CreateAccout from './views/components/login_comp/create_account/createAcc
 
 //pages
 import LoginPage from './views/pages/login_basePage/login_basePage';
-import BaseLayout from './views/pages/base/BaseLayout';
-import NotFoundPage from './views/pages/page_not_found/PageNotFound';
+import BaseLayout from './views/pages/base/layout/BaseLayout.jsx';
+import NotFoundPage from './views/pages/base/page_not_found/PageNotFound';
 import HomePage from './views/pages/home/homepage';
-import EnrolledCourses from './views/pages/enrolled_courses/EnrolledCourses';
+import EnrolledCourses from './views/pages/formando/enrolled_courses/EnrolledCourses';
 import NotificationPage from './views/pages/notifications/notificationsPage';
 import Forum from './views/pages/forum/forum';
-import CompletedCourses from './views/pages/completed_courses/CompletedCourses';
-import FavoriteCourses from './views/pages/favorite_courses/FavoriteCourses';
+import CompletedCourses from './views/pages/formando/completed_courses/CompletedCourses';
+import FavoriteCourses from './views/pages/formando/favorite_courses/FavoriteCourses';
 import CursosPage from './views/pages/courses/CursosPage';
 import ForumPosts from './views/pages/forum/post/post';
 import ConteudosList from './views/pages/forum/post/conteudos_posts';
 import CPlusPlusPage from './views/pages/forum/post/post';
 import PostComments from './views/pages/forum/post/coments/comment';
-import CourseRegistration from './views/pages/course_registration/CourseRegistration';
+import CourseRegistration from './views/pages/formando/course_registration/CourseRegistration';
 import EditProfile from './views/pages/profile/profile';
-import ClassPage from './views/pages/class_page/ClassPage';
 import InfoProfile from './views/pages/profile/infoprofile';
+import ClassPage from './views/pages/formando/class_page/ClassPage';
 
 //Admin 
 import HomePageAdmin from './views/pages/admin/home/HomePageAdmin.jsx';
