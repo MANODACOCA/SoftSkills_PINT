@@ -23,7 +23,7 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                                     attributes: [
                                         [sequelize.col('id_utilizador'), 'id_util'],
                                         [sequelize.col('nome_utilizador'), 'nome_util'],
-                                        [sequelize.col('email'), 'email_util'],
+                                        'email',
                                         [sequelize.col('telemovel'), 'tel_util'],
                                         [sequelize.col('img_perfil'), 'img_util'],
                                     ]
