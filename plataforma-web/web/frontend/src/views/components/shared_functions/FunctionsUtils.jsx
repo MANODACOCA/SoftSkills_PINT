@@ -123,6 +123,7 @@ export const calcularHorasCurso = (aulas) => {
       }      
     }
   }
+  
   hrsAula = hrsAula + (minAulas/60) + (secAulas/3600);
 
   return parseFloat(hrsAula.toFixed(2));

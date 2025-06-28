@@ -67,6 +67,7 @@ const EditCourse = () => {
         7: <FaInfoCircle className="text-cyan-600" />,
         8: <FaLink className="text-blue-500" />,
     };
+    const [horasCursoFormato, setHorasCursoFormato] = useState();
 
     //#endregion
     
@@ -1084,17 +1085,21 @@ const EditCourse = () => {
             [name]: updateValue,
         }));
     };
-    //#endregion
-    
 
     const atualizarHorasCursoBD = async (id, horas_curso) => {
         try {
             await update_cursos(id, {horas_curso: horas_curso});
-            await fetchCurso(id);
+            const cursoAtualizado = await fetchCurso(id);
+            let hora = Math.floor(cursoAtualizado.horas_curso);
+            let minuto = Math.floor((cursoAtualizado.horas_curso - hora) * 60);
+            const formato = hora + 'h' + minuto + 'min';
+            setHorasCursoFormato(formato);
         } catch (error) {
             console.log('Erro ao atualizar tabela');
         }
     }
+
+    //#endregion
 
 
     useEffect(() => {
@@ -1117,6 +1122,7 @@ const EditCourse = () => {
         carregarDados();
     }, []);
 
+    
     return (
         <div className='form-group'>
             {error && <div className="alert alert-danger mt-2">{error}</div>}
@@ -1269,7 +1275,7 @@ const EditCourse = () => {
                             <div className='d-flex flex-column align-items-center'>
                                 <h5 className='m-1 mb-3'>{cursos.nome_curso || 'Nome'}</h5>
                                 <small>Número de inscritos: {cursos.contador_formandos}</small>
-                                <small>Horas de curso: {cursos.horas_curso}</small>
+                                <small>Horas de curso: {horasCursoFormato}</small>
                             </div>
                             <button onClick={handleSubmitCursoImg} type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
                         </div>

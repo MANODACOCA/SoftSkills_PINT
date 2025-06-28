@@ -66,11 +66,18 @@ const UsersTables = () => {
         }
     }
 
+    const HistoryUser = (id) => {
+        navigate(`/admin/utilizadores/historico/${id}`);
+    }
+
     const renderActions = (item) => {
         return(
             <div className="d-flex">
                 <button className="btn btn-outline-primary me-2" onClick={() => HandleEdit(item.id_utilizador)}>
                     <i className="bi bi-pencil"></i>
+                </button>
+                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser(item.id_utilizador)}>
+                    <i className="bi bi-clock-history"></i>
                 </button>
                 <button className="btn btn-outline-danger" onClick={() => HandleBlock(item.id_utilizador, item.estado_utilizador)}>
                     <i className={`bi ${item.estado_utilizador ? 'bi-unlock' :  'bi-lock'}`}></i>

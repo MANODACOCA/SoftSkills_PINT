@@ -40,6 +40,7 @@ import ForumTable from './views/pages/admin/forum/forumTable.jsx';
 import CreateCourse from './views/pages/admin/course/Criar_Course.jsx';
 import EditCourse from './views/pages/admin/course/Editar_Course.jsx';
 import EditUser from './views/pages/admin/user/Editar_User.jsx';
+import HistoryUser from './views/pages/admin/user/Historico_User.jsx';
 
 function App() {
 
@@ -92,6 +93,7 @@ function App() {
           <Route path='/admin/cursos/criar' element={<CreateCourse />} />
           <Route path='/admin/cursos/editar/:id' element={<EditCourse />} />
           <Route path='/admin/utilizadores/editar/:id' element={<EditUser />} />
+          <Route path='/admin/utilizadores/historico/:id' element={<HistoryUser />} />
           {/* admin */}
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
