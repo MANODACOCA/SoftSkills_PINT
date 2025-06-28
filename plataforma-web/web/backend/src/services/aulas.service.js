@@ -20,7 +20,13 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                                 {
                                     model: utilizador,
                                     as: 'id_formador_utilizador',
-                                    attributes: ['id_utilizador', 'nome_utilizador', 'email', 'telemovel', 'img_perfil'],
+                                    attributes: [
+                                        [sequelize.col('id_utilizador'), 'id_util'],
+                                        [sequelize.col('nome_utilizador'), 'nome_util'],
+                                        [sequelize.col('email'), 'email_util'],
+                                        [sequelize.col('telemovel'), 'tel_util'],
+                                        [sequelize.col('img_perfil'), 'img_util'],
+                                    ]
                                 }
                             ]
                         }
