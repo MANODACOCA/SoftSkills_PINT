@@ -1,9 +1,18 @@
 import './ClassHeader.css';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaClock } from 'react-icons/fa';
 import { Button } from 'react-bootstrap';
 
 const ClassHeader = ({ nomeCurso, tipo, totalAulas, tempoTotal, onPrevious, onNext, cursoTipo }) => {
+
+    const [horasCursoFormato, setHorasCursoFormato] = useState();
+
+    useEffect(() => {
+        let hora = Math.floor(tempoTotal);
+        let minuto = Math.floor((tempoTotal - hora) * 60);
+        const formato = hora !== 0 && minuto !== 0 ? `${hora}h ${minuto}min` : hora !== 0 ? `${hora}h` : minuto !== 0 ? `${minuto}h` : 'Tempo inválido';
+        setHorasCursoFormato(formato);
+    }, [tempoTotal]);
 
     return (
         <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
@@ -13,7 +22,7 @@ const ClassHeader = ({ nomeCurso, tipo, totalAulas, tempoTotal, onPrevious, onNe
                     <h6><strong>Tipologia:</strong> {tipo}</h6>
                     <h6><strong>Total de aulas:</strong> {totalAulas}</h6>
                     <h6><span className="d-flex align-items-center">
-                        <FaClock className="me-1" /> {tempoTotal}
+                        <FaClock className="me-1" /> {horasCursoFormato}
                     </span>
                     </h6>
                 </div>

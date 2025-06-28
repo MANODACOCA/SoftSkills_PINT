@@ -29,9 +29,9 @@ const FeaturedCourseCard = ({
     if (verificacao.inscrito) {
       if (now >= dataInicioCurso) {
         if (location.pathname.startsWith('/my/cursos/inscritos')) {
-          navigate(`/my/cursos/inscritos/curso/${course.id_curso}`);
+          navigate(`/my/cursos/inscritos/curso/${course.id_curso}?tab=aulas`);
         } else if (location.pathname.startsWith('/my/cursos/terminados')) {
-          navigate(`/my/cursos/terminados/curso/${course.id_curso}`);
+          navigate(`/my/cursos/terminados/curso/${course.id_curso}?tab=aulas`);
         }
       } else {
         navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
