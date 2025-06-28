@@ -125,7 +125,7 @@ const HomePageAdmin = () => {
                   <h6 className="fw-semibold text-uppercase opacity-75">Gestão de</h6>
                   <h3 className="fw-bold">Categoria/Área/Tópico</h3>
                 </div>
-                <i className="bi bi-graph-up"></i> 
+                <i className="bi bi-tag"></i> 
               </div>          
               <p className="mb-0 opacity-75">Nº Categorias {totalQueixas}</p>
             </div>

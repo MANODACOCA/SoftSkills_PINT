@@ -1,7 +1,7 @@
 import './Table.css';
 import React, { useState } from 'react';
 
-const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordenar }) => {
+const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordenar, showPagination=true }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPag, setitemsPag] = useState(10);
   const [expandedRows, setExpandedRows] = useState([]);
@@ -32,6 +32,7 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
   return (
     <div className="">
       <div className='d-flex justify-content-between mb-3'>
+        {showPagination && (   
         <div className='w-25 d-flex col-4'>
           <div className={`${ordenar ? 'w-50' : 'w-100' } d-flex align-items-center pe-4`}>
             <label htmlFor="itemsPag" className='form-label me-2'>Mostrar:</label>
@@ -43,15 +44,16 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
                 <option value={data.length}>tudo</option>
             </select>
           </div>
-          {ordenar &&
+          {ordenar && (
             <div className='w-50 d-flex align-items-center justify-content-start'>
               <label htmlFor="itemsPag" className='form-label me-2'>Ordenar:</label>
               <select name="itemsPag" id="itemsPag" className='form-select' value={itemsPag} onChange={handleChange}>
                   <option value="">fazer</option>
               </select>
             </div>
-          }        
+          )}
         </div>
+        )}
         {pesquisa && 
           <input
             className="input-group d-none d-md-flex form-control form-control-md w-25 col-6"

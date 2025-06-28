@@ -1,7 +1,7 @@
 import Table from "../../../components/table/Table";
 import { columnsUtilizadores } from "../../../components/table/ColumnsUtilizadores";
 import { useEffect, useState } from "react";
-import { delete_utilizador, list_utilizador, update_utilizador } from "../../../../api/utilizador_axios";
+import { create_utilizador, delete_utilizador, list_utilizador, update_utilizador } from "../../../../api/utilizador_axios";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 const UsersTables = () => {
     const [user, setuser] = useState([]);
     const navigate = useNavigate();
+    const [formador, setFormador] = useState(false);
 
     const FetchUtilizadores = async() => {
         try {
@@ -83,13 +84,87 @@ const UsersTables = () => {
         );
     }
 
+    const HandleCreate = async () => {
+        const result = await Swal.fire({
+            title: "Tem certeza que deseja adicionar utilizador?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonColor: "Cancelar",
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+        if(result.isConfirmed) {
+            const adicionarUtilizador = await Swal.fire({
+                title: 'Adicionar Utilizador',
+                html: ` 
+                    <label for="nome" class="form-label">Nome de Utilizador</label>
+                    <input id="nome" class="form-control mb-3" placeholder= "Nome do utilizador">
+                    <label for="email" class="form-label">Email do utilizador</label>
+                    <input id="email" class="form-control mb-3" placeholder="exemplo@email.com">
+                `,
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+                    const email = document.getElementById('email').value;
+
+                    if (!nome || !email) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+
+                    return{
+                        nome_utilizador: nome,
+                        email,
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Adicionar Utilizador',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+            if (adicionarUtilizador.isConfirmed && adicionarUtilizador.value) {
+                try {
+                    const nome_utilizador = adicionarUtilizador.value.nome_utilizador;
+                    const email = adicionarUtilizador.value.email
+                    const data = await create_utilizador(nome_utilizador, email);
+                    //const cargo = await update_utilizador(id, {isformador: formador});
+                    console.log(data);
+                    //console.log(cargo);
+                    const users = await FetchUtilizadores();
+                    console.log(users);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Conteudo adicionado com sucesso!",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } catch (error) {
+                    console.log('Erro ao criar Utlizador');
+                    Swal.fire({
+                        icon: "error",
+                        title: "Erro",
+                        text: "Não foi possível adicionar o conteudo",
+                        timer: 2000,
+                        showConfirmButton: false,
+                    });
+                }    
+            }         
+        }
+    }
+
     useEffect(() => {
         FetchUtilizadores();
     }, [])
 
     return(
         <div>
-            <Table columns={columnsUtilizadores} data={user} actions={renderActions} />
+            <Table columns={columnsUtilizadores} data={user} actions={renderActions} onAddClick={HandleCreate} />
         </div>
     );
 }
