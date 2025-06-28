@@ -1,7 +1,6 @@
 
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const sincrono = require('../models/sincrono');
 const { aulas, material_apoio, conteudos, tipo_formato, cursos, trabalhos, formadores, sincrono } = require('../models/init-models')(sequelize);
 
 //Vamos aos cursos inscritos para ir para a pagina de curso com aula ->  
