@@ -1,7 +1,7 @@
 
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { aulas, material_apoio, conteudos, tipo_formato, cursos, trabalhos, formadores, sincrono } = require('../models/init-models')(sequelize);
+const { aulas, material_apoio, conteudos, tipo_formato, cursos, trabalhos, formadores, sincrono, utilizador } = require('../models/init-models')(sequelize);
 
 //Vamos aos cursos inscritos para ir para a pagina de curso com aula ->  
 async function getAulasAndMateriaApoioForCurso(cursoId) {
@@ -16,6 +16,13 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                         {
                             model: formadores,
                             as: 'id_formador_formadore',
+                            include: [
+                                {
+                                    model: utilizador,
+                                    as: 'id_formador_utilizador',
+                                    attributes: ['id_utilizador', 'nome_utilizador', 'email', 'telemovel', 'img_perfil'],
+                                }
+                            ]
                         }
                     ]
                 },
