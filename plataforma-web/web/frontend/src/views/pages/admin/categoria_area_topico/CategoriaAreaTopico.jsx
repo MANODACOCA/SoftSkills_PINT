@@ -19,7 +19,7 @@ const CategoriaAreaTopicoTable = () => {
         }
     }
 
-    const renderTopics = (area, isExpanded, expandedContent = false) => {
+   /*const renderTopics = (area, isExpanded, expandedContent = false) => {
         if (expandedContent) {
             return (
                 <div className="m-0 bg-light border rounded">
@@ -37,13 +37,22 @@ const CategoriaAreaTopicoTable = () => {
             );
         }
         return <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`} />;
+    }; */
+    const renderTopics = (area, isExpanded, expandedContent = false) => {
+        if (expandedContent) {
+            return (
+                <div className="m-0 bg-light border rounded">
+                    <Table columns={topicoColumns} data={area.topicos ?? []} actions={renderActionsArea} /*onAddClick={handleAddEditArea}*/ conteudos={renderTopics} showPagination={false}/>
+                </div>
+            );
+        }
+        return <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`} />;
     };
 
     const renderAreas = (categoria, isExpanded, expandedContent = false) => {
         if (expandedContent) {
             return (
                 <div className="m-0 bg-light border rounded">
-                    <h6 className="p-2">Áreas</h6>
                     <Table columns={areaColumns} data={categoria.areas ?? []} actions={renderActionsArea} /*onAddClick={handleAddEditArea}*/ conteudos={renderTopics} showPagination={false}/>
                 </div>
             );
@@ -64,7 +73,12 @@ const CategoriaAreaTopicoTable = () => {
     return (
         <div>
             <Table columns={catColumns} data={CatAreaTop} actions={renderActionsCategoria} onAddClick={handleAddEditCategoria} conteudos={renderAreas}/>
+           
         </div>
+        
+        // <div>
+        //     <Table columns={} data={} actions={} onAddClick={} conteudos={} />
+        // </div>
     );
 }
 

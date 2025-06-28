@@ -51,7 +51,7 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
                   <option value="">fazer</option>
               </select>
             </div>
-          )}        
+          )}
         </div>
         )}
         {pesquisa && 

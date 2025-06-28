@@ -33,7 +33,6 @@ const HistoryUser = () => {
         }
     };
 
-
     const fetchCompletedCourses = async (userId) => {
         try {
             const data = await getCompletedCourses(userId);
@@ -72,7 +71,7 @@ const HistoryUser = () => {
                             e.target.onerror = null;
                             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(utilizador.nome_utilizador)}&background=random&bold=true`;
                         }}
-                        height={300} className="rounded-circle" alt="Imagem do utilizador" />  
+                        height={150} className="rounded-circle" alt="Imagem do utilizador" />  
                         )}  
                     </div>
                     <div className="d-flex flex-column justify-content-start align-items-start">
@@ -92,8 +91,8 @@ const HistoryUser = () => {
                     </div>
                 </div>
                 <div className="d-flex flex-column justify-content-start align-items-start w-25">
-                    <p>Cursos terminados: </p>
-                    <p>Cursos inscritos: </p>
+                    <p>Cursos terminados: {cursosTerminados.length}</p>
+                    <p>Cursos inscritos: {cursosInscrito.length}</p>
                 </div>
             </div>
             <div className=''>
