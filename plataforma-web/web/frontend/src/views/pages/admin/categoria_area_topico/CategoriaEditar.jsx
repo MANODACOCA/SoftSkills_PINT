@@ -91,7 +91,7 @@ const EditarCategoria = () => {
                     <label for="nome" class="form-label">Nome do Tópico</label>
                     <input id="nome" class="form-control mb-3" placeholder= "Nome do Tópico">
                     <label for="descricao" class="form-label">Descrição do Tópico</label>
-                    <textarea id="descricao" class="form-control mb-3" placeholder= "Descrição do Tópico"></textarea>
+                    <textarea id="descricao" class="form-control mb-3" style="min-height: 300px; max-height: 500px;" placeholder= "Descrição do Tópico"></textarea>
                 `,
                 preConfirm: () => {
                     const nome = document.getElementById('nome').value;
@@ -132,7 +132,7 @@ const EditarCategoria = () => {
                 } catch (error) {
                     Swal.fire({
                         title: 'Erro',
-                        text: 'Erro ao cancelar operação',
+                        text: 'Erro ao tentar adicionar topico',
                         icon: 'error',
                         confirmButtonText: 'Fechar',
                         customClass: {
@@ -166,7 +166,7 @@ const EditarCategoria = () => {
                     <label for="nome" class="form-label">Nome do Tópico</label>
                     <input id="nome" class="form-control mb-3" value="${topicos.nome_topico}" placeholder="Nome do Tópico">
                     <label for="descricao" class="form-label">Descrição do Tópico</label>
-                    <textarea id="descricao" class="form-control mb-3" placeholder="Descrição do Tópico">${topicos.descricao_top}</textarea>
+                    <textarea id="descricao" class="form-control mb-3" style="min-height: 300px; max-height: 500px;" placeholder="Descrição do Tópico">${topicos.descricao_top}</textarea>
                 `,
                 preConfirm: () => {
                     const nome = document.getElementById('nome').value.trim();
@@ -194,7 +194,8 @@ const EditarCategoria = () => {
             if (editarTopico.isConfirmed && editarTopico.value) {
                 try {
                     const { nome_topico, descricao_top } = editarTopico.value;
-                    await update_topico({ nome_topico, descricao_top });
+                    const id_topico = topicos.id_topico;
+                    await update_topico(id_topico, { nome_topico, descricao_top });
                     await fetchCatAreaTop();
                 Swal.fire({
                         title: 'Sucesso',
@@ -207,7 +208,7 @@ const EditarCategoria = () => {
                 } catch (error) {
                     Swal.fire({
                         title: 'Erro',
-                        text: 'Erro ao cancelar operação',
+                        text: 'Erro ao tentar editar o topico',
                         icon: 'error',
                         confirmButtonText: 'Fechar',
                         customClass: {

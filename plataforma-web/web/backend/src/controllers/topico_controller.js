@@ -43,7 +43,7 @@ controllers.update = async (req,res)=>{
   try {
     if(req.body){
       const {id} = req.params;
-      const updated = await model.update(req.body,{where:{id:id}});
+      const updated = await model.update(req.body,{where:{id_topico: id}});
       if(updated){
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
@@ -77,7 +77,7 @@ controllers.delete = async (req,res)=>{
 controllers.getCategoriaAreaTopico = async (req, res) => {
   try{
     const categoria_area_topico = await topicosService.getCategoriaAreaTopico();
-    
+
     if(categoria_area_topico && categoria_area_topico.length > 0){
       res.status(200).json(categoria_area_topico);
     } else {
