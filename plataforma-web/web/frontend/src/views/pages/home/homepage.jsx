@@ -5,8 +5,10 @@ import SpinnerBorder from '../../components/spinner-border/spinner-border';
 import './HomePage.css';
 import { list_cursos, getCourseDestaqueAssincrono, getCourseDestaqueSincrono, getCousesWithMoreFormandos, getCourseForYou, getCourseNews, getCoursePopular } from '../../../api/cursos_axios';
 import ScrollableSection from '../../components/scrollable_section/ScrollableSection';
+import { useUser } from '../../../utils/useUser';
 
 const HomePage = () => {
+  const { user } = useUser();
   const scrollRef = useRef(null);
   const scrollRef1 = useRef(null);
   const scrollRef2 = useRef(null);
@@ -88,7 +90,7 @@ const HomePage = () => {
     fetchCoursesDestaque();
   }, []);
 
-  if ( !coursesForYou || !coursesPopular || !coursesNews || !courseSincrono || !courseAssincrono || !topCourses || loading ) {
+  if (!coursesForYou || !coursesPopular || !coursesNews || !courseSincrono || !courseAssincrono || !topCourses || loading) {
     return <SpinnerBorder />;
   }
 
@@ -100,12 +102,12 @@ const HomePage = () => {
       <ScrollableSection title="Cursos mais populares" courses={coursesPopular} scrollRef={scrollRef1} onScroll={scroll}></ScrollableSection>
 
       <h1 className="mt-5 ps-3">Curso assíncrono em destaque</h1>
-      <div className='px-3'><Cardhighlight course={courseAssincrono} /></div>
+      <div className='px-3'><Cardhighlight course={courseAssincrono} userId={user.id_utilizador} /></div>
 
       <ScrollableSection title="Novidades" courses={coursesNews} scrollRef={scrollRef2} onScroll={scroll}></ScrollableSection>
 
       <h1 className="mt-5 ps-3">Curso síncrono em destaque</h1>
-      <div className='px-3'><Cardhighlight course={courseSincrono} /></div>
+      <div className='px-3'><Cardhighlight course={courseSincrono} userId={user.id_utilizador} /></div>
     </div>
   );
 };

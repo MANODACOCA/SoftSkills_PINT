@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext, useRef } from 'react';
+import { createContext, useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { get_utilizador } from '../api/utilizador_axios';
 import { getUserIdFromToken } from '../views/components/shared_functions/FunctionsUtils';

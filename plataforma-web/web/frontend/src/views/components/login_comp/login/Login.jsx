@@ -77,16 +77,28 @@ const FirstLogin = () => {
                 const response_login = await login(email, password);
                 console.log(response_login);
                 if (response_login.success) {
+                    const role = localStorage.getItem('activeRole');
                     if (response_login.jaAtivou && !response_login.twoFa) {
                         localStorage.setItem('token', response_login.token);
+
                         await refreshUser();
-                        navigate('/home');
+
+                        if (role === 'admin') {
+                            navigate('/admin/home');
+                        } else if (role === 'formador') {
+                            navigate('formador/home');
+                        } else {
+                            navigate('/home');
+                        }
+
                     } else if (response_login.jaAtivou && response_login.twoFa) {
                         navigate('/login/verificacao-identidade', {
                             state: {
                                 email,
                                 response_login,
-                                redirectTo: '/home'
+                                redirectTo: role === 'admin' ? '/admin/home'
+                                    : role === 'formador' ? '/formador/home'
+                                        : '/home'
                             }
                         });
                     } else {
