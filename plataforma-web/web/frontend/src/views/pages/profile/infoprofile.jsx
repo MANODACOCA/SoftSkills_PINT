@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import './profile.css';
-import { useUser } from '../../../utils/userContext';
+import { useUser } from '../../../utils/useUser';
 import Swal from 'sweetalert2';
 import { alterarPassword, update_utilizador } from '../../../api/utilizador_axios';
 

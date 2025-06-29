@@ -4,7 +4,7 @@ import './Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 import { PiMicrosoftOutlookLogoBold } from "react-icons/pi";
 import { login } from '../../../../api/utilizador_axios';
-import { useUser } from '../../../../utils/userContext';
+import { useUser } from '../../../../utils/useUser';
 
 
 const providers = [

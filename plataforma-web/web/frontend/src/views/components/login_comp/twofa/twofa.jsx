@@ -5,7 +5,7 @@ import './twofa.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 
 import { verificarCodigo } from '../../../../api/utilizador_axios';
-import { useUser } from '../../../../utils/userContext';
+import { useUser } from '../../../../utils/useUser';
 
 const TwoFA = () => {
     const location = useLocation();

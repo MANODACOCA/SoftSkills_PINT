@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FaCalendarAlt, FaClock, FaLanguage } from 'react-icons/fa';
 import { GrStatusGood } from "react-icons/gr";
 import { VscError } from "react-icons/vsc";
-import { useUser } from '../../../utils/userContext';
+import { useUser } from '../../../utils/useUser';
 import { create_inscricoes, get_inscricoes } from '../../../api/inscricoes_axios';
 import { update_cursos } from '../../../api/cursos_axios';
 import ISO6391 from 'iso-639-1';
 import Swal from 'sweetalert2';
 import './CardRegistration.css';
 
+
 const EnrollmentCard = ({ course, onContadorUpdate }) => {
+
+  const navigate = useNavigate();
+
   if (!course) return null;
 
   const duration = course.horas_curso || 0;
@@ -99,7 +104,7 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
   return (
     <div className="enrollment-card rounded-4">
       <img src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
-        alt={`Imagem do curso ${course.nome_curso}`} 
+        alt={`Imagem do curso ${course.nome_curso}`}
         className="card-img-top enrollment-image-vertical"
         onError={handleError}
       />
@@ -144,11 +149,11 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
             </button>
           ) : inscrito ? (
             <button
-              style={{ opacity: 1, pointerEvents: "none" }}
+              style={{ opacity: 1 }}
               className="btn btn-primary btn-lg w-100 rounded-4 bg-success d-flex justify-content-center align-items-center gap-2"
-              disabled
+              onClick={() => navigate(`/my/cursos/inscritos/curso/${course.id_curso}?tab=aulas`)}
             >
-              Inscrito <GrStatusGood />
+              <GrStatusGood /> Inscrito - Ir para o curso
             </button>
           ) : (
             <button

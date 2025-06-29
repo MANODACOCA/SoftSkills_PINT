@@ -6,6 +6,7 @@ import ScrollableSection from '../../../components/scrollable_section/Scrollable
 import { formatDayMonthYear } from '../../../components/shared_functions/FunctionsUtils';
 import { FaVideo, FaUsers, FaCalendarAlt } from 'react-icons/fa';
 import { getCursosDisponiveisParaInscricao } from '../../../../api/cursos_axios';
+import SpinnerBorder from '../../../components/spinner-border/spinner-border'
 import './CourseRegistration.css';
 
 const CourseRegistration = () => {
@@ -15,6 +16,7 @@ const CourseRegistration = () => {
   const scrollRef = React.useRef(null);
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = React.useRef(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -49,6 +51,7 @@ const CourseRegistration = () => {
 
   const fetchCourseData = async (courseId) => {
     try {
+      setLoading(true);
       const cursosDetalhados = await getCursosDisponiveisParaInscricao("todos", courseId);
 
       if (cursosDetalhados.length === 0) {
@@ -68,6 +71,8 @@ const CourseRegistration = () => {
       setRelatedCourses(filtered);
     } catch (error) {
       console.error('Erro ao carregar dados do curso:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,6 +94,10 @@ const CourseRegistration = () => {
       alert('Ocorreu um erro ao processar a inscrição.');
     }
   };
+
+  if (!course || loading) {
+    return <SpinnerBorder />;
+  }
 
   if (!course) return <div className="">Curso não encontrado</div>;
 
@@ -128,7 +137,7 @@ const CourseRegistration = () => {
         <div className="col-md-8 mt-4">
           <h2>Descrição</h2>
           <p>{course.descricao_curso || "Sem descrição disponível para este curso."}</p>
-          
+
           {course.isassincrono && (
             <>
               <h2 className="mt-4">Aulas</h2>

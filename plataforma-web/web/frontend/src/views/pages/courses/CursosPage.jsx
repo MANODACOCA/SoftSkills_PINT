@@ -4,8 +4,6 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
 import { formatDayMonthYear, radomArray } from '../../components/shared_functions/FunctionsUtils';
 import SpinnerBorder from '../../components/spinner-border/spinner-border';
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min";
 
 import Card from '../../components/card/Card';
 import FilterMenu from "../../components/filter_menu/filter_menu";

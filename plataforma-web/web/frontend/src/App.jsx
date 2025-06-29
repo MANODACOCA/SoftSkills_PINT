@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import ProtectedRoute from './views/components/rotasProtegidas/rotasProtegidas';
 import TokenChecker from './utils/authService.js';
@@ -45,7 +44,7 @@ import CategoriaAreaTopicoTable from './views/pages/admin/categoria_area_topico/
 function App() {
 
   return (
-    <Router>
+    <>
       <TokenChecker />
       <Routes>
 
@@ -69,6 +68,7 @@ function App() {
             </ProtectedRoute>
           }
         >
+          {/* formando */}
           <Route path="/home" element={<HomePage />} />
           <Route path="/notificacoes" element={<NotificationPage />} />
           <Route path="/cursos" element={<CursosPage />} />
@@ -84,6 +84,13 @@ function App() {
           <Route path="my/cursos/inscritos/curso/:cursoId" element={<ClassPage />} />
           <Route path="my/cursos/terminados/curso/:cursoId" element={<ClassPage />} />
           <Route path='/perfil/info' element={<InfoProfile />} />
+          {/* formando */}
+
+
+          {/* formador */}
+          {/* formador */}
+
+
           {/* admin */}
           <Route path='/admin/home' element={<HomePageAdmin />} />
           <Route path='/admin/cursos' element={<CourseTable />} />
@@ -93,14 +100,15 @@ function App() {
           <Route path='/admin/cursos/criar' element={<CreateCourse />} />
           <Route path='/admin/cursos/editar/:id' element={<EditCourse />} />
           <Route path='/admin/utilizadores/historico/:id' element={<HistoryUser />} />
-          <Route path= '/admin/categorias' element={<CategoriaAreaTopicoTable />}/>
+          <Route path='/admin/categorias' element={<CategoriaAreaTopicoTable />} />
           {/* admin */}
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    </Router >
+    </>
+
   );
 };
 

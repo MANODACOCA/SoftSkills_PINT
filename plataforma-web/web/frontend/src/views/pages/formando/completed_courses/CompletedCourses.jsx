@@ -2,7 +2,7 @@ import './CompletedCourses.css';
 import FeaturedCourseCard from '../../../components/card_highlight/CardHighlight';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { getCompletedCourses } from '../../../../api/cursos_axios';
-import { useUser } from '../../../../utils/userContext';
+import { useUser } from '../../../../utils/useUser';
 import React, { useState, useEffect } from 'react';
 
 const CompletedCourses = () => {

@@ -263,13 +263,13 @@ const ClassPage = () => {
                                     {curso.issincrono && (
                                         <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>}>
                                             <div className="mt-4">
-                                                <h3 className='mb-4'>Trabalhos</h3>
                                                 {trabalhoIdSelecionado ? (
                                                     <TrabalhosEntrega
                                                         trabalho={trabalhoSelecionado}
                                                     />
                                                 ) : (
                                                     <>
+                                                        <h3 className='mb-4'>Trabalhos</h3>
                                                         {trabalhos && trabalhos.length > 0 ? trabalhos.map((trabalho, index) => (
                                                             <TrabalhosList
                                                                 key={trabalho.id_trabalho}
@@ -288,26 +288,37 @@ const ClassPage = () => {
 
                                     <Tab eventKey="sobre" title={<span className='fw-bold'>SOBRE</span>}>
                                         {curso ? (
-                                            <div className="mt-4">
+                                            <div className="bg-white p-4 rounded-4 shadow-sm mt-4 border-bottom">
                                                 <h3 className='mb-4'>Sobre o Curso</h3>
                                                 <p className="mt-3">{curso.descricao_curso}</p>
 
                                                 {curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore && (
                                                     <div className="mt-4">
                                                         <h3>Formador</h3>
-                                                        <div className="d-flex align-items-start mt-3">
+                                                        <div className="d-flex align-items-start mt-4">
                                                             <div className="me-3">
                                                                 <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
-                                                                    <FaUserTie className="text-white fs-3" />
+                                                                    <img
+                                                                        src={curso.sincrono.id_formador_formadore.id_formador_utilizador?.img_util || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || 'Formador')}`}
+                                                                        alt="Foto do formador"
+                                                                        className="rounded-circle"
+                                                                        width="60"
+                                                                        height="60"
+                                                                    />
                                                                 </div>
                                                             </div>
                                                             <div>
                                                                 <h4>
                                                                     {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
                                                                 </h4>
-                                                                <p className="text-muted mb-3">
-                                                                    {curso.sincrono.id_formador_formadore.email_formador || ""}
-                                                                </p>
+                                                                <div className='d-flex gap-5'>
+                                                                    <p className="text-muted mb-3">
+                                                                        Email: {curso.sincrono.id_formador_formadore.id_formador_utilizador.email || ""}
+                                                                    </p>
+                                                                    <p className="text-muted mb-3">
+                                                                        Telemóvel: {curso.sincrono.id_formador_formadore.id_formador_utilizador.tel_util || ""}
+                                                                    </p>
+                                                                </div>
                                                                 <p>
                                                                     {curso.sincrono.id_formador_formadore.descricao_formador || "Sem descrição disponível para este formador."}
                                                                 </p>
