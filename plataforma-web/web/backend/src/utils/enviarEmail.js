@@ -98,5 +98,51 @@ async function enviarEmailConfirmacaoInscricao(nome_formando, destinatario, nome
   });
 }
 
+async function enviarEmailUserBloqueado(destinatario) {
+  return transporter.sendMail({
+    from: '"SoftSkills" <softskills.service@gmail.com>',
+    to: destinatario,
+    subject: '⚠️ Conta Bloqueada - SoftSkills',
+    html: `
+       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #d32f2f; text-align: center;">⚠️ A sua conta foi bloqueada</h2>
+          <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+            Exmo.(a) Utilizador(a),<br><br>
+            Informamos que a sua conta na plataforma <strong style="color: #1976d2;">SoftSkills</strong> foi <strong style="color: #d32f2f;">temporariamente bloqueada</strong> devido a atividades que violam os nossos termos de utilização ou políticas internas.<br><br>
+            Caso considere que se trata de um erro, ou deseje obter mais informações sobre esta situação, poderá entrar em contacto com a nossa equipa de suporte através do endereço <a href="mailto:softskills.service@gmail.com" style="color: #1976d2; text-decoration: none;">softskills.service@gmail.com</a>.<br><br>
+            Agradecemos a sua compreensão.<br><br>
+            Com os melhores cumprimentos,<br>
+            <strong>Equipa SoftSkills</strong> 💼
+          </p>
+        </div>
+      </div>
+    `
+  });
+}
 
-module.exports = { sendEmail, enviarEmailVerificaCode, enviarEmailConfirmacaoInscricao };
+async function enviarEmailUserDesbloqueado(destinatario) {
+  return transporter.sendMail({
+    from: '"SoftSkills" <softskills.service@gmail.com>',
+    to: destinatario,
+    subject: '✅ Conta Desbloqueada - SoftSkills',
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #2e7d32; text-align: center;">✅ A sua conta foi desbloqueada</h2>
+          <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+            Exmo.(a) Utilizador(a),<br><br>
+            Temos o prazer de informar que a sua conta na plataforma <strong style="color: #1976d2;">SoftSkills</strong> foi <strong style="color: #2e7d32;">reativada</strong> com sucesso e já se encontra totalmente operacional.<br><br>
+            Agradecemos a sua paciência durante o período de bloqueio e lamentamos qualquer inconveniente que a situação possa ter causado.<br><br>
+            Se necessitar de algum esclarecimento adicional, estamos inteiramente ao dispor através do e-mail <a href="mailto:softskills.service@gmail.com" style="color: #1976d2; text-decoration: none;">softskills.service@gmail.com</a>.<br><br>
+            Com os melhores cumprimentos,<br>
+            <strong>Equipa SoftSkills</strong> 💼
+          </p>
+        </div>
+      </div>
+    `
+  });
+}
+
+
+module.exports = { sendEmail, enviarEmailVerificaCode, enviarEmailConfirmacaoInscricao, enviarEmailUserBloqueado, enviarEmailUserDesbloqueado };

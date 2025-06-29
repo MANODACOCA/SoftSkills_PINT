@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate, NavLink } from "react-router-dom";
 import './Layout.css';
 
@@ -6,6 +6,7 @@ import './Layout.css';
 import HeaderGeral from '../../../components/base_components/header/Index_Header'
 import SideBar from '../../../components/base_components/sidebar/Index_SideBar';
 import Footer from '../../../components/base_components/footer/Index_Footer';
+import { checkUserBlocked } from '../../../../utils/checkUserBlock';
 
 const BaseLayout = () => {
 
@@ -14,6 +15,13 @@ const BaseLayout = () => {
     const toggleSidebar = () => {
         setCollapsed(!collapsed);
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            checkUserBlocked();
+        }, 10000);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className=" d-flex bg-light">

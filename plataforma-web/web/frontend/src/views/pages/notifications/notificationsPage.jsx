@@ -12,7 +12,7 @@ const NotificationPage = () => {
     const fetchAllNotifications = async () => {
         try {
             const cursos = await find_notificacao_curso();
-            const posts = await find_notificacao_curso();//find_notificacoes_comentarios_post();
+            const posts = await find_notificacoes_comentarios_post();
 
             const cursosComTipo = cursos.map(n => ({
                 ...n,

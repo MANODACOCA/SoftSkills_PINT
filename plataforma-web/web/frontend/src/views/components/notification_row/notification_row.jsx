@@ -7,7 +7,13 @@ const NotificationRow = ({notification, onDelete}) => {
     return(
         <div className="d-flex align-items-center justify-content-between">
             <div className='d-flex gap-4 align-items-center'>
-                <img src={iscurso ? notification.curso?.imagem : notification.utilizador?.imagem} alt="imagem notificação" width={80} height={80} className='img-not' />
+                <img src={iscurso ? notification.curso?.imagem : notification.utilizador?.imagem} 
+                onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(notification.id_utilizador.nome_utilizador)}&background=random&bold=true`;
+                }}
+                alt="imagem notificação" width={80} height={80} className='img-not' 
+                />
                 <div className='d-flex align-items-start flex-column justify-content-center'>
                     <h5>{iscurso ? notification.curso?.nome_curso : notification.utilizador?.nome_utilizador}</h5>
                     <p>Erro na tabela que contem uma falha de campo para o conteudo da notificaçao</p>

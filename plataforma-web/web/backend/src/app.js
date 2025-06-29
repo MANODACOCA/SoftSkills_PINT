@@ -124,6 +124,5 @@ app.use('/trabalhos',trabalhosRouter);
 const entregaTrabalhosRouter = require('./routes/entrega_trabalhos_route.js');
 app.use('/entrega-trabalhos',entregaTrabalhosRouter);
 
-//para ir buscar as imagens ao backend
-//app.use('/uploads/usersProfilesImg/', express.static(path.join(__dirname, 'uploads/usersProfilesImg/')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+

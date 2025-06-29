@@ -14,7 +14,7 @@ const fs = require('fs');
 const uploadProfileImg = require('../middlewares/uploadUserProfileIMG');
 
 const gerarPassword = require('../utils/gerarPassword');
-const { sendEmail, enviarEmailVerificaCode } = require("../utils/enviarEmail");
+const { sendEmail, enviarEmailVerificaCode, enviarEmailUserBloqueado, enviarEmailUserDesbloqueado } = require("../utils/enviarEmail");
 const { guardarCodigo, verificarCodigoCerto, apagarCodigo } = require('../utils/guardar_codigo');
 const utilizador = require("../models/utilizador");
 const { error } = require("console");
@@ -98,13 +98,21 @@ controllers.create = async (req, res) => {
   }
 };
 
-controllers.update = async (req, res) => { // atualizar e isnerir um novo utilizador com uma passe radom no email
+controllers.update = async (req, res) => { 
   try {
     if (req.body) {
       const { id } = req.params;
       const updated = await model.update(req.body, { where: { id_utilizador: id } });
+
       if (updated) {
         const modelUpdated = await model.findByPk(id);
+        if (req.body.hasOwnProperty('estado_utilizador')) {
+          if(req.body.estado_utilizador === false){
+            enviarEmailUserBloqueado(modelUpdated.email);
+          } else if (req.body.estado_utilizador === true) {
+            enviarEmailUserDesbloqueado(modelUpdated.email);
+          }
+        }
         res.status(200).json(modelUpdated);
       } else {
         res.status(404).json({ erro: 'Utilizador nao foi atualizado/a!' });
@@ -198,6 +206,10 @@ controllers.login = async (req, res) => {
       enviarEmailVerificaCode(email, codigo);
     }
 
+    if(!user.estado_utilizador) {
+      return res.status(403).json({ message: 'A sua conta foi bloqueada'});
+    }
+
     const roles = [];
 
     let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '120min' });
@@ -288,5 +300,21 @@ controllers.verificarCodigo = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Erro ao ativar conta.' });
   }
 };
+
+controllers.verificarUserState = async (req, res) => {
+  try{
+    const id = req.decoded.id;
+    
+    const utilizador = await model.findByPk(id);
+
+    if(!utilizador || utilizador.estado_utilizador === false) {
+      return res.status(403).json({message: 'A sua conta foi bloqueada'});
+    }
+
+    return res.status(200).json({success: 'ok'});
+  } catch(error) {
+    return res.status(500).json({error: 'Erro interno '});
+  }
+}
 
 module.exports = controllers;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, useLocation, useNavigate, NavLink } from "react-router-dom";
 import { Carousel, Container, Row, Col } from 'react-bootstrap';
 import './login_basePage.css'

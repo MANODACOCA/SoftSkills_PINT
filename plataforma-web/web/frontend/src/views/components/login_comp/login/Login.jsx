@@ -120,6 +120,8 @@ const FirstLogin = () => {
                     } else if (field === 'password') {
                         setError('Password inserida é inválida. Por favor digite outra password!');
                     }
+                } else if(error.response?.status === 403) {
+                    setError('A sua conta foi bloqueada');
                 } else {
                     setError('Erro ao efetuar login. Tente novamente mais tarde.');
                 }
