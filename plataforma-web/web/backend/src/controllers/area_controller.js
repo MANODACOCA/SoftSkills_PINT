@@ -28,12 +28,20 @@ controllers.get = async (req,res)=>{
 
 controllers.create = async (req,res)=>{
   try{
-    if(req.body){
-      const data = await model.create(req.body);
-      res.status(201).json(data);
-    }else{
-      res.status(400).json({erro: 'Erro ao criar Area!',desc: 'Corpo do pedido esta vazio.'});
+    const { nome_area, ...resto} = req.body;
+    if(!nome_area){
+      return res.status(400).json({
+        erro: 'Erro ao criar Área',
+        desc: 'Campo "nome" é obrigatorio'})
     }
+
+    const existente = await model.findOne({ nome_area: nome_area.trim() });
+
+    if (existente) {
+      return res.status(409) .json({ erro: 'Já existe uma area com esse nome.' });
+    }
+      const data = await model.create( {nome_area: nome_area.trim(), ...resto});
+      res.status(201).json(data);
   }catch(err){
     res.status(500).json({erro: 'Erro ao criar Area!',desc: err.message});
   }
@@ -43,7 +51,7 @@ controllers.update = async (req,res)=>{
   try {
     if(req.body){
       const {id} = req.params;
-      const updated = await model.update(req.body,{where:{id:id}});
+      const updated = await model.update(req.body,{where:{id_area: id}});
       if(updated){
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
@@ -61,7 +69,7 @@ controllers.update = async (req,res)=>{
 controllers.delete = async (req,res)=>{
   try {
     const {id} = req.params;
-    const deleted = await model.destroy({where:{id:id}});
+    const deleted = await model.destroy({where:{id_area: id}});
     if(deleted){
       res.status(200).json({msg:'Area apagado/a com sucesso!'});
     }else{

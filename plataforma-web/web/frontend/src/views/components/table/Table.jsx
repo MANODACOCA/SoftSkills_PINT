@@ -1,7 +1,7 @@
 import './Table.css';
 import React, { useState } from 'react';
 
-const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordenar, showPagination=true }) => {
+const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordenar}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPag, setitemsPag] = useState(10);
   const [expandedRows, setExpandedRows] = useState([]);
@@ -32,7 +32,6 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
   return (
     <div className="">
       <div className='d-flex justify-content-between mb-3'>
-        {showPagination && (   
         <div className='w-25 d-flex col-4'>
           <div className={`${ordenar ? 'w-50' : 'w-100' } d-flex align-items-center pe-4`}>
             <label htmlFor="itemsPag" className='form-label me-2'>Mostrar:</label>
@@ -53,7 +52,6 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
             </div>
           )}
         </div>
-        )}
         {pesquisa && 
           <input
             className="input-group d-none d-md-flex form-control form-control-md w-25 col-6"
@@ -63,9 +61,9 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
           />
         }
         {onAddClick && (
-          <button className='btn btn-custom d-flex align-items-center justify-content-center rounded-5 col-2' onClick={() => onAddClick(null)}>
-            <i className='bi bi-plus-lg fs-4'></i>
-            <strong className='ps-2 d-none d-md-block'>Adicionar</strong>
+          <button className='btn btn-primary d-flex align-items-center justify-content-center col-2' onClick={() => onAddClick.callback(null)}>
+            <i className='bi bi-plus-lg'></i>
+            <span className='ps-2 d-none d-md-block'>{onAddClick.label}</span>
           </button>
         )}
 
@@ -82,7 +80,14 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
             </tr>
           </thead>
           <tbody>
-            {currentData.map((item, rowIndex) => (
+            {currentData.length == 0 ? (
+              <tr>
+                <td colSpan={columns.length + (actions ? 1 : 0) + (conteudos ? 1 : 0)} className="text-center py-4">
+                  <span className="text-muted">Sem dados disponíveis.</span>
+                </td>
+              </tr>
+            ) : (
+            currentData.map((item, rowIndex) => (
               <React.Fragment key={rowIndex}>
               <tr key={rowIndex}>
                 {columns.map((col, colIndex) => (
@@ -109,7 +114,8 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
                 </tr>
               )}
               </React.Fragment>
-            ))}
+            ))
+            )}
           </tbody>
         </table>
       </div>

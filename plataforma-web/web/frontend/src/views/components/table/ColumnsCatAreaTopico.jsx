@@ -1,12 +1,12 @@
 
 export const catColumns = [
-    { label: 'Nº', key: 'id_categoria'},
-    { label: 'Categoria', key: 'nome_cat'}
+    { label: 'Categoria', key: 'nome_cat'},
+    { label: 'Nº Areas', render: (item) => item.areas?.length ?? 0 }
 ];
 
 export const areaColumns = [
-    { label: 'Nº', key: 'id_area'},
-    { label: 'Área', key: 'nome_area'},
+    { label: 'Área', render: (item) => item?.nome_area ?? 0},
+    { label: 'Nº Tópicos', render: (item) => item.topicos?.length ?? 0 }
 ];
 
 export const topicoColumns = [

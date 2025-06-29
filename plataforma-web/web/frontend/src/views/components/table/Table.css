@@ -22,13 +22,3 @@
     background-color: transparent;
 }
 
-.btn-custom{
-  background-color: white;
-  color: var(--cor-principal);
-  border: 2px solid var(--cor-principal);
-  transition: background-color 0.2s ease-in-out;
-}
-.btn-custom:hover{
-  color: white;
-  background-color: var(--cor-principal);
-}

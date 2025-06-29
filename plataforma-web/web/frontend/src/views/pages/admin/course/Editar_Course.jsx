@@ -1092,7 +1092,7 @@ const EditCourse = () => {
             const cursoAtualizado = await fetchCurso(id);
             let hora = Math.floor(cursoAtualizado.horas_curso);
             let minuto = Math.floor((cursoAtualizado.horas_curso - hora) * 60);
-            const formato = hora + 'h' + minuto + 'min';
+            const formato = hora !== 0 && minuto !== 0 ? `${hora}h ${minuto}min` : hora !== 0 ? `${hora}h` : minuto !== 0 ? `${minuto}h` : 'Tempo inválido';
             setHorasCursoFormato(formato);
         } catch (error) {
             console.log('Erro ao atualizar tabela');
@@ -1291,7 +1291,7 @@ const EditCourse = () => {
                                 {/* Aulas */}
                                 {cursos.isassincrono === true && (
                                     <div className='mt-4'>
-                                        <Table columns={columnsAulas} data={aulas} actions={renderActionsAula} onAddClick={HandleEditCreateAula} conteudos={renderConteudos} />
+                                        <Table columns={columnsAulas} data={aulas} actions={renderActionsAula} onAddClick={{callback: HandleEditCreateAula, label: 'Aula'}} conteudos={renderConteudos} />
                                     </div>
                                 )}
                             </div>
@@ -1301,7 +1301,7 @@ const EditCourse = () => {
                                 {/* Material de Apoio */}
                                 {cursos.isassincrono === true && (
                                     <div className='mt-4'>
-                                        <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={handleEditCreateMaterialApoio} />
+                                        <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={{callback: handleEditCreateMaterialApoio, label: 'Material Apoio'}} />
                                     </div>
                                 )}
                             </div>
