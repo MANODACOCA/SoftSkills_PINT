@@ -299,7 +299,7 @@ controllers.verificarUserState = async (req, res) => {
     
     const utilizador = await model.findByPk(id);
 
-    if(utilizador.estado_utilizador === false) {
+    if(!utilizador || utilizador.estado_utilizador === false) {
       return res.status(403).json({message: 'A sua conta foi bloqueada'});
     }
 
