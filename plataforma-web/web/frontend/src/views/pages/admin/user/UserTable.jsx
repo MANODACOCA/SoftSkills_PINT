@@ -236,7 +236,7 @@ const UsersTables = () => {
 
     return(
         <div>
-            <Table columns={columnsUtilizadores} data={user ?? []} actions={renderActions} onAddClick={HandleCreate} />
+            <Table columns={columnsUtilizadores} data={user ?? []} actions={renderActions} onAddClick={{callback: HandleCreate, label: 'Utilizadores'}} />
         </div>
     );
 }

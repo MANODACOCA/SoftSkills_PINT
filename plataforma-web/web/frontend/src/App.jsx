@@ -41,7 +41,6 @@ import CreateCourse from './views/pages/admin/course/Criar_Course.jsx';
 import EditCourse from './views/pages/admin/course/Editar_Course.jsx';
 import HistoryUser from './views/pages/admin/user/Historico_User.jsx';
 import CategoriaAreaTopicoTable from './views/pages/admin/categoria_area_topico/CategoriaAreaTopico';
-import EditarCategoria from './views/pages/admin/categoria_area_topico/CategoriaEditar.jsx';
 
 function App() {
 
@@ -95,7 +94,6 @@ function App() {
           <Route path='/admin/cursos/editar/:id' element={<EditCourse />} />
           <Route path='/admin/utilizadores/historico/:id' element={<HistoryUser />} />
           <Route path= '/admin/categorias' element={<CategoriaAreaTopicoTable />}/>
-          <Route path= '/admin/categorias/editar/:id' element={< EditarCategoria />}/>
           {/* admin */}
         </Route>
 //#endregion{/*CONTEUDO DA PAGINA */}

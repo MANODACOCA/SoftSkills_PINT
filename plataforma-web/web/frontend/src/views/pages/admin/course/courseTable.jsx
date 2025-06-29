@@ -103,7 +103,7 @@ const CourseTable = () => {
 
     return(
         <div>
-            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={HandleEditCreate}/>
+            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={{callback: HandleEditCreate, label: 'Curso'}}/>
         </div>
     );
 }

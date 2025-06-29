@@ -61,9 +61,9 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
           />
         }
         {onAddClick && (
-          <button className='btn btn-custom d-flex align-items-center justify-content-center rounded-5 col-2' onClick={() => onAddClick(null)}>
-            <i className='bi bi-plus-lg fs-4'></i>
-            <strong className='ps-2 d-none d-md-block'>Adicionar</strong>
+          <button className='btn btn-primary d-flex align-items-center justify-content-center col-2' onClick={() => onAddClick.callback(null)}>
+            <i className='bi bi-plus-lg'></i>
+            <span className='ps-2 d-none d-md-block'>{onAddClick.label}</span>
           </button>
         )}
 

@@ -1,38 +1,382 @@
 import Table from "../../../components/table/Table";
-import { useEffect, useState } from "react";
-import { getCategoriaAreaTopico } from "../../../../api/topico_axios";
-import { catColumns, areaColumns, topicoColumns } from "../../../components/table/ColumnsCatAreaTopico";
-import { create_categoria } from "../../../../api/categoria_axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { areaColumns } from "../../../components/table/ColumnsCatAreaTopico";
+import { create_topico, getCategoriaAreaTopico, update_topico } from "../../../../api/topico_axios";
+import { create_area, update_area } from "../../../../api/area_axios";
+import { create_categoria, list_categoria, update_categoria } from "../../../../api/categoria_axios";
 
 const CategoriaAreaTopicoTable = () => {
-    const [CatAreaTop, setCatAreaTop] = useState([]); 
-    const navigate = useNavigate();
-    
-    const fetchCategoriaAreaTopico = async () => {
+    const [areas, setAreas] = useState([]);
+    const [categoria, setCategoria] = useState([]);
+    const [categoriaAtual, setCategoriaAtual] = useState({
+        id_categoria: null,
+        nome_cat: ''
+    });
+
+    const fetchCatAreaTop = async () => {
         try {
             const response = await getCategoriaAreaTopico();
-            console.log(response);
-            setCatAreaTop(response);
+            const area = response.find((a) => a.id_categoria.toString() == categoriaAtual.id_categoria.toString())?.areas ?? [];
+            setAreas(area);
         } catch (error) {
-            console.log('Erro ao ir buscar as categoria, área e tópico');
+            console.log('Erro na lista de categoria area e topico!');
+        }
+    }
+
+    const fetchCategoria = async () => {
+        try {
+            const response = await list_categoria();
+            setCategoria(response);
+        } catch (error) {
+            console.log('Erro ao carregar Categorias');
         }
     }
 
     const renderActions = (item) => {
         return(
-        <div className="d-flex">
-            <button className="btn btn-outline-primary me-2" onClick={() => handleEditCategoria(item.id_categoria, item.nome_cat)}>
-                <i className="bi bi-pencil"></i>
-            </button>
-        </div>
+            <div>
+                <button className="btn btn-outline-primary me-2" onClick={() => handleEditArea(item)}>
+                    <i className="bi bi-pencil"></i>
+                </button>
+                <button className="btn btn-outline-success me-2" onClick={() => handleAddTopico(item.id_area)}>
+                    <i className="bi bi-plus-circle"></i>
+                </button>
+            </div>
         );
-    };
-    
-    const handleEditCategoria = async (id, nome) => {
+    }
+
+    const renderTopicos = (item, isExpanded, expandedContent = false ) => {
+        if (expandedContent) {
+            return (
+            <div className="m-0 bg-light border rounded">
+                <h6 className='p-2'>Topicos</h6>
+                <div className='mx-2 my-1 border rounded'>
+                {item.topicos?.length > 0 ? 
+                    (item.topicos?.map((t, index) => (    
+                        <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
+                            <div className='d-flex align-items-center justify-content-between'>
+                                <div>
+                                    {t.nome_topico}   
+                                </div>
+                                <div>
+                                    <button className="btn btn-outline-primary" onClick={()=> handleEditTopico(t)}>
+                                        <i className="bi bi-pencil"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                    ) : (
+                        <div className='p-2'>
+                            Área sem tópicos disponíveis
+                        </div>
+                    )
+                }
+                </div>
+            </div>
+            );
+        }
+        return(
+            <div>
+                <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
+            </div>            
+        );   
+    }
+
+    const handleAddTopico = async (idArea) => {
         const result = await Swal.fire({
-            title: `Tem a certeza que deseja editar ou adicionar área/tópico à ${nome}`,
+            title: 'Tem a certeza que deseja alterar o nome do Topico?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+        if (result.isConfirmed) {
+            const adicionarTopico = await Swal.fire({
+                title: 'Adicionar Topico',
+                html: ` 
+                    <label for="nome" class="form-label">Nome do Tópico</label>
+                    <input id="nome" class="form-control mb-3" placeholder= "Nome do Tópico">
+                    <label for="descricao" class="form-label">Descrição do Tópico</label>
+                    <textarea id="descricao" class="form-control mb-3" style="min-height: 300px; max-height: 500px;" placeholder= "Descrição do Tópico"></textarea>
+                `,
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+                    const descricao = document.getElementById('descricao').value;
+
+                    if (!nome || !descricao) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+
+                    return{
+                        nome_topico: nome,
+                        descricao_top: descricao,
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Adicionar Tópico',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+            if (adicionarTopico.isConfirmed && adicionarTopico.value) {
+                try {
+                    const id_area = idArea;
+                    const nome_topico = adicionarTopico.value.nome_topico;
+                    const descricao_top = adicionarTopico.value.descricao_top;
+                    await create_topico({id_area, nome_topico, descricao_top});
+                    fetchCatAreaTop();
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: `Adicionado com sucesso`,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Erro ao tentar adicionar topico',
+                        icon: 'error',
+                        confirmButtonText: 'Fechar',
+                        customClass: {
+                            confirmButton: 'btn btn-danger',
+                        },
+                    });
+                    console.error("Erro ao cancelar criação de topico", error);
+                }
+            }
+        }
+    }
+
+    const handleEditTopico = async (topicos) => {
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja alterar este Topico?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        if (result.isConfirmed) {
+            const editarTopico = await Swal.fire({
+                title: 'Editar Tópico',
+                html: `
+                    <label for="nome" class="form-label">Nome do Tópico</label>
+                    <input id="nome" class="form-control mb-3" value="${topicos.nome_topico}" placeholder="Nome do Tópico">
+                    <label for="descricao" class="form-label">Descrição do Tópico</label>
+                    <textarea id="descricao" class="form-control mb-3" style="min-height: 300px; max-height: 500px;" placeholder="Descrição do Tópico">${topicos.descricao_top}</textarea>
+                `,
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value.trim();
+                    const descricao = document.getElementById('descricao').value.trim();  
+                    
+                    if(!nome || !descricao) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+                    
+                    return {
+                        nome_topico: nome,
+                        descricao_top: descricao
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Editar Tópico',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+
+            if (editarTopico.isConfirmed && editarTopico.value) {
+                try {
+                    const { nome_topico, descricao_top } = editarTopico.value;
+                    const id_topico = topicos.id_topico;
+                    await update_topico(id_topico, { nome_topico, descricao_top });
+                    await fetchCatAreaTop();
+                Swal.fire({
+                        title: 'Sucesso',
+                        text: `Alterado com sucesso`,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Erro ao tentar editar o topico',
+                        icon: 'error',
+                        confirmButtonText: 'Fechar',
+                        customClass: {
+                            confirmButton: 'btn btn-danger',
+                        },
+                    });
+                    console.error("Erro ao editar de topico", error);
+                }
+            }
+        }
+    }
+
+    const handleAddArea = async () => {
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja adicionar área?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+        if (result.isConfirmed) {
+            const adicionarArea = await Swal.fire({
+                title: 'Adicionar Área',
+                html: ` 
+                    <label for="nome" class="form-label">Nome da Área</label>
+                    <input id="nome" class="form-control mb-3" placeholder= "Nome da Área">
+                `,
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+
+                    if (!nome) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+
+                    return{
+                        nome_area: nome,
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Adicionar Área',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+            if (adicionarArea.isConfirmed && adicionarArea.value) {
+                try {
+                    const id_categoria = categoriaAtual.id_categoria;
+                    const nome_area = adicionarArea.value.nome_area;
+                    await create_area({id_categoria, nome_area});
+                    fetchCatAreaTop();
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: `Adicionado com sucesso`,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Erro ao cancelar operação',
+                        icon: 'error',
+                        confirmButtonText: 'Fechar',
+                        customClass: {
+                            confirmButton: 'btn btn-danger',
+                        },
+                    });
+                    console.error("Erro ao cancelar criação de área", error);
+                }
+            }
+        }
+    }
+
+    const handleEditArea = async (areas) => {
+        console.log(areas.nome_area);
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja editar a área?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+        if (result.isConfirmed) {
+            const editarArea = await Swal.fire({
+                title: 'Editar Área',
+                html: ` 
+                    <label for="nome" class="form-label">Nome da Área</label>
+                    <input id="nome" class="form-control mb-3" value="${areas.nome_area}">
+                `,
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+
+                    if (!nome) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+
+                    return{
+                        nome_area: nome,
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Editar Área',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+            if (editarArea.isConfirmed && editarArea.value) {
+                try {
+                    const id_area = areas.id_area;
+                    const nome_area = editarArea.value.nome_area;
+                    await update_area(id_area, { nome_area});
+                    fetchCatAreaTop();
+                    Swal.fire({
+                        title: 'Sucesso',
+                        text: `Editado com sucesso`,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Erro',
+                        text: 'Erro ao editar área',
+                        icon: 'error',
+                        confirmButtonText: 'Fechar',
+                        customClass: {
+                            confirmButton: 'btn btn-danger',
+                        },
+                    });
+                    console.error("Erro ao editar área", error);
+                }
+            }
+        } 
+    }
+
+    const handleCategoria = async (categoriaAtual) => {
+        console.log(categoriaAtual.nome_cat);
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja o nome desta Categoria?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sim',
@@ -44,22 +388,58 @@ const CategoriaAreaTopicoTable = () => {
             buttonsStyling: false
         });
         
-        if(result.isConfirmed) {
-            try {
-                navigate(`/admin/categorias/editar/${id}`);
-            } catch (error) {
-                Swal.fire({
-                    title: 'Erro',
-                    text: `Ocorreu um erro ao tentar aceder às areas da ${CatAreaTop.nome_cat} `,
-                    icon: 'error',
-                    confirmButtonText: 'Fechar',
-                    customClass: {
-                        confirmButton: 'btn btn-danger',
-                    },
-                });
+        if (result.isConfirmed){
+            const editarCategoria = await Swal.fire({
+                title: 'Editar Categoria',
+                html: ` 
+                    <label for="nome" class="form-label">Nome da Categoria</label>
+                    <input id="nome" class="form-control mb-3" value="${categoriaAtual.nome_cat}">
+                `,
+                preConfirm: () => {
+                    const nome = document.getElementById('nome').value;
+
+                    if (!nome) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+
+                    return{
+                        nome_cat: nome,
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Editar Categoria',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+            if(editarCategoria.isConfirmed && editarCategoria.value){
+                try {
+                    const nome = editarCategoria.value.nome_cat;
+                    await update_categoria(categoriaAtual.id_categoria, { nome_cat: nome });
+                    fetchCategoria();
+                    setCategoriaAtual(categoriaAtual => ({...categoriaAtual, nome_cat: nome}));
+                    Swal.fire({
+                        icon: "success",
+                        title: "Categoria alterada com sucesso!",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } catch (error) {
+                    console.error("Erro ao mudar nome da categoria", error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Erro",
+                        text: "Não foi possível mudar o nome da categoria",
+                        timer: 2000,
+                        showConfirmButton: false,
+                    });
+                }
             }
         }
-    };
+    }
 
     const handleAddCategoria = async () => {
         const result = await Swal.fire({
@@ -104,8 +484,9 @@ const CategoriaAreaTopicoTable = () => {
             if (adicionarCategoria.isConfirmed && adicionarCategoria.value) {
                 try {
                     const nome_cat = adicionarCategoria.value.nome_cat;
-                    await create_categoria({nome_cat: nome_cat});
-                    fetchCategoriaAreaTopico();
+                    const data = await create_categoria({nome_cat: nome_cat});
+                    fetchCategoria();
+                    setCategoriaAtual({id_categoria: data.id_categoria,nome_cat: data.nome_cat});
                     Swal.fire({
                         icon: "success",
                         title: "Categoria adicionada com sucesso!",
@@ -124,17 +505,71 @@ const CategoriaAreaTopicoTable = () => {
             }
         }
     }
+     
+    useEffect(() => {
+        fetchCategoria();
+    }, []);
 
     useEffect(() => {
-        fetchCategoriaAreaTopico();
-    }, []);
+        fetchCatAreaTop();
+    }, [categoriaAtual.id_categoria]);
 
     return (
         <div className="">
-            <Table columns={catColumns} data={CatAreaTop} actions={renderActions} onAddClick={handleAddCategoria} />
+            <div className="mb-5">
+                <div className="d-flex justify-content-between align-items-center my-3">
+                    <h3 className="m-0"><label className="form-label fw-bold">Selecione a Categoria</label></h3>
+                    <button className="btn btn-primary d-flex align-items-center justify-content-center col-2" onClick={() => handleAddCategoria()}>
+                        <i className="bi bi-plus-lg"></i>
+                        <span className="ps-2 d-none d-md-block">Categoria</span>
+                    </button>
+                </div>    
+                <select className="form-control" value={categoriaAtual.id_categoria} onChange={(e) => {
+                    const idSelected = e.target.value;
+                    const cat = categoria.find((c) => c.id_categoria.toString() == idSelected);
+                    if(!idSelected || !cat) {
+                        setCategoriaAtual({
+                            id_categoria: null,
+                            nome_cat: '',
+                        });
+                        setAreas([]);
+                    } else {
+                        setCategoriaAtual({
+                            id_categoria: cat.id_categoria,
+                            nome_cat: cat.nome_cat,
+                        });    
+                    }
+                    
+                }}>
+                    <option value="">-- Selecione a Categoria --</option>
+                    {categoria.map((c) => {
+                        return(
+                            <option key={c.id_categoria} value={c.id_categoria}>{c.nome_cat}</option>
+                        );
+                    })}
+                </select>
+                {categoriaAtual.id_categoria &&
+                    <div className="d-flex justify-content-between mt-4">
+                        <button className="btn btn-success me-2" onClick={() => handleCategoria(categoriaAtual)}>
+                            Alterar Nome Categoria
+                        </button>
+                    </div>      
+                }
+            </div>
+            {categoriaAtual.id_categoria &&
+                <div>
+                    <Table columns={areaColumns} data={areas ?? []} actions={renderActions} onAddClick={{callback: handleAddArea, label:'Área'}} conteudos={renderTopicos} />
+                </div>    
+            }
+            {!categoriaAtual.id_categoria &&
+                <div className="d-flex justify-content-center p-5">
+                    <span className="text-secondary">Selecione a Categoria para poder alterar as áreas e os tópicos</span>
+                </div>    
+            }
+            
         </div>
-        
-    );
+    )
 }
 
 export default CategoriaAreaTopicoTable;
+
