@@ -198,7 +198,7 @@ controllers.login = async (req, res) => {
       enviarEmailVerificaCode(email, codigo);
     }
 
-    if(user.estado_utilizador) {
+    if(!user.estado_utilizador) {
       return res.status(403).json({ message: 'A sua conta foi bloqueada'});
     }
 
