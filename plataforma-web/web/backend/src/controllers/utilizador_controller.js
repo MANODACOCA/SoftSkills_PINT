@@ -293,4 +293,20 @@ controllers.verificarCodigo = async (req, res) => {
   }
 };
 
+controllers.verificarUserState = async (req, res) => {
+  try{
+    const id = req.decoded.id;
+    
+    const utilizador = await model.findByPk(id);
+
+    if(utilizador.estado_utilizador === false) {
+      return res.status(403).json({message: 'A sua conta foi bloqueada'});
+    }
+
+    return res.status(200).json({success: 'ok'});
+  } catch(error) {
+    return res.status(500).json({error: 'Erro interno '});
+  }
+}
+
 module.exports = controllers;

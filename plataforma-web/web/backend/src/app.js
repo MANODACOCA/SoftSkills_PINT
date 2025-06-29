@@ -127,12 +127,3 @@ app.use('/entrega-trabalhos',entregaTrabalhosRouter);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-//---------------------------------------------------------------------------------
-app.get('/verificar-utilizador-block', checkTokenUserForBlock, (req, res) =>{
-console.log('Headers recebidos:', req.headers);
-  if (req.decoded.estado_utilizador === false) {
-    return res.status(403).json({message: 'Utilizador Bloqueado'});
-  }
-
-  res.status(200).json({ok: 'Utilizador com permissoes'});
-});

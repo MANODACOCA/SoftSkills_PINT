@@ -2,14 +2,12 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config.js');
 
 let checkTokenUserForBlock = (req, res, next) => {
-    console.log('checkTokenUserForBlock entrou');
   let token = req.headers['x-access-token'] || req.headers['authorization'];
   if (token && token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
   }
 
   if (!token) {
-        console.log('Token ausente');  // <--- Diagnóstico
     return res.status(401).json({ success: false, message: 'Token indisponível.' });
   }
 

@@ -31,6 +31,6 @@ router.post('/verificar-codigo',controller.verificarCodigo);
 router.post('/esqueceu-password',controller.esqueceuPassword);
 router.post('/alterar-imgperfil/:id',controller.alterarImgPerfil);
 router.get('/count', controller.countUtilizadores);
-
+router.get('/verificar-utilizador-block', checkTokenUserForBlock, controller.verificarUserState);
 
 module.exports = router;
