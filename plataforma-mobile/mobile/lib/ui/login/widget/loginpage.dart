@@ -1,8 +1,11 @@
 //import 'dart:convert';
 //import 'package:mobile/data/services/basedados.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../API/utilizadores_api.dart';
 //import 'package:crypto/crypto.dart';
 //import '../../profile/widget/activate_twofa.dart';
 
@@ -14,9 +17,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
+  UtilizadoresApi api = UtilizadoresApi();
   bool isSwitched = false;
   bool isRememberMe = false;
   bool? twoFactorEnabled;
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String text = '';
   bool isPasswordVisible = false;
@@ -43,12 +48,6 @@ class _LoginPage extends State<LoginPage> {
       isSwitched = rememberMe;
     });
   }
-  /* // Função para encriptar a password
-  String _encryptPassword(String password) {
-    final bytes = utf8.encode(password);
-    final hash = sha256.convert(bytes);
-    return hash.toString();
-  } */
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +71,7 @@ class _LoginPage extends State<LoginPage> {
                     width: screenWidth - 40,
                     height: 46,
                     child: TextField(
+                      controller: _emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -203,8 +203,10 @@ class _LoginPage extends State<LoginPage> {
                       fixedSize: Size(screenWidth - 40, 46),
                     ),
                     onPressed: () async {
-                      /*Falta fazer o load da info do utilizador na base de dados e verificar o gmail e a password*/
-                      context.go("/twofa");
+                      bool success = (await api.login(_emailController.text, _passwordController.text)) as bool;
+                      if (success) {
+                        context.go("/twofa");
+                      }
                     },
                     child: const Text(
                       'Login',
