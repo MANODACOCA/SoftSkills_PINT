@@ -1,5 +1,5 @@
-import { createContext, useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { createContext, useState, useEffect, useContext, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { get_utilizador } from '../api/utilizador_axios';
 import { getUserIdFromToken } from '../views/components/shared_functions/FunctionsUtils';
 
@@ -11,7 +11,11 @@ export const UserProvider = ({ children }) => {
   const [activeRole, setActiveRoleState] = useState(() => {
     return localStorage.getItem('activeRole') || 'formando';
   });
+  const prevActiveRole = useRef(activeRole);
+
   const navigate = useNavigate();
+  const location = useLocation();
+  const firstRender = useRef(true);
 
   const setActiveRole = (role) => {
     localStorage.setItem('activeRole', role);
@@ -59,15 +63,24 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (!navigate) return;
-    if (activeRole === 'formando') {
-      navigate('/home');
-    } else if (activeRole === 'formador') {
-      navigate('formador/home');
-    } else if (activeRole === 'admin') {
-      navigate('admin/home');
+    if (firstRender.current) {
+      firstRender.current = false;
+      prevActiveRole.current = activeRole;
+      return;
     }
-  }, [activeRole]);
+
+    if (prevActiveRole.current !== activeRole) {
+      if (activeRole === 'formando') {
+        navigate('/home');
+      } else if (activeRole === 'formador') {
+        navigate('/formador/home');
+      } else if (activeRole === 'admin') {
+        navigate('/admin/home');
+      }
+    }
+
+    prevActiveRole.current = activeRole;
+  }, [activeRole, navigate]);
 
   return (
     <UserContext.Provider value={{ user, setUser, roles, activeRole, setActiveRole, refreshUser: loadUser }}>
