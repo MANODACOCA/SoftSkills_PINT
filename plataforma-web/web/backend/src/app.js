@@ -122,13 +122,14 @@ const trabalhosRouter = require('./routes/trabalhos_route.js');
 app.use('/trabalhos',trabalhosRouter);
 
 const entregaTrabalhosRouter = require('./routes/entrega_trabalhos_route.js');
-const { checkToken } = require('./middlewares/middleware_login.js');
+const { checkTokenUserForBlock } = require('./middlewares/blockUser.js');
 app.use('/entrega-trabalhos',entregaTrabalhosRouter);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //---------------------------------------------------------------------------------
-app.get('/verificar-utilizador-block', checkToken, (req, res) =>{
+app.get('/verificar-utilizador-block', checkTokenUserForBlock, (req, res) =>{
+  console.log(req.decoded);
   if (!req.decoded.estado_utilizador) {
     return res.status(403).json({message: 'Utilizador Bloqueado'});
   }
