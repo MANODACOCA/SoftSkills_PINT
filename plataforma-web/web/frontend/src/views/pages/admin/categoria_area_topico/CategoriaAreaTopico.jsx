@@ -145,7 +145,7 @@ const CategoriaAreaTopicoTable = () => {
                 } catch (error) {
                     Swal.fire({
                         title: 'Erro',
-                        text: 'Erro ao tentar adicionar topico',
+                        text: 'Tópico já existe',
                         icon: 'error',
                         confirmButtonText: 'Fechar',
                         customClass: {
@@ -221,7 +221,7 @@ const CategoriaAreaTopicoTable = () => {
                 } catch (error) {
                     Swal.fire({
                         title: 'Erro',
-                        text: 'Erro ao tentar editar o topico',
+                        text: 'Tópico já existe',
                         icon: 'error',
                         confirmButtonText: 'Fechar',
                         customClass: {
@@ -290,7 +290,7 @@ const CategoriaAreaTopicoTable = () => {
                 } catch (error) {
                     Swal.fire({
                         title: 'Erro',
-                        text: 'Erro ao cancelar operação',
+                        text: 'Área já existe',
                         icon: 'error',
                         confirmButtonText: 'Fechar',
                         customClass: {
@@ -360,7 +360,7 @@ const CategoriaAreaTopicoTable = () => {
                 } catch (error) {
                     Swal.fire({
                         title: 'Erro',
-                        text: 'Erro ao editar área',
+                        text: 'Área já existe',
                         icon: 'error',
                         confirmButtonText: 'Fechar',
                         customClass: {
@@ -432,7 +432,7 @@ const CategoriaAreaTopicoTable = () => {
                     Swal.fire({
                         icon: "error",
                         title: "Erro",
-                        text: "Não foi possível mudar o nome da categoria",
+                        text: "Categoria já existe",
                         timer: 2000,
                         showConfirmButton: false,
                     });
@@ -497,7 +497,7 @@ const CategoriaAreaTopicoTable = () => {
                     Swal.fire({
                         icon: "error",
                         title: "Erro",
-                        text: "Não foi possível adicionar o categoria",
+                        text: "Categoria já existe",
                         timer: 2000,
                         showConfirmButton: false,
                     });
@@ -524,7 +524,7 @@ const CategoriaAreaTopicoTable = () => {
                         <span className="ps-2 d-none d-md-block">Categoria</span>
                     </button>
                 </div>    
-                <select className="form-control" value={categoriaAtual.id_categoria} onChange={(e) => {
+                <select className="form-select" value={categoriaAtual.id_categoria} onChange={(e) => {
                     const idSelected = e.target.value;
                     const cat = categoria.find((c) => c.id_categoria.toString() == idSelected);
                     if(!idSelected || !cat) {
@@ -539,7 +539,6 @@ const CategoriaAreaTopicoTable = () => {
                             nome_cat: cat.nome_cat,
                         });    
                     }
-                    
                 }}>
                     <option value="">-- Selecione a Categoria --</option>
                     {categoria.map((c) => {

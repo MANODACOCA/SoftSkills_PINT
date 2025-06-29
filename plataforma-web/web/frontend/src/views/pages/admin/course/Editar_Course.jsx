@@ -822,7 +822,7 @@ const EditCourse = () => {
                         title: 'Editar Material de apoio',
                         html: `
                             <label for="formato" class="form-label">Formato</label>
-                            <select id="formato" class="form-control mb-3">
+                            <select id="formato" class="form-select mb-3">
                                 ${formatos.map(f => `
                                     <option value="${f.id_formato}" ${f.id_formato == material.id_formato ? 'selected' : ''}>${f.formato}</option>
                                 `).join('')}

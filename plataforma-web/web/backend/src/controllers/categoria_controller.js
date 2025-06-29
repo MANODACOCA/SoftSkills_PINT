@@ -53,18 +53,24 @@ controllers.create = async (req,res)=>{
 
 controllers.update = async (req,res)=>{
   try {
-    if(req.body){
-      const {id} = req.params;
-      const updated = await model.update(req.body,{where:{id_categoria: id}});
-      if(updated){
-        const modelUpdated = await model.findByPk(id);
-        res.status(200).json(modelUpdated);
-      }else{
-        res.status(404).json({erro:'Categoria nao foi atualizado/a!'});
-      }
-    }else{
-      res.status(400).json({erro: 'Erro ao atualizar o/a Categoria!',desc: 'Corpo do pedido esta vazio.'});
+    const { id } = req.params;
+    const { nome_cat, ...resto} = req.body;
+    if(!nome_cat){
+      return res.status(400).json({
+      erro: 'Erro ao criar Categoria',
+      desc: 'Campo "nome" é obrigatorio'})
     }
+
+    const existente = await model.findOne({ nome_cat: nome_cat.trim() });
+    
+    if (existente) {
+      return res.status(409) .json({ erro: 'Já existe uma categoria com esse nome.' });
+    }
+    
+    await model.update({ where: { id_categoria: id } }, { nome_cat: nome_cat.trim(), ...resto } );
+
+    const modelUpdated = await model.findByPk(id);
+    res.status(200).json(modelUpdated);
   }catch(err){
     res.status(500).json({erro: 'Erro ao atualizar o/a Categoria!',desc: err.message});
   }
