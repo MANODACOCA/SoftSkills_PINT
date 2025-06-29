@@ -49,18 +49,24 @@ controllers.create = async (req,res)=>{
 
 controllers.update = async (req,res)=>{
   try {
-    if(req.body){
-      const {id} = req.params;
-      const updated = await model.update(req.body,{where:{id_area: id}});
-      if(updated){
-        const modelUpdated = await model.findByPk(id);
-        res.status(200).json(modelUpdated);
-      }else{
-        res.status(404).json({erro:'Area nao foi atualizado/a!'});
-      }
-    }else{
-      res.status(400).json({erro: 'Erro ao atualizar o/a Area!',desc: 'Corpo do pedido esta vazio.'});
+    const { id } = req.params;
+    const { nome_area, ...resto} = req.body;
+    if(!nome_area){
+      return res.status(400).json({
+      erro: 'Erro ao criar Área',
+      desc: 'Campo "nome" é obrigatorio'})
     }
+
+    const existente = await model.findOne({ nome_area: nome_area.trim() });
+    
+    if (existente) {
+      return res.status(409).json({ erro: 'Já existe uma area com esse nome.' });
+    }
+    
+    await model.update({ where: { id_area: id } }, { nome_area: nome_area.trim(), ...resto } );
+
+    const modelUpdated = await model.findByPk(id);
+    res.status(200).json(modelUpdated);   
   }catch(err){
     res.status(500).json({erro: 'Erro ao atualizar o/a Area!',desc: err.message});
   }
