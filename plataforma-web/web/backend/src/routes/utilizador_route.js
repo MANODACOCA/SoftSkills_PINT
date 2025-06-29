@@ -1,7 +1,7 @@
 const express = require('express');
-const controller = require('../controllers/utilizador_controller.js')
+const controller = require('../controllers/utilizador_controller.js');
+const { checkTokenUserForBlock } = require('../middlewares/blockUser.js');
 const router = express.Router();
-const middleware = require('../middlewares/middleware_login');
 
 router.get('/',(req, res) => {
   res.send("<h1>Ups! Está vazio aqui...</h1><br><b>Caminhos:</b><br>/list<br>/get/{id}<br>/create<br>/update/{id}<br>/delete/{id}");
