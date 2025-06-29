@@ -7,7 +7,6 @@ import './login_basePage.css'
 import slide1 from '../../../assets/images/carrousel-login/1.jpg';
 import slide2 from '../../../assets/images/carrousel-login/2.jpg';
 import slide3 from '../../../assets/images/carrousel-login/3.jpg';
-import { checkUserBlocked } from '../../../utils/checkUserBlock';
 
 
 const LoginPage = () => {
@@ -16,14 +15,6 @@ const LoginPage = () => {
         { id: 'slide-2', src: slide2 },
         { id: 'slide-3', src: slide3 },
     ];
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            checkUserBlocked();
-        }, 60000);
-        console.log('ola');
-        return () => clearInterval(interval);
-    }, []);
 
     return (
         <Container fluid className='login-page p-0'>
