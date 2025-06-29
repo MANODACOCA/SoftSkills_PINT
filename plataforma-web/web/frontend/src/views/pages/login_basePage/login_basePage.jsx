@@ -21,7 +21,7 @@ const LoginPage = () => {
         const interval = setInterval(() => {
             checkUserBlocked();
         }, 60000);
-
+        console.log('ola');
         return () => clearInterval(interval);
     }, []);
 
