@@ -19,7 +19,7 @@ const BaseLayout = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             checkUserBlocked();
-        }, 60000);
+        }, 10000);
         console.log('ola');
         return () => clearInterval(interval);
     }, []);
