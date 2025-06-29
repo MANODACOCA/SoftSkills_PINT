@@ -132,3 +132,15 @@ export const utilizadores_contagem = async () => {
         throw error;
     }
 }
+
+export const checkUserBloqueado = async (token) => {
+  try {
+    const response = await axios.get(`${API_URL}/verificar-utilizador-block`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Erro ao verificar estado do utilizador", error);
+    throw error;
+  }
+};

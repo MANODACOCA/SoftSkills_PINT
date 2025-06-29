@@ -122,7 +122,6 @@ const trabalhosRouter = require('./routes/trabalhos_route.js');
 app.use('/trabalhos',trabalhosRouter);
 
 const entregaTrabalhosRouter = require('./routes/entrega_trabalhos_route.js');
-const { checkTokenUserForBlock } = require('./middlewares/blockUser.js');
 app.use('/entrega-trabalhos',entregaTrabalhosRouter);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
