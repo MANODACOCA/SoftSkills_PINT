@@ -2,6 +2,7 @@ import { checkUserBloqueado } from "../api/utilizador_axios";
 
 export const checkUserBlocked = async () => {
     const token = localStorage.getItem("token");
+    console.log(token);
     if (!token) return false;
     try {
         await checkUserBloqueado(token);

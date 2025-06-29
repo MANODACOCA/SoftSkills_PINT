@@ -4,7 +4,7 @@ const config = require('../config/config.js');
 let checkTokenUserForBlock = (req, res, next) => {
   let token = req.headers['x-access-token'] || req.headers['authorization'];
   if (token && token.startsWith('Bearer ')) {
-    token = token.slice(7, token.length);
+    token = token.slice(7).trim();
   }
 
   if (!token) {
@@ -17,6 +17,10 @@ let checkTokenUserForBlock = (req, res, next) => {
         return res.status(403).json({ success: false, message: 'Token inválido.' });
     }
 
+    if (!decoded || typeof decoded !== 'object') {
+      return res.status(403).json({ success: false, message: 'Token malformado.' });
+    }
+    
     console.log('Token decodificado:', decoded);
 
     req.decoded = decoded;
