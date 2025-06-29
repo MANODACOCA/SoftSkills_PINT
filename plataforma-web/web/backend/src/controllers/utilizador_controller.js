@@ -198,6 +198,10 @@ controllers.login = async (req, res) => {
       enviarEmailVerificaCode(email, codigo);
     }
 
+    if(user.estado_utilizador) {
+      return res.status(403).json({ message: 'A sua conta foi bloqueada'});
+    }
+
     const roles = [];
 
     let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '120min' });
