@@ -102,14 +102,14 @@ const HistoryUser = () => {
                             {/* Inscrito */}
                             {cursosInscrito.map((cu, index) => {
                                 return (
-                                    <div key={index} className="card flex-row rounded-4 card-highlight position-relative mb-3">
+                                    <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
                                         <img
-                                            src={
-                                            cu.id_curso_curso.imagem
-                                                ? cu.id_curso_curso.imagem
-                                                : `https://ui-avatars.com/api/?name=${encodeURIComponent(cu?.id_curso_curso?.nome_curso)}&background=random&bold=true`                                 
-                                            }
-                                            className="rounded-start-4 highlight-image"
+                                            src={cu.id_curso_curso.imagem}
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_curso.nome_curso)}&background=random&bold=true`;
+                                                }}
+                                            className="rounded-start-4 highlights-images"
                                             alt="imagem curso"
                                         />
                                         <div className="card-body d-flex flex-column justify-content-between">
@@ -127,14 +127,14 @@ const HistoryUser = () => {
                             {/* Terminado */}
                             {cursosTerminados.map((cu, index) => {
                                 return(
-                                    <div key={index} className="card flex-row rounded-4 card-highlight position-relative mb-3">
+                                    <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
                                         <img
                                             src={
                                             cu.imagem
                                                 ? cu.imagem
                                                 : `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.nome_curso)}&background=random&bold=true`                                 
                                             }
-                                            className="rounded-start-4 highlight-image"
+                                            className="rounded-start-4 highlights-images"
                                             alt="imagem curso"
                                         />
                                         <div className="card-body d-flex flex-column justify-content-between">

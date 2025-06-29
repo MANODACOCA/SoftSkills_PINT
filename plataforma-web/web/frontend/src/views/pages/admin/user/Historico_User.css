@@ -1,10 +1,10 @@
-.card-highlight {
+.cards-highlights{
   background-color: #ffffff;
   height: 200px;
   overflow: hidden;
 }
-.highlight-image {
-  width: 35%;
+.highlights-images {
+  width: 45%;
   height: 100%;
   object-fit: cover;
 }
