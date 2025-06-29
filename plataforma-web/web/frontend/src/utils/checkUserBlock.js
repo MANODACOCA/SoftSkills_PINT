@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = 'https://softskills-api.onrender.com/area';
+const API_URL = 'https://softskills-api.onrender.com';
 
 export const checkUserBlocked = async () => {
   try {
