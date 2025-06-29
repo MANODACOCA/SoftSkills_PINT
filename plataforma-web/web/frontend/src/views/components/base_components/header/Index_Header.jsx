@@ -2,7 +2,7 @@ import HeaderFormando from './Header_Formando';
 import HeaderAdmin from './Header_Admin';
 import HeaderFormador from './Header_Formador';
 
-import { useUser } from '../../../../utils/userContext';
+import { useUser } from '../../../../utils/useUser';
 
 const HeaderGeral = (props) => {
   const { activeRole } = useUser();

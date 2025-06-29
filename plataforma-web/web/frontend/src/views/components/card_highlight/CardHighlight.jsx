@@ -1,12 +1,10 @@
-import './CardHighlight.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
 import { FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
 import { verificar_acesso_curso } from '../../../api/cursos_axios';
-
+import './CardHighlight.css';
 
 const FeaturedCourseCard = ({
   course,
@@ -157,7 +155,7 @@ const FeaturedCourseCard = ({
 
 
 
-  //CARD PARA CURSOS INSCRITOS VERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
+  //CARD PARA CURSOS INSCRITOS 
   if (variant === 'enrolled') {
     const today = new Date();
     const endDate = new Date(course.data_fim_curso);

@@ -7,7 +7,7 @@ import { FaLock } from 'react-icons/fa';
 import './profile.css';
 
 import { update_utilizador, alterarImgPerfil } from '../../../api/utilizador_axios';
-import { useUser } from '../../../utils/userContext';
+import { useUser } from '../../../utils/useUser';
 
 const EditProfile = () => {
     const API_URL = 'https://softskills-api.onrender.com/';

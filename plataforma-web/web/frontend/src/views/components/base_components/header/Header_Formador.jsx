@@ -7,7 +7,7 @@ import { IoIosArrowForward, IoIosFlag } from "react-icons/io";
 import { GoKey } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { RxExit } from "react-icons/rx";
-import { useUser } from '../../../../utils/userContext';
+import { useUser } from '../../../../utils/useUser';
 
 const HeaderFormando = ({ toggleSidebar, collapsed }) => {
     const API_URL = 'https://softskills-api.onrender.com/';

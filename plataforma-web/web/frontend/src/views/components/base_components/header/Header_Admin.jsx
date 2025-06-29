@@ -7,9 +7,9 @@ import { IoIosArrowForward, IoIosFlag } from "react-icons/io";
 import { GoKey } from "react-icons/go";
 import { CgProfile } from "react-icons/cg";
 import { RxExit } from "react-icons/rx";
-import { useUser } from '../../../../utils/userContext';
+import { useUser } from '../../../../utils/useUser';
 
-const HeaderFormando = ({ toggleSidebar, collapsed }) => {
+const HeaderAdmin = ({ toggleSidebar, collapsed }) => {
     const API_URL = 'https://softskills-api.onrender.com/';
     const { user, activeRole } = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -71,22 +71,8 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                 <button className="btn btn-outline-secondary mx-2 hide" onClick={toggleSidebar}>
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
                 </button>
-                <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
+                <Link to="admin/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
-
-            <input
-                className="input-group d-none d-md-flex form-control form-control-md"
-                type="search"
-                placeholder="Pesquisar curso"
-                aria-label="Pesquisar"
-                value={searchTerm}
-                onChange={(e) => {
-                    const value = e.target.value;
-                    setSearchTerm(value);
-                    debouncedNavigate(value);
-                }}
-                onFocus={handleFocus}
-            />
 
             {user && (
                 <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
@@ -139,4 +125,4 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
     );
 };
 
-export default HeaderFormando;
+export default HeaderAdmin;
