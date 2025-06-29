@@ -10,9 +10,9 @@ export const checkUserBlocked = async () => {
         return false;
     } catch (error) {
         if(error.response?.status === 403) {
-            //localStorage.removeItem('token');
+            localStorage.removeItem('token');
             alert("A sua conta foi bloqueada. Sessão terminada.");
-            //window.location.href = "/login";
+            window.location.href = "/login";
             return true;
         }
 
