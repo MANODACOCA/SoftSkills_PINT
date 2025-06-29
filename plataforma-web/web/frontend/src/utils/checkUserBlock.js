@@ -6,19 +6,19 @@ export const checkUserBlocked = async () => {
     const token = localStorage.getItem("token");
     if (!token) return false;
 
-    const res = await axios.get(`${API_URL}/verificar-utilizador-block`, {
+    await axios.get(`${API_URL}/verificar-utilizador-block`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
-    if (res.status === 403) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-      alert("A sua conta foi bloqueada. Sessão terminada.");
-      return true;
+    return false;
+  } catch (error) {
+    if(error.response?.status === 403) {
+        localStorage.removeItem('token');
+        alert("A sua conta foi bloqueada. Sessão terminada.");
+        window.location.href = "/login";
+        return true;
     }
 
-    return false;
-  } catch (err) {
     console.error("Erro ao verificar estado do utilizador", err);
     return false;
   }
