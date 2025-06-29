@@ -129,6 +129,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //---------------------------------------------------------------------------------
 app.get('/verificar-utilizador-block', checkToken, (req, res) =>{
+  console.log(req.decoded.estado_utilizador);
   if (!req.decoded.estado_utilizador) {
     return res.status(403).json({message: 'Utilizador Bloqueado'});
   }
