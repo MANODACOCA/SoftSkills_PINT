@@ -2,15 +2,16 @@ import Table from "../../../components/table/Table";
 import Swal from "sweetalert2";
 import { useEffect, useState } from "react";
 import { areaColumns } from "../../../components/table/ColumnsCatAreaTopico";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { create_topico, getCategoriaAreaTopico, update_topico } from "../../../../api/topico_axios";
-import { create_area } from "../../../../api/area_axios";
-import { get_categoria } from "../../../../api/categoria_axios";
+import { create_area, update_area } from "../../../../api/area_axios";
+import { get_categoria, update_categoria } from "../../../../api/categoria_axios";
 
 const EditarCategoria = () => {
     const {id}  = useParams();
     const [areas, setAreas] = useState([]);
     const [categoria, setCategoria] = useState([]);
+    const navigate = useNavigate();
 
     const fetchCatAreaTop = async () => {
         try {
@@ -37,7 +38,7 @@ const EditarCategoria = () => {
     const renderActions = (item) => {
         return(
             <div>
-                <button className="btn btn-outline-primary me-2" onClick={() => handleEditArea()}>
+                <button className="btn btn-outline-primary me-2" onClick={() => handleEditArea(item)}>
                     <i className="bi bi-pencil"></i>
                 </button>
                 <button className="btn btn-outline-success me-2" onClick={() => handleAddTopico(item.id_area)}>
@@ -305,6 +306,7 @@ const EditarCategoria = () => {
     }
 
     const handleEditArea = async (areas) => {
+        console.log(areas.nome_area);
         const result = await Swal.fire({
             title: 'Tem a certeza que deseja editar a área?',
             icon: 'warning',
@@ -322,7 +324,7 @@ const EditarCategoria = () => {
                 title: 'Editar Área',
                 html: ` 
                     <label for="nome" class="form-label">Nome da Área</label>
-                    <input id="nome" class="form-control mb-3" placeholder= value="${areas.nome_area}">
+                    <input id="nome" class="form-control mb-3" value="${areas.nome_area}">
                 `,
                 preConfirm: () => {
                     const nome = document.getElementById('nome').value;
@@ -346,7 +348,7 @@ const EditarCategoria = () => {
             });
             if (editarArea.isConfirmed && editarArea.value) {
                 try {
-                    const id_area = id;
+                    const id_area = areas.id_area;
                     const nome_area = editarArea.value.nome_area;
                     await update_area(id_area, { nome_area});
                     fetchCatAreaTop();
@@ -372,6 +374,44 @@ const EditarCategoria = () => {
             }
         } 
     }
+
+    const handleCategoria = async () => {
+        console.log(categoria.id_categoria);
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja o nome desta Categoria?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+        
+        if (result.isConfirmed){
+            try {
+                await update_categoria(categoria.id_categoria, { nome_cat: categoria.nome_cat });
+                Swal.fire({
+                    icon: "success",
+                    title: "Categoria alterada com sucesso!",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                await fetchCatAreaTop();
+            } catch (error) {
+                console.error("Erro ao mudar nome da categoria", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Não foi possível mudar o nome da categoria",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            }
+        }
+    }
     
     useEffect(() => {
         fetchCatAreaTop();
@@ -380,16 +420,23 @@ const EditarCategoria = () => {
 
     return (
         <div className="">
-            <div className="mb-4">
+            <div className="mb-5">
                 <label className="form-label fw-bold">Nome da Categoria</label>
-                <input className="form-control" type="text" key={categoria.nome_cat} />    
+                <input className="form-control" type="text" value={categoria.nome_cat} onChange={(e) => setCategoria({ ...categoria, nome_cat: e.target.value })}/> 
+                <div className="d-flex justify-content-between mt-4">
+                    <button className="btn btn-success me-2" onClick={() => handleCategoria()}>
+                        Alterar Nome Categoria
+                    </button>
+                    <button className="btn btn-danger me-2" onClick={() => {navigate('/admin/categorias')}}>
+                        Cancelar Alterações
+                    </button>
+                </div>   
             </div>
             <div>
                 <Table columns={areaColumns} data={areas ?? []} actions={renderActions} onAddClick={handleAddArea} conteudos={renderTopicos} />
             </div>
         </div>
     )
-
 }
 
 export default EditarCategoria;
