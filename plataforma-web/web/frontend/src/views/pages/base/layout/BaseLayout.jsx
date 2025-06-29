@@ -20,7 +20,6 @@ const BaseLayout = () => {
         const interval = setInterval(() => {
             checkUserBlocked();
         }, 10000);
-        console.log('ola');
         return () => clearInterval(interval);
     }, []);
 

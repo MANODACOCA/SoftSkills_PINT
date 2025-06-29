@@ -1,8 +1,8 @@
+import Swal from "sweetalert2";
 import { checkUserBloqueado } from "../api/utilizador_axios";
 
 export const checkUserBlocked = async () => {
     const token = localStorage.getItem("token");
-    console.log(token);
     if (!token) return false;
     try {
         await checkUserBloqueado(token);
@@ -11,8 +11,22 @@ export const checkUserBlocked = async () => {
     } catch (error) {
         if(error.response?.status === 403) {
             localStorage.removeItem('token');
-            alert("A sua conta foi bloqueada. Sessão terminada.");
-            window.location.href = "/login";
+
+            const result = await Swal.fire({
+                title: 'A sua conta foi bloqueada. Sessão terminada.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'ok',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                },
+                buttonsStyling: false
+            });
+            if(result.isConfirmed){
+                window.location.href = "/login";
+                enviarEmailUserBloqueado
+            }
+
             return true;
         }
 

@@ -14,7 +14,7 @@ const fs = require('fs');
 const uploadProfileImg = require('../middlewares/uploadUserProfileIMG');
 
 const gerarPassword = require('../utils/gerarPassword');
-const { sendEmail, enviarEmailVerificaCode } = require("../utils/enviarEmail");
+const { sendEmail, enviarEmailVerificaCode, enviarEmailUserBloqueado, enviarEmailUserDesbloqueado } = require("../utils/enviarEmail");
 const { guardarCodigo, verificarCodigoCerto, apagarCodigo } = require('../utils/guardar_codigo');
 const utilizador = require("../models/utilizador");
 const { error } = require("console");
@@ -102,9 +102,18 @@ controllers.update = async (req, res) => { // atualizar e isnerir um novo utiliz
   try {
     if (req.body) {
       const { id } = req.params;
+      const {atualizacoes} = req.body;
       const updated = await model.update(req.body, { where: { id_utilizador: id } });
+
       if (updated) {
         const modelUpdated = await model.findByPk(id);
+        if (atualizacoes.hasOwnProperty('estado_utilizador')) {
+          if(atualizacoes.estado_utilizador === false){
+            enviarEmailUserBloqueado(modelUpdated.email);
+          } else if (atualizacoes.estado_utilizador === true) {
+            enviarEmailUserDesbloqueado(modelUpdated.email);
+          }
+        }
         res.status(200).json(modelUpdated);
       } else {
         res.status(404).json({ erro: 'Utilizador nao foi atualizado/a!' });
