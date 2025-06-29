@@ -98,19 +98,18 @@ controllers.create = async (req, res) => {
   }
 };
 
-controllers.update = async (req, res) => { // atualizar e isnerir um novo utilizador com uma passe radom no email
+controllers.update = async (req, res) => { 
   try {
     if (req.body) {
       const { id } = req.params;
-      const {atualizacoes} = req.body;
       const updated = await model.update(req.body, { where: { id_utilizador: id } });
 
       if (updated) {
         const modelUpdated = await model.findByPk(id);
-        if (atualizacoes.hasOwnProperty('estado_utilizador')) {
-          if(atualizacoes.estado_utilizador === false){
+        if (req.body.hasOwnProperty('estado_utilizador')) {
+          if(req.body.estado_utilizador === false){
             enviarEmailUserBloqueado(modelUpdated.email);
-          } else if (atualizacoes.estado_utilizador === true) {
+          } else if (req.body.estado_utilizador === true) {
             enviarEmailUserDesbloqueado(modelUpdated.email);
           }
         }
