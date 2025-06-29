@@ -43,6 +43,7 @@ class UtilizadoresApi {
         body: jsonEncode({'nome_utilizador': nomeUtilizador, 'email': email}),
       );
       if (response.statusCode == 201) {
+        print('Utilizador criado com sucesso: ${response.body}');
         return jsonDecode(response.body);
       }
       throw Exception('Erro ao criar Utilizador!');
@@ -114,6 +115,7 @@ class UtilizadoresApi {
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
+      print('Tentando efetuar login com email: $email e password: $password');
       final response = await http.post(
         Uri.parse('$urlAPI/login'),
         headers: {'Content-Type': 'application/json'},
@@ -124,7 +126,6 @@ class UtilizadoresApi {
       }
       throw Exception('Erro ao efetuar login!');
     } catch (error) {
-      print('Erro ao efetuar login: $error');
       throw error;
     }
   }

@@ -1,14 +1,19 @@
+// ignore_for_file: use_build_context_synchronously
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
+import '../../../API/utilizadores_api.dart';
 
 class CreatePassword extends StatefulWidget {
-  const CreatePassword({super.key});
+  final String email;
+  const CreatePassword({super.key, required this.email});
 
   @override
   State<CreatePassword> createState() => _CreatePassword();
 }
 
 class _CreatePassword extends State<CreatePassword> {
+  final UtilizadoresApi api = UtilizadoresApi();
   bool isPasswordVisible = false;
   final newpass = TextEditingController();
   final pass = TextEditingController();
@@ -16,8 +21,6 @@ class _CreatePassword extends State<CreatePassword> {
     Icons.visibility_off,
     color: AppColors.primary,
   );
-
-  /*Ir buscar na base de dados a password anterior e compará-la com a nova password*/
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +160,17 @@ class _CreatePassword extends State<CreatePassword> {
 
   Future<void> analisar() async {
     if (newpass.text == pass.text) {
-      context.go("/login");
+      var success = await api.alterarPassword(widget.email, newpass.text);
+      if (success['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Password alterada com sucesso!')),
+        );
+        await Future.delayed(Duration(seconds: 2));
+       } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao alterar password: ${success['message']}')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('As passwords não coincidem!')),

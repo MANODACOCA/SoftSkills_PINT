@@ -135,7 +135,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'createPassword',
       path: '/createPassword',
-      builder: (context, state) => CreatePassword(),
+      builder: (context, state) => CreatePassword(email: state.extra as String),
     ),
     GoRoute(
       name: 'changeforgotpass',
