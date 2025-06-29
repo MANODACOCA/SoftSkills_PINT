@@ -122,8 +122,16 @@ const trabalhosRouter = require('./routes/trabalhos_route.js');
 app.use('/trabalhos',trabalhosRouter);
 
 const entregaTrabalhosRouter = require('./routes/entrega_trabalhos_route.js');
+const { checkToken } = require('./middlewares/middleware_login.js');
 app.use('/entrega-trabalhos',entregaTrabalhosRouter);
 
-//para ir buscar as imagens ao backend
-//app.use('/uploads/usersProfilesImg/', express.static(path.join(__dirname, 'uploads/usersProfilesImg/')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+//---------------------------------------------------------------------------------
+app.get('/verificar-utilizador-block', checkToken, (req, res) =>{
+  if (!req.decoded.estado_utilizador) {
+    return res.status(403).json({message: 'Utilizador Bloqueado'});
+  }
+
+  res.status(200).json({ok: 'Utilizador com permissoes'});
+});
