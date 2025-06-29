@@ -24,14 +24,6 @@ const CategoriaAreaTopicoTable = () => {
         }
     }
 
-    const fetchCategoria = async () => {
-        try {
-            const response = await list_categoria();
-            setCategoria(response);
-        } catch (error) {
-            console.log('Erro ao carregar Categorias');
-        }
-    }
 
     const renderActions = (item) => {
         return(
@@ -45,6 +37,9 @@ const CategoriaAreaTopicoTable = () => {
             </div>
         );
     }
+
+
+    // #region topico
 
     const renderTopicos = (item, isExpanded, expandedContent = false ) => {
         if (expandedContent) {
@@ -234,6 +229,11 @@ const CategoriaAreaTopicoTable = () => {
         }
     }
 
+    // #endregion 
+    
+
+    // #region area
+
     const handleAddArea = async () => {
         const result = await Swal.fire({
             title: 'Tem a certeza que deseja adicionar área?',
@@ -373,6 +373,20 @@ const CategoriaAreaTopicoTable = () => {
         } 
     }
 
+    // #endregion
+
+
+    // #region categoria
+
+    const fetchCategoria = async () => {
+        try {
+            const response = await list_categoria();
+            setCategoria(response);
+        } catch (error) {
+            console.log('Erro ao carregar Categorias');
+        }
+    }
+
     const handleCategoria = async (categoriaAtual) => {
         console.log(categoriaAtual.nome_cat);
         const result = await Swal.fire({
@@ -505,7 +519,10 @@ const CategoriaAreaTopicoTable = () => {
             }
         }
     }
+
+    // #endregion
      
+
     useEffect(() => {
         fetchCategoria();
     }, []);

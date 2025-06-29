@@ -118,7 +118,7 @@ const HomePageAdmin = () => {
         </div>
 
         <div className="col-12 col-sm-6 col-md-4 col-lg-3">
-          <Link to="/admin/queixas" className="text-decoration-none text-white">
+          <Link to="/admin/categorias" className="text-decoration-none text-white">
             <div className="card-stat card-categoria shadow rounded-4 p-4 text-white text-start">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
