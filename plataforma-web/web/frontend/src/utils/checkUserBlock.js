@@ -6,7 +6,7 @@ export const checkUserBlocked = async () => {
     const token = localStorage.getItem("token");
     if (!token) return false;
 
-    const res = await axios(`/${API_URL}/verificar-utilizador-block`, {
+    const res = await axios.get(`/${API_URL}/verificar-utilizador-block`, {
       headers: { Authorization: `Bearer ${token}` }
     });
 
