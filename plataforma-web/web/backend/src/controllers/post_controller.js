@@ -4,7 +4,6 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).post;
 const controllers = {};
-const { getCommentsByPost } = require('../services/post.service');
 
 
 controllers.list = async (req,res)=>{
@@ -71,35 +70,5 @@ controllers.delete = async (req,res)=>{
     res.status(500).json({erro:'Erro ao apagar o/a Post!',desc: err.message});
   }
 };
-
-controllers.getCommentsByPost = async (req, res) => {
-  try {
-    const { postId } = req.params;
-    
-    // Validação básica do ID
-    if (!postId || isNaN(postId)) {
-      return res.status(400).json({
-        success: false,
-        message: 'ID do post inválido'
-      });
-    }
-
-    const comments = await getCommentsByPost(parseInt(postId));
-    
-    res.json({
-      success: true,
-      data: comments
-    });
-  } catch (error) {
-    console.error('Erro no controller getCommentsByPost:', error);
-    
-    const statusCode = error.message.includes('não encontrado') ? 404 : 500;
-    res.status(statusCode).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
-
 
 module.exports = controllers;
