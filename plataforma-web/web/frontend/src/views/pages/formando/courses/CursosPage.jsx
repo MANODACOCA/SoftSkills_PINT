@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { getCursosDisponiveisParaInscricao } from '../../../api/cursos_axios';
-import { formatDayMonthYear, radomArray } from '../../components/shared_functions/FunctionsUtils';
-import SpinnerBorder from '../../components/spinner-border/spinner-border';
+import { getCursosDisponiveisParaInscricao } from '../../../../api/cursos_axios';
+import { formatDayMonthYear, radomArray } from '../../../components/shared_functions/FunctionsUtils';
+import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 
-import Card from '../../components/card/Card';
-import FilterMenu from "../../components/filter_menu/filter_menu";
+import Card from '../../../components/card/Card';
+import FilterMenu from "../../../components/filter_menu/filter_menu";
 
 
 const CursosPage = () => {
