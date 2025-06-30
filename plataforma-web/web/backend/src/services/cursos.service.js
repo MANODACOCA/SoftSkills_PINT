@@ -29,23 +29,20 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   }
 
   if (search) {
-    baseWhereAssincrono[Sequelize.Op.and] = [
-      Sequelize.where(
-        Sequelize.fn('unaccent', Sequelize.col('nome_curso')),
-        {
-          [Op.iLike]: Sequelize.fn('unaccent', `${search}`)
-        }
-      )
-    ];
-    baseWhereSincrono[Sequelize.Op.and] = [
-      Sequelize.where(
-        Sequelize.fn('unaccent', Sequelize.col('nome_curso')),
-        {
-          [Op.iLike]: Sequelize.fn('unaccent', `${search}`)
-        }
-      )
-    ]
+   
+    const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    const searchFilter = Sequelize.where(
+      Sequelize.fn('unaccent', Sequelize.col('nome_curso')),
+      {
+        [Op.iLike]: `%${unaccentedSearch}%` 
+      }
+    );
+
+    baseWhereAssincrono[Op.and] = [searchFilter];
+    baseWhereSincrono[Op.and] = [searchFilter];
   }
+
 
   if (topicosIDs.length > 0) {
     baseWhereAssincrono.id_topico = { [Op.in]: topicosIDs };
