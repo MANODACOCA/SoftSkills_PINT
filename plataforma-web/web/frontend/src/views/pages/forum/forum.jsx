@@ -38,7 +38,7 @@ const Foruns = () => {
   }, [fetchForuns]);
 
   const handleParticiparClick = (id) => {
-    navigate(`/forum/posts/${id}`);
+    navigate(`/forum/${id}`);
   };
 
   // Filtra os fóruns com base no termo de pesquisa
@@ -129,7 +129,7 @@ const Foruns = () => {
       ) : error ? (
         <div className="alert alert-danger text-center my-5">{error}</div>
       ) : forunsFiltrados.length === 0 ? (
-        <div className="alert alert-info text-center">Nenhum fórum encontrado com os filtros ou pesquisa atuais.</div>
+        <div className="alert alert-info text-center">Nenhum fórum encontrado com a pesquisa atual.</div>
       ) : (
         <div className="row row-cols-1 g-4">
           {forunsFiltrados.map(renderForumCard)}

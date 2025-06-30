@@ -15,13 +15,13 @@ import CreateAccout from './views/components/login_comp/create_account/createAcc
 //pages
 import LoginPage from './views/pages/login_basePage/login_basePage';
 import BaseLayout from './views/pages/base/layout/BaseLayout.jsx';
-import HomePage from './views/pages/home/homepage';
+import HomePage from './views/pages/formando/home/homepage';
 import EnrolledCourses from './views/pages/formando/enrolled_courses/EnrolledCourses';
-import NotificationPage from './views/pages/notifications/notificationsPage';
+import NotificationPage from './views/pages/formando/notifications/notificationsPage';
 import Forum from './views/pages/forum/forum';
 import CompletedCourses from './views/pages/formando/completed_courses/CompletedCourses';
 import FavoriteCourses from './views/pages/formando/favorite_courses/FavoriteCourses';
-import CursosPage from './views/pages/courses/CursosPage';
+import CursosPage from './views/pages/formando/courses/CursosPage';
 import ForumPosts from './views/pages/forum/post/post';
 import ConteudosList from './views/pages/forum/post/conteudos_posts';
 import CPlusPlusPage from './views/pages/forum/post/post';
@@ -71,6 +71,10 @@ function App() {
             </ProtectedRoute>
           }
         >
+          <Route path="/forum" element={<Forum />} />
+          <Route path="/forum/:id" element={<ForumPosts />} />
+          <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
+          <Route path="/forum/posts/:postId/conteudos" element={<ConteudosList />} />
           <Route path='/perfil/info' element={<InfoProfile />} />
           <Route path="/perfil/editar" element={<EditProfile />} />
         </Route>
@@ -92,10 +96,6 @@ function App() {
           <Route path="my/cursos/inscritos" element={<EnrolledCourses />} />
           <Route path="my/cursos/terminados" element={<CompletedCourses />} />
           <Route path="/cursos/favoritos" element={<FavoriteCourses />} />
-          <Route path="/forum" element={<Forum />} />
-          <Route path="/forum/posts/:id" element={<ForumPosts />} />
-          <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
-          <Route path="/forum/posts/:postId/conteudos" element={<ConteudosList />} />
           <Route path="/cursos/:id" element={<CourseRegistration />} />
           <Route path="my/cursos/inscritos/curso/:cursoId" element={<ClassPage />} />
           <Route path="my/cursos/terminados/curso/:cursoId" element={<ClassPage />} />

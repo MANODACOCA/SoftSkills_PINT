@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
-import Slide from '../../components/carrousel/Carrousel';
-import Cardhighlight from '../../components/card_highlight/CardHighlight';
-import SpinnerBorder from '../../components/spinner-border/spinner-border';
+import Slide from '../../../components/carrousel/Carrousel';
+import Cardhighlight from '../../../components/card_highlight/CardHighlight';
+import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import './HomePage.css';
-import { list_cursos, getCourseDestaqueAssincrono, getCourseDestaqueSincrono, getCousesWithMoreFormandos, getCourseForYou, getCourseNews, getCoursePopular } from '../../../api/cursos_axios';
-import ScrollableSection from '../../components/scrollable_section/ScrollableSection';
-import { useUser } from '../../../utils/useUser';
+import { list_cursos, getCourseDestaqueAssincrono, getCourseDestaqueSincrono, getCousesWithMoreFormandos, getCourseForYou, getCourseNews, getCoursePopular } from '../../../../api/cursos_axios';
+import ScrollableSection from '../../../components/scrollable_section/ScrollableSection';
+import { useUser } from '../../../../utils/useUser';
 
 const HomePage = () => {
   const { user } = useUser();
