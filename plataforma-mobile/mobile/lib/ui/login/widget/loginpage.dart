@@ -203,9 +203,35 @@ class _LoginPage extends State<LoginPage> {
                       fixedSize: Size(screenWidth - 40, 46),
                     ),
                     onPressed: () async {
-                      bool success = (await api.login(_emailController.text, _passwordController.text)) as bool;
-                      if (success) {
-                        context.go("/twofa");
+                      if (_emailController.text.isEmpty ||
+                          _passwordController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Por favor, preencha todos os campos.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
+                      try {
+                        final response = await api.login(
+                          _emailController.text,
+                          _passwordController.text,
+                        );
+                        if (response['success'] == true) {
+                          if (response['twoFa'] == false) {
+                            context.go('/homepage'); //Homepage
+                          } else {
+                            context.go("/twofa");
+                          }
+                        }
+                      } catch (error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Erro ao efetuar login: $error'),
+                          ),
+                        );
                       }
                     },
                     child: const Text(

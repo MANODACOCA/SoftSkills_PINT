@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 
 import ProtectedRoute from './views/components/rotasProtegidas/rotasProtegidas';
 import TokenChecker from './utils/authService.js';
+import NotFoundPage from './views/pages/base/page_not_found/PageNotFound';
+import NotPermisson from './views/pages/base/page_not_found/PageNotPermisson.jsx';
 
 //components login
 import Login from './views/components/login_comp/login/Login';
@@ -13,7 +15,6 @@ import CreateAccout from './views/components/login_comp/create_account/createAcc
 //pages
 import LoginPage from './views/pages/login_basePage/login_basePage';
 import BaseLayout from './views/pages/base/layout/BaseLayout.jsx';
-import NotFoundPage from './views/pages/base/page_not_found/PageNotFound';
 import HomePage from './views/pages/home/homepage';
 import EnrolledCourses from './views/pages/formando/enrolled_courses/EnrolledCourses';
 import NotificationPage from './views/pages/notifications/notificationsPage';
@@ -61,14 +62,30 @@ function App() {
 
 
  //#region{/*CONTEUDO DA PAGINA */}
+
+        {/* for all */}
         <Route
           element={
-            <ProtectedRoute>
+            <ProtectedRoute allowedRoles={['formando', 'formador', 'admin']}>
               <BaseLayout />
             </ProtectedRoute>
           }
         >
-          {/* formando */}
+          <Route path='/perfil/info' element={<InfoProfile />} />
+          <Route path="/perfil/editar" element={<EditProfile />} />
+        </Route>
+        {/* for all */}
+
+
+
+        {/* formando */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['formando']}>
+              <BaseLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/home" element={<HomePage />} />
           <Route path="/notificacoes" element={<NotificationPage />} />
           <Route path="/cursos" element={<CursosPage />} />
@@ -80,18 +97,34 @@ function App() {
           <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
           <Route path="/forum/posts/:postId/conteudos" element={<ConteudosList />} />
           <Route path="/cursos/:id" element={<CourseRegistration />} />
-          <Route path="/perfil/editar" element={<EditProfile />} />
           <Route path="my/cursos/inscritos/curso/:cursoId" element={<ClassPage />} />
           <Route path="my/cursos/terminados/curso/:cursoId" element={<ClassPage />} />
-          <Route path='/perfil/info' element={<InfoProfile />} />
-          {/* formando */}
+        </Route>
+        {/* formando */}
 
 
-          {/* formador */}
-          {/* formador */}
+
+        {/* formador */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['formador']}>
+              <BaseLayout />
+            </ProtectedRoute>
+          }
+        >
+
+        </Route>
+        {/* formador */}
 
 
-          {/* admin */}
+        {/* admin */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['admin']}>
+              <BaseLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path='/admin/home' element={<HomePageAdmin />} />
           <Route path='/admin/cursos' element={<CourseTable />} />
           <Route path='/admin/utilizadores' element={<UsersTables />} />
@@ -101,12 +134,15 @@ function App() {
           <Route path='/admin/cursos/editar/:id' element={<EditCourse />} />
           <Route path='/admin/utilizadores/historico/:id' element={<HistoryUser />} />
           <Route path='/admin/categorias' element={<CategoriaAreaTopicoTable />} />
-          {/* admin */}
+
         </Route>
+        {/* admin */}
+
 //#endregion{/*CONTEUDO DA PAGINA */}
 
         <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+        <Route path="/not-permission" element={<NotPermisson />} />
+      </Routes >
     </>
 
   );

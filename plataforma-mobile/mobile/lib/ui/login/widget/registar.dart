@@ -1,5 +1,6 @@
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
+import '../../../API/utilizadores_api.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -9,6 +10,9 @@ class Register extends StatefulWidget {
 }
 
 class _Register extends State<Register> {
+  final UtilizadoresApi api = UtilizadoresApi();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userNomeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,15 +55,29 @@ class _Register extends State<Register> {
                       children: <Widget>[
                         SizedBox(height: 70),
                         Text(
-                          'Seja bem-vindo, insira o seu email',
+                          'Seja bem-vindo à SoftSkills',
                           style: TextStyle(
                             fontSize: 16,
                             fontStyle: FontStyle.italic,
                             color: Color.fromRGBO(105, 105, 105, 100),
                           ),
                         ),
-                        SizedBox(height: 50),
+                        SizedBox(height: 30),
                         TextField(
+                          controller: _userNomeController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(
+                                color: Color.fromRGBO(211, 211, 211, 100),
+                              ),
+                            ),
+                            labelText: 'Nome de Utilizador',
+                          ),
+                        ),
+                        SizedBox(height: 25),
+                        TextField(
+                          controller: _emailController,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20),
@@ -79,11 +97,29 @@ class _Register extends State<Register> {
                             ),
                             fixedSize: const Size(310, 46),
                           ),
-                          onPressed: () {
-                            context.go("/createPassword");
+                          onPressed: () async {
+                            var success = await api.createUtilizador(
+                              _userNomeController.text,
+                              _emailController.text,
+                            );
+                            if (success['success'] == true) {
+                              context.go(
+                                '/createPassword',
+                                extra: {'email': _emailController.text},
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Erro ao criar utilizador: ${success['message']}',
+                                  ),
+                                ),
+                              );
+                            }
+                            //context.go("/createPassword");
                           },
                           child: const Text(
-                            'Confirmar email',
+                            'Criar Conta',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
