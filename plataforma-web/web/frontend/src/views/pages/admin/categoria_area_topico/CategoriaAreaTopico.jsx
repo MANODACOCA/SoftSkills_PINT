@@ -130,14 +130,14 @@ const CategoriaAreaTopicoTable = () => {
                     const nome_topico = adicionarTopico.value.nome_topico;
                     const descricao_top = adicionarTopico.value.descricao_top;
                     const data = await create_topico({id_area, nome_topico, descricao_top});
-                    console.log('ola');
                     const id_topico = data.id_topico;
-                    const data_criacao_cp = new Date().toLocaleDateString();
+                    const data_criacao_cp = new Date();
+                    console.log(data_criacao_cp);
                     await create_conteudos_partilhado({id_topico, data_criacao_cp})
                     fetchCatAreaTop();
                     Swal.fire({
                         title: 'Sucesso',
-                        text: `Adicionado com sucesso`,
+                        text: `Adicionado com sucesso. Foi criado um tópico para o forúm!`,
                         icon: 'success',
                         timer: 1500,
                         showConfirmButton: false
