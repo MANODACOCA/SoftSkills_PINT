@@ -31,8 +31,12 @@ const HistoryUser = () => {
           setCursosInscrito(formatted);
           console.log(formatted);
         } catch (error) {
-          console.error('Erro ao encontrar cursos inscritos:', error);
-          setCursosInscrito([]);
+            if (error.response?.status === 404){
+                setCursosInscrito([]);
+                console.log('Não existem cursos onde o utilizador esteja inscrito');
+            } else {
+                console.error('Erro ao encontrar cursos inscritos');
+            }
         }
     };
 
@@ -42,8 +46,12 @@ const HistoryUser = () => {
             setCursosTerminados(data);
             console.log(data);
         } catch (error) {
-            console.error('Erro ao encontrar cursos terminados:', error);
-            setCursosTerminados([]);
+            if (error.response?.status === 404){
+                setCursosTerminados([]);
+                console.log('Não existem cursos que o utilizador ja tenha terminado');
+            } else {
+                console.error('Erro ao encontrar cursos inscritos');
+            }
         }
     };
 
@@ -63,7 +71,12 @@ const HistoryUser = () => {
             setCursosLecionadosTerminados(data);
             console.log(data);
         } catch (error) {
-            console.log('Erro ao encontrar cursos lecionados');
+            if (error.response?.status === 404){
+                setCursosLecionadosAtualmente([]);
+                console.log('Não existem cursos a serem lecionados Terminados');
+            } else {
+                console.log('Erro ao encontrar cursos lecionados');
+            }
         }
     }
 
@@ -73,7 +86,12 @@ const HistoryUser = () => {
             setCursosLecionadosAtualmente(data);
             console.log(data);
         } catch (error) {
-            console.log('Erro ao encontrar cursos lecionados');
+            if (error.response?.status === 404){
+                setCursosLecionadosAtualmente([]);
+                console.log('Não existem cursos a serem lecionados atualmente');
+            } else {
+                console.log('Erro ao encontrar cursos lecionados');
+            }
         }
     }
 
