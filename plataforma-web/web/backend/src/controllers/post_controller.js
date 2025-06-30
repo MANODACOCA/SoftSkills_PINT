@@ -4,7 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).post;
 const controllers = {};
-const { getCommentsByPost, getConteudosByPost, incrementPostLike, decrementPostLike} = require('../services/post.service');
+const { getCommentsByPost } = require('../services/post.service');
 
 
 controllers.list = async (req,res)=>{
@@ -100,92 +100,6 @@ controllers.getCommentsByPost = async (req, res) => {
     });
   }
 };
-
-controllers.getConteudosByPost = async (req, res) => {
-        try {
-            const {postId} = req.params;
-            
-            if (!postId || isNaN(postId)) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'ID do post inválido'
-                });
-            }
-
-            const conteudos = await getConteudosByPost(parseInt(postId));
-            
-            res.json({
-                success: true,
-                data: conteudos
-            });
-        } catch (error) {
-            console.error('Erro no controller getByPost:', error);
-            
-            const statusCode = error.message.includes('não encontrado') ? 404 : 500;
-            res.status(statusCode).json({
-                success: false,
-                message: error.message
-            });
-        }
-};
-
-controllers.incrementLike = async (req, res) => {
-    try {
-        const { postId } = req.params;
-        
-        if (!postId || isNaN(postId)) {
-            return res.status(400).json({
-                success: false,
-                message: 'ID do post inválido'
-            });
-        }
-
-        const result = await incrementPostLike(parseInt(postId));
-        
-        res.json({
-            success: true,
-            likeCount: result.likeCount
-        });
-    } catch (error) {
-        console.error('Erro no controller incrementLike:', error);
-        
-        const statusCode = error.message.includes('não encontrado') ? 404 : 500;
-        res.status(statusCode).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
-
-controllers.decrementLike = async (req, res) => {
-    try {
-        const { postId } = req.params;
-        
-        if (!postId || isNaN(postId)) {
-            return res.status(400).json({
-                success: false,
-                message: 'ID do post inválido'
-            });
-        }
-
-        const result = await decrementPostLike(parseInt(postId));
-        
-        res.json({
-            success: true,
-            likeCount: result.likeCount,
-            message: result.message || ''
-        });
-    } catch (error) {
-        console.error('Erro no controller decrementLike:', error);
-        
-        const statusCode = error.message.includes('não encontrado') ? 404 : 500;
-        res.status(statusCode).json({
-            success: false,
-            message: error.message
-        });
-    }
-};
-
 
 
 module.exports = controllers;
