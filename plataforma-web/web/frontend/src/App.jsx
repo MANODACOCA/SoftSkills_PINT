@@ -20,8 +20,10 @@ import BaseLayout from './views/pages/base/layout/BaseLayout.jsx';
 import NotificationPage from './views/pages/formando/notifications/notificationsPage';
 import EditProfile from './views/pages/profile/profile';
 import InfoProfile from './views/pages/profile/infoprofile';
+
+
 //forum
-import Forum from './views/pages/forum/forum';
+import Forum from './views/pages/forum/conteudos_partilhados/conteudos_partilhados.jsx';
 import PostComments from './views/pages/forum/post/coments/comment';
 import ForumPosts from './views/pages/forum/post/post';
 import ConteudosList from './views/pages/forum/post/conteudos_posts';

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
 import {
   getForuns
-} from '../../../api/conteudos_partilhado_axios';
+} from '../../../../api/conteudos_partilhado_axios';
 
 const Foruns = () => {
   const [foruns, setForuns] = useState([]);
@@ -63,7 +63,10 @@ const Foruns = () => {
                 <p className="card-text">{topico.descricao_top || 'Sem descrição'}</p>
                 <div className="d-flex gap-3 flex-wrap">
                   <small className="text-muted">Criado em: {dataCriacao}</small>
-                  <small className="text-muted">Tópico: {topico.nome_topico || 'Tópico desconhecido'}</small>
+                </div>
+                <div className="d-flex gap-3 flex-wrap">
+                  <small className="text-muted">Criado em: {dataCriacao}</small>
+                  <small className="text-muted">Categoria: {topico.nome_categoria || 'Tópico desconhecido'}</small>
                 </div>
               </div>
               <div className="text-end">

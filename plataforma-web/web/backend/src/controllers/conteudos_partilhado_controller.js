@@ -5,16 +5,26 @@ const models = initModels(sequelize);
 const controllers = {};
 
 const conteudoPartilhadoService = require('../services/conteudo_partilhado.service');
-const ForumService = require("../services/forum.service");
 
 
 controllers.list = async (req, res) => {
   try {
-    const data = await ForumService.getForumAll();
-    res.status(200).json(data);
+    const ordernar = req.query.ordenar || "Mais Recentes";
+    const search = req.query.search || "";
+    const data = await conteudoPartilhadoService.getForuns(ordernar, search);
+
+    if (data && data.length > 0) {
+      res.status(200).json(data);
+    } else {
+      res.status(404), json({ erro: 'Nenhum conteudo partilhado encontrado.' });
+    }
+
   } catch (error) {
-    res.status(500).json({ erro: 'Erro ao carregar a lista do Forum', desc: error.message });
-    throw (error);
+    console.error('Erro ao procurar cursos disponiveis:', error);
+    res.status(500).json({
+      erro: 'Erro ao procurar conteudos partilhados.',
+      desc: error.message
+    });
   }
 };
 
@@ -86,27 +96,6 @@ controllers.countForum = async (req, res) => {
     res.status(200).json(total);
   } catch (error) {
     res.status(500).json('Erro ao contar Foruns');
-  }
-}
-
-controllers.getForuns = async (req, res) => {
-  try {
-    const ordernar = req.query.ordenar || "Mais Recentes";
-    const search = req.query.search || "";
-    const conteudos_partilhado = await conteudoPartilhadoService.getForuns(ordernar, search);
-
-    if (conteudos_partilhado && conteudos_partilhado.length > 0) {
-      res.status(200).json(conteudos_partilhado);
-    } else {
-      res.status(404), json({ erro: 'Nenhum conteudo partilhado encontrado.' });
-    }
-
-  } catch (error) {
-    console.error('Erro ao procurar cursos disponiveis:', error);
-    res.status(500).json({
-      erro: 'Erro ao procurar conteudos partilhados.',
-      desc: error.message
-    });
   }
 }
 
