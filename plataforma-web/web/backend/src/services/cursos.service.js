@@ -1,4 +1,4 @@
-const { Sequelize, Op, where } = require('sequelize');
+const { Sequelize, Op, where, Model } = require('sequelize');
 const sequelize = require('../models/database');
 const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria } = require('../models/init-models')(sequelize);
 
@@ -150,7 +150,6 @@ async function getCourseWithMoreFormandos() {
   }
 }
 
-
 // Função para colocar 8 cursos random
 async function getCourseForYou() {
   try {
@@ -164,7 +163,6 @@ async function getCourseForYou() {
     throw error;
   }
 }
-
 
 // Função para colocar 8 cursos mais populares
 async function getCoursePopular() {
@@ -184,7 +182,6 @@ async function getCoursePopular() {
   }
 }
 
-
 // Função para obter o curso assíncrono em destaque(vai buscar o curso com mais inscricoes)
 async function getCourseDestaqueAssincrono() {
   try {
@@ -203,7 +200,6 @@ async function getCourseDestaqueAssincrono() {
   }
 }
 
-
 // Função para colocar 8 cursos mais recentes
 async function getCourseNews() {
   try {
@@ -221,7 +217,6 @@ async function getCourseNews() {
     throw error;
   }
 }
-
 
 // Função para obter o curso síncrono em destaque(vai buscar o curso com mais inscricoes)
 async function getCourseDestaqueSincrono() {
@@ -246,7 +241,6 @@ async function getCourseDestaqueSincrono() {
     return null;
   }
 }
-
 
 /*Esta funcao vai buscar todos os cursos em curso de um determinado formando*/
 async function getEnrolledCoursesForUser(userId, tipologia = null) {
@@ -321,7 +315,6 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
     throw error;
   }
 }
-
 
 /*Esta funcao vai buscar todos os cursos completosa de um determinado formando*/
 async function getCompleteCoursesFromUser(userId, tipologia = null) {
@@ -407,8 +400,6 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
   }
 }
 
-
-
 /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
 async function updateFormandosCounter() {
   try {
@@ -438,7 +429,6 @@ async function updateFormandosCounter() {
   }
 }
 /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
-
 
 async function getAllCoursesWithAllInfo() {
   try {
@@ -685,6 +675,54 @@ async function verifyInscription(userId, cursoId) {
   }
 }
 
+async function getCursosLecionadosTerminadosService(userId) {
+  try {
+    const cursoLecionado = await sincrono.findAll({
+      where: {
+        id_formador : userId,
+      },
+      include: [
+        {
+          model: cursos,
+          as: 'id_curso_curso',
+          where: {
+            data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE') },
+          },
+        }
+      ]
+    });
+    
+    return cursoLecionado;
+  } catch (error) {
+    console.error('Erro ao encontrar cursos lecionados terminados para o utilizador:', error);
+    throw error;
+  }
+}
+
+async function getCursosLecionadosAtualmenteService(userId) {
+  try {
+    const cursoLecionado = await sincrono.findAll({
+      where: {
+        id_formador : userId,
+      },
+      include: [
+        {
+          model: cursos,
+          as: 'id_curso_curso',
+          where: {
+            data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
+          },
+        }
+      ]
+    });
+
+    return cursoLecionado;
+  } catch (error) {
+    console.error('Erro ao encontrar cursos lecionados atualmente para o utilizador:', error);
+    throw error;
+  }
+}
+
 module.exports = {
   getCursosDiponiveisParaInscricao,
   getCourseDestaqueSincrono,
@@ -701,4 +739,6 @@ module.exports = {
   verifyInscription,
   createCursoCompleto,
   updateCursoCompleto,
+  getCursosLecionadosTerminadosService,
+  getCursosLecionadosAtualmenteService,
 };

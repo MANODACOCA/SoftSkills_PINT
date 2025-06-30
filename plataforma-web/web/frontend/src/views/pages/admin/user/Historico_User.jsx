@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCompletedCourses, getEnrolledCourses } from "../../../../api/cursos_axios";
+import { getCompletedCourses, getCursosLecionadosAtualmente, getCursosLecionadosTerminados, getEnrolledCourses } from "../../../../api/cursos_axios";
 import { useParams } from "react-router-dom";
 import { Tab, Tabs } from 'react-bootstrap';
 import './Historico_User.css';
@@ -10,6 +10,9 @@ const HistoryUser = () => {
     const [cursosTerminados, setCursosTerminados] = useState([]);
     const [cursosInscrito, setCursosInscrito] = useState([]);
     const [utilizador, setUtilizador] = useState([]);
+    const [cursosLecionadosTerminados, setCursosLecionadosTerminados] = useState([]);
+    const [cursosLecionadosAtualmente, setCursosLecionadosAtualmente] = useState([]);
+
 
     const fetchEnrolledCourses = async (userId) => {
         try {
@@ -54,10 +57,32 @@ const HistoryUser = () => {
         }
     }
 
+    const fetchCursosLecionadosTerminados = async (userId) => {
+        try {
+            const data = await getCursosLecionadosTerminados(userId);
+            setCursosLecionadosTerminados(data);
+            console.log(data);
+        } catch (error) {
+            console.log('Erro ao encontrar cursos lecionados');
+        }
+    }
+
+    const fetchCursosLecionadosAtualmente = async (userId) => {
+        try {
+            const data = await getCursosLecionadosAtualmente(userId);
+            setCursosLecionadosAtualmente(data);
+            console.log(data);
+        } catch (error) {
+            console.log('Erro ao encontrar cursos lecionados');
+        }
+    }
+
     useEffect(() => {
         fetchEnrolledCourses(id);
         fetchCompletedCourses(id);
         fetchUtilizador(id);
+        fetchCursosLecionadosAtualmente(id);
+        fetchCursosLecionadosTerminados(id);
     }, [])
 
     return(
@@ -97,35 +122,62 @@ const HistoryUser = () => {
             </div>
             <div className=''>
                 <Tabs defaultActiveKey="cursoInscrito" className="my-4 nav-justified custom-tabs">
-                    <Tab eventKey="cursoInscrito" title="Cursos Inscritos">
-                        <div className="mt-4">
-                            {/* Inscrito */}
-                            {cursosInscrito.map((cu, index) => {
-                                return (
-                                    <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
-                                        <img
-                                            src={cu.id_curso_curso.imagem}
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_curso.nome_curso)}&background=random&bold=true`;
-                                                }}
-                                            className="rounded-start-4 highlights-images"
-                                            alt="imagem curso"
-                                        />
-                                        <div className="card-body d-flex flex-column justify-content-between">
-                                            <div>
-                                                <h5 className="mb-2">{cu.id_curso_curso.nome_curso}</h5>
+                    {utilizador.isformando && 
+                        <Tab eventKey="cursoInscrito" title="Cursos Inscritos">
+                            <div className="mt-4">
+                                {cursosInscrito.map((cu, index) => {
+                                    return (
+                                        <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
+                                            <img
+                                                src={cu.id_curso_curso.imagem}
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_curso.nome_curso)}&background=random&bold=true`;
+                                                    }}
+                                                className="rounded-start-4 highlights-images"
+                                                alt="imagem curso"
+                                            />
+                                            <div className="card-body d-flex flex-column justify-content-between">
+                                                <div>
+                                                    <h5 className="mb-2">{cu.id_curso_curso.nome_curso}</h5>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                );
+                                    );
                                 })}    
-                        </div>
-                    </Tab>
-                    <Tab eventKey="cursoTerminado" title="Cursos Terminados">
+                            </div>
+                        </Tab>
+                    }
+                    {utilizador.isformando &&
+                        <Tab eventKey="cursoTerminado" title="Cursos Terminados">
+                            <div className="mt-4">
+                                {cursosTerminados.map((cu, index) => {
+                                    return(
+                                        <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
+                                            <img
+                                                src={
+                                                cu.imagem
+                                                    ? cu.imagem
+                                                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.nome_curso)}&background=random&bold=true`                                 
+                                                }
+                                                className="rounded-start-4 highlights-images"
+                                                alt="imagem curso"
+                                            />
+                                            <div className="card-body d-flex flex-column justify-content-between">
+                                                <div>
+                                                    <h5 className="mb-2">{cu.nome_curso}</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })} 
+                            </div>
+                        </Tab>
+                    }
+                    {utilizador.isformador &&  
+                    <Tab eventKey="cursosLecionadosAtualmente" title="Cursos a Lecionar" >
                         <div className="mt-4">
-                            {/* Terminado */}
-                            {cursosTerminados.map((cu, index) => {
+                            {cursosLecionadosAtualmente.map((cu, index) => {
                                 return(
                                     <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
                                         <img
@@ -144,16 +196,36 @@ const HistoryUser = () => {
                                         </div>
                                     </div>
                                 );
-                            })} 
+                            })}
                         </div>
                     </Tab>
+                    }
                     {utilizador.isformador &&  
-                    <Tab eventKey="cursosLecionados" title="Cursos Lecionados" >
+                    <Tab eventKey="cursosLecionadosTerminados" title="Cursos já Lecionados" >
                         <div className="mt-4">
-                            {}
+                            {cursosLecionadosTerminados.map((cu, index) => {
+                                return(
+                                    <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
+                                        <img
+                                            src={
+                                            cu.imagem
+                                                ? cu.imagem
+                                                : `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.nome_curso)}&background=random&bold=true`                                 
+                                            }
+                                            className="rounded-start-4 highlights-images"
+                                            alt="imagem curso"
+                                        />
+                                        <div className="card-body d-flex flex-column justify-content-between">
+                                            <div>
+                                                <h5 className="mb-2">{cu.nome_curso}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </Tab>
-                     }
+                    }
                 </Tabs>
             </div>
         </div>
