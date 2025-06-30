@@ -31,7 +31,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   if (search) {
     baseWhereAssincrono[Sequelize.Op.and] = [
       Sequelize.where(
-        Sequelize.fr('unaccent', Sequelize.col('nome_curso')),
+        Sequelize.fn('unaccent', Sequelize.col('nome_curso')),
         {
           [Op.iLike]: Sequelize.fn('unaccent', `${search}`)
         }
@@ -39,7 +39,7 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
     ];
     baseWhereSincrono[Sequelize.Op.and] = [
       Sequelize.where(
-        Sequelize.fr('unaccent', Sequelize.col('nome_curso')),
+        Sequelize.fn('unaccent', Sequelize.col('nome_curso')),
         {
           [Op.iLike]: Sequelize.fn('unaccent', `${search}`)
         }
