@@ -3,15 +3,22 @@ import axios from 'axios';
 const API_URL = 'https://softskills-api.onrender.com/conteudos_partilhado';
 
 
-export const list_conteudos_partilhado = async () => {
-  try{
-    const response = await axios.get(`${API_URL}/list`);
-    return response.data;
-  }catch (error){
-    console.error('Erro ao ir buscar lista de Conteudo Partilhado!');
-    throw error;
-  }
+export const list_conteudos_partilhado = async (ordenar = "Mais Recentes", search = "") => {
+try{
+        let url = `${API_URL}/list?ordenar=${ordenar}`;
+
+        if (search) {
+            url += `&search=${encodeURIComponent(search)}`
+        }
+
+        const response = await axios.get(url);
+        return response.data;
+    } catch (error){
+        console.error('Erro ao procurar foruns!');
+        throw error;
+    }
 }
+    
 
 export const get_conteudos_partilhado  = async (id) => {
     try{
@@ -54,22 +61,6 @@ export const delete_conteudos_partilhado = async (id) => {
 };
 
 /*------------------------------------------------------------------------------------------------*/
-
-export const getForuns = async (ordenar = "Mais Recentes", search = "") => {
-    try{
-        let url = `${API_URL}/foruns?ordenar=${ordenar}`;
-
-        if (search) {
-            url += `&search=${encodeURIComponent(search)}`
-        }
-
-        const response = await axios.get(url);
-        return response.data;
-    } catch (error){
-        console.error('Erro ao procurar foruns!');
-        throw error;
-    }
-}
 
 export const forum_contagem = async () => {
     try{

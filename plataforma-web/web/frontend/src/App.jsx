@@ -24,10 +24,7 @@ import InfoProfile from './views/pages/profile/infoprofile';
 
 //forum
 import Forum from './views/pages/forum/conteudos_partilhados/conteudos_partilhados.jsx';
-import PostComments from './views/pages/forum/post/coments/comment';
 import ForumPosts from './views/pages/forum/post/post';
-import ConteudosList from './views/pages/forum/post/conteudos_posts';
-import CPlusPlusPage from './views/pages/forum/post/post';
 
 //formando
 import HomePage from './views/pages/formando/home/homepage';
@@ -87,8 +84,6 @@ function App() {
         >
           <Route path="/forum" element={<Forum />} />
           <Route path="/forum/:id" element={<ForumPosts />} />
-          <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
-          <Route path="/forum/posts/:postId/conteudos" element={<ConteudosList />} />
           <Route path='/perfil/info' element={<InfoProfile />} />
           <Route path="/perfil/editar" element={<EditProfile />} />
         </Route>

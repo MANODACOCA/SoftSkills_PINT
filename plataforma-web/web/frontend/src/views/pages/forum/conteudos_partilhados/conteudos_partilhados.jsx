@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
 import {
-  getForuns
+  list_conteudos_partilhado
 } from '../../../../api/conteudos_partilhado_axios';
 
 const Foruns = () => {
@@ -10,7 +10,7 @@ const Foruns = () => {
   const [ordenar, setOrdenar] = useState('Mais Recentes');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [pesquisa, setPesquisa] = useState(''); // <- nova state de pesquisa
+  const [pesquisa, setPesquisa] = useState('');
 
   const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const Foruns = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getForuns(ordenar, pesquisa);
+      const data = await list_conteudos_partilhado(ordenar, pesquisa);
 
       setForuns(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -35,7 +35,8 @@ const Foruns = () => {
   }, [fetchForuns]);
 
   const handleParticiparClick = (id) => {
-    navigate(`/forum/${id}`);
+    const selectForum = foruns.find(f => f.id_conteudos_partilhado === id);
+    navigate(`/forum/${id}`, { state: {forum: selectForum} });
   };
 
   const renderForumCard = (forum) => {
@@ -61,12 +62,12 @@ const Foruns = () => {
               <div>
                 <h5 className="card-title">{topico.nome_topico || 'Tópico desconhecido'}</h5>
                 <p className="card-text">{topico.descricao_top || 'Sem descrição'}</p>
-                <div className="d-flex gap-3 flex-wrap">
+                <div className="d-flex gap-3 flex-wrap mb-2">
                   <small className="text-muted">Criado em: {dataCriacao}</small>
                 </div>
                 <div className="d-flex gap-3 flex-wrap">
-                  <small className="text-muted">Criado em: {dataCriacao}</small>
-                  <small className="text-muted">Categoria: {topico.nome_categoria || 'Tópico desconhecido'}</small>
+                  <small className="text-muted">Categoria: {topico.id_area_area.id_categoria_categorium.nome_cat || 'Categoria desconhecida'}</small>
+                  <small className="text-muted">Área: {topico.id_area_area.nome_area || 'Área desconhecida'}</small>
                 </div>
               </div>
               <div className="text-end">
