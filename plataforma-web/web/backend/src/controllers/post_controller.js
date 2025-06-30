@@ -82,7 +82,7 @@ controllers.update = async (req, res) => {
 
 controllers.delete = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id_post } = req.params;
     const deleted = await model.destroy({ where: { id: id } });
     if (deleted) {
       res.status(200).json({ msg: 'Post apagado/a com sucesso!' });
