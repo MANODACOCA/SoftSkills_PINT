@@ -80,9 +80,9 @@ const HistoryUser = () => {
     useEffect(() => {
         fetchEnrolledCourses(id);
         fetchCompletedCourses(id);
-        fetchUtilizador(id);
         fetchCursosLecionadosAtualmente(id);
         fetchCursosLecionadosTerminados(id);
+        fetchUtilizador(id);
     }, [])
 
     return(
