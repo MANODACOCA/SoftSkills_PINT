@@ -20,12 +20,11 @@ import BaseLayout from './views/pages/base/layout/BaseLayout.jsx';
 import NotificationPage from './views/pages/formando/notifications/notificationsPage';
 import EditProfile from './views/pages/profile/profile';
 import InfoProfile from './views/pages/profile/infoprofile';
+
+
 //forum
-import Forum from './views/pages/forum/forum';
-import PostComments from './views/pages/forum/post/coments/comment';
+import Forum from './views/pages/forum/conteudos_partilhados/conteudos_partilhados.jsx';
 import ForumPosts from './views/pages/forum/post/post';
-import ConteudosList from './views/pages/forum/post/conteudos_posts';
-import CPlusPlusPage from './views/pages/forum/post/post';
 
 //formando
 import HomePage from './views/pages/formando/home/homepage';
@@ -38,8 +37,8 @@ import CourseRegistration from './views/pages/formando/course_registration/Cours
 
 
 //formador
-
-
+import HomePageFormador from './views/pages/formador/home/HomePage.jsx';
+import CursoLecionarList from './views/pages/formador/courses_lecionar_dos_list/CoursesLecionarDosList.jsx';
 
 //Admin 
 import HomePageAdmin from './views/pages/admin/home/HomePageAdmin.jsx';
@@ -85,8 +84,6 @@ function App() {
         >
           <Route path="/forum" element={<Forum />} />
           <Route path="/forum/:id" element={<ForumPosts />} />
-          <Route path="/forum/posts/:postId/comments" element={<PostComments />} />
-          <Route path="/forum/posts/:postId/conteudos" element={<ConteudosList />} />
           <Route path='/perfil/info' element={<InfoProfile />} />
           <Route path="/perfil/editar" element={<EditProfile />} />
         </Route>
@@ -124,7 +121,8 @@ function App() {
             </ProtectedRoute>
           }
         >
-
+          <Route path='/formador/home' element={<HomePageFormador />}></Route>
+          <Route path='/formador/cursos' element={<CursoLecionarList />}></Route>
         </Route>
         {/* formador */}
 

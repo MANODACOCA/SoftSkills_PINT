@@ -2,76 +2,7 @@ const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
 const { denuncia, comentario, utilizador, post, tipo_denuncia, conteudos_partilhado, topico, area, categoria } = require('../models/init-models')(sequelize);
 
-// async function getDenunciasAll() {
-//  try {
-//         const denuncias = await denuncia.findAll({
-//             attributes: [
-//                 'id_denuncia', 
-//                 'id_comentario', 
-//                 'id_utilizador', 
-//                 'id_post', 
-//                 'id_tipo_denuncia'
-//             ],
-//             include: [
-//                 {
-//                     model: utilizador,
-//                     as: 'id_utilizador_utilizador',
-//                     attributes: ['nome_utilizador']
-//                 },
-//                 {
-//                     model: tipo_denuncia,
-//                     as: 'id_tipo_denuncia_tipo_denuncium',
-//                     attributes: ['tipo_denuncia']
-//                 },
-//                 {
-//                     model: comentario,
-//                     as: 'id_comentario_comentario',
-//                     attributes: ['texto_comentario'],
-//                     required: false
-//                 },
-//                 {
-//                     model: post,
-//                     as: 'id_post_post',
-//                     attributes: ['texto_post'],
-//                     required: false,
-//                     include: [
-//                         {
-//                             model: conteudos_partilhado,
-//                             as: 'id_conteudos_partilhado_conteudos_partilhado',
-//                             attributes: ['id_conteudos_partilhado'],
-//                             include: [
-//                                 {
-//                                     model: topico,
-//                                     as: 'id_topico_topico',
-//                                     attributes: ['nome_topico'],
-//                                     include: [
-//                                         {
-//                                             model: area,
-//                                             as: 'id_area_area',
-//                                             attributes: ['nome_area'],
-//                                             include: [
-//                                                 {
-//                                                     model: categoria,
-//                                                     as: 'id_categoria_categorium',
-//                                                     attributes: ['nome_cat']
-//                                                 }
-//                                             ]
-//                                         }
-//                                     ]
-//                                 }
-//                             ]
-//                         }
-//                     ]
-//                 }
-//             ]
-//         });
-//         return denuncias;
-//     } catch(error) {
-//         console.error('Erro ao encontrar denuncias', error);
-//         throw error;
-//     }
 
-// }
 
 async function getDenunciasAll() {
     try {

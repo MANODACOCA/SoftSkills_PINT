@@ -1,6 +1,6 @@
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
-const { conteudos_partilhado, topico } = require('../models/init-models')(sequelize);
+const { conteudos_partilhado, topico, categoria, area } = require('../models/init-models')(sequelize);
 
 async function getForuns(ordenar = "Mais Recentes", search = "") {
   let foruns = [];
@@ -24,7 +24,7 @@ async function getForuns(ordenar = "Mais Recentes", search = "") {
       }
     );
 
-   whereTopico = searchFilter;
+    whereTopico = searchFilter;
   }
 
   foruns = await conteudos_partilhado.findAll({
@@ -33,8 +33,22 @@ async function getForuns(ordenar = "Mais Recentes", search = "") {
         model: topico,
         as: "id_topico_topico",
         attributes: ['nome_topico', 'descricao_top'],
-        where: Object.keys(whereTopico).length ? whereTopico : undefined
-      }
+        where: Object.keys(whereTopico).length ? whereTopico : undefined,
+        include: [
+          {
+            model: area,
+            as: 'id_area_area',
+            attributes: ['nome_area'],
+            include: [
+              {
+                model: categoria,
+                as: 'id_categoria_categorium',
+                attributes: ['nome_cat'],
+              }
+            ]
+          }
+        ]
+      },
     ],
     order
   });

@@ -2,8 +2,6 @@ const express = require('express');
 const controller = require('../controllers/comentario_controller.js')
 const router = express.Router();
 
-router.get('/:comentarioId/conteudos', controller.getConteudosByComentario);
-
 router.get('/',(req, res) => {
   res.send("<h1>Ups! Está vazio aqui...</h1><br><b>Caminhos:</b><br>/list<br>/get/{id}<br>/create<br>/update/{id}<br>/delete/{id}");
 });
