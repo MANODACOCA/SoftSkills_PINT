@@ -3,6 +3,7 @@
 const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
+const utilizador = require("../models/utilizador");
 const model = initModels(sequelize).post;
 const controllers = {};
 
@@ -23,7 +24,13 @@ controllers.get = async (req, res) => {
     const data = await model.findAll({
       where: {
         id_conteudos_partilhado: id_conteudos_partilhado
-      }
+      },
+      include: [
+        {
+          model: utilizador,
+          as: 'id_utilizador_utilizador',
+        }
+      ],
     });
 
     if (data) {

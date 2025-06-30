@@ -3,6 +3,7 @@ import { Spinner } from 'react-bootstrap';
 import { useLocation } from "react-router-dom";
 
 import ForumHeader from "../../../components/forum/header/headerForum";
+import Post from "../../../components/forum/post/post";
 import { get_post } from "../../../../api/post_axios";
 
 const ForumPosts = () => {
@@ -44,9 +45,6 @@ const ForumPosts = () => {
   if (error) return <div className="mt-4 alert alert-danger">{error}</div>;
   console.log(posts);
 
-
-  console.log(posts.quatidadePosts);
-
   return (
     <div>
       <ForumHeader
@@ -54,6 +52,23 @@ const ForumPosts = () => {
         forum={forum}
         onPostCreated={fetchPosts}
       />
+      <div className="container mt-5" style={{ maxWidth: '1500px' }}>
+        {posts.length === 0 ? (
+          <div className="alert alert-warning mt-3">Ainda não existem posts.</div>
+        ) : (
+          posts.map((post) => (
+            <Post
+              key={post.id_post}
+              autor={"Você"} // ou substitui com username real se tiveres
+              tempo={"agora"} // ou formata a data do post
+              texto={post.texto_post}
+              likes={post.contador_likes_post}
+              comentarios={post.contador_comentarios}
+              imagemAutor={"https://randomuser.me/api/portraits/men/75.jpg"} // ou avatar do autor
+            />
+          ))
+        )}
+      </div>
 
     </div>
   );
