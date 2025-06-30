@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://softskills-api.onrender.com/post';
+const API_URL = 'https://softskills-api.onrender.com/posts';
 
 
 export const list_post = async () => {

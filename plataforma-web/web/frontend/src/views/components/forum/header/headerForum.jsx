@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
+import Swal from 'sweetalert2';
 import './headerForum.css';
-import { create_post } from '../../../api/post_axios';
-import { useUser } from '../../../utils/useUser';
+import { create_post } from '../../../../api/post_axios';
+import { useUser } from '../../../../utils/useUser';
 
-const ForumHeader = ({ totalPosts, forum }) => {
+const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
     const API_URL = 'https://softskills-api.onrender.com/';
     const { user } = useUser();
     const [showModal, setShowModal] = useState(false);
@@ -29,7 +30,13 @@ const ForumHeader = ({ totalPosts, forum }) => {
 
             setConteudo('');
             setShowModal(false);
-            setIsSuccess('Post criado com sucesso!');
+            if (onPostCreated) onPostCreated();
+            Swal.fire({
+                title: "Post criado com sucesso!",
+                icon: "success",
+                showConfirmButton:false,
+                timer: 3000,
+            });
         } catch (error) {
             console.error('Erro ao criar post:', error);
             setIsError('Erro ao criar post. Tente novamente.');
