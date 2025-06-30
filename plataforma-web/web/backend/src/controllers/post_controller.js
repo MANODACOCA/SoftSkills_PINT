@@ -28,7 +28,7 @@ controllers.get = async (req, res) => {
 controllers.create = async (req, res) => {
   try {
     if (req.body) {
-      const { texto_post, id_utilizador, id_contexto_partilhado } = req.body;
+      const { texto_post, id_utilizador, id_conteudos_partilhado } = req.body;
 
       const data = await model.create({
         texto_post,
