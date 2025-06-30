@@ -83,7 +83,7 @@ const CursoLecionarList = ({cursosLecionadosA, cursosLecionadosTerm}) => {
                                     return(
                                         <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
                                             <img
-                                                src={cu.id_curso_sincrono_curso.imagem}
+                                                src={cu.id_curso_sincrono_curso.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`}
                                                 onError={(e) => {
                                                     e.target.onerror = null;
                                                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`;
