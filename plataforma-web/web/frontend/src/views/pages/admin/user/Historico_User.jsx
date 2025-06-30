@@ -147,6 +147,13 @@ const HistoryUser = () => {
                             })} 
                         </div>
                     </Tab>
+                    {utilizador.isformador &&  
+                    <Tab eventKey="cursosLecionados" title="Cursos Lecionados" >
+                        <div className="mt-4">
+                            {}
+                        </div>
+                    </Tab>
+                     }
                 </Tabs>
             </div>
         </div>

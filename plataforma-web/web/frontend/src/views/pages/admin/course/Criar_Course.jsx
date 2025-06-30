@@ -206,7 +206,6 @@ const CreateCourse = () => {
     };
 
 
-
     const handleSubmitCursoImg = async (e) => {
         e.preventDefault();
         try {

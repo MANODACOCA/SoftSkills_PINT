@@ -15,7 +15,7 @@ export const checkUserBlocked = async () => {
             const result = await Swal.fire({
                 title: 'A sua conta foi bloqueada. Sessão terminada.',
                 icon: 'warning',
-                showCancelButton: true,
+                showCancelButton: false,
                 confirmButtonText: 'ok',
                 customClass: {
                     confirmButton: 'btn btn-success me-2',

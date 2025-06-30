@@ -470,7 +470,7 @@ const CategoriaAreaTopicoTable = () => {
         });
         if(result.isConfirmed){
             const adicionarCategoria = await Swal.fire({
-                title: 'Adicionar Topico',
+                title: 'Adicionar categoria',
                 html: ` 
                     <label for="nome" class="form-label">Nome da Categoria</label>
                     <input id="nome" class="form-control mb-3" placeholder= "Nome da categoria">
