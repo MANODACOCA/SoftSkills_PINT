@@ -219,8 +219,9 @@ class _LoginPage extends State<LoginPage> {
                           _emailController.text,
                           _passwordController.text,
                         );
+                        print('response: $response');
                         if (response['success'] == true) {
-                          if (response['twoFa'] == false) {
+                          if (response['twoFa'] == false || response['twoFa'] == null) {
                             context.go('/homepage'); //Homepage
                           } else {
                             context.go("/twofa");
