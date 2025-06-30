@@ -684,7 +684,7 @@ async function getCursosLecionadosTerminadosService(userId) {
       include: [
         {
           model: cursos,
-          as: 'id_curso_curso',
+          as: 'id_curso_sincrono_curso',
           where: {
             data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE') },
           },
@@ -708,7 +708,7 @@ async function getCursosLecionadosAtualmenteService(userId) {
       include: [
         {
           model: cursos,
-          as: 'id_curso_curso',
+          as: 'id_curso_sincrono_curso',
           where: {
             data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
           },
