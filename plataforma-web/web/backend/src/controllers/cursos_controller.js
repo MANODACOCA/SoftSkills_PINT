@@ -257,5 +257,32 @@ controllers.verificarInscricao = async (req,res) => {
   }
 };
 
+controllers.getCursosLecionadosTerminados = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const cursosLecionados = await cursosService.getCursosLecionadosTerminadosService(userId);
+    if (cursosLecionados){
+      res.status(200).json(cursosLecionados);
+    } else if (!cursosLecionados) {
+      res.status(404).json({erro: 'Nao foram encontrados cursos lecionados ja terminados'});
+    }
+  } catch (error) {
+    res.status(500).json({erro: 'Erro a procurar cursos lecionados ja terminados'})
+  }
+}
+
+controllers.getCursosLecionadosAtualmente = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const cursosLecionados = await cursosService.getCursosLecionadosAtualmenteService(userId);
+    if (cursosLecionados){
+      res.status(200).json(cursosLecionados);
+    } else if (!cursosLecionados) {
+      res.status(404).json({erro: 'Nao foram encontrados cursos lecionados atualmente'});
+    }
+  } catch (error) {
+    res.status(500).json({erro: 'Erro a procurar cursos lecionados atualmente'});
+  }
+}
 
 module.exports = controllers;

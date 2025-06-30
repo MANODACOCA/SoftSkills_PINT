@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import '../../../API/utilizadores_api.dart';
@@ -104,7 +106,7 @@ class _Register extends State<Register> {
                             );
                             if (success['success'] == true) {
                               context.go(
-                                '/createPassword',
+                                '/login',
                                 extra: {'email': _emailController.text},
                               );
                             } else {
@@ -116,7 +118,6 @@ class _Register extends State<Register> {
                                 ),
                               );
                             }
-                            //context.go("/createPassword");
                           },
                           child: const Text(
                             'Criar Conta',

@@ -207,3 +207,23 @@ export const cursos_contagem = async () => {
         throw error;
     }
 }
+
+export const getCursosLecionadosTerminados = async (userId) => {
+    try {
+        const response = await axios.get(`${API_URL}/users/${userId}/cursos-lecionados-terminados`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao contar o numero de cursos', error);
+        throw error;
+    }
+}
+
+export const getCursosLecionadosAtualmente = async (userId) => {
+    try {
+        const response = await axios.get(`${API_URL}/users/${userId}/cursos-lecionados-atualmente`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao contar o numero de cursos', error);
+        throw error;
+    }
+}

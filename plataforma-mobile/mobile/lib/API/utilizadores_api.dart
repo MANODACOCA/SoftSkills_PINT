@@ -6,23 +6,11 @@ import 'dart:convert';
 class UtilizadoresApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/utilizador';
 
-  Future<List<dynamic>> listUtilizador() async {
-    try {
-      final response = await http.get(Uri.parse('$urlAPI/list'));
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      }
-      throw Exception('Erro ao buscar lista de Utilizador!');
-    } catch (error) {
-      print('Erro ao buscar lista de Utilizador: $error');
-      throw error;
-    }
-  }
-
   Future<Map<String, dynamic>> getUtilizador(String id) async {
     try {
       final response = await http.get(Uri.parse('$urlAPI/get/$id'));
       if (response.statusCode == 200) {
+        print('Utilizador encontrado: ${response.body}');
         return jsonDecode(response.body);
       }
       throw Exception('Erro ao buscar Utilizador!');
@@ -183,19 +171,6 @@ class UtilizadoresApi {
       throw Exception('Erro ao validar codigo 2FA!');
     } catch (error) {
       print('Erro ao validar codigo 2FA: $error');
-      throw error;
-    }
-  }
-
-  Future<int> utilizadoresContagem() async {
-    try {
-      final response = await http.get(Uri.parse('$urlAPI/count'));
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      }
-      throw Exception('Erro ao contar o numero de utilizadores!');
-    } catch (error) {
-      print('Erro ao contar o numero de utilizadores: $error');
       throw error;
     }
   }

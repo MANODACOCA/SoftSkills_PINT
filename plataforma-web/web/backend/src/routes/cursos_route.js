@@ -36,5 +36,7 @@ router.get('/users/:userId/completed-courses', middleware.checkToken,controller.
 router.get('/all-info', middleware.checkToken,controller.getAllInfoCursosAdmin);
 router.get('/verificar/:userId/:cursoId', middleware.checkToken,controller.verificarInscricao);
 router.get('/count', middleware.checkToken, controller.countCursos);
+router.get('/users/:userId/cursos-lecionados-terminados', middleware.checkToken, controller.getCursosLecionadosTerminados);
+router.get('/users/:userId/cursos-lecionados-atualmente', middleware.checkToken, controller.getCursosLecionadosAtualmente);
 
 module.exports = router;
