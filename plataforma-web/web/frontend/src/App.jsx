@@ -13,23 +13,33 @@ import ForgotPassword from './views/components/login_comp/forgot_password/forgot
 import CreateAccout from './views/components/login_comp/create_account/createAccount';
 
 //pages
+
+//for all
 import LoginPage from './views/pages/login_basePage/login_basePage';
 import BaseLayout from './views/pages/base/layout/BaseLayout.jsx';
-import HomePage from './views/pages/formando/home/homepage';
-import EnrolledCourses from './views/pages/formando/enrolled_courses/EnrolledCourses';
 import NotificationPage from './views/pages/formando/notifications/notificationsPage';
+import EditProfile from './views/pages/profile/profile';
+import InfoProfile from './views/pages/profile/infoprofile';
+//forum
 import Forum from './views/pages/forum/forum';
-import CompletedCourses from './views/pages/formando/completed_courses/CompletedCourses';
-import FavoriteCourses from './views/pages/formando/favorite_courses/FavoriteCourses';
-import CursosPage from './views/pages/formando/courses/CursosPage';
+import PostComments from './views/pages/forum/post/coments/comment';
 import ForumPosts from './views/pages/forum/post/post';
 import ConteudosList from './views/pages/forum/post/conteudos_posts';
 import CPlusPlusPage from './views/pages/forum/post/post';
-import PostComments from './views/pages/forum/post/coments/comment';
-import CourseRegistration from './views/pages/formando/course_registration/CourseRegistration';
-import EditProfile from './views/pages/profile/profile';
-import InfoProfile from './views/pages/profile/infoprofile';
+
+//formando
+import HomePage from './views/pages/formando/home/homepage';
+import EnrolledCourses from './views/pages/formando/enrolled_courses/EnrolledCourses';
+import CompletedCourses from './views/pages/formando/completed_courses/CompletedCourses';
+import FavoriteCourses from './views/pages/formando/favorite_courses/FavoriteCourses';
+import CursosPage from './views/pages/formando/courses/CursosPage';
 import ClassPage from './views/pages/formando/class_page/ClassPage';
+import CourseRegistration from './views/pages/formando/course_registration/CourseRegistration';
+
+
+//formador
+
+
 
 //Admin 
 import HomePageAdmin from './views/pages/admin/home/HomePageAdmin.jsx';
@@ -41,6 +51,8 @@ import CreateCourse from './views/pages/admin/course/Criar_Course.jsx';
 import EditCourse from './views/pages/admin/course/Editar_Course.jsx';
 import HistoryUser from './views/pages/admin/user/Historico_User.jsx';
 import CategoriaAreaTopicoTable from './views/pages/admin/categoria_area_topico/CategoriaAreaTopico';
+
+
 
 function App() {
 

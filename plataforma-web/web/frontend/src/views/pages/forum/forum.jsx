@@ -2,8 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
 import {
-  getForuns,
-  filtrarConteudosPartilhados
+  getForuns
 } from '../../../api/conteudos_partilhado_axios';
 
 const Foruns = () => {
@@ -11,7 +10,6 @@ const Foruns = () => {
   const [ordenar, setOrdenar] = useState('Mais Recentes');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [filtros, setFiltros] = useState({ id_area: '', id_topico: '' });
   const [pesquisa, setPesquisa] = useState(''); // <- nova state de pesquisa
 
   const navigate = useNavigate();
@@ -20,9 +18,7 @@ const Foruns = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = filtros.id_area || filtros.id_topico
-        ? await filtrarConteudosPartilhados(filtros)
-        : await getForuns(ordenar);
+      const data = await getForuns(ordenar, pesquisa);
 
       setForuns(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -31,23 +27,16 @@ const Foruns = () => {
     } finally {
       setLoading(false);
     }
-  }, [ordenar, filtros]);
+  }, [ordenar, pesquisa]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchForuns();
   }, [fetchForuns]);
 
   const handleParticiparClick = (id) => {
     navigate(`/forum/${id}`);
   };
-
-  // Filtra os fóruns com base no termo de pesquisa
-  const forunsFiltrados = foruns.filter((forum) => {
-    const topico = forum.id_topico_topico || {};
-    const titulo = topico.nome_topico?.toLowerCase() || '';
-    const descricao = topico.descricao_top?.toLowerCase() || '';
-    return titulo.includes(pesquisa.toLowerCase()) || descricao.includes(pesquisa.toLowerCase());
-  });
 
   const renderForumCard = (forum) => {
     const topico = forum.id_topico_topico || {};
@@ -73,7 +62,7 @@ const Foruns = () => {
                 <h5 className="card-title">{topico.nome_topico || 'Tópico desconhecido'}</h5>
                 <p className="card-text">{topico.descricao_top || 'Sem descrição'}</p>
                 <div className="d-flex gap-3 flex-wrap">
-                   <small className="text-muted">Criado em: {dataCriacao}</small>
+                  <small className="text-muted">Criado em: {dataCriacao}</small>
                   <small className="text-muted">Tópico: {topico.nome_topico || 'Tópico desconhecido'}</small>
                 </div>
               </div>
@@ -128,11 +117,11 @@ const Foruns = () => {
         </div>
       ) : error ? (
         <div className="alert alert-danger text-center my-5">{error}</div>
-      ) : forunsFiltrados.length === 0 ? (
+      ) : foruns.length === 0 ? (
         <div className="alert alert-info text-center">Nenhum fórum encontrado com a pesquisa atual.</div>
       ) : (
         <div className="row row-cols-1 g-4">
-          {forunsFiltrados.map(renderForumCard)}
+          {foruns.map(renderForumCard)}
         </div>
       )}
     </div>

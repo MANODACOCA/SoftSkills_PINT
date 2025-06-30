@@ -23,9 +23,7 @@ router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 
 //Nossas Rotas:
-router.get('/filtros', controller.listarConteudosFiltrados);
 router.get('/foruns', controller.getForuns);
-router.get('/:id/posts', controller.getPostsByConteudoPartilhado);
 router.get('/count', controller.countForum);
 
 module.exports = router;
