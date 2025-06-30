@@ -55,10 +55,14 @@ export const delete_conteudos_partilhado = async (id) => {
 
 /*------------------------------------------------------------------------------------------------*/
 
-export const getForuns = async (ordenar = "Mais Recentes") => {
+export const getForuns = async (ordenar = "Mais Recentes", search = "") => {
     try{
         let url = `${API_URL}/foruns?ordenar=${ordenar}`;
-         
+
+        if (search) {
+            url += `&search=${encodeURIComponent(search)}`
+        }
+
         const response = await axios.get(url);
         return response.data;
     } catch (error){

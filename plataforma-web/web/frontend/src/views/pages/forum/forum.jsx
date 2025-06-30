@@ -18,7 +18,7 @@ const Foruns = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await getForuns(ordenar);
+      const data = await getForuns(ordenar, pesquisa);
 
       setForuns(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -27,7 +27,7 @@ const Foruns = () => {
     } finally {
       setLoading(false);
     }
-  }, [ordenar]);
+  }, [ordenar, pesquisa]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -37,14 +37,6 @@ const Foruns = () => {
   const handleParticiparClick = (id) => {
     navigate(`/forum/${id}`);
   };
-
-  // Filtra os fóruns com base no termo de pesquisa
-  const forunsFiltrados = foruns.filter((forum) => {
-    const topico = forum.id_topico_topico || {};
-    const titulo = topico.nome_topico?.toLowerCase() || '';
-    const descricao = topico.descricao_top?.toLowerCase() || '';
-    return titulo.includes(pesquisa.toLowerCase()) || descricao.includes(pesquisa.toLowerCase());
-  });
 
   const renderForumCard = (forum) => {
     const topico = forum.id_topico_topico || {};
@@ -125,11 +117,11 @@ const Foruns = () => {
         </div>
       ) : error ? (
         <div className="alert alert-danger text-center my-5">{error}</div>
-      ) : forunsFiltrados.length === 0 ? (
+      ) : foruns.length === 0 ? (
         <div className="alert alert-info text-center">Nenhum fórum encontrado com a pesquisa atual.</div>
       ) : (
         <div className="row row-cols-1 g-4">
-          {forunsFiltrados.map(renderForumCard)}
+          {foruns.map(renderForumCard)}
         </div>
       )}
     </div>
