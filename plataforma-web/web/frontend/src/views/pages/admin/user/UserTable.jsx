@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { create_utilizador, delete_utilizador, list_utilizador, update_utilizador } from "../../../../api/utilizador_axios";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { create_formadores } from "../../../../api/formadores_axios";
 
 const UsersTables = () => {
     const [user, setuser] = useState([]);
@@ -106,27 +107,56 @@ const UsersTables = () => {
         });
 
         if(result.isConfirmed) {
-            try {
-                await update_utilizador(id, {isformador: true});
-                FetchUtilizadores();
-                Swal.fire({
-                    title: 'Sucesso',
-                    text: `O utilizador passou a ser formador com sucesso`,
-                    icon: 'success',
-                    timer: 1500,
-                    showConfirmButton: false
-                }); 
-            } catch (error) {
-                Swal.fire({
-                    title: 'Erro', 
-                    text: 'Ocorreu um erro atualizar utilizador para formador', 
-                    icon: 'error',
-                    confirmButtonText: 'Fechar',
-                    customClass: {
-                        confirmButton: 'btn btn-danger',
-                    },
-                });
-            }
+            const adicionarFormador = await Swal.fire({
+                title: 'Adicionar Formador',
+                html: ` 
+                    <label for="nome" class="form-label">Nome de Utilizador</label>
+                    <input id="nome" class="form-control mb-3" value="${utilizador}" readonly>
+                    <label for="descricaoformador" class="form-label">Descrição do formador</label>
+                    <textarea id="descricaoFormador" class="form-control mb-3" style="min-height: 300px; max-height: 500px;" placeholder="Descrição do formador"></textarea> 
+                `,
+                preConfirm: () => {
+                    const descricaoformador = document.getElementById('descricaoFormador').value.trim();
+   
+                    if (!descricaoformador) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+
+                    return{
+                        descricao_formador: descricaoformador,
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Atualizar Utilizador',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+            if (adicionarFormador.isConfirmed && adicionarFormador.value) {
+                try {
+                    const formador = adicionarFormador.value.descricao_formador;
+                    await update_utilizador(id, {isformador: true});
+                    await create_formadores({id_formador: id, descricao_formador: formador});
+                    FetchUtilizadores();
+                    Swal.fire({
+                        icon: "success",
+                        title: "Utilizador atualizado com sucesso!",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Erro",
+                        text: "Não foi possível atualizar o utilizador",
+                        timer: 2000,
+                        showConfirmButton: false,
+                    });
+                }    
+            }     
         }
     }
 
@@ -178,11 +208,32 @@ const UsersTables = () => {
                             </label>
                         </div>
                     </div>
+                    <div id="descricaoWrapper" class="d-none">
+                        <label for="descricao" id="descricaoLabel" class="form-label">Descrição do formador</label>
+                        <textarea id="descricao" class="form-control mb-3" style="min-height: 300px; max-height: 500px;" placeholder="Descrição formador"></textarea>
+                    </div>
                 `,
+                didOpen: () => {
+                    const selectedFormador = document.getElementById('formadorSwitch');
+                    const descricaoWrapper = document.getElementById('descricaoWrapper');
+
+                    const toggleDescricao = () => {
+                        if (selectedFormador.checked) {
+                            descricaoWrapper.classList.remove('d-none');
+                        } else {
+                            descricaoWrapper.classList.add('d-none');
+                        }
+                    };
+
+                    toggleDescricao();
+
+                    formadorSwitch.addEventListener('change', toggleDescricao);
+                },
                 preConfirm: () => {
                     const nome = document.getElementById('nome').value;
                     const email = document.getElementById('email').value;
                     const formador = document.getElementById('formadorSwitch').checked;
+                    const descricao = document.getElementById('descricao')?.value || '';
                     
                     if (!nome || !email) {
                         Swal.showValidationMessage('Todos os campos são obrigatórios!');
@@ -192,7 +243,8 @@ const UsersTables = () => {
                     return{
                         nome_utilizador: nome,
                         email,
-                        isformador: formador
+                        isformador: formador,
+                        descricao: formador ? descricao : ''
                     };
                 },
                 showCancelButton: true,
@@ -207,9 +259,14 @@ const UsersTables = () => {
                 try {
                     const formador = adicionarUtilizador.value.isformador;
                     const nome_utilizador = adicionarUtilizador.value.nome_utilizador;
-                    const email = adicionarUtilizador.value.email
+                    const email = adicionarUtilizador.value.email;
+                    const descricao_formador = adicionarUtilizador.value.descricao;
                     const data = await create_utilizador(nome_utilizador, email);
                     await update_utilizador(data.data.id_utilizador, {isformador: formador});
+                    if (formador) {
+                        const id_formador = data.data.id_utilizador;
+                        await create_formadores({id_formador, descricao_formador});
+                    }
                     FetchUtilizadores();
                     Swal.fire({
                         icon: "success",
