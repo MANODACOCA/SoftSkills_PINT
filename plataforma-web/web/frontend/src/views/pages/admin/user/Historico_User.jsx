@@ -208,7 +208,7 @@ const HistoryUser = () => {
                     {utilizador.isformador &&  
                     <Tab eventKey="cursosLecionadosAtualmente" title="Cursos a Lecionar" >
                         <div className="mt-4">
-                            {cursosLecionadosAtualmente ? (
+                            {cursosLecionadosAtualmente.length === 0 ? (
                                 <div className="d-flex justify-content-center p-5">
                                     <span className="text-secondary">Este utilizador não se encontra a lecionar nenhum curso</span>
                                 </div>
