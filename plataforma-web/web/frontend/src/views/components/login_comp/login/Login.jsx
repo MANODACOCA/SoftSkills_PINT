@@ -86,7 +86,7 @@ const FirstLogin = () => {
                         if (role === 'admin') {
                             navigate('/admin/home');
                         } else if (role === 'formador') {
-                            navigate('formador/home');
+                            navigate('/formador/home');
                         } else {
                             navigate('/home');
                         }

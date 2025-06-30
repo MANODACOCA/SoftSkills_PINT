@@ -52,3 +52,4 @@ export const delete_formadores = async (id) => {
         throw error;
     }
 };
+

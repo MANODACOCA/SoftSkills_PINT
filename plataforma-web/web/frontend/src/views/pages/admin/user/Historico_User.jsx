@@ -208,7 +208,7 @@ const HistoryUser = () => {
                     {utilizador.isformador &&  
                     <Tab eventKey="cursosLecionadosAtualmente" title="Cursos a Lecionar" >
                         <div className="mt-4">
-                            {cursosLecionadosAtualmente ? (
+                            {cursosLecionadosAtualmente.length === 0 ? (
                                 <div className="d-flex justify-content-center p-5">
                                     <span className="text-secondary">Este utilizador não se encontra a lecionar nenhum curso</span>
                                 </div>
@@ -217,7 +217,7 @@ const HistoryUser = () => {
                                     return(
                                         <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
                                             <img
-                                                src={cu.id_curso_sincrono_curso.imagem}
+                                                src={cu.id_curso_sincrono_curso.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`}
                                                 onError={(e) => {
                                                     e.target.onerror = null;
                                                     e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`;
