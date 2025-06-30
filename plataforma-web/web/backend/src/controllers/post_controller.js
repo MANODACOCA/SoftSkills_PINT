@@ -27,7 +27,10 @@ controllers.get = async (req, res) => {
     });
 
     if (data) {
-      res.status(200).json(data);
+      res.status(200).json({
+        quatidadePosts: data.length,
+        posts: data,
+      });
     } else {
       res.status(404).json({ erro: 'Posts nao encontrados!' });
     }
