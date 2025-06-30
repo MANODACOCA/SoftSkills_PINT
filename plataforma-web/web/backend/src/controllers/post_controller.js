@@ -28,7 +28,7 @@ controllers.get = async (req, res) => {
       include: [
         {
           model: utilizador,
-          as: 'id_utilizador_utilizador',
+          as: 'id_utilizador_utilizador'
         }
       ],
     });
