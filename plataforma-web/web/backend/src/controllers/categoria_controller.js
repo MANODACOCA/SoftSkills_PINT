@@ -39,7 +39,7 @@ controllers.create = async (req,res)=>{
       desc: 'Campo "nome" é obrigatorio'})
   }
 
-  const existente = await model.findOne({ nome_cat: nome_cat.trim() });
+  const existente = await model.findOne({where: { nome_cat: nome_cat.trim() }});
 
   if (existente) {
     return res.status(409) .json({ erro: 'Já existe uma categoria com esse nome.' });

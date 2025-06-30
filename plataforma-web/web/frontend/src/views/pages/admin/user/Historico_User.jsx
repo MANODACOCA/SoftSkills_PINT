@@ -55,16 +55,6 @@ const HistoryUser = () => {
         }
     };
 
-    const fetchUtilizador = async (id) => {
-        try {
-            const response = await get_utilizador(id);
-            setUtilizador(response);
-            console.log(response);
-        } catch (error) {
-            console.log('Erro ao encontrar user!');
-        }
-    }
-
     const fetchCursosLecionadosTerminados = async (userId) => {
         try {
             const data = await getCursosLecionadosTerminados(userId);
@@ -95,6 +85,16 @@ const HistoryUser = () => {
         }
     }
 
+    const fetchUtilizador = async (id) => {
+        try {
+            const response = await get_utilizador(id);
+            setUtilizador(response);
+            console.log(response);
+        } catch (error) {
+            console.log('Erro ao encontrar user!');
+        }
+    }
+
     useEffect(() => {
         fetchEnrolledCourses(id);
         fetchCompletedCourses(id);
@@ -109,7 +109,8 @@ const HistoryUser = () => {
                 <div className="d-flex align-items-center gap-5">
                     <div>
                         {utilizador && (    
-                        <img src={utilizador.img_perfil} 
+                        <img 
+                        src={utilizador?.img_perfil || `https://ui-avatars.com/api/?name=${encodeURIComponent(utilizador.nome_utilizador)}&background=random&bold=true`}
                         onError={(e) => {
                             e.target.onerror = null;
                             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(utilizador.nome_utilizador)}&background=random&bold=true`;
@@ -120,14 +121,14 @@ const HistoryUser = () => {
                     <div className="d-flex flex-column justify-content-start align-items-start">
                         <h4>{utilizador?.nome_utilizador}</h4>
                         <div className="d-flex">
-                            {utilizador?.isgestor_administrador &&
-                                <p>Administrador/</p>
-                            }
-                            {utilizador?.isformador && 
-                                <p>Formador/</p>
-                            }
                             {utilizador?.isformando && 
                                 <p>Formando</p>
+                            }
+                            {utilizador?.isformador && 
+                                <p>/Formador</p>
+                            }
+                            {utilizador?.isgestor_administrador &&
+                                <p>/Administrador</p>
                             }
                         </div>
                         <small className="text-secondary">{utilizador?.email}</small>
@@ -143,104 +144,129 @@ const HistoryUser = () => {
                     {utilizador.isformando && 
                         <Tab eventKey="cursoInscrito" title="Cursos Inscritos">
                             <div className="mt-4">
-                                {cursosInscrito.map((cu, index) => {
-                                    return (
-                                        <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
-                                            <img
-                                                src={cu.id_curso_curso.imagem}
+                                {cursosInscrito.length === 0 ? (
+                                    <div className="d-flex justify-content-center p-5">
+                                        <span className="text-secondary">Este utilizador não se encontra inscrito em nenhum curso</span>
+                                    </div>
+                                ) : (
+                                    cursosInscrito.map((cu, index) => {
+                                        return (
+                                            <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
+                                                <img
+                                                    src={cu.id_curso_curso.imagem}
                                                     onError={(e) => {
                                                         e.target.onerror = null;
                                                         e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_curso.nome_curso)}&background=random&bold=true`;
                                                     }}
-                                                className="rounded-start-4 highlights-images"
-                                                alt="imagem curso"
-                                            />
-                                            <div className="card-body d-flex flex-column justify-content-between">
-                                                <div>
-                                                    <h5 className="mb-2">{cu.id_curso_curso.nome_curso}</h5>
+                                                    className="rounded-start-4 highlights-images"
+                                                    alt="imagem curso"
+                                                />
+                                                <div className="card-body d-flex flex-column justify-content-between">
+                                                    <div>
+                                                        <h5 className="mb-2">{cu.id_curso_curso.nome_curso}</h5>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    );
-                                })}    
+                                        );
+                                    })
+                                )}  
                             </div>
                         </Tab>
                     }
                     {utilizador.isformando &&
                         <Tab eventKey="cursoTerminado" title="Cursos Terminados">
                             <div className="mt-4">
-                                {cursosTerminados.map((cu, index) => {
-                                    return(
-                                        <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
-                                            <img
-                                                src={
-                                                cu.imagem
-                                                    ? cu.imagem
-                                                    : `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.nome_curso)}&background=random&bold=true`                                 
-                                                }
-                                                className="rounded-start-4 highlights-images"
-                                                alt="imagem curso"
-                                            />
-                                            <div className="card-body d-flex flex-column justify-content-between">
-                                                <div>
-                                                    <h5 className="mb-2">{cu.nome_curso}</h5>
+                                {cursosTerminados.length === 0 ? (
+                                    <div className="d-flex justify-content-center p-5">
+                                        <span className="text-secondary">Este utilizador ainda não terminou nenhum curso</span>
+                                    </div>
+                                ) : (
+                                    cursosTerminados.map((cu, index) => {
+                                        return(
+                                            <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
+                                                <img
+                                                    src={cu.imagem}
+                                                    onError={(e) => {
+                                                        e.target.onerror = null;
+                                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.nome_curso)}&background=random&bold=true`;
+                                                    }}
+                                                    className="rounded-start-4 highlights-images"
+                                                    alt="imagem curso"
+                                                />
+                                                <div className="card-body d-flex flex-column justify-content-between">
+                                                    <div>
+                                                        <h5 className="mb-2">{cu.nome_curso}</h5>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    );
-                                })} 
+                                        );
+                                    })
+                                    )}
                             </div>
                         </Tab>
                     }
                     {utilizador.isformador &&  
                     <Tab eventKey="cursosLecionadosAtualmente" title="Cursos a Lecionar" >
                         <div className="mt-4">
-                            {cursosLecionadosAtualmente.map((cu, index) => {
-                                return(
-                                    <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
-                                        <img
-                                            src={
-                                            cu.imagem
-                                                ? cu.imagem
-                                                : `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.nome_curso)}&background=random&bold=true`                                 
-                                            }
-                                            className="rounded-start-4 highlights-images"
-                                            alt="imagem curso"
-                                        />
-                                        <div className="card-body d-flex flex-column justify-content-between">
-                                            <div>
-                                                <h5 className="mb-2">{cu.nome_curso}</h5>
+                            {cursosLecionadosAtualmente ? (
+                                <div className="d-flex justify-content-center p-5">
+                                    <span className="text-secondary">Este utilizador não se encontra a lecionar nenhum curso</span>
+                                </div>
+                            ) : (
+                                cursosLecionadosAtualmente.map((cu, index) => {
+                                    return(
+                                        <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
+                                            <img
+                                                src={cu.id_curso_sincrono_curso.imagem}
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`;
+                                                }}
+                                                className="rounded-start-4 highlights-images"
+                                                alt="imagem curso"
+                                            />
+                                            <div className="card-body d-flex flex-column justify-content-between">
+                                                <div>
+                                                    <h5 className="mb-2">{cu.id_curso_sincrono_curso.nome_curso}</h5>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })
+                            )}
+                            
                         </div>
                     </Tab>
                     }
                     {utilizador.isformador &&  
                     <Tab eventKey="cursosLecionadosTerminados" title="Cursos já Lecionados" >
                         <div className="mt-4">
-                            {cursosLecionadosTerminados.map((cu, index) => {
-                                return(
-                                    <div key={index} className="card flex-row rounded-4 cards-highlightsposition-relative mb-3">
-                                        <img
-                                            src={
-                                            cu.imagem
-                                                ? cu.imagem
-                                                : `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.nome_curso)}&background=random&bold=true`                                 
-                                            }
-                                            className="rounded-start-4 highlights-images"
-                                            alt="imagem curso"
-                                        />
-                                        <div className="card-body d-flex flex-column justify-content-between">
-                                            <div>
-                                                <h5 className="mb-2">{cu.nome_curso}</h5>
+                            {cursosLecionadosTerminados.length === 0 ? (
+                                <div className="d-flex justify-content-center p-5">
+                                    <span className="text-secondary">Este utilizador ainda não acabou de lecionar nenhum curso</span>
+                                </div>
+                            ) : (
+                                cursosLecionadosTerminados.map((cu, index) => {
+                                    return(
+                                        <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
+                                            <img
+                                                src={cu.id_curso_sincrono_curso.imagem}
+                                                onError={(e) => {
+                                                    e.target.onerror = null;
+                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`;
+                                                }}
+                                                className="rounded-start-4 highlights-images"
+                                                alt="imagem curso"
+                                            />
+                                            <div className="card-body d-flex flex-column justify-content-between">
+                                                <div>
+                                                    <h5 className="mb-2">{cu.id_curso_sincrono_curso.nome_curso}</h5>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })
+                            )}
                         </div>
                     </Tab>
                     }
