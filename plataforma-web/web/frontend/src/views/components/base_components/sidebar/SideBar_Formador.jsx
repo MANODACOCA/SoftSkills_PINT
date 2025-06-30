@@ -20,7 +20,7 @@ const SidebarFormador = ({ toggleSidebar, collapsed }) => {
         <div className={`border-end ${effectiveCollapsed ? 'collapsed' : ''} d-flex flex-column align-items-start p-2 sidebar`}>
             <div className='d-flex justify-content-between flex-column vh-100 w-100'>
                 <div>
-                    <NavLink to="/home" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
+                    <NavLink to="/formador/home" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-house-door fs-4 px-2"></i>
@@ -35,7 +35,7 @@ const SidebarFormador = ({ toggleSidebar, collapsed }) => {
                         }
                     </NavLink>
                     <hr />
-                    <NavLink to="/cursos" className={`nav-link d-flex align-items-center px-2 ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
+                    <NavLink to="/formador/cursos" className={`nav-link d-flex align-items-center px-2 ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-mortarboard fs-4 px-2"></i>
@@ -49,25 +49,25 @@ const SidebarFormador = ({ toggleSidebar, collapsed }) => {
                             </div>
                         }
                     </NavLink>
-                    <NavLink to="my/cursos/inscritos" className={`nav-link d-flex align-items-center px-2 ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
+                 {/*   <NavLink to="/formador/cursos-lecionados" className={`nav-link d-flex align-items-center px-2 ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-laptop fs-4 px-2"></i>
-                                Cursos inscritos
+                                Cursos Lecionados
                             </div>
                         }
                         {effectiveCollapsed && 
                             <div className='d-flex flex-column align-items-center m-0'>
                                 <i className="bi bi-laptop fs-4 px-2"></i>
-                                <small className='text-truncate d-inline-block text-ellipsis'>Cursos inscritos</small>
+                                <small className='text-truncate d-inline-block text-ellipsis'>Cursos Lecionados</small>
                             </div>
                         }
-                    </NavLink>
+                    </NavLink> */}
                    {/*  <NavLink to="/cursos/favoritos" className="nav-link d-flex align-items-center px-2 ">
                         <i className="bi bi-heart fs-4 px-2"></i>
                         {!collapsed && 'Cursos Favoritos'}
                     </NavLink> */}
-                    <NavLink to="my/cursos/terminados" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
+                   {/* <NavLink to="my/cursos/terminados" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-patch-check fs-4 px-2"></i>
@@ -80,7 +80,7 @@ const SidebarFormador = ({ toggleSidebar, collapsed }) => {
                                 <small className='text-truncate d-inline-block text-ellipsis'>Cursos Terminados</small>
                             </div>
                         }
-                    </NavLink>
+                    </NavLink> */}
                     <hr />
                     <NavLink to="/forum" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
