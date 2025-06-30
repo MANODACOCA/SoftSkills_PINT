@@ -29,8 +29,22 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   }
 
   if (search) {
-    baseWhereAssincrono.nome_curso = { [Op.iLike]: `${search}%` };
-    baseWhereSincrono.nome_curso = { [Op.iLike]: `${search}%` };
+    baseWhereAssincrono[Sequelize.Op.and] = [
+      Sequelize.where(
+        Sequelize.fr('unaccent', Sequelize.col('nome_curso')),
+        {
+          [Op.iLike]: Sequelize.fn('unaccent', `${search}`)
+        }
+      )
+    ];
+    baseWhereSincrono[Sequelize.Op.and] = [
+      Sequelize.where(
+        Sequelize.fr('unaccent', Sequelize.col('nome_curso')),
+        {
+          [Op.iLike]: Sequelize.fn('unaccent', `${search}`)
+        }
+      )
+    ]
   }
 
   if (topicosIDs.length > 0) {
