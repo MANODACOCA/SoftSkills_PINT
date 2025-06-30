@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
 
 // Rotas CRUD
 router.get('/list', controller.list);
-router.get('/get/:id', controller.get);
-router.post('/create', controller.create);
+router.get('/get/posts', controller.get);//buscar posts pelo id do conteudo partuilhado
+router.post('/create', controller.create);//cria post novo
 router.put('/update/:id', controller.update);
 router.delete('/delete/:id', controller.delete);
 

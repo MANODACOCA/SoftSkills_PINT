@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://softskills-api.onrender.com/post';
+const API_URL = 'https://softskills-api.onrender.com/posts';
 
 
 export const list_post = async () => {
@@ -15,7 +15,7 @@ export const list_post = async () => {
 
 export const get_post  = async (id) => {
     try{
-        const response = await axios.get(`${API_URL}/get/${id}`);
+        const response = await axios.get(`${API_URL}/get/posts?id_conteudos_partilhado=${id}`);
         return response.data;
     }catch(error){
         console.error('Erro ao buscar Post!');
