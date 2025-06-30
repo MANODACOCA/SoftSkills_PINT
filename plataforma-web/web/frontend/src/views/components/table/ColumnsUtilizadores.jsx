@@ -10,7 +10,7 @@ export const columnsUtilizadores = [
     } else return '----';
   }},  
   { label: 'Data Nascimento', render: (item) => {
-    if(formatDayMonthYear(item.data_nasc)){
+    if(item.data_nasc != null){
       return formatDayMonthYear(item.data_nasc);
     } else return '----';
   }},
