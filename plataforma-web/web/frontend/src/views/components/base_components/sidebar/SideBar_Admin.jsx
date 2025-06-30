@@ -50,7 +50,7 @@ const SidebarAdmin = ({ toggleSidebar, collapsed }) => {
                         }
                     </NavLink>
                     <hr />
-                    <NavLink to="admin/forum" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
+                    <NavLink to="/forum" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-chat-dots fs-4 px-2"></i>

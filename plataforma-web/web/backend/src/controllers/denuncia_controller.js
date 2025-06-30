@@ -4,6 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).denuncia;
 const controllers = {};
+
 const denunciasService = require('../services/denuncias.service');
 
 
