@@ -33,7 +33,9 @@ controllers.create = async (req, res) => {
       const data = await model.create({
         texto_post,
         id_utilizador,
-        id_conteudos_partilhado
+        id_conteudos_partilhado,
+        contador_likes_post: 0,
+        contador_comentarios: 0
       });
 
       res.status(201).json({
