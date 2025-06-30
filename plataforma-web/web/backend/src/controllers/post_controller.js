@@ -3,7 +3,7 @@
 const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const utilizador = require("../models/utilizador");
+const { utilizador } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).post;
 const controllers = {};
 
