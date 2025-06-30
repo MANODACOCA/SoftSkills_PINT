@@ -1,5 +1,6 @@
 //const model = require('../models/post');;
 
+const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).post;
@@ -13,15 +14,25 @@ controllers.list = async (req, res) => {
 
 controllers.get = async (req, res) => {
   try {
-    const { id } = req.params;
-    const data = await model.findByPk(id);
+    const { id_conteudos_partilhado } = req.query;
+
+    if (!id_conteudos_partilhado) {
+      return res.status(400).json({ erro: 'Falta id_conteudos_partilhados na query.' });
+    }
+
+    const data = await model.findAll({
+      where: {
+        id_conteudos_partilhado: id_conteudos_partilhado
+      }
+    });
+
     if (data) {
       res.status(200).json(data);
     } else {
-      res.status(404).json({ erro: 'Post nao encontrado/a!' });
+      res.status(404).json({ erro: 'Posts nao encontrados!' });
     }
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao procurar Post!', desc: err.message });
+    res.status(500).json({ erro: 'Erro ao procurar Posts!', desc: err.message });
   }
 };
 
@@ -40,7 +51,7 @@ controllers.create = async (req, res) => {
 
       res.status(201).json({
         message: 'Post criado com sucesso!',
-        post: data, 
+        post: data,
       });
     } else {
       res.status(400).json({ erro: 'Erro ao criar Post!', desc: 'Corpo do pedido esta vazio.' });

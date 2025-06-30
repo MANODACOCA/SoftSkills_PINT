@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 
 // Rotas CRUD
 router.get('/list', controller.list);
-router.get('/get/:id', controller.get);
+router.get('/get/forum/:id', controller.get);
 router.post('/create', controller.create);
 router.put('/update/:id', controller.update);
 router.delete('/delete/:id', controller.delete);
