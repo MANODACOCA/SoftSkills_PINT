@@ -45,8 +45,13 @@ controllers.create = async (req, res) => {
 
 controllers.delete = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deleted = await model.destroy({ where: { id_likes_post: id } }); // CORREÇÃO AQUI
+    const { id_post, id_utilizador } = req.body;
+
+    if(!id_post || !id_utilizador){
+        return res.status(400).json({erro: 'id_post e id_utilizador são obrigatórios para deletar o like.'})
+    }
+       
+    const deleted = await model.destroy({ where: { id_post, id_utilizador } }); // CORREÇÃO AQUI
     if (deleted) {
       res.status(200).json({ msg: "Like post apagado/a com sucesso!" });
     } else {
@@ -58,3 +63,5 @@ controllers.delete = async (req, res) => {
 };
 
 module.exports = controllers;
+
+

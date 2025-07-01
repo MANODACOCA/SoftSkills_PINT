@@ -22,10 +22,10 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     const handleLike = async () => {
         try {
             if (liked) {
-                await delete_like(idPost);
+                await delete_like(idPost,user.id_utilizador);
                 setLikes(likes - 1);
             } else {
-                await put_like(idPost);
+                await put_like(idPost,user.id_utilizador);
                 setLikes(likes + 1);
             }
             setLiked(!liked);
