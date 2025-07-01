@@ -75,7 +75,7 @@ controllers.delete = async (req,res)=>{
 
 controllers.getCursoNotificationsController = async (req,res)=>{
   try {
-    const {id} = req.params
+    const {id} = req.params;
     const cursos = await getNotificationOfCourse(id);
     res.status(200).json(cursos); 
   } catch(error) {
