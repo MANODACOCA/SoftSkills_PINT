@@ -61,7 +61,7 @@ controllers.update = async (req,res)=>{
 controllers.delete = async (req,res)=>{
   try {
     const {id} = req.params;
-    const deleted = await model.destroy({where:{id:id}});
+    const deleted = await model.destroy({where:{id_notificacao_cursos: id}});
     if(deleted){
       res.status(200).json({msg:'Notificacao de Curso apagado/a com sucesso!'});
     }else{
@@ -75,7 +75,8 @@ controllers.delete = async (req,res)=>{
 
 controllers.getCursoNotificationsController = async (req,res)=>{
   try {
-    const cursos = await getNotificationOfCourse();
+    const {userID} = req.params;
+    const cursos = await getNotificationOfCourse(userID);
     res.status(200).json(cursos); 
   } catch(error) {
     res.status(500).json({erro:'Erro ao obter notificaçao'});

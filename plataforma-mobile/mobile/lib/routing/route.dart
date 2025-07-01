@@ -85,7 +85,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'homepage',
       path: '/homepage',
-      builder: (context, state) => HomePage(),
+      builder: (context, state) => HomePage(idUser: state.extra as String),
     ),
     GoRoute(
       name: 'return',
@@ -93,10 +93,12 @@ final rotas = GoRouter(
       builder: (context, state) => ReturnLogin(),
     ),
     GoRoute(
-      name: 'profile',
-      path: '/profile',
-      builder: (context, state) => Profile(),
-    ),
+  path: '/profile',
+  builder: (context, state) {
+    final idUser = state.extra as String?;
+    return Profile(idUser: idUser);
+  },
+),
     /* GoRoute(
       name: 'notificacoes',
       path: '/notificacoes',
@@ -110,7 +112,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'alterarInformacoes',
       path: '/alterarInformacoes',
-      builder: (context, state) => ChangePersonalInfo(),
+      builder: (context, state) => ChangePersonalInfo(idUser: state.extra as String),
     ),
     GoRoute(
       name: 'seeinfoprofile',

@@ -299,7 +299,7 @@ const ClassPage = () => {
                                                             <div className="me-3">
                                                                 <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
                                                                     <img
-                                                                        src={`${API_URL}${curso.sincrono.id_formador_formadore.id_formador_utilizador?.img_util}`}
+                                                                        src={curso.sincrono.id_formador_formadore.id_formador_utilizador?.img_util || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || 'Formador')}`}
                                                                         onError={(e) => {
                                                                             e.target.onerror = null;
                                                                             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
@@ -312,18 +312,24 @@ const ClassPage = () => {
                                                                 </div>
                                                             </div>
                                                             <div>
-                                                                <h4>
-                                                                    {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
-                                                                </h4>
-                                                                <div className='d-flex gap-5'>
-                                                                    <p className="text-muted mb-3">
-                                                                        Email: {curso.sincrono.id_formador_formadore.id_formador_utilizador.email || ""}
-                                                                    </p>
-                                                                    <p className="text-muted mb-3">
-                                                                        Telemóvel: {curso.sincrono.id_formador_formadore.id_formador_utilizador.tel_util || "N/A"}
-                                                                    </p>
+                                                                <div className='d-flex justify-content-between gap-5 mb-0'>
+                                                                    <h4 className='mb-0'>
+                                                                        {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
+                                                                    </h4>
+                                                                    <div>
+                                                                    { curso.sincrono.id_formador_formadore.id_formador_utilizador.pais &&
+                                                                        <small className='alert alert-success mb-0 py-1 px-2'>
+                                                                            <i className='bi bi-geo-alt me-2'></i>
+                                                                            {curso.sincrono.id_formador_formadore.id_formador_utilizador.pais}
+                                                                        </small>  
+                                                                    }    
+                                                                    </div>
+                                                                       
                                                                 </div>
-                                                                <p>
+                                                                <small className="text-muted">
+                                                                    {curso.sincrono.id_formador_formadore.id_formador_utilizador.email || ""}
+                                                                </small>
+                                                                <p className='mt-3'>
                                                                     {curso.sincrono.id_formador_formadore.descricao_formador || "Sem descrição disponível para este formador."}
                                                                 </p>
                                                             </div>

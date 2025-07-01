@@ -55,10 +55,12 @@ export const delete_notificacoes_curso = async (id) => {
 
 
 //encontra o imagem e nome de curso por id
-export const find_notificacao_curso = async () => {
+export const find_notificacao_curso = async (id) => {
     try {
-        const response = await axios.get(`${API_URL}/find_notificacoes_curso`)
-        return response.data
+        console.log(id);
+        console.log(`${API_URL}/find_notificacoes_curso/${id}`);
+        const response = await axios.get(`${API_URL}/find_notificacoes_curso/${id}`);
+        return response.data;
     } catch (error) {
         console.error('Erro ao encontrar Notificacao de Curso!');
         throw error;
