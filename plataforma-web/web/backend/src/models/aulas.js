@@ -1,8 +1,7 @@
 const Sequelize = require('sequelize');
-const { options } = require('../routes/notificacoes_curso_route');
-const { criarNotifacoesGenerica } = require('../utils/SendNotification');
+
 module.exports = function(sequelize, DataTypes) {
-  return /* const aulas = */ sequelize.define('aulas', {
+  return sequelize.define('aulas', {
     id_aula: {
       autoIncrement: true,
       autoIncrementIdentity: true,
@@ -49,16 +48,4 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-
-  /* aulas.afterCreate(async (aulas, options) => {
-    await criarNotifacoesGenerica({
-      tipo:'aula',
-      versao: 'criada',
-      nome: aulas.nome_aula,
-      id_curso: aulas.id_curso,
-      sequelize
-    });
-  });
-
-  return aulas; */
 };
