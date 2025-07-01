@@ -1,14 +1,23 @@
 import './post.css';
-import React, { useState } from 'react';
+import Swal from 'sweetalert2';
+import React, { use, useState } from 'react';
 import { Card, Button, Dropdown } from 'react-bootstrap';
 import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
+import { delete_post } from "../../../../api/post_axios";
+//import Comentario from "../../../components/forum/comentario/comentario";
+import { useUser } from '../../../../utils/useUser';
 
-const PostCard = ({ autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor }) => {
+const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, onDeleted }) => {
     const API_URL = 'https://softskills-api.onrender.com/';
+    const { user, setUser } = useUser();
 
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(inicialLikes);
+
+    const [showComments, setShowComments] = useState(false);
+    const [comments, setComments] = useState([]);
+
 
     const handleLike = () => {
         if (liked) {
@@ -18,6 +27,41 @@ const PostCard = ({ autor, tempo, texto, likes: inicialLikes, comentarios, image
         }
         setLiked(!liked);
     }
+
+    const handleDelete = async () => {
+        const result = await Swal.fire({
+            title: 'Tem a certeza?',
+            text: "Esta ação não pode ser desfeita!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sim, eliminar!',
+            cancelButtonText: 'Cancelar',
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await delete_post(idPost);
+                Swal.fire(
+                    'Eliminado!',
+                    'O post foi eliminado com sucesso.',
+                    'success'
+                );
+                // Se você passar uma função onDeleted no props para atualizar a lista no pai:
+                if (typeof onDeleted === 'function') {
+                    onDeleted(idPost);
+                }
+            } catch (error) {
+                Swal.fire(
+                    'Erro!',
+                    'Ocorreu um erro ao eliminar o post.',
+                    'error'
+                );
+            }
+        }
+    };
+
 
     return (
         <Card className="mb-3 shadow-sm rounded-4 border-0">
@@ -52,11 +96,13 @@ const PostCard = ({ autor, tempo, texto, likes: inicialLikes, comentarios, image
 
                         <Dropdown.Menu>
                             <Dropdown.Item href="#action-1">
-                                <BsExclamationTriangleFill />Denuciar
+                                <BsExclamationTriangleFill className='me-4' />Denuciar
                             </Dropdown.Item>
-                            <Dropdown.Item href="#action-2">
-                                <BsFillTrash3Fill />Eliminar
-                            </Dropdown.Item>
+                            {idAutor === user?.id_utilizador && (
+                                <Dropdown.Item className='text-danger' onClick={handleDelete}>
+                                    <BsFillTrash3Fill className='me-4' />Eliminar
+                                </Dropdown.Item>
+                            )}
                         </Dropdown.Menu>
                     </Dropdown>
                 </div>
@@ -70,7 +116,11 @@ const PostCard = ({ autor, tempo, texto, likes: inicialLikes, comentarios, image
 
                 {/* Ações */}
                 <div className="d-flex justify-content-start align-items-center gap-4">
-                    <Button variant={liked ? "secondary" : "primary"} size="sm" className="d-flex align-items-center" onClick={handleLike}>
+                    <Button
+                        size="sm"
+                        className={`btn d-flex align-items-center text-white ${liked ? 'btn-primary' : 'btn-outline-secondary'}`}
+                        onClick={handleLike}
+                    >
                         {liked ? (
                             <AiFillLike className="me-1" style={{ fontSize: '20px' }} />
                         ) : (
@@ -83,6 +133,7 @@ const PostCard = ({ autor, tempo, texto, likes: inicialLikes, comentarios, image
                         <BsChat className="me-1" style={{ fontSize: '18px' }} /> {comentarios} comentários
                     </Button>
                 </div>
+
             </Card.Body>
         </Card>
     );

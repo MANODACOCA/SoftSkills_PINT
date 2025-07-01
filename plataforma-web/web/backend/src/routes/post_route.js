@@ -15,5 +15,8 @@ router.post('/create', controller.create);//cria post novo
 router.put('/update/:id', controller.update);
 router.delete('/delete/:id', controller.delete);
 
+router.put('/addLike/:id', controller.putLike);
+router.put('/deleteLike/:id', controller.deleteLike);
+
 
 module.exports = router;
