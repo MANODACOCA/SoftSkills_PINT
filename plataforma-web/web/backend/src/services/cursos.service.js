@@ -550,7 +550,7 @@ async function getCursoWithAllInfoOneCourse(id) {
                   attributes: [
                     [sequelize.col('id_utilizador'), 'id_util'],
                     [sequelize.col('nome_utilizador'), 'nome_util'],
-                    'imagem',
+                    'img_perfil',
                   ]
                 }
               ]
