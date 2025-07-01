@@ -26,6 +26,7 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                                         'email',
                                         [sequelize.col('telemovel'), 'tel_util'],
                                         [sequelize.col('img_perfil'), 'img_util'],
+                                        [sequelize.col('pais'), 'pais'],
                                     ]
                                 }
                             ]

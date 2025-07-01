@@ -851,7 +851,13 @@ const CursoLecionarAula = () => {
                 
                 <Tab eventKey="sobre" title={<span className='fw-bold'>Sobre</span>}>
                     <div>
-                        <div className='mb-3 d-flex'>
+                        <h2>Sobre o curso</h2>
+                        
+                    </div>
+                    <hr />
+                    <div>
+                        <h2>Formador</h2>
+                        <div className='my-3 d-flex'>
                             <div className='me-2'>
                                 <img 
                                     src={`${API_URL}${cursos.sincrono.id_formador_formadore.id_formador_utilizador.img_perfi}` || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`}
