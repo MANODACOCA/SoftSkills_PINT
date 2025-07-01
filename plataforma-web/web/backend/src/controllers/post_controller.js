@@ -31,6 +31,7 @@ controllers.get = async (req, res) => {
           as: 'id_utilizador_utilizador'
         }
       ],
+      order: [['data_criacao_post' , 'DESC']],
     });
 
     if (data) {
