@@ -24,6 +24,14 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_utilizador'
       }
     },
+    id_formato: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'tipo_formato',
+        key: 'id_formato'
+      }
+    },
     texto_comentario: {
       type: DataTypes.STRING(1024),
       allowNull: false
@@ -31,6 +39,15 @@ module.exports = function(sequelize, DataTypes) {
     contador_likes_com: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    data_criacao_comentario: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.fn('now')
+    },
+    caminho_ficheiro: {
+      type: DataTypes.STRING(1024),
+      allowNull: true
     }
   }, {
     sequelize,
