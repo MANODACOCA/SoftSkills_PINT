@@ -44,7 +44,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
 
     const handleDelete = async () => {
         const result = await Swal.fire({
-            title: 'Tem a certeza?',
+            title: 'Tem a certeza que pretendes eliminar o teu post?',
             text: "Esta ação não pode ser desfeita!",
             icon: 'warning',
             showCancelButton: true,
@@ -57,11 +57,15 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
         if (result.isConfirmed) {
             try {
                 await delete_post(idPost);
-                Swal.fire(
-                    'Eliminado!',
-                    'O post foi eliminado com sucesso.',
-                    'success'
-                );
+                Swal.fire({
+                    title:'Eliminado!',
+                    text:'O post foi eliminado com sucesso.',
+                    icon:'success',
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+
+
                 // Se você passar uma função onDeleted no props para atualizar a lista no pai:
                 if (typeof onDeleted === 'function') {
                     onDeleted(idPost);
