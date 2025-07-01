@@ -67,7 +67,7 @@ const ForumPosts = () => {
         ) : (
           posts.map((post) => {
             const autorData = post.id_utilizador_utilizador || {};
-
+            
             return (
               <PostCard
                 key={post.id_post}

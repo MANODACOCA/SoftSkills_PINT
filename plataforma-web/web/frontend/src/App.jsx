@@ -22,7 +22,7 @@ import EditProfile from './views/pages/profile/profile';
 import InfoProfile from './views/pages/profile/infoprofile';
 //forum
 import Forum from './views/pages/forum/conteudos_partilhados/conteudos_partilhados.jsx';
-import ForumPosts from './views/pages/forum/post/post';
+import ForumPosts from './views/pages/forum/posts/post';
 
 
 

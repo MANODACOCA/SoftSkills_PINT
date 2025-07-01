@@ -103,9 +103,11 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            <Dropdown.Item onClick={handleDelete}>
-                                <BsExclamationTriangleFill className='me-4' />Denuciar
-                            </Dropdown.Item>
+                            {idAutor !== user?.id_utilizador && (
+                                <Dropdown.Item onClick={handleDelete}>
+                                    <BsExclamationTriangleFill className='me-4' />Denuciar
+                                </Dropdown.Item>
+                            )}
                             {idAutor === user?.id_utilizador && (
                                 <Dropdown.Item className='text-danger' onClick={handleDelete}>
                                     <BsFillTrash3Fill className='me-4' />Eliminar
@@ -141,7 +143,6 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                         <BsChat className="me-1" style={{ fontSize: '18px' }} /> {comentarios} comentários
                     </Button>
                 </div>
-
             </Card.Body>
         </Card>
     );
