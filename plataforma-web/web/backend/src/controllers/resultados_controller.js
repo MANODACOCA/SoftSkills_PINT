@@ -7,15 +7,15 @@ const controllers = {};
 const resultadosServices = require('../services/resultados.service');
 
 
-// controllers.list = async (req,res)=>{
-//   trt{
-//     const {id} = req.params;
-//     const data = await resultadosServices.getResultadosFormandos(id);
-//     res.status(200).json(data);
-//   } catch(err) {
-//     res.status(500).json({erro: 'Erro ao procurar Resultados!',desc: err.message});
-//   }
-// };
+controllers.list = async (req,res)=>{
+  try{
+    const {id} = req.params;
+    const data = await model.findAll({id});
+    res.status(200).json(data);
+  } catch(err) {
+    res.status(500).json({erro: 'Erro ao procurar Resultados!',desc: err.message});
+  }
+};
 
 controllers.get = async (req,res)=>{
   try{
