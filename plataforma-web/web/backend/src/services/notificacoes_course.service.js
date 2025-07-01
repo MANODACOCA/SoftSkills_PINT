@@ -18,7 +18,6 @@ async function getNotificationOfCourse(userID) {
           {
             model: utilizador,
             as: 'id_utilizador_utilizador',
-            attributes: ['id_utilizador'],
           }
         ]
       }
