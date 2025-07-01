@@ -3,12 +3,12 @@ const sequelize = require('../models/database');
 const utilizador = require('../models/utilizador');
 const { cursos, notificacoes_curso } = require('../models/init-models')(sequelize);
 
-async function getNotificationOfCourse(userID) {
+async function getNotificationOfCourse(id) {
   try {
     const notifications = await notificacoes_curso.findAll(
       {
         where: {
-          id_utilizador: userID,
+          id_utilizador: id,
         },
         include: [
           {
