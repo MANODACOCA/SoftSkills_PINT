@@ -1,6 +1,5 @@
 const sequelize = require('../models/database');
-const utilizador = require('../models/utilizador');
-const { cursos, notificacoes_curso } = require('../models/init-models')(sequelize);
+const { cursos, notificacoes_curso, utilizador } = require('../models/init-models')(sequelize);
 
 async function getNotificationOfCourse(userID) {
   try {
