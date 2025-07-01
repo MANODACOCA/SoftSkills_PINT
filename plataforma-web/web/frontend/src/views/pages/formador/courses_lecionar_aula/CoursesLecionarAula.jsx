@@ -17,6 +17,8 @@ import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../
 import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 const API_URL = 'https://softskills-api.onrender.com/';
+const toIsoTimestamp = (data, hora) => `${data}T${hora}:00`;      // Para concatenar data e hora numa string  
+const minutesToInterval = min => `00:${min.toString().padStart(2,'0')}:00`;   // para converter depois para o interval depois
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -63,8 +65,8 @@ const CursoLecionarAula = () => {
     const fetchAulas = async (id) => {
         try {
             const response = await getAulas_Curso(id);
+            console.log('Aulas recebidas:', response);
             setAulas(response);
-            return response;
         } catch (error) {
             console.log('Erro encontrar as Aulas', error);
         }
@@ -150,12 +152,16 @@ const CursoLecionarAula = () => {
                         html: `
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
+                            
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" class="form-control mb-3" value="${aulaData?.data_aula || ''}">
+                            <input id="dataAula" type="date" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
+                            
                             <label for="horaAula" class="form-label">Hora da Aula</label>
-                            <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.hora_aula || ''}">
+                            <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0,5) || ''}">
+                            
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
-                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${aulaData?.tempo_duracao || 0}">
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${aulaData?.tempo_duracao?.split(':')[1] || 0}">
+                
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -175,10 +181,10 @@ const CursoLecionarAula = () => {
                             const nome = document.getElementById('nomeAula').value.trim();
                             const data = document.getElementById('dataAula').value;
                             const hora = document.getElementById('horaAula').value;
-                            const tempo = parseInt(document.getElementById('tempoDuracao').value, 10);
+                            const tempoM = parseInt(document.getElementById('tempoDuracao').value, 10);
                             const url = document.getElementById('urlAula').value.trim();
 
-                            if(!nome || !url || !hora || data || isNaN(tempo)) {
+                            if (!nome || !data || !hora || !url || isNaN(tempoM)) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
                                 return;
                             }
@@ -188,6 +194,9 @@ const CursoLecionarAula = () => {
                                 return;
                             }
                             
+                            const data_aula     = toIsoTimestamp(data, hora);   
+                            const tempo_duracao = minutesToInterval(tempoM);
+
                             return {
                                 id_curso: cursos.id_curso,
                                 data_aula,
@@ -223,12 +232,16 @@ const CursoLecionarAula = () => {
                         html: `
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
+                            
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" class="form-control mb-3" value="${aulaData?.data_aula || ''}">
+                            <input id="dataAula" type="date" class="form-control mb-3">
+                            
                             <label for="horaAula" class="form-label">Hora da Aula</label>
-                            <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.hora_aula || ''}">
+                            <input id="horaAula" type="time" class="form-control mb-3">
+                            
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
-                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${aulaData?.tempo_duracao || 0}">
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="0">
+                            
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -246,12 +259,12 @@ const CursoLecionarAula = () => {
                         },
                         preConfirm: () => {
                             const nome = document.getElementById('nomeAula').value;
-                            const data_aula = new Date().toISOString().split('T')[0];
+                            const data   = document.getElementById('dataAula').value;
                             const hora = document.getElementById('horaAula').value;
-                            const tempo = parseInt(document.getElementById('tempoDuracao').value, 10);
-                            const url = document.getElementById('urlAula').value;
+                            const tempoM = parseInt(document.getElementById('tempoDuracao').value, 10);
+                            const url = document.getElementById('urlAula').value.trim();
 
-                            if (!nome || !data || !hora || !url || isNaN(tempo)) {
+                            if (!nome || !data || !hora || !url || isNaN(tempoM)) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
                                 return;
                             }
@@ -260,20 +273,23 @@ const CursoLecionarAula = () => {
                                 Swal.showValidationMessage('Insira um URL válido!');
                                 return;
                             }
+                        
+                            const data_aula     = toIsoTimestamp(data, hora);   
+                            const tempo_duracao = minutesToInterval(tempoM);  
 
                             return { 
                                 id_curso: cursos.id_curso,
                                 data_aula,
                                 nome_aula: nome, 
                                 caminho_url: url,
-                                tempo_duracao: tempo
+                                tempo_duracao
                             };
                         }
                     });
                     if(adicionarAula.isConfirmed && adicionarAula.value){
                         try {
                             await create_aulas(adicionarAula.value);
-                            const aulasCarregadas = await fetchAulas(cursos.id_curso);
+                            await fetchAulas(cursos.id_curso);
                             Swal.fire({
                                 icon: "success",
                                 title: "Aula adicionada com sucesso!",

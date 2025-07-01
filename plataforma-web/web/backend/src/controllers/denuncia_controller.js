@@ -35,7 +35,8 @@ controllers.get = async (req,res)=>{
 controllers.create = async (req,res)=>{
   try{
     if(req.body){
-      const data = await model.create(req.body);
+      const {id_comentario, id_utilizador, id_post, id_tipo_denuncia} = req.body;
+      const data = await model.create({id_comentario, id_utilizador, id_post, id_tipo_denuncia});
       res.status(201).json(data);
     }else{
       res.status(400).json({erro: 'Erro ao criar Denuncia!',desc: 'Corpo do pedido esta vazio.'});

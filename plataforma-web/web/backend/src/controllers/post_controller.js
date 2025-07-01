@@ -3,7 +3,7 @@
 const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const { utilizador } = require('../models/init-models')(sequelize);
+const { utilizador, likes_post, comentario } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).post;
 const controllers = {};
 
@@ -31,7 +31,7 @@ controllers.get = async (req, res) => {
           as: 'id_utilizador_utilizador'
         }
       ],
-      order: [['data_criacao_post' , 'DESC']],
+      order: [['data_criacao_post', 'DESC']],
     });
 
     if (data) {
@@ -94,6 +94,11 @@ controllers.update = async (req, res) => {
 controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
+
+    await comentario.destroy({ where: { id_post: id } });
+
+    await likes_post.destroy({ where: { id_post: id } });
+
     const deleted = await model.destroy({ where: { id_post: id } });
     if (deleted) {
       res.status(200).json({ msg: 'Post apagado/a com sucesso!' });
@@ -117,7 +122,7 @@ controllers.putLike = async (req, res) => {
     }
 
     const updated = await model.update(
-      { contador_likes_post: post.contador_likes_post+1 },
+      { contador_likes_post: post.contador_likes_post + 1 },
       { where: { id_post: id } }
     );
 
@@ -135,7 +140,7 @@ controllers.putLike = async (req, res) => {
 
 //para retirar like
 controllers.deleteLike = async (req, res) => {
-    try {
+  try {
 
     const { id } = req.params;
 
@@ -145,7 +150,7 @@ controllers.deleteLike = async (req, res) => {
     }
 
     const updated = await model.update(
-      { contador_likes_post: post.contador_likes_post-1 },
+      { contador_likes_post: post.contador_likes_post - 1 },
       { where: { id_post: id } }
     );
 

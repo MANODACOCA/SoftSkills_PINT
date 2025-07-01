@@ -12,14 +12,13 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
     const [conteudo, setConteudo] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isError, setIsError] = useState('');
-    const [isSuccess, setIsSuccess] = useState('');
+    const [ficheiroSelecionado, setFicheiroSelecionado] = useState(null);
 
     const onCreatePost = async () => {
         if (!conteudo.trim() || !user || !forum) return;
 
         setIsSubmitting(true);
         setIsError('');
-        setIsSuccess('');
 
         try {
             await create_post({
@@ -28,13 +27,15 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
                 id_conteudos_partilhado: forum.id_conteudos_partilhado,
             });
 
+         
             setConteudo('');
             setShowModal(false);
             if (onPostCreated) onPostCreated();
+            setFicheiroSelecionado(null);
             Swal.fire({
                 title: "Post criado com sucesso!",
                 icon: "success",
-                showConfirmButton:false,
+                showConfirmButton: false,
                 timer: 3000,
             });
         } catch (error) {
@@ -125,8 +126,13 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
                     </div>
 
                     {isError && <Alert variant="danger">{isError}</Alert>}
-                    {isSuccess && <Alert variant="success">{isSuccess}</Alert>}
-
+                    <Form.Group className="mb-3">
+                        <Form.Label>Adicionar ficheiro (opcional)</Form.Label>
+                        <Form.Control
+                            type="file"
+                            onChange={(e) => setFicheiroSelecionado(e.target.files[0])}
+                        />
+                    </Form.Group>
                     <Form.Control
                         as="textarea"
                         rows={4}
