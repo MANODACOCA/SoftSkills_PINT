@@ -8,7 +8,7 @@ import { columnsNotasFinais } from '../../../components/table/ColumnsAvaliacaoFi
 import { get_cursos } from '../../../../api/cursos_axios';
 import { create_material_apoio, delete_material_apoio, get_material_apoio, get_material_apoio_curso, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
-import { list_resultados } from '../../../../api/resultados_axios';
+import { get_resultados } from '../../../../api/resultados_axios';
 import Swal from 'sweetalert2';
 import { create_aulas, delete_aulas, getAulas_Curso, update_aulas } from '../../../../api/aulas_axios';
 import { list_formadores } from '../../../../api/formadores_axios';
@@ -48,9 +48,9 @@ const CursoLecionarAula = () => {
         }
     }
 
-    const fetchResultados = async () => {
+    const fetchResultados = async (id) => {
         try{
-            const response = await list_resultados();
+            const response = await get_resultados(id);
             setResultados(response);
         } catch(error) {
             console.log('Erro ao encontrar a lista de resultados dos formandos', error);
@@ -789,9 +789,6 @@ const CursoLecionarAula = () => {
     const renderActionsResultados = (item) => {
         return(
         <div className="d-flex">
-            <a href={item.conteudo}  className="btn btn-outline-success me-2" target="_blank">
-                <i className='bi bi-box-arrow-up-right'></i>
-            </a>
             <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateResultados(item.id_resul)}>
                 <i className="bi bi-pencil"></i>
             </button> 
@@ -807,7 +804,18 @@ const CursoLecionarAula = () => {
     }
 
     const HandleDeleteResultados = async (id) => {
-
+        const result = await Swal.fire({
+            title: "Tem certeza que deseja retirar esta nota?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonColor: "Cancelar",
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
     }
     //#endregion
 

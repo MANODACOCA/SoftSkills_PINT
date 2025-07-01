@@ -1,7 +1,7 @@
 const sequelize = require('../models/database');
 const { cursos, notificacoes_curso, utilizador } = require('../models/init-models')(sequelize);
 
-async function getNotificationOfCourse(userID) {
+async function getNotificationOfCourse(userID, order) {
   try {
     const notifications = await notificacoes_curso.findAll(
       {
@@ -17,6 +17,9 @@ async function getNotificationOfCourse(userID) {
             model: utilizador,
             as: 'id_utilizador_utilizador',
           }
+        ],
+        order: [
+          ['data_hora_notificacaocurso', order === 'antigo' ? 'ASC' : 'DESC']
         ]
       }
     );

@@ -7,15 +7,15 @@ const NotificationRow = ({notification, onDelete}) => {
     return(
         <div className="d-flex align-items-center justify-content-between">
             <div className='d-flex gap-4 align-items-center'>
-                <img src={notification.curso?.imagem} 
+                <img src={notification.id_curso_curso?.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(notification.id_curso_curso.nome_curso)}&background=random&bold=true`} 
                 onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(notification.id_utilizador.nome_utilizador)}&background=random&bold=true`;
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(notification.id_curso_curso.nome_curso)}&background=random&bold=true`;
                 }}
                 alt="imagem notificação" width={80} height={80} className='img-not' 
                 />
                 <div className='d-flex align-items-start flex-column justify-content-center'>
-                    <h5>{notification.curso?.nome_curso}</h5>
+                    <h5>{notification.id_curso_curso?.nome_curso}</h5>
                     <p>{notification.conteudo_notif_curso}</p>
                 </div>
             </div>
