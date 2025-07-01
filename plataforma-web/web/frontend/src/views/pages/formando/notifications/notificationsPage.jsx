@@ -8,11 +8,12 @@ const NotificationPage = () => {
     const [notificacoes, setNotificacoes] = useState([]);
     const [ordenacao, setOrdenacao] = useState('recente');
 
-    const fetchAllNotifications = async () => {
+    const fetchAllNotifications = async (ord = ordenacao) => {
         try {
             const id = user.id_utilizador;
             console.log(id)
-            const cursos = await find_notificacao_curso(id, ordenacao);
+            console.log(ordenacao);
+            const cursos = await find_notificacao_curso(id, ord);
             setNotificacoes(cursos);
         } catch (error) {
             console.error('Erro ao carregar notificações:', error);
@@ -35,9 +36,9 @@ const NotificationPage = () => {
 
     useEffect(() => {
         if (user && user.id_utilizador) {
-            fetchAllNotifications();
+            fetchAllNotifications(ordenacao);
         }
-    }, [user]);
+    }, [user, ordenacao]);
 
     if (!user || !user.id_utilizador || !notificacoes) {
         return <div className="text-center mt-5">A carregar...</div>;

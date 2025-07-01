@@ -43,9 +43,9 @@ export const update_notificacoes_curso = async (id, data) => {
     }
 };
 
-export const delete_notificacoes_curso = async (id, order) => {
+export const delete_notificacoes_curso = async (id) => {
     try{
-        const response = await axios.delete(`${API_URL}/delete/${id}?order=${order}`);
+        const response = await axios.delete(`${API_URL}/delete/${id}`);
         return response.data;
     }catch(error){
         console.error('Erro ao excluir Notificacao de Curso!');
@@ -55,11 +55,11 @@ export const delete_notificacoes_curso = async (id, order) => {
 
 
 //encontra o imagem e nome de curso por id
-export const find_notificacao_curso = async (id) => {
+export const find_notificacao_curso = async (id, order) => {
     try {
         console.log(id);
         console.log(`${API_URL}/find_notificacoes_curso/${id}`);
-        const response = await axios.get(`${API_URL}/find_notificacoes_curso/${id}`);
+        const response = await axios.get(`${API_URL}/find_notificacoes_curso/${id}?order=${order}`);
         return response.data;
     } catch (error) {
         console.error('Erro ao encontrar Notificacao de Curso!');
