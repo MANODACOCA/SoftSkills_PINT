@@ -1,10 +1,10 @@
 import './post.css';
 import Swal from 'sweetalert2';
-import React, { use, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Button, Dropdown } from 'react-bootstrap';
 import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import { delete_post, put_like, delete_like } from "../../../../api/post_axios";
+import { delete_post, put_like, delete_like, jaDeuLike } from "../../../../api/post_axios";
 //import Comentario from "../../../components/forum/comentario/comentario";
 import { useUser } from '../../../../utils/useUser';
 
@@ -22,10 +22,10 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     const handleLike = async () => {
         try {
             if (liked) {
-                await delete_like(idPost,user.id_utilizador);
+                await delete_like(idPost, user.id_utilizador);
                 setLikes(likes - 1);
             } else {
-                await put_like(idPost,user.id_utilizador);
+                await put_like(idPost, user.id_utilizador);
                 setLikes(likes + 1);
             }
             setLiked(!liked);
@@ -43,7 +43,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            cancelButtonColor: '#3b5b84',
             confirmButtonText: 'Sim, eliminar!',
             cancelButtonText: 'Cancelar',
         });
@@ -69,6 +69,21 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
             }
         }
     };
+
+    const verificarLike = async () => {
+        if (!user?.id_utilizador) return;
+
+        try {
+            const jaCurtiu = await jaDeuLike(idPost, user.id_utilizador);
+            setLiked(jaCurtiu);
+        } catch (err) {
+            console.error("Erro ao verificar se já deu like:", err);
+        }
+    };
+
+    useEffect(() => {
+        verificarLike();
+    }, [idPost, user]);
 
 
     return (
