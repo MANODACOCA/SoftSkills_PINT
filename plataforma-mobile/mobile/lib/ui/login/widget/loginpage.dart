@@ -1,6 +1,6 @@
 //import 'dart:convert';
 //import 'package:mobile/data/services/basedados.dart';
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, await_only_futures
 
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
@@ -221,8 +221,22 @@ class _LoginPage extends State<LoginPage> {
                         );
                         print('response: $response');
                         if (response['success'] == true) {
-                          if (response['twoFa'] == false || response['twoFa'] == null) {
-                            context.go('/homepage'); //Homepage
+                          if (response['twoFa'] == false ||
+                              response['twoFa'] == null) {
+                            final token = response['token'];
+                            var userId = await api.getUserIdFromToken(token);
+                            if (userId == null) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    'Erro ao obter ID do utilizador.',
+                                  ),
+                                ),
+                              );
+                              return;
+                            } else {
+                              context.go('/homepage', extra: userId);
+                            }
                           } else {
                             context.go("/twofa");
                           }

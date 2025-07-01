@@ -59,12 +59,12 @@ const ForumPosts = () => {
           posts.map((post) => (
             <Post
               key={post.id_post}
-              autor={"Você"} // ou substitui com username real se tiveres
+              autor={post.id_utilizador_utilizador.nome_utilizador} // ou substitui com username real se tiveres
               tempo={"agora"} // ou formata a data do post
               texto={post.texto_post}
               likes={post.contador_likes_post}
               comentarios={post.contador_comentarios}
-              imagemAutor={"https://randomuser.me/api/portraits/men/75.jpg"} // ou avatar do autor
+              imagemAutor={post.id_utilizador_utilizador.img_perfil} // ou avatar do autor
             />
           ))
         )}

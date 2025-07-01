@@ -24,7 +24,7 @@ import {
 
 
 const ClassPage = () => {
-
+    const API_URL = 'https://softskills-api.onrender.com/';
     const navigate = useNavigate();
     const [curso, setCurso] = useState(null);
     const [aulas, setAulas] = useState([]);
@@ -305,7 +305,7 @@ const ClassPage = () => {
                                                                             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
                                                                         }}
                                                                         alt="Foto do formador"
-                                                                        className="rounded-circle"
+                                                                        className='rounded-circle'
                                                                         width="60"
                                                                         height="60"
                                                                     />

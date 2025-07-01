@@ -1,0 +1,30 @@
+.btn-primary {
+  background-color: var(--cor-principal);
+  border-color: var(--cor-principal);
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active {
+  background-color: darken(var(--cor-principal), 10%);
+  border-color: darken(var(--cor-principal), 10%);
+  /* darken() não funciona direto no CSS, mas você pode colocar um tom mais escuro manualmente */
+}
+
+.btn-secondary {
+  background-color: var(--cor-secundaria);
+  border-color: var(--cor-secundaria);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active,
+.btn-secondary.active {
+  background-color: #008cc7; /* um azul mais escuro para hover */
+  border-color: #008cc7;
+}
+
+.dropdown-toggle-no-caret::after {
+  display: none !important;
+}
