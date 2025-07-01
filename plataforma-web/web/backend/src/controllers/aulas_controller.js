@@ -41,7 +41,7 @@ controllers.create = async (req, res) => {
       if (!rx.test(tempo_duracao)) {
         return res.status(400).json({erro: 'Formato de tempo_duracao inválido!', desc: 'Use hh:mm:ss — ex. 00:45:00'});
       }
-    } else if (caminho_url && isYouTube(caminho_url)) {
+    } else (caminho_url && isYouTube(caminho_url)) 
       try {
         const { hours, minutes, seconds } = await getVideoDuration(caminho_url);
         req.body.tempo_duracao =
