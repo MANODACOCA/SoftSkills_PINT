@@ -24,7 +24,7 @@ import {
 
 
 const ClassPage = () => {
-
+    const API_URL = 'https://softskills-api.onrender.com/';
     const navigate = useNavigate();
     const [curso, setCurso] = useState(null);
     const [aulas, setAulas] = useState([]);
@@ -299,9 +299,13 @@ const ClassPage = () => {
                                                             <div className="me-3">
                                                                 <div className="rounded-circle bg-primary d-flex align-items-center justify-content-center" style={{ width: '60px', height: '60px' }}>
                                                                     <img
-                                                                        src={curso.sincrono.id_formador_formadore.id_formador_utilizador?.img_util || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || 'Formador')}`}
+                                                                        src={`${API_URL}${curso.sincrono.id_formador_formadore.id_formador_utilizador?.img_util}`}
+                                                                        onError={(e) => {
+                                                                            e.target.onerror = null;
+                                                                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
+                                                                        }}
                                                                         alt="Foto do formador"
-                                                                        className="rounded-circle"
+                                                                        className='rounded-circle'
                                                                         width="60"
                                                                         height="60"
                                                                     />
@@ -316,7 +320,7 @@ const ClassPage = () => {
                                                                         Email: {curso.sincrono.id_formador_formadore.id_formador_utilizador.email || ""}
                                                                     </p>
                                                                     <p className="text-muted mb-3">
-                                                                        Telemóvel: {curso.sincrono.id_formador_formadore.id_formador_utilizador.tel_util || ""}
+                                                                        Telemóvel: {curso.sincrono.id_formador_formadore.id_formador_utilizador.tel_util || "N/A"}
                                                                     </p>
                                                                 </div>
                                                                 <p>
