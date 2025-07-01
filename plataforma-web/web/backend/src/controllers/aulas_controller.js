@@ -51,9 +51,6 @@ controllers.create = async (req, res) => {
       } catch (err) {
         return res.status(400).json({ erro: 'Não consegui obter a duração do vídeo.', desc: err.message });
       }
-    } else {
-      req.body.tempo_duracao = null;
-    }
 
     const data = await model.create(req.body);
 
@@ -102,10 +99,6 @@ controllers.update = async (req, res) => {
       } catch (err) {
         return res.status(400).json({ erro: 'Não consegui obter a duração do vídeo.', desc: err.message });
       }
-    }
-
-    else {
-      req.body.tempo_duracao = req.body.tempo_duracao || null;
     }
       const updated = await model.update(req.body, { where: { id_aula : id } });
       if (updated) {
