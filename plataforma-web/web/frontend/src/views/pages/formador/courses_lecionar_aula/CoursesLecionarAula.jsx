@@ -13,6 +13,7 @@ import { list_formadores } from '../../../../api/formadores_axios';
 import Table from '../../../components/table/Table';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
 import { useUser } from '../../../../utils/useUser';
+const API_URL = 'https://softskills-api.onrender.com/';
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -838,16 +839,26 @@ const CursoLecionarAula = () => {
                 
                 <Tab eventKey="sobre" title={<span className='fw-bold'>Sobre</span>}>
                     <div>
-                        <div className='mb-3'>
-                            <div>
-                                <img src={cursos.imagem} alt="" />
+                        <div className='mb-3 d-flex'>
+                            <div className='me-2'>
+                                <img 
+                                    src={`${API_URL}${cursos.sincrono.id_formador_formadore.id_formador_utilizador.img_perfil}` || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
+                                    }}
+                                    alt="Foto do formador"
+                                    className='rounded-circle'
+                                    width="60"
+                                    height="60"
+                                />
                             </div>
                             <div>
                                 <h5>{cursos.sincrono.id_formador_formadore.id_formador_utilizador.nome_util}</h5>
                                 <small className='alert alert-success py-1 px-2'>
                                     <i className='bi bi-geo-alt me-2'></i>
                                     teste
-                                </small>    
+                                </small>   
                             </div>
                         </div>
                         <p>{cursos.sincrono.id_formador_formadore.descricao_formador}</p>
