@@ -43,9 +43,9 @@ export const update_notificacoes_curso = async (id, data) => {
     }
 };
 
-export const delete_notificacoes_curso = async (id) => {
+export const delete_notificacoes_curso = async (id, order) => {
     try{
-        const response = await axios.delete(`${API_URL}/delete/${id}`);
+        const response = await axios.delete(`${API_URL}/delete/${id}?order=${order}`);
         return response.data;
     }catch(error){
         console.error('Erro ao excluir Notificacao de Curso!');
