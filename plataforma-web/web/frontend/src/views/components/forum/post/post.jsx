@@ -1,10 +1,11 @@
 import './post.css';
 import Swal from 'sweetalert2';
 import React, { useEffect, useState } from 'react';
-import { Card, Button, Dropdown } from 'react-bootstrap';
+import { Card, Button, Dropdown, Modal, Form } from 'react-bootstrap';
 import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { delete_post, put_like, delete_like, jaDeuLike } from "../../../../api/post_axios";
+import { list_tipo_denuncia } from "../../../../api/tipo_denuncia_axios";
 import { useUser } from '../../../../utils/useUser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -18,12 +19,51 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     const API_URL = 'https://softskills-api.onrender.com/';
     const { user, setUser } = useUser();
 
+
+
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(inicialLikes);
+
+
 
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState([]);
 
+    /*DENUCIA*/
+    const [showReportModal, setShowReportModal] = useState(false);
+    const [reportReason, setReportReason] = useState('');
+    const [tipoDenunciaList, setTipoDenunciaList] = useState([]);
+
+    const fetchDenucias = async () => {//vai buscar os tipos de denúcias
+        try {
+            const data = await list_tipo_denuncia();
+            setTipoDenunciaList(data);
+        } catch (err) {
+            console.error("Erro ao listar tipo de denucias:", err);
+            Swal.fire("Erro", "Não foi possível listar tipo de denucias. Tente novamente.", "error");
+        }
+    }
+    const handleReportSubmit = async () => {
+
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Denúncia enviada',
+            text: 'Obrigado por ajudar a manter a comunidade segura!',
+            timer: 3000,
+            showConfirmButton: false,
+        });
+
+        setReportReason('');
+        setShowReportModal(false);
+    };
+
+    useEffect(() => {
+        if (showReportModal) {
+            fetchDenucias();
+        }
+    }, [showReportModal]);
+    /*DENUCIA*/
 
     const handleLike = async () => {
         try {
@@ -58,9 +98,9 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
             try {
                 await delete_post(idPost);
                 Swal.fire({
-                    title:'Eliminado!',
-                    text:'O post foi eliminado com sucesso.',
-                    icon:'success',
+                    title: 'Eliminado!',
+                    text: 'O post foi eliminado com sucesso.',
+                    icon: 'success',
                     showConfirmButton: false,
                     timer: 2000,
                 });
@@ -95,7 +135,6 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
         verificarLike();
     }, [idPost, user]);
 
-
     return (
         <Card className="mb-3 shadow-sm rounded-4 border-0">
             <Card.Body>
@@ -129,9 +168,45 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
 
                         <Dropdown.Menu>
                             {idAutor !== user?.id_utilizador && (
-                                <Dropdown.Item onClick={handleDelete}>
-                                    <BsExclamationTriangleFill className='me-4' />Denuciar
-                                </Dropdown.Item>
+                                <>
+                                    <Dropdown.Item className='text-danger' onClick={() => setShowReportModal(true)}>
+                                        <BsExclamationTriangleFill className='me-4' />Denuciar
+                                    </Dropdown.Item>
+
+                                    <Modal show={showReportModal} onHide={() => setShowReportModal(false)} centered>
+                                        <Modal.Header>
+                                            <Modal.Title>Denunciar Post</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <Form.Group>
+                                                <Form.Label>Selecione o motivo da denúncia</Form.Label>
+                                                <Form.Select
+                                                    value={reportReason}
+                                                    onChange={(e) => setReportReason(e.target.value)}
+                                                >
+                                                    <option value="">-- Selecione um motivo --</option>
+                                                    {tipoDenunciaList.map((tipo) => (
+                                                        <option key={tipo.id} value={tipo.id}>
+                                                            {tipo.tipo_denuncia}
+                                                        </option>
+                                                    ))}
+                                                </Form.Select>
+                                            </Form.Group>
+                                        </Modal.Body>
+                                        <Modal.Footer>
+                                            <Button variant="secondary" onClick={() => { setShowReportModal(false); setReportReason(''); }}>
+                                                Cancelar
+                                            </Button>
+                                            <Button
+                                                variant="danger"
+                                                onClick={handleReportSubmit}
+                                                disabled={!reportReason}
+                                            >
+                                                Enviar denúncia
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
+                                </>
                             )}
                             {idAutor === user?.id_utilizador && (
                                 <Dropdown.Item className='text-danger' onClick={handleDelete}>
