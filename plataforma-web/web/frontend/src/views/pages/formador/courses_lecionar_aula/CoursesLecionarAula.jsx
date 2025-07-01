@@ -172,13 +172,13 @@ const CursoLecionarAula = () => {
                             cancelButton: 'btn btn-danger',
                         },
                         preConfirm: () => {
-                            const nome = document.getElementById('nomeAula').value;
-                            const url = document.getElementById('urlAula').value;
+                            const nome = document.getElementById('nomeAula').value.trim();
                             const data = document.getElementById('dataAula').value;
                             const hora = document.getElementById('horaAula').value;
-                            const data_aula  = `${data}T${hora}:00`;
+                            const tempo = parseInt(document.getElementById('tempoDuracao').value, 10);
+                            const url = document.getElementById('urlAula').value.trim();
 
-                            if(!nome || !url) {
+                            if(!nome || !url || !hora || data || isNaN(tempo)) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
                                 return;
                             }
@@ -190,10 +190,10 @@ const CursoLecionarAula = () => {
                             
                             return {
                                 id_curso: cursos.id_curso,
-                                data_aula: materiais.data_aula,
+                                data_aula,
                                 nome_aula: nome, 
                                 caminho_url: url,
-                                tempo_duracao: 0,
+                                tempo_duracao
                             };
                         }
                     });
