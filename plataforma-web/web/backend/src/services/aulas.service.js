@@ -94,9 +94,9 @@ async function getAulas(cursoID) {
         throw new Error('Curso não econtrado');
     }
 
-    if (cursoSincrono.issincrono) {
-        return [];
-    }
+    // if (cursoSincrono.issincrono) {
+    //     return [];
+    // }
 
     const todasAulas = await aulas.findAll({
         where: { id_curso: cursoID },
