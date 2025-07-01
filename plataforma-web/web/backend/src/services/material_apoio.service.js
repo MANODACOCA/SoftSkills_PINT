@@ -11,9 +11,9 @@ async function getMaterialApoioDoCurso(cursoID){
         throw new Error('Curso não econtrado');
     }
 
-    if(cursoSincrono.issincrono){
-        return [];
-    }
+    // if(cursoSincrono.issincrono){
+    //     return [];
+    // }
 
     const materialApoio = await material_apoio.findAll({
         where: { id_curso: cursoID },

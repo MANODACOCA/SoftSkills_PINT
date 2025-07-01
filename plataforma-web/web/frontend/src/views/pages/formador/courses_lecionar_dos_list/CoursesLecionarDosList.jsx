@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getCompletedCourses, getCursosLecionadosAtualmente, getCursosLecionadosTerminados, getEnrolledCourses } from "../../../../api/cursos_axios";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, Link } from "react-router-dom";
 import { Tab, Tabs } from 'react-bootstrap';
 import './CoursesLecionarDosList.css';
 import { get_utilizador } from "../../../../api/utilizador_axios";
@@ -8,13 +8,13 @@ import { useUser } from '../../../../utils/useUser';
 
 const CursoLecionarList = ({cursosLecionadosA, cursosLecionadosTerm}) => {
     const { user } = useUser();
-    const id = user?.id_utilizador;
-    console.log(id);
     const [utilizador, setUtilizador] = useState([]);
     const [cursosLecionadosTerminados, setCursosLecionadosTerminados] = useState([]);
     const [cursosLecionadosAtualmente, setCursosLecionadosAtualmente] = useState([]);
     const location = useLocation();
     const [activeKey, setActiveKey] = useState('cursosLecionadosA');
+    /* const id = user?.id_utilizador;
+    console.log(id); */
 
     const fetchCursosLecionadosTerminados = async (userId) => {
         try {
@@ -46,21 +46,13 @@ const CursoLecionarList = ({cursosLecionadosA, cursosLecionadosTerm}) => {
         }
     }
 
-    const fetchUtilizador = async (id) => {
-        try {
-            const response = await get_utilizador(id);
-            setUtilizador(response);
-            console.log(response);
-        } catch (error) {
-            console.log('Erro ao encontrar user!');
-        }
-    }
-
     useEffect(() => {
+        if (!user || !user.id_utilizador) return;
+        const id = user.id_utilizador;
+
         fetchCursosLecionadosAtualmente(id);
         fetchCursosLecionadosTerminados(id);
-        fetchUtilizador(id);
-    }, [])
+    }, [user])
 
     useEffect(() => {
         if(location.state?.activeTab) {
@@ -81,6 +73,7 @@ const CursoLecionarList = ({cursosLecionadosA, cursosLecionadosTerm}) => {
                             ) : (
                                 cursosLecionadosAtualmente.map((cu, index) => {
                                     return(
+                                        <Link to={`/formador/cursos/${cu.id_curso_sincrono_curso.id_curso}`} className="text-decoration-none text-white">
                                         <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
                                             <img
                                                 src={cu.id_curso_sincrono_curso.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`}
@@ -97,6 +90,7 @@ const CursoLecionarList = ({cursosLecionadosA, cursosLecionadosTerm}) => {
                                                 </div>
                                             </div>
                                         </div>
+                                        </Link>
                                     );
                                 })
                             )}

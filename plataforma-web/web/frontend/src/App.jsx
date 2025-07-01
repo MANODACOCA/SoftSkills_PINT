@@ -40,6 +40,7 @@ import CourseRegistration from './views/pages/formando/course_registration/Cours
 //formador
 import HomePageFormador from './views/pages/formador/home/HomePage.jsx';
 import CursoLecionarList from './views/pages/formador/courses_lecionar_dos_list/CoursesLecionarDosList.jsx';
+import CursoLecionarAula from './views/pages/formador/courses_lecionar_aula/CoursesLecionarAula.jsx';
 
 
 
@@ -126,6 +127,8 @@ function App() {
         >
           <Route path='/formador/home' element={<HomePageFormador />}></Route>
           <Route path='/formador/cursos' element={<CursoLecionarList />}></Route>
+          <Route path='/formador/cursos/:id' element={<CursoLecionarAula />}></Route>
+
         </Route>
         {/* formador */}
 
