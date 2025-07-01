@@ -75,8 +75,8 @@ controllers.delete = async (req,res)=>{
 
 controllers.getCursoNotificationsController = async (req,res)=>{
   try {
-    const {id} = req.params;
-    const cursos = await getNotificationOfCourse(id);
+    const {userID} = req.params;
+    const cursos = await getNotificationOfCourse(userID);
     res.status(200).json(cursos); 
   } catch(error) {
     res.status(500).json({erro:'Erro ao obter notificaçao'});
