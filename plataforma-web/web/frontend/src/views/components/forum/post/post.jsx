@@ -4,7 +4,7 @@ import React, { use, useState } from 'react';
 import { Card, Button, Dropdown } from 'react-bootstrap';
 import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import { delete_post } from "../../../../api/post_axios";
+import { delete_post, put_like, delete_like } from "../../../../api/post_axios";
 //import Comentario from "../../../components/forum/comentario/comentario";
 import { useUser } from '../../../../utils/useUser';
 
@@ -19,14 +19,22 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     const [comments, setComments] = useState([]);
 
 
-    const handleLike = () => {
-        if (liked) {
-            setLikes(likes - 1);
-        } else {
-            setLikes(likes + 1);
+    const handleLike = async () => {
+        try {
+            if (liked) {
+                await delete_like(idPost);
+                setLikes(likes - 1);
+            } else {
+                await put_like(idPost);
+                setLikes(likes + 1);
+            }
+            setLiked(!liked);
+        } catch (err) {
+            console.error("Erro ao atualizar like:", err);
+            Swal.fire("Erro", "Não foi possível atualizar o like. Tente novamente.", "error");
         }
-        setLiked(!liked);
-    }
+    };
+
 
     const handleDelete = async () => {
         const result = await Swal.fire({
@@ -95,7 +103,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            <Dropdown.Item href="#action-1">
+                            <Dropdown.Item onClick={handleDelete}>
                                 <BsExclamationTriangleFill className='me-4' />Denuciar
                             </Dropdown.Item>
                             {idAutor === user?.id_utilizador && (

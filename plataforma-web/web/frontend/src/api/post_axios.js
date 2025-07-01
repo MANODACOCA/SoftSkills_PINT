@@ -52,3 +52,23 @@ export const delete_post = async (id) => {
         throw error;
     }
 };
+
+export const put_like = async (id) => {
+    try{
+        const response = await axios.put(`${API_URL}/addLike/${id}`);
+        return response.data;
+    }catch(error){
+        console.error('Erro ao adicionar like no Post!');
+        throw error;
+    }
+};
+
+export const delete_like = async (id) => {
+    try{
+        const response = await axios.put(`${API_URL}/addLike/${id}`);
+        return response.data;
+    }catch(error){
+        console.error('Erro ao eliminar like no Post!');
+        throw error;
+    }
+};
