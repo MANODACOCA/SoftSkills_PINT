@@ -32,12 +32,24 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id_formato'
       }
     },
+    id_resultado_et: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'resultados',
+        key: 'id_resul'
+      }
+    },
     nome_et: {
       type: DataTypes.STRING(300),
       allowNull: false
     },
     caminho_et: {
       type: DataTypes.STRING(1024),
+      allowNull: false
+    },
+    data_entrega_et: {
+      type: DataTypes.DATE,
       allowNull: false
     }
   }, {

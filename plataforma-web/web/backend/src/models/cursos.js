@@ -84,6 +84,25 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     indexes: [
       {
+        name: "idx_cursos_estado_issincrono",
+        fields: [
+          { name: "estado" },
+          { name: "issincrono" },
+        ]
+      },
+      {
+        name: "idx_cursos_id_topico",
+        fields: [
+          { name: "id_topico" },
+        ]
+      },
+      {
+        name: "idx_cursos_nome_curso",
+        fields: [
+          { name: "nome_curso" },
+        ]
+      },
+      {
         name: "pk_cursos",
         unique: true,
         fields: [

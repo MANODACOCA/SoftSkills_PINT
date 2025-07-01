@@ -32,6 +32,11 @@ module.exports = function(sequelize, DataTypes) {
     conteudo_notif_curso: {
       type: DataTypes.STRING(500),
       allowNull: false
+    },
+    isread: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
     sequelize,

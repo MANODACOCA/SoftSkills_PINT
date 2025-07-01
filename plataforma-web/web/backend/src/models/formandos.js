@@ -9,10 +9,6 @@ module.exports = function(sequelize, DataTypes) {
         model: 'utilizador',
         key: 'id_utilizador'
       }
-    },
-    percurso_formativo: {
-      type: DataTypes.STRING(100),
-      allowNull: true
     }
   }, {
     sequelize,

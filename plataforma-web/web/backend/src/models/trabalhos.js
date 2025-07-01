@@ -35,6 +35,10 @@ module.exports = function(sequelize, DataTypes) {
     descricao_tr: {
       type: DataTypes.STRING(1024),
       allowNull: false
+    },
+    data_entrega_tr: {
+      type: DataTypes.DATE,
+      allowNull: true
     }
   }, {
     sequelize,
