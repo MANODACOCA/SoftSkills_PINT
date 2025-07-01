@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import NotificationRow from "../../../components/notification_row/notification_row";
 import { delete_notificacoes_curso, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
 import { useUser } from '../../../../utils/useUser';
+import Swal from 'sweetalert2';
 
 const NotificationPage = () => {
     const { user } = useUser();
@@ -11,8 +12,6 @@ const NotificationPage = () => {
     const fetchAllNotifications = async (ord = ordenacao) => {
         try {
             const id = user.id_utilizador;
-            console.log(id)
-            console.log(ordenacao);
             const cursos = await find_notificacao_curso(id, ord);
             setNotificacoes(cursos);
         } catch (error) {
@@ -21,16 +20,38 @@ const NotificationPage = () => {
     };
 
     const HandleDelete = async (id) => {
-        const confirm = window.confirm('Tem a certeza que pretende eleminar');
+        const result = await Swal.fire({
+            title: "Tem certeza que deseja apagar a notificação?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonColor: "Cancelar",
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
 
-        if (!confirm) return;
-        console.log("Tentando eliminar:", id);
-        try {
-            await delete_notificacoes_curso(id);
-            fetchAllNotifications();
-            console.log('Eliminado com sucesso!');
-        } catch (error) {
-            console.log('Erro ao eliminar notificação!');
+        if(result.isConfirmed){
+            try {
+                await delete_notificacoes_curso(id);
+                fetchAllNotifications();
+                Swal.fire({
+                    icon: "success",
+                    title: "Notificação apagada com sucesso!",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Não foi possível apagar notificação",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            }    
         }
     }
 
