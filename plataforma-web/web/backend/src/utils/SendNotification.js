@@ -1,4 +1,4 @@
-const initModels = require('../models/init-models');
+const {initModels} = require('../models/init-models');
 
 module.exports.criarNotifacoesGenerica = async (
     tipo,
