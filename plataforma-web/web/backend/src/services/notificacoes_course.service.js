@@ -4,11 +4,12 @@ const { cursos, notificacoes_curso, utilizador } = require('../models/init-model
 
 async function getNotificationOfCourse(userID, order) {
   try {
+    const now = new Date();
     const notifications = await notificacoes_curso.findAll(
       {
         where: {
           id_utilizador: userID,
-          data_hora_notificacaocurso: { [Op.lte]: Sequelize.literal('CURRENT_DATE') },
+          data_hora_notificacaocurso: { [Op.lte]: now },
         },
         include: [
           {

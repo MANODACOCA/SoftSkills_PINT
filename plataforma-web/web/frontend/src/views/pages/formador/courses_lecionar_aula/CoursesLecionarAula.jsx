@@ -148,9 +148,15 @@ const CursoLecionarAula = () => {
                     const editarAula = await Swal.fire({
                         title: 'Editar Aula',
                         html: `
-                            <label for="nome" class="form-label">Aula</label>
-                            <input id="nomeAula" class="form-control mb-3" placeholder="Nome da Aula" value="${aulaData?.nome_aula || ''}">
-                            <label for="conteudo" class="form-label">URL</label>
+                            <label for="nomeAula" class="form-label">Aula</label>
+                            <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
+                            <label for="dataAula" class="form-label">Data da Aula</label>
+                            <input id="dataAula" type="date" class="form-control mb-3" value="${aulaData?.data_aula || ''}">
+                            <label for="horaAula" class="form-label">Hora da Aula</label>
+                            <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.hora_aula || ''}">
+                            <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${aulaData?.tempo_duracao || 0}">
+                            <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
                         showCancelButton: true,
@@ -168,6 +174,9 @@ const CursoLecionarAula = () => {
                         preConfirm: () => {
                             const nome = document.getElementById('nomeAula').value;
                             const url = document.getElementById('urlAula').value;
+                            const data = document.getElementById('dataAula').value;
+                            const hora = document.getElementById('horaAula').value;
+                            const data_aula  = `${data}T${hora}:00`;
 
                             if(!nome || !url) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
@@ -212,14 +221,16 @@ const CursoLecionarAula = () => {
                     const adicionarAula = await Swal.fire({
                         title: 'Adicionar Aula',
                         html: `
-                            <label for="nome" class="form-label">Aula</label>
+                            <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
-                            <label for="dataAula" class="form-label">Data aula</label>
-                            <input id="dataAula" class="form-control mb-3" placeholder= "Data da aula">
-                            <label for="dataAula" class="form-label">Data aula</label>
-                            <input id="dataAula" class="form-control mb-3" placeholder= "Data da aula">                            
-                            <label for="conteudo" class="form-label">URL</label>
-                            <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url?.[0] || ''}">
+                            <label for="dataAula" class="form-label">Data da Aula</label>
+                            <input id="dataAula" type="date" class="form-control mb-3" value="${aulaData?.data_aula || ''}">
+                            <label for="horaAula" class="form-label">Hora da Aula</label>
+                            <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.hora_aula || ''}">
+                            <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${aulaData?.tempo_duracao || 0}">
+                            <label for="urlAula" class="form-label">URL</label>
+                            <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
                         showCancelButton: true,
                         confirmButtonText: 'Adicionar Aula',
@@ -235,10 +246,12 @@ const CursoLecionarAula = () => {
                         },
                         preConfirm: () => {
                             const nome = document.getElementById('nomeAula').value;
-                            const url = document.getElementById('urlAula').value;
                             const data_aula = new Date().toISOString().split('T')[0];
+                            const hora = document.getElementById('horaAula').value;
+                            const tempo = parseInt(document.getElementById('tempoDuracao').value, 10);
+                            const url = document.getElementById('urlAula').value;
 
-                            if (!nome || !url) {
+                            if (!nome || !data || !hora || !url || isNaN(tempo)) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
                                 return;
                             }
@@ -253,7 +266,7 @@ const CursoLecionarAula = () => {
                                 data_aula,
                                 nome_aula: nome, 
                                 caminho_url: url,
-                                tempo_duracao: 0
+                                tempo_duracao: tempo
                             };
                         }
                     });
