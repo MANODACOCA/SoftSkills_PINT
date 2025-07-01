@@ -5,10 +5,16 @@ import { Card, Button, Dropdown } from 'react-bootstrap';
 import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { delete_post, put_like, delete_like, jaDeuLike } from "../../../../api/post_axios";
-//import Comentario from "../../../components/forum/comentario/comentario";
 import { useUser } from '../../../../utils/useUser';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import 'dayjs/locale/pt'; // português
+dayjs.extend(relativeTime);
+dayjs.locale('pt');
 
-const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, onDeleted }) => {
+//import Comentario from "../../../components/forum/comentario/comentario";
+
+const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, onDeleted }) => {
     const API_URL = 'https://softskills-api.onrender.com/';
     const { user, setUser } = useUser();
 
@@ -105,7 +111,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                         />
                         <div className="ms-2">
                             <div className="fw-semibold">{autor}</div>
-                            <div className="text-muted small">{tempo}</div>
+                            <div className="text-muted small">{dayjs(dataCriacao).fromNow()}</div>
                         </div>
                     </div>
                     <Dropdown align="end">
