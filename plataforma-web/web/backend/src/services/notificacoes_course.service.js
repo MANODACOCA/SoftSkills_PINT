@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const sequelize = require('../models/database');
 const utilizador = require('../models/utilizador');
 const { cursos, notificacoes_curso } = require('../models/init-models')(sequelize);

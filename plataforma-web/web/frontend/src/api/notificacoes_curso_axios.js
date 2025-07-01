@@ -58,6 +58,7 @@ export const delete_notificacoes_curso = async (id) => {
 export const find_notificacao_curso = async (id) => {
     try {
         console.log(id);
+        console.log(`${API_URL}/find_notificacoes_curso/${id}`);
         const response = await axios.get(`${API_URL}/find_notificacoes_curso/${id}`);
         return response.data;
     } catch (error) {
