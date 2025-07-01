@@ -128,3 +128,24 @@ export const calcularHorasCurso = (aulas) => {
 
   return parseFloat(hrsAula.toFixed(2));
 }
+
+
+export const toIsoTimestamp = (data, hora) => `${data}T${hora}:00`;      // Para concatenar data e hora numa string  
+export const minutesToInterval = min => `00:${min.toString().padStart(2,'0')}:00`;   // para converter depois para o interval depois
+
+export const isValidMeetingLink = url => {
+  const patterns = [
+    // Zoom
+    /^https:\/\/([a-z0-9-]+\.)?zoom\.us\/j\/\d+(?:\?.*)?$/i,
+
+    // YouTube
+    /^https:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]{11}(?:&.*)?$/i,
+
+    // YouTube
+    /^https:\/\/youtu\.be\/[\w-]{11}(?:\?.*)?$/i,
+
+    // Microsoft Teams
+    /^https:\/\/(www\.)?teams\.microsoft\.com\/l\/meetup-join\/[\w-?&=]+$/i
+  ];
+  return patterns.some(rx => rx.test(url));
+};
