@@ -5,6 +5,7 @@ const initModels = require("../models/init-models");
 const model = initModels(sequelize).aulas;
 const controllers = {};
 const aulasService = require('../services/aulas.service');
+const { criarNotifacoesGenerica } = require("../utils/SendNotification");
 const { getVideoDuration } = require('../utils/youtube_aulas');
 
 
@@ -47,6 +48,19 @@ controllers.create = async (req, res) => {
     }
 
     const data = await model.create(req.body);
+
+    try {
+      await criarNotifacoesGenerica(
+        'aula',
+        'criada',
+        req.body.nome_aula,
+        req.body.id_curso,
+        sequelize
+      );
+    } catch (error) {
+      console.error('Erro ao enviar notificação de criação de aula');
+    }
+
     return res.status(201).json(data);
 
   } catch (err) {
