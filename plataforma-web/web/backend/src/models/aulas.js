@@ -59,5 +59,6 @@ module.exports = function(sequelize, DataTypes) {
       sequelize
     });
   });
-  
+
+  return aulas;
 };
