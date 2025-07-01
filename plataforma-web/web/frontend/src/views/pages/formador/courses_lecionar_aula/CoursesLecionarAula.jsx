@@ -857,7 +857,7 @@ const CursoLecionarAula = () => {
                                 <h5>{cursos.sincrono.id_formador_formadore.id_formador_utilizador.nome_util}</h5>
                                 <small className='alert alert-success py-1 px-2'>
                                     <i className='bi bi-geo-alt me-2'></i>
-                                    teste
+                                    {cursos.sincrono.id_formador_formadore.id_formador_utilizador.pais}
                                 </small>   
                             </div>
                         </div>
