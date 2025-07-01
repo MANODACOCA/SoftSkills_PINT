@@ -13,6 +13,7 @@ import { list_formadores } from '../../../../api/formadores_axios';
 import Table from '../../../components/table/Table';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
 import { useUser } from '../../../../utils/useUser';
+import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 const API_URL = 'https://softskills-api.onrender.com/';
 
 const CursoLecionarAula = () => {
@@ -786,11 +787,22 @@ const CursoLecionarAula = () => {
     }, []);
 
     if (!user || !user.id_utilizador || !cursos || !cursos.sincrono) {
-        return <div className="text-center mt-5">A carregar...</div>;
+      
+          return <SpinnerBorder />  
+        
+        
     }
-
+/* if(cursos.sincrono === null) {
+            return <div className="alert alert-danger text-center mt-4">
+                <i className='bi bi-x-circle fs-1'></i><br />
+                O curso <strong>{cursos.nome_curso}</strong> é assincrono, apenas administradores podem editar!
+            </div>;
+        } */
     if (user.id_utilizador !== cursos.sincrono.id_formador) {
-        return <div className="alert alert-danger text-center mt-4">Não pode aceder à página visto que não é formador do curso <strong>{cursos.nome_curso}</strong></div>;
+        return <div className="alert alert-danger text-center mt-4">
+            <i className='bi bi-x-circle fs-1'></i><br />
+            Não pode aceder à página visto que não é formador do curso <strong>{cursos.nome_curso}</strong>
+        </div>;
     }
 
     return (
