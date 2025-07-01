@@ -1,4 +1,4 @@
-const { inscricoes, formandos, notificacoes_curso } = require('../models/init-models')(sequelize);
+const initModels = require('../models/init-models');
 
 module.exports.criarNotifacoesGenerica = async (
     tipo,
@@ -8,6 +8,7 @@ module.exports.criarNotifacoesGenerica = async (
     sequelize
 ) => {
     try {
+        const { inscricoes, formandos, notificacoes_curso } = initModels(sequelize);
 
         const utilizadoresInscritos = await inscricoes.findAll({
             where: {id_curso},

@@ -2,7 +2,7 @@
 
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const model = initModels(sequelize).aulas;
+const model = initModels(sequelize).notificacoes_curso;
 const controllers = {};
 const { getNotificationOfCourse } = require("../services/notificacoes_course.service");
 
