@@ -6,6 +6,7 @@ import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { delete_post, put_like, delete_like, jaDeuLike } from "../../../../api/post_axios";
 import { list_tipo_denuncia } from "../../../../api/tipo_denuncia_axios";
+import { create_denuncia } from "../../../../api/denuncia_axios";
 import { useUser } from '../../../../utils/useUser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -44,18 +45,30 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
         }
     }
     const handleReportSubmit = async () => {
+        try {
+            const denuciaData = {
+                id_comentario: null,
+                id_utilizador: user.id_utilizador,
+                id_post: idPost,
+                id_tipo_denuncia: reportReason,
+            }
 
+            await create_denuncia(denuciaData);
 
-        Swal.fire({
-            icon: 'success',
-            title: 'Denúncia enviada',
-            text: 'Obrigado por ajudar a manter a comunidade segura!',
-            timer: 3000,
-            showConfirmButton: false,
-        });
+            Swal.fire({
+                icon: 'success',
+                title: 'Denúncia enviada',
+                text: 'Obrigado por ajudar a manter a comunidade segura!',
+                timer: 3000,
+                showConfirmButton: false,
+            });
 
-        setReportReason('');
-        setShowReportModal(false);
+            setReportReason('');
+            setShowReportModal(false);
+        } catch (err) {
+            console.error("Erro ao reportar post:", err);
+            Swal.fire("Erro", "Não foi possível reportar post. Tente novamente.", "error");
+        }
     };
 
     useEffect(() => {
@@ -65,6 +78,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     }, [showReportModal]);
     /*DENUCIA*/
 
+    /*LIKES*/
     const handleLike = async () => {
         try {
             if (liked) {
@@ -81,7 +95,24 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
         }
     };
 
+    const verificarLike = async () => {
+        if (!user?.id_utilizador) return;
 
+        try {
+            const jaCurtiu = await jaDeuLike(idPost, user.id_utilizador);
+            setLiked(jaCurtiu);
+        } catch (err) {
+            console.error("Erro ao verificar se já deu like:", err);
+        }
+    };
+
+    useEffect(() => {
+        verificarLike();
+    }, [idPost, user]);
+    /*LIKES*/
+
+
+    /*Eliminar post*/
     const handleDelete = async () => {
         const result = await Swal.fire({
             title: 'Tem a certeza que pretendes eliminar o teu post?',
@@ -119,21 +150,9 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
             }
         }
     };
+    /*Eliminar post*/
 
-    const verificarLike = async () => {
-        if (!user?.id_utilizador) return;
 
-        try {
-            const jaCurtiu = await jaDeuLike(idPost, user.id_utilizador);
-            setLiked(jaCurtiu);
-        } catch (err) {
-            console.error("Erro ao verificar se já deu like:", err);
-        }
-    };
-
-    useEffect(() => {
-        verificarLike();
-    }, [idPost, user]);
 
     return (
         <Card className="mb-3 shadow-sm rounded-4 border-0">
@@ -186,7 +205,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                                                 >
                                                     <option value="">-- Selecione um motivo --</option>
                                                     {tipoDenunciaList.map((tipo) => (
-                                                        <option key={tipo.id} value={tipo.id}>
+                                                        <option key={tipo.id_tipo_denuncia} value={tipo.id_tipo_denuncia}>
                                                             {tipo.tipo_denuncia}
                                                         </option>
                                                     ))}
