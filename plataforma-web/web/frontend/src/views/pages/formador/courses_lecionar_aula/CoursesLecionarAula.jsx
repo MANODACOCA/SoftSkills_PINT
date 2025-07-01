@@ -200,7 +200,11 @@ const CursoLecionarAula = () => {
                         title: 'Adicionar Aula',
                         html: `
                             <label for="nome" class="form-label">Aula</label>
-                            <input id="nomeAula" class="form-control mb-3" placeholder="Nome da Aula" value="${aulaData?.nome_aula || ''}">
+                            <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
+                            <label for="dataAula" class="form-label">Data aula</label>
+                            <input id="dataAula" class="form-control mb-3" placeholder= "Data da aula">
+                            <label for="dataAula" class="form-label">Data aula</label>
+                            <input id="dataAula" class="form-control mb-3" placeholder= "Data da aula">                            
                             <label for="conteudo" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url?.[0] || ''}">
                         `,
@@ -834,10 +838,19 @@ const CursoLecionarAula = () => {
                 
                 <Tab eventKey="sobre" title={<span className='fw-bold'>Sobre</span>}>
                     <div>
-                        <div>
-                            {}
+                        <div className='mb-3'>
+                            <div>
+                                <img src={cursos.imagem} alt="" />
+                            </div>
+                            <div>
+                                <h5>{cursos.sincrono.id_formador_formadore.id_formador_utilizador.nome_util}</h5>
+                                <small className='alert alert-success py-1 px-2'>
+                                    <i className='bi bi-geo-alt me-2'></i>
+                                    teste
+                                </small>    
+                            </div>
                         </div>
-                        {}
+                        <p>{cursos.sincrono.id_formador_formadore.descricao_formador}</p>
                     </div>
                 </Tab>
             </Tabs>
