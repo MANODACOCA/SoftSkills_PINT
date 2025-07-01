@@ -5,14 +5,15 @@ import '../../core/shared/search_bar.dart';
 import '../../core/shared/export.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.idUser});
+
+  final String idUser;
 
   @override
   State<HomePage> createState() => _HomePage();
 }
 
 class _HomePage extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +37,7 @@ class _HomePage extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: Footer(idUser: widget.idUser),
     );
   }
 }

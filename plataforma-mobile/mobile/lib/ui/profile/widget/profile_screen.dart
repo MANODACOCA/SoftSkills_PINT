@@ -7,7 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../API/utilizadores_api.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  const Profile({super.key, this.idUser});
+
+  final String? idUser;
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -15,7 +17,14 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   final UtilizadoresApi api = UtilizadoresApi();
-  
+  late Future<Map<String, dynamic>> userInfo;
+
+  @override
+  void initState() {
+    super.initState();
+    userInfo = api.getUtilizador(widget.idUser!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,34 +49,47 @@ class _ProfileState extends State<Profile> {
               SizedBox(
                 width: double.infinity,
                 height: 170,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage('assets/logo-softinsa.png'),
-                          fit: BoxFit.cover,
+                child: FutureBuilder<Map<String, dynamic>>(
+                  future: userInfo,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Erro ao carregar dados'));
+                    } else if (!snapshot.hasData || snapshot.data == null) {
+                      return Center(child: Text('Sem dados do utilizador'));
+                    }
+                    final data = snapshot.data!;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              image: AssetImage('${data['img_perfil']}'),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Nome do Utilizador",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      "Email do Utilizador",
-                      style: TextStyle(fontSize: 13, color: Colors.grey),
-                    ),
-                  ],
+                        SizedBox(height: 10),
+                        Text(
+                          "${data['nome_utilizador']}",
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Text(
+                          "${data['email']}",
+                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
               Divider(
@@ -344,7 +366,7 @@ class _ProfileState extends State<Profile> {
           ),
         ),
       ),
-      bottomNavigationBar: Footer(),
+      bottomNavigationBar: Footer(idUser: widget.idUser),
     );
   }
 
@@ -358,10 +380,13 @@ class _ProfileState extends State<Profile> {
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('Terminar sessão', style: TextStyle(color: Colors.white)),
+              child: Text(
+                'Terminar sessão',
+                style: TextStyle(color: Colors.white),
+              ),
               onPressed: () {
                 context.go('/');
-                 // ignore: avoid_print
+                // ignore: avoid_print
                 print('LogOut!');
               },
             ),
@@ -370,7 +395,7 @@ class _ProfileState extends State<Profile> {
               child: Text('Cancelar', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.pop(); // Close the dialog
-                 // ignore: avoid_print
+                // ignore: avoid_print
                 print('Não foi dado logOut!');
               },
             ),
