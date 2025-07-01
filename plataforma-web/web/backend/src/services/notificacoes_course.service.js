@@ -21,7 +21,7 @@ async function getNotificationOfCourse(userID) {
         ]
       }
     );
-    return notifications;
+    return notifications || [];
   } catch (error) {
     console.error('Erro ao buscar notificações de curso:', error);
     throw error;
