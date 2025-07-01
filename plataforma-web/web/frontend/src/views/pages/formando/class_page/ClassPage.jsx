@@ -312,21 +312,24 @@ const ClassPage = () => {
                                                                 </div>
                                                             </div>
                                                             <div>
-                                                                <h4>
-                                                                    {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
-                                                                </h4>
-                                                                <div className='d-flex gap-5'>
+                                                                <div className='d-flex justify-content-between gap-5 mb-0'>
+                                                                    <h4 className='mb-0'>
+                                                                        {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
+                                                                    </h4>
+                                                                    <div>
                                                                     { curso.sincrono.id_formador_formadore.id_formador_utilizador.pais &&
-                                                                        <small className='alert alert-success py-1 px-2'>
+                                                                        <small className='alert alert-success mb-0 py-1 px-2'>
                                                                             <i className='bi bi-geo-alt me-2'></i>
                                                                             {curso.sincrono.id_formador_formadore.id_formador_utilizador.pais}
                                                                         </small>  
-                                                                    }
-                                                                    <p className="text-muted mb-3">
-                                                                        {curso.sincrono.id_formador_formadore.id_formador_utilizador.email || ""}
-                                                                    </p>
+                                                                    }    
+                                                                    </div>
+                                                                       
                                                                 </div>
-                                                                <p>
+                                                                <small className="text-muted">
+                                                                    {curso.sincrono.id_formador_formadore.id_formador_utilizador.email || ""}
+                                                                </small>
+                                                                <p className='mt-3'>
                                                                     {curso.sincrono.id_formador_formadore.descricao_formador || "Sem descrição disponível para este formador."}
                                                                 </p>
                                                             </div>

@@ -4,9 +4,11 @@ import { useParams } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterialApoio';
 import { columnsAulas } from '../../../components/table/ColumnsAula';
+import { columnsNotasFinais } from '../../../components/table/ColumnsAvaliacaoFinal';
 import { get_cursos } from '../../../../api/cursos_axios';
 import { create_material_apoio, delete_material_apoio, get_material_apoio, get_material_apoio_curso, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
+import { list_resultados } from '../../../../api/resultados_axios';
 import Swal from 'sweetalert2';
 import { create_aulas, delete_aulas, getAulas_Curso, update_aulas } from '../../../../api/aulas_axios';
 import { list_formadores } from '../../../../api/formadores_axios';
@@ -24,7 +26,7 @@ const CursoLecionarAula = () => {
     const [aulas, setAulas] = useState([]);
     const [formadores, setFormadores] = useState([]);
     const [formato, setFormato] = useState([]);
-
+    const [resultados, setResultados] = useState([]);
 
     //#region curso
     const fetchCurso = async (id) => {
@@ -43,6 +45,15 @@ const CursoLecionarAula = () => {
             setFormadores(response);
         } catch (error) {
             console.log('Erro ao encontrar a lista de formadores', error);
+        }
+    }
+
+    const fetchResultados = async () => {
+        try{
+            const response = await list_resultados();
+            setResultados(response);
+        } catch(error) {
+            console.log('Erro ao encontrar a lista de resultados dos formandos', error);
         }
     }
     //#endregion
@@ -782,6 +793,7 @@ const CursoLecionarAula = () => {
             await fetchFormadores();
             await fetchCurso(id);
             await fetchAulas(id);
+            await fetchResultados(id);
         }
         carregarDados();
     }, []);
@@ -851,36 +863,13 @@ const CursoLecionarAula = () => {
                 
                 <Tab eventKey="sobre" title={<span className='fw-bold'>Sobre</span>}>
                     <div>
-                        <h2>Sobre o curso</h2>
-                        
+                        <h2>Avaliação final</h2>  
                     </div>
                     <hr />
+
                     <div>
-                        <h2>Formador</h2>
-                        <div className='my-3 d-flex'>
-                            <div className='me-2'>
-                                <img 
-                                    src={`${API_URL}${cursos.sincrono.id_formador_formadore.id_formador_utilizador.img_perfi}` || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`}
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
-                                    }}
-                                    alt="Foto do formador"
-                                    className='rounded-circle'
-                                    width="60"
-                                    height="60"
-                                />
-                            </div>
-                            <div>
-                                <h5>{cursos.sincrono.id_formador_formadore.id_formador_utilizador.nome_util}</h5>
-                                <small className='alert alert-success py-1 px-2'>
-                                    <i className='bi bi-geo-alt me-2'></i>
-                                    {cursos.sincrono.id_formador_formadore.id_formador_utilizador.pais}
-                                </small>   
-                            </div>
-                        </div>
-                        <p>{cursos.sincrono.id_formador_formadore.descricao_formador}</p>
-                    </div>
+                    <Table columns={columnsNotasFinais} />
+                    </div> 
                 </Tab>
             </Tabs>
         </div>
