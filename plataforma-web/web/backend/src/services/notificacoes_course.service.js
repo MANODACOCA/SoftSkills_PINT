@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const sequelize = require('../models/database');
 const { cursos, notificacoes_curso, utilizador } = require('../models/init-models')(sequelize);
 
