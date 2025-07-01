@@ -842,7 +842,7 @@ const CursoLecionarAula = () => {
                         <div className='mb-3 d-flex'>
                             <div className='me-2'>
                                 <img 
-                                    src={`${API_URL}${cursos.sincrono.id_formador_formadore.id_formador_utilizador.img_perfil}` || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`}
+                                    src={`${API_URL}${cursos.sincrono.id_formador_formadore.id_formador_utilizador.img_perfi}` || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`}
                                     onError={(e) => {
                                         e.target.onerror = null;
                                         e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
