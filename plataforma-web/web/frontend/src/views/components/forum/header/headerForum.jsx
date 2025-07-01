@@ -34,7 +34,7 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
             Swal.fire({
                 title: "Post criado com sucesso!",
                 icon: "success",
-                showConfirmButton:false,
+                showConfirmButton: false,
                 timer: 3000,
             });
         } catch (error) {
@@ -126,7 +126,13 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
 
                     {isError && <Alert variant="danger">{isError}</Alert>}
                     {isSuccess && <Alert variant="success">{isSuccess}</Alert>}
-
+                    <Form.Group className="mb-3">
+                        <Form.Label>Adicionar ficheiro (opcional)</Form.Label>
+                        <Form.Control
+                            type="file"
+                            onChange={(e) => setFicheiroSelecionado(e.target.files[0])}
+                        />
+                    </Form.Group>
                     <Form.Control
                         as="textarea"
                         rows={4}
