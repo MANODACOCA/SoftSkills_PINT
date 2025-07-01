@@ -3,7 +3,7 @@ import { Spinner } from 'react-bootstrap';
 import { useLocation } from "react-router-dom";
 
 import ForumHeader from "../../../components/forum/header/headerForum";
-import Post from "../../../components/forum/post/post";
+import PostCard from "../../../components/forum/post/post";
 import { get_post } from "../../../../api/post_axios";
 
 const ForumPosts = () => {
@@ -13,8 +13,13 @@ const ForumPosts = () => {
   const location = useLocation();
   const forum = location.state?.forum;
 
+  const handlePostDeleted = (deletedPostId) => {
+    setPosts(posts.filter(post => post.id_post !== deletedPostId));
+  };
+
   const fetchPosts = async () => {
     try {
+      setLoading(true);
       if (!forum || !forum.id_conteudos_partilhado) {
         throw new Error("Fórum inválido ou ausente.");
       }
@@ -38,12 +43,16 @@ const ForumPosts = () => {
   }, [forum]);
 
 
-  if (loading) return <div className="mt-4"><div className="text-center py-5">
-    <Spinner animation="border" variant="primary" />
-  </div></div>;
+  if (loading) return (
+    <div className="mt-4">
+      <div className="text-center py-5">
+        <Spinner animation="border" variant="primary" />
+      </div>
+    </div>
+  );
+
 
   if (error) return <div className="mt-4 alert alert-danger">{error}</div>;
-  console.log(posts);
 
   return (
     <div>
@@ -56,17 +65,25 @@ const ForumPosts = () => {
         {posts.length === 0 ? (
           <div className="alert alert-warning mt-3">Ainda não existem posts.</div>
         ) : (
-          posts.map((post) => (
-            <Post
-              key={post.id_post}
-              autor={post.id_utilizador_utilizador.nome_utilizador} // ou substitui com username real se tiveres
-              tempo={"agora"} // ou formata a data do post
-              texto={post.texto_post}
-              likes={post.contador_likes_post}
-              comentarios={post.contador_comentarios}
-              imagemAutor={post.id_utilizador_utilizador.img_perfil} // ou avatar do autor
-            />
-          ))
+          posts.map((post) => {
+            const autorData = post.id_utilizador_utilizador || {};
+
+            return (
+              <PostCard
+                key={post.id_post}
+                idPost={post.id_post}
+                idAutor={autorData.id_utilizador}
+                autor={autorData.nome_utilizador || "Usuário desconhecido"}
+                tempo={"agora"}
+                texto={post.texto_post}
+                likes={post.contador_likes_post}
+                comentarios={post.contador_comentarios}
+                imagemAutor={autorData.img_perfil}
+                onDeleted={handlePostDeleted}
+              />
+            );
+          })
+
         )}
       </div>
 

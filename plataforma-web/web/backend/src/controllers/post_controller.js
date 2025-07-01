@@ -104,4 +104,60 @@ controllers.delete = async (req, res) => {
   }
 };
 
+//para dar like
+controllers.putLike = async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const post = await model.findByPk(id);
+    if (!post) {
+      return res.status(404).json({ erro: 'Post não encontrado!' });
+    }
+
+    const updated = await model.update(
+      { contador_likes_post: post.contador_likes_post+1 },
+      { where: { id_post: id } }
+    );
+
+    if (updated) {
+      const modelUpdated = await model.findByPk(id);
+      res.status(200).json(modelUpdated);
+    } else {
+      res.status(404).json({ erro: 'Post nao foi atualizado/a!' });
+    }
+
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao atualizar like do Post!', desc: err.message });
+  }
+};
+
+//para retirar like
+controllers.deleteLike = async (req, res) => {
+    try {
+
+    const { id } = req.params;
+
+    const post = await model.findByPk(id);
+    if (!post) {
+      return res.status(404).json({ erro: 'Post não encontrado!' });
+    }
+
+    const updated = await model.update(
+      { contador_likes_post: post.contador_likes_post-1 },
+      { where: { id_post: id } }
+    );
+
+    if (updated) {
+      const modelUpdated = await model.findByPk(id);
+      res.status(200).json(modelUpdated);
+    } else {
+      res.status(404).json({ erro: 'Post nao foi atualizado/a!' });
+    }
+
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao eliminar like do Post!', desc: err.message });
+  }
+};
+
 module.exports = controllers;
