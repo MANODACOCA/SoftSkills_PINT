@@ -785,6 +785,31 @@ const CursoLecionarAula = () => {
 
      //#endregion
      
+    //#region Resultados
+    const renderActionsResultados = (item) => {
+        return(
+        <div className="d-flex">
+            <a href={item.conteudo}  className="btn btn-outline-success me-2" target="_blank">
+                <i className='bi bi-box-arrow-up-right'></i>
+            </a>
+            <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateResultados(item.id_resul)}>
+                <i className="bi bi-pencil"></i>
+            </button> 
+            <button className="btn btn-outline-danger" onClick={()=> HandleDeleteResultados(item.id_resul)}>
+                <i className="bi bi-trash"></i>
+            </button>
+        </div>
+        );
+    }
+
+    const handleEditCreateResultados = async (id) => {
+        
+    }
+
+    const HandleDeleteResultados = async (id) => {
+
+    }
+    //#endregion
 
     useEffect(() => {
         const carregarDados = async () => {
@@ -861,15 +886,13 @@ const CursoLecionarAula = () => {
                 </Tab>
                 */}
                 
-                <Tab eventKey="sobre" title={<span className='fw-bold'>Sobre</span>}>
-                    <div>
-                        <h2>Avaliação final</h2>  
-                    </div>
-                    <hr />
-
-                    <div>
-                    <Table columns={columnsNotasFinais} />
-                    </div> 
+                <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
+                    <div className='mt-4'>
+                    {/* Resultados Finais */}
+                        <div className='mt-4'>
+                            <Table columns={columnsNotasFinais} data={resultados} actions={renderActionsResultados} onAddClick={{callback: handleEditCreateResultados, label: 'Resultados'}}  />
+                        </div>
+                    </div>  
                 </Tab>
             </Tabs>
         </div>

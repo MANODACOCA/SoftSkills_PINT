@@ -1,10 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import NotificationRow from "../../../components/notification_row/notification_row";
 import { delete_notificacoes_curso, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
-import { delete_notificacoes_comentarios_post, find_notificacoes_comentarios_post  } from '../../../../api/notificacoes_comentarios_post_axios';
-
+import { useUser } from '../../../../utils/useUser';
 
 const NotificationPage = () => {
+    const { user } = useUser();
+    const id = user?.id_utilizador;
+    console.log(id);
     const [notificacoes, setNotificacoes] = useState([]);
     const [ordenacao, setOrdenacao] = useState('recente');
 
@@ -49,7 +51,7 @@ const NotificationPage = () => {
             </div>
             {notificacoes.map((notification, index) => (
                 <div key={index}>
-                    <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id)} />
+                    <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id_notificacao_cursos)} />
                     <hr />
                 </div>
             ))}
