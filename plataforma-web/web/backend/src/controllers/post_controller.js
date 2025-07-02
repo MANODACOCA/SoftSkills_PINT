@@ -112,6 +112,11 @@ controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
 
+    const post = await model.findByPk(id);
+    if (!post) {
+      return res.status(404).json({ erro: 'Post não encontrado!' });
+    }
+
     if (post.caminho_ficheiro && post.caminho_ficheiro.includes('/uploads/')) {
       const ficheiroPath = path.join(__dirname, '..', 'uploads', post.caminho_ficheiro.split('/uploads/')[1]);
 
