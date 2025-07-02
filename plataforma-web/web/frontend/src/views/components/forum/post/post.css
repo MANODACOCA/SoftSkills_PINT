@@ -19,7 +19,7 @@
 }
 
 .comentario-avatar {
-  border: 2px solid #007bff; /* borda azul no avatar */
+  border: 2px solid #00A9E0; /* borda azul no avatar */
 }
 
 .comentario-texto {
@@ -30,7 +30,7 @@
 }
 
 .fw-semibold {
-  color: #007bff;
+  color: #00A9E0;
 }
 
 .comentario-time {

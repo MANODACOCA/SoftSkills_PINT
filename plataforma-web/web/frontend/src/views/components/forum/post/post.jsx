@@ -2,7 +2,7 @@ import './post.css';
 import Swal from 'sweetalert2';
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Dropdown, Modal, Form } from 'react-bootstrap';
-import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
+import { BsChat, BsChatFill, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import { FaFile } from 'react-icons/fa';
 import { delete_post, put_like, delete_like, jaDeuLike } from "../../../../api/post_axios";
@@ -299,12 +299,15 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                     </Button>
 
                     <Button
-                        variant={showComments ? 'primary' : 'outline-primary'}
                         size="sm"
                         className="d-flex align-items-center"
                         onClick={() => setShowComments(!showComments)}
                     >
-                        <BsChat className="me-1" style={{ fontSize: '18px' }} />
+                        {showComments ? (
+                              <BsChatFill className="me-1" style={{ fontSize: '18px' }} />
+                        ) : (
+                               <BsChat className="me-1" style={{ fontSize: '18px' }} />
+                        )}
                         {comentarios} comentários
                     </Button>
 
