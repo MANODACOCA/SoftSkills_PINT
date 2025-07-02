@@ -18,6 +18,10 @@ const FeaturedCourseCard = ({
 
   if (!course) return null;
 
+  const goInscCourse = () => {
+    navigate(`/cursos/${course.id_curso}`);
+  };
+
   const goToCourse = async () => {
     const verificacao = await verificar_acesso_curso(userId, course.id_curso);//verifica se o formando tem acesso ao curso
 
@@ -38,15 +42,8 @@ const FeaturedCourseCard = ({
   };
 
   const [img, setImg] = useState(course.imagem);
-  const handleError = () => {
-    const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(title)}&background=random&bold=true`;
-    setImg(fallback);
-  };
 
   const nameFormador = course.nome_formador || "Formador";
-  const imageFormador = course.imagem_utilizador && course.imagem_utilizador.trim() !== ''
-    ? course.imagem_utilizador
-    : `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(nameFormador)}`;
 
   //CARD PARA CURSOS FAVORITOS
   if (variant === 'favorite') {
@@ -63,10 +60,13 @@ const FeaturedCourseCard = ({
     return (
       <div className="card flex-row rounded-4 card-highlight favorite-card position-relative">
         <img
-          src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
-          className="rounded-start-4 highlight-image"
-          alt="imagem curso"
-          onError={handleError}
+          src={img}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
+          }}
+          alt="Foto do curso"
+          className='rounded-start-4 highlight-image'
         />
         <div className="card-body d-flex flex-column justify-content-between">
           <div>
@@ -113,11 +113,14 @@ const FeaturedCourseCard = ({
 
     return (
       <div className="card flex-row rounded-4 card-highlight evaluation-card">
-      <img
-          src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
-          className="rounded-start-4 highlight-image"
-          alt="imagem curso"
-          onError={handleError}
+        <img
+          src={img}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
+          }}
+          alt="Foto do curso"
+          className='rounded-start-4 highlight-image'
         />
         <div className="card-body d-flex flex-column justify-content-between w-100">
           <div className="d-flex justify-content-between align-items-start">
@@ -164,7 +167,7 @@ const FeaturedCourseCard = ({
     const diffTime = endDate.getTime() - today.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const diffMinutes= Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60));
+    const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60));
 
     const showWarning = course.tipo === 'assincrono' && diffTime > 0 && diffTime <= 15 * 24 * 60 * 60 * 1000;
     const tipoBadge = course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono';
@@ -172,10 +175,13 @@ const FeaturedCourseCard = ({
     return (
       <div className="card flex-row rounded-4 card-highlight enrolled-card">
         <img
-          src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
-          className="rounded-start-4 highlight-image"
-          alt="imagem curso"
-          onError={handleError}
+          src={img}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
+          }}
+          alt="Foto do curso"
+          className='rounded-start-4 highlight-image'
         />
         <div className="card-body d-flex flex-column justify-content-between w-100">
           <div className="d-flex justify-content-between align-items-start">
@@ -198,8 +204,8 @@ const FeaturedCourseCard = ({
                 <>
                   <FaExclamationTriangle className="me-2" />
                   Curso expira em {diffDays !== 0 && `${diffDays}d`} {/* //dias */}
-                                  {diffHours !== 0 && `${diffHours}h`} {/* //horas */}
-                                  {diffMinutes !==0 && diffHours === 0 && diffDays === 0 && `${diffMinutes}m`} {/* //minutos */}
+                  {diffHours !== 0 && `${diffHours}h`} {/* //horas */}
+                  {diffMinutes !== 0 && diffHours === 0 && diffDays === 0 && `${diffMinutes}m`} {/* //minutos */}
                 </>
               ) : (
                 'Em curso...'
@@ -218,12 +224,15 @@ const FeaturedCourseCard = ({
   //CARD PARA CURSOS NA HOMEPAGE
   return (
     <div className="card flex-row rounded-4 card-highlight">
-     <img
-          src={img ? img : `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
-          className="rounded-start-4 highlight-image"
-          alt="imagem curso"
-          onError={handleError}
-        />
+      <img
+        src={img}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
+        }}
+        alt="Foto do curso"
+        className='rounded-start-4 highlight-image'
+      />
       <div className="card-body d-flex flex-column justify-content-between">
         <div>
           <h4 className="card-title">{course.nome_curso}</h4>
@@ -243,9 +252,13 @@ const FeaturedCourseCard = ({
               <div className="d-flex align-items-center gap-2">
                 <span>Formador: {course.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util}</span>
                 <img
-                  src={course.sincrono?.id_formador_formadore?.id_formador_utilizador?.img_perfi}
-                  alt="formador"
-                  className="rounded-circle me-2 avatar"
+                  src={course.sincrono?.id_formador_formadore?.id_formador_utilizador?.img_perfil || "invalid-image"}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
+                  }}
+                  alt="Foto do formador"
+                  className='rounded-circle me-2 avatar'
                 />
               </div>
             )}
@@ -256,7 +269,7 @@ const FeaturedCourseCard = ({
           )}
         </div>
         <div className="mt-2">
-          <button className="btn btn-primary rounded-4" onClick={goToCourse}>Detalhes</button>
+          <button className="btn btn-primary rounded-4" onClick={goInscCourse}>Detalhes</button>
         </div>
       </div>
     </div>

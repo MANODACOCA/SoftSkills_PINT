@@ -150,10 +150,8 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
           ) : inscrito ? (
             <button
               style={{ opacity: 1 }}
-              className="btn btn-primary btn-lg w-100 rounded-4 bg-success d-flex justify-content-center align-items-center gap-2"
-              onClick={() => navigate(`/my/cursos/inscritos/curso/${course.id_curso}?tab=aulas`)}
-            >
-              <GrStatusGood /> Inscrito - Ir para o curso
+              className="btn btn-primary btn-lg w-100 rounded-4 bg-success d-flex justify-content-center align-items-center gap-2" disabled>
+              <GrStatusGood /> Inscrito
             </button>
           ) : (
             <button

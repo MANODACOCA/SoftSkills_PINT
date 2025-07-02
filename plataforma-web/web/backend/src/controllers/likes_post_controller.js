@@ -24,8 +24,6 @@ controllers.get = async (req, res) => {
         if (data) {
             const deuLike = !!data;
             res.status(200).json(deuLike);
-        } else {
-            res.status(404).json({ erro: "Like post não encontrado/a!" });
         }
     } catch (err) {
         res.status(500).json({ erro: "Erro ao procurar Like post!", desc: err.message });

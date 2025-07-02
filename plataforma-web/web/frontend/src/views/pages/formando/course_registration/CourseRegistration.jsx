@@ -166,9 +166,13 @@ const CourseRegistration = () => {
               <h2 className="mt-5">Formador</h2>
               <div className="d-flex align-items-center mt-3 gap-3">
                 <img
-                  src={course.sincrono.id_formador_formadore?.id_formador_utilizador.img_perfi || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(course.sincrono.id_formador_formadore?.nome_formador || 'Formador')}`}
+                  src={course.sincrono.id_formador_formadore?.id_formador_utilizador.img_perfi || "invalid-image"}
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
+                  }}
                   alt="Foto do formador"
-                  className="rounded-circle"
+                  className='rounded-circle'
                   width="80"
                   height="80"
                 />

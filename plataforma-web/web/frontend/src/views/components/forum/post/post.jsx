@@ -4,20 +4,11 @@ import React, { useEffect, useState } from 'react';
 import { Card, Button, Dropdown, Modal, Form } from 'react-bootstrap';
 import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
-import {
-    FaVideo,
-    FaFileAlt,
-    FaFilePowerpoint,
-    FaFileImage,
-    FaFileAudio,
-    FaFilePdf,
-    FaLink,
-    FaFile,
-    FaInfoCircle
-} from 'react-icons/fa';
+import { FaFile } from 'react-icons/fa';
 import { delete_post, put_like, delete_like, jaDeuLike } from "../../../../api/post_axios";
 import { list_tipo_denuncia } from "../../../../api/tipo_denuncia_axios";
 import { create_denuncia } from "../../../../api/denuncia_axios";
+import { get_comentarios_by_post } from "../../../../api/comentario_axios";
 import { useUser } from '../../../../utils/useUser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -25,16 +16,7 @@ import 'dayjs/locale/pt'; // português
 dayjs.extend(relativeTime);
 dayjs.locale('pt');
 
-//import Comentario from "../../../components/forum/comentario/comentario";
-
-const iconMapById = {
-    1: <FaFilePdf className="text-danger" />,
-    2: <FaFilePowerpoint className="text-warning" />,
-    3: <FaFileAlt className="text-success" />,
-    4: <FaFileImage className="text-pink-500" />,
-    5: <FaInfoCircle className="text-cyan-600" />,
-    6: <FaLink className="text-blue-500" />,
-};
+import Comentario from "../../../components/forum/comentario/comentario";
 
 const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, tipoFormato, onDeleted }) => {
 
@@ -45,8 +27,27 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     const API_URL = 'https://softskills-api.onrender.com/';
     const { user, setUser } = useUser();
 
+    /*COMENTS*/
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState([]);
+
+    const fetchComments = async () => {
+        try {
+            const data = await get_comentarios_by_post(idPost);
+            setComments(data);
+        } catch (err) {
+            console.error("Erro ao encontrar comentarios:", err);
+            Swal.fire("Erro", "Não foi possível encontrar comentarios. Tente novamente.", "error");
+        }
+    }
+
+    useEffect(() => {
+        if (showComments) {
+            fetchComments();
+        }
+    }, [showComments]);
+    /*COMENTS*/
+
 
     /*DENUCIA*/
     const [showReportModal, setShowReportModal] = useState(false);
@@ -123,7 +124,11 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
             const jaCurtiu = await jaDeuLike(idPost, user.id_utilizador);
             setLiked(jaCurtiu);
         } catch (err) {
-            console.error("Erro ao verificar se já deu like:", err);
+            if (err.response?.status === 404) {
+                setLiked(false);
+            } else {
+                console.error("Erro ao verificar se já deu like:", err);
+            }
         }
     };
 
@@ -174,7 +179,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     /*Eliminar post*/
 
 
-
+    console.log("COMENTARIOS", comments);
     return (
         <Card className="mb-3 shadow-sm rounded-4 border-0">
             <Card.Body>
@@ -264,9 +269,9 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                 {tipoFormato && conteudo && (
                     <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light mt-4" >
                         <div className="d-flex align-items-center">
-                            {getIconById(tipoFormato)}
+                            <FaFile className="text-secondary" />
                             <a href={conteudo} className="text-decoration-none text-primary ms-2">
-                                LINK
+                                FICHEIRO
                             </a>
                         </div>
                         <a href={conteudo} download className="text-secondary">
@@ -293,11 +298,38 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                         {likes}
                     </Button>
 
-                    <Button variant="outline-secondary" size="sm" className="d-flex align-items-center">
-                        <BsChat className="me-1" style={{ fontSize: '18px' }} /> {comentarios} comentários
+                    <Button
+                        variant={showComments ? 'primary' : 'outline-primary'}
+                        size="sm"
+                        className="d-flex align-items-center"
+                        onClick={() => setShowComments(!showComments)}
+                    >
+                        <BsChat className="me-1" style={{ fontSize: '18px' }} />
+                        {comentarios} comentários
                     </Button>
+
                 </div>
             </Card.Body>
+            {showComments && (
+                <div className="mt-1 ms-5 me-3">
+                    {comments.length > 0 ? (
+                        comments.map((comment, idx) => (
+                            <Comentario
+                                key={idx}
+                                avatar={comment.id_utilizador_utilizador.img_perfil}
+                                name={comment.id_utilizador_utilizador.nome_utilizador}
+                                time={dayjs(comment.data_criacao_comentario).fromNow()}
+                                text={comment.texto_comentario}
+                                likes={comment.contador_likes_com}
+                                idComentario={comment.id_comentario}
+                            />
+                        ))
+                    ) : (
+                        <p className="text-muted text-center">Nenhum comentário ainda.</p>
+                    )}
+                </div>
+            )}
+
         </Card>
     );
 };
