@@ -57,7 +57,7 @@ export const delete_post = async (id) => {
 export const put_like = async (id_post, id_utilizador) => {
     try {
         console.log("wdawdwa", id_post)
-         axios.put(`${API_URL_POSTS}/addLike/${id_post}`);
+        axios.put(`${API_URL_POSTS}/addLike/${id_post}`);
         const response = await axios.post(`${API_URL_LIKES}/create`, {
             id_post: id_post,
             id_utilizador: id_utilizador,
@@ -71,7 +71,7 @@ export const put_like = async (id_post, id_utilizador) => {
 
 export const delete_like = async (id_post, id_utilizador) => {
     try {
-         axios.put(`${API_URL_POSTS}/deleteLike/${id_post}`);
+        axios.put(`${API_URL_POSTS}/deleteLike/${id_post}`);
         const response = await axios.delete(`${API_URL_LIKES}/delete`, {
             data: {
                 id_post: id_post,
@@ -90,7 +90,11 @@ export const jaDeuLike = async (id_post, id_utilizador) => {
         const response = await axios.get(`${API_URL_LIKES}/get/${id_post}/${id_utilizador}`);
         return response.data;
     } catch (error) {
-        console.error('Erro ao eliminar like no Post!');
-        throw error;
+        if (error.response?.status === 404) {
+            return false;
+        } else {
+            console.error('Erro inesperado ao verificar se deu like no Post!', error);
+            throw error;
+        }
     }
 };
