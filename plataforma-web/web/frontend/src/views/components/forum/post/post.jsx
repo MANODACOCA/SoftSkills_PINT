@@ -4,6 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { Card, Button, Dropdown, Modal, Form } from 'react-bootstrap';
 import { BsChat, BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
+import {
+    FaVideo,
+    FaFileAlt,
+    FaFilePowerpoint,
+    FaFileImage,
+    FaFileAudio,
+    FaFilePdf,
+    FaLink,
+    FaFile,
+    FaInfoCircle
+} from 'react-icons/fa';
 import { delete_post, put_like, delete_like, jaDeuLike } from "../../../../api/post_axios";
 import { list_tipo_denuncia } from "../../../../api/tipo_denuncia_axios";
 import { create_denuncia } from "../../../../api/denuncia_axios";
@@ -16,7 +27,21 @@ dayjs.locale('pt');
 
 //import Comentario from "../../../components/forum/comentario/comentario";
 
-const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, onDeleted }) => {
+const iconMapById = {
+    1: <FaFilePdf className="text-danger" />,
+    2: <FaFilePowerpoint className="text-warning" />,
+    3: <FaFileAlt className="text-success" />,
+    4: <FaFileImage className="text-pink-500" />,
+    5: <FaInfoCircle className="text-cyan-600" />,
+    6: <FaLink className="text-blue-500" />,
+};
+
+const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, tipoFormato, onDeleted }) => {
+
+    const getIconById = (id) => {
+        return iconMapById[id] || <FaFile className="text-secondary" />;
+    };
+
     const API_URL = 'https://softskills-api.onrender.com/';
     const { user, setUser } = useUser();
 
@@ -240,6 +265,20 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                 <div className="mt-3 mb-2">
                     <p className="mb-1">{texto}</p>
                 </div>
+                {tipoFormato && conteudo && (
+                    <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light mt-4" >
+                        <div className="d-flex align-items-center">
+                            {getIconById(tipoFormato)}
+                            <a href={conteudo} className="text-decoration-none text-primary ms-2">
+                                LINK
+                            </a>
+                        </div>
+                        <a href={conteudo} download className="text-secondary">
+                            <i className="bi bi-download"></i>
+                        </a>
+                    </div>
+                )}
+
 
                 <hr />
 

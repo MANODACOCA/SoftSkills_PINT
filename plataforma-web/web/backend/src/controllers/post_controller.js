@@ -75,8 +75,8 @@ controllers.create = async (req, res) => {
         id_formato: Number(id_formato),
         texto_post,
         caminho_ficheiro: ficheiroURL || null,
-        contador_likes_post: 0,              
-        contador_comentarios: 0              
+        contador_likes_post: 0,
+        contador_comentarios: 0
       };
 
       const data = await model.create(payload);
@@ -111,6 +111,16 @@ controllers.update = async (req, res) => {
 controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (post.caminho_ficheiro && post.caminho_ficheiro.includes('/uploads/')) {
+      const ficheiroPath = path.join(__dirname, '..', 'uploads', post.caminho_ficheiro.split('/uploads/')[1]);
+
+      try {
+        await fs.unlink(ficheiroPath);
+      } catch (err) {
+        console.warn(`Ficheiro não foi encontrado ou não pôde ser apagado: ${ficheiroPath}`);
+      }
+    }
 
     await comentario.destroy({ where: { id_post: id } });
 
