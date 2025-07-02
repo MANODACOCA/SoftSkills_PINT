@@ -1,7 +1,7 @@
 const express = require('express');
 const controller = require('../controllers/post_controller');
 const router = express.Router();
-
+const uploadConteudoPost = require('../middlewares/uploadConteudoPost');
 
 // Rotas básicas do CRUD
 router.get('/', (req, res) => {
@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
 
 // Rotas CRUD
 router.get('/list', controller.list);
-router.get('/get/posts', controller.get);//buscar posts pelo id do conteudo partuilhado
-router.post('/create', controller.create);//cria post novo
+router.get('/get/posts', controller.get);
+router.post('/create', uploadConteudoPost.single('ficheiro'), controller.create);
 router.put('/update/:id', controller.update);
 router.delete('/delete/:id', controller.delete);
 

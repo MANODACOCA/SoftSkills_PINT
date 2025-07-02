@@ -50,20 +50,40 @@ controllers.get = async (req, res) => {
 controllers.create = async (req, res) => {
   try {
     if (req.body) {
-      const { texto_post, id_utilizador, id_conteudos_partilhado } = req.body;
+      const { id_utilizador, id_conteudos_partilhado, id_formato, texto_post, caminho_ficheiro } = req.body;
 
-      const data = await model.create({
+      if (!id_utilizador || !id_conteudos_partilhado  || !texto_post ) {
+        return res.status(400).json({
+          erro: 'Campos obrigatórios em falta',
+          desc: 'id_utilizador, id_conteudos_partilhado e texto_post são obrigatórios'
+        });
+      }
+
+      const ficheiroRelativo = req.file
+        ? req.file.path.replace(/^.*[\\/]uploads[\\/]/, '')
+        : null;
+
+      const ficheiroURL = ficheiroRelativo
+        ? `${req.protocol}://${req.get('host')}/uploads/${ficheiroRelativo}`
+        : null;
+
+      if (!ficheiroURL && !caminho_ficheiro) {
+        return res.status(400).json({
+          erro: 'Falta ficheiro ou URL',
+          desc: 'Envie um ficheiro (campo "ficheiro") ou o campo "conteudo" com o link externo'
+        });
+      }
+
+      const payload = {
+        id_utilizador: Number(id_utilizador),
+        id_conteudos_partilhado: Number(id_conteudos_partilhado),
+        id_formato: Number(id_formato),
         texto_post,
-        id_utilizador,
-        id_conteudos_partilhado,
-        contador_likes_post: 0,
-        contador_comentarios: 0
-      });
+        caminho_ficheiro: ficheiroURL || caminho_ficheiro
+      };
 
-      res.status(201).json({
-        message: 'Post criado com sucesso!',
-        post: data,
-      });
+     const data = await model.create(payload);
+      res.status(201).json(data);
     } else {
       res.status(400).json({ erro: 'Erro ao criar Post!', desc: 'Corpo do pedido esta vazio.' });
     }

@@ -24,9 +24,9 @@ export const get_post = async (id) => {
     }
 };
 
-export const create_post = async (data) => {
+export const create_post = async (formData, config) => {
     try {
-        const response = await axios.post(`${API_URL_POSTS}/create`, data);
+        const response = await axios.post(`${API_URL_POSTS}/create`, formData, config);
         return response.data;
     } catch (error) {
         console.error('Erro ao criar Post!');
