@@ -125,7 +125,7 @@ controllers.update = async (req,res)=>{
 controllers.delete = async (req,res)=>{
   try {
     const {id} = req.params;
-    const deleted = await model.destroy({where:{id:id}});
+    const deleted = await model.destroy({where:{id_trabalho:id}});
     if(deleted){
       res.status(200).json({msg:'trabalhos apagado/a com sucesso!'});
     }else{
@@ -138,9 +138,9 @@ controllers.delete = async (req,res)=>{
 
 controllers.getTrabalhosByCurso = async (req, res) => {
   try {
-    const id = req.params();
+    const {id} = req.params;
     const data = await model.findAll({where: {id_curso_tr : id},});
-    if (data.lenght === 0) {
+    if (data.length === 0) {
       res.status(404).json({erro: 'Não foi encontrado nenhum trabalho para este curso'});
     }
     res.status(200).json(data);
