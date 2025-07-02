@@ -18,8 +18,8 @@ import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
 import {FaVideo,FaFileAlt, FaFilePowerpoint,FaFileImage,FaFilePdf,FaFileWord} from 'react-icons/fa';
-import ListaTrabalhosEditor from '../trabalhos/TrabalhosPrincipal';
 import { create_trabalhos, delete_trabalhos, get_trabalhos, update_trabalhos } from '../../../../api/trabalhos_axios';
+import { columnsTrabalhos } from '../../../components/table/ColumnsTrabalho';
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -1004,9 +1004,8 @@ const CursoLecionarAula = () => {
                         const hora = document.getElementById('horaTr').value;
                         const id_formato = parseInt(document.getElementById('formatoTr').value);
                         const ficheiro = document.getElementById('ficheiroTr').files[0];
-                        const url = document.getElementById('urlTr').value.trim();
 
-                        if (!nome || !descricao || !data || !hora || !id_formato || (!ficheiro && !url)) {
+                        if (!nome || !descricao || !data || !hora || !id_formato || !ficheiro) {
                             Swal.showValidationMessage("Todos os campos são obrigatórios!");
                             return false;
                         }
@@ -1018,8 +1017,7 @@ const CursoLecionarAula = () => {
                             descricao_tr: descricao,
                             data_entrega_tr,
                             id_formato_tr: id_formato,
-                            caminho_tr: ficheiro ? '' : url,
-                            ficheiro: ficheiro || null,
+                            ficheiro: ficheiro,
                             id_curso_tr: cursos.id_curso
                         };
                     },
@@ -1080,12 +1078,28 @@ const CursoLecionarAula = () => {
 
     const fetchTrabalhos = async (idCurso) => {
         try {
-            const lista = await get_trabalhos(idCurso);
-            setTrabalhos(lista);
+            const response = await get_trabalhos(idCurso);
+            setTrabalhos(response);
         } catch (err) {
             console.error("Erro ao buscar trabalhos", err);
         }
     };
+
+    const renderActionsTrabalhos = (item) => {
+        return(
+        <div className="d-flex">
+            <a href={item.conteudo}  className="btn btn-outline-success me-2" target="_blank">
+                <i className='bi bi-box-arrow-up-right'></i>
+            </a>
+            <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateMaterialApoio(item.id_material_apoio)}>
+                <i className="bi bi-pencil"></i>
+            </button> 
+            <button className="btn btn-outline-danger" onClick={()=> HandleDeleteMaterialApoio(item.id_material_apoio)}>
+                <i className="bi bi-trash"></i>
+            </button>
+        </div>
+        );
+    }
 
     //#endregion
 
@@ -1159,41 +1173,14 @@ const CursoLecionarAula = () => {
                     </div>
                 </Tab>
 
-            {/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ TRABLAHOS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$444 */}
-                {/* <Tab eventKey="eventos" title={<span className='fw-bold'>Trabalhos</span>}>    
-                 <div className='mt-4'>
-             
-                 </div>
-                </Tab> */}
                 
-            <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
-            <div className="mt-4">
-                {/* BOTÃO DE ADICIONAR TRABALHO */}
-                {user?.id_utilizador === cursos?.sincrono?.id_formador && (
-                <div className="text-end mb-3">
-                    <button className="btn btn-success" onClick={() => handleEditarTrabalho(null)}>
-                    <i className="bi bi-plus-circle me-2"></i>Adicionar Trabalho
-                    </button>
-                </div>
-                )}
-
-                {/* LISTA DE TRABALHOS */}
-                {trabalhos.length === 0 ? (
-                <div className="alert alert-info">Não há trabalhos disponíveis.</div>
-                ) : (
-                trabalhos.map((trabalho) => (
-                    <TrabalhosAdicionarCurso
-                    key={trabalho.id_trabalho}
-                    trabalho={trabalho}
-                    onEdit={() => handleEditarTrabalho(trabalho)}
-                    podeEditar={user?.id_utilizador === cursos?.sincrono?.id_formador}
-                    />
-                ))
-                )}
-            </div>
-            </Tab>
+                <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
+                    <div className="mt-4">
+                        {/* Trabalhos */}
+                    <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{callback: handleEditarTrabalho, label: 'Trabalhos'}} />
+                    </div>
+                </Tab>
                 
-            {/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   TRABLAHOS   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$444 */}
                 <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
                 <div className="mt-4">
                      <Table columns={colunasNotasFinais} data={resultados} actions={null}
