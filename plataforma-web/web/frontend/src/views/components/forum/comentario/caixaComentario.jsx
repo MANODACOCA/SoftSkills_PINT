@@ -5,7 +5,7 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { create_comentario } from "../../../../api/comentario_axios";
 import { useUser } from '../../../../utils/useUser';
 
-const CaixaComentario = () => {
+const CaixaComentario = ({ idPost }) => {
     const [comment, setComment] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
@@ -13,7 +13,7 @@ const CaixaComentario = () => {
     const [isError, setIsError] = useState('');
     const { user } = useUser();
 
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -26,9 +26,9 @@ const CaixaComentario = () => {
 
         try {
             const formData = new FormData();
-            formData.append('texto_post', comment);
+            formData.append('id_post', idPost);
             formData.append('id_utilizador', user.id_utilizador);
-            formData.append('id_formato', '1');
+            formData.append('texto_comentario', comment);
 
             if (selectedFile) {
                 formData.append('ficheiro', selectedFile);
