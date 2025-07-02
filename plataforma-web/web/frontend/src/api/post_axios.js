@@ -56,7 +56,6 @@ export const delete_post = async (id) => {
 
 export const put_like = async (id_post, id_utilizador) => {
     try {
-        console.log("wdawdwa", id_post)
         axios.put(`${API_URL_POSTS}/addLike/${id_post}`);
         const response = await axios.post(`${API_URL_LIKES}/create`, {
             id_post: id_post,

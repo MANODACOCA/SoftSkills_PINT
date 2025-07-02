@@ -1,20 +1,60 @@
 import '../post/post.css';
-import { useState } from "react";
+import { use, useState, useEffect } from "react";
 import { FaHeart } from "react-icons/fa";
 import { Image, Button, Row, Col, Dropdown, Modal, Form } from "react-bootstrap";
 import { BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import Swal from "sweetalert2";
 import { useUser } from '../../../../utils/useUser';
 import { list_tipo_denuncia } from "../../../../api/tipo_denuncia_axios";
 import { create_denuncia } from "../../../../api/denuncia_axios";
+import { delete_comentario, like_comentario, unlike_comentario, jaDeuLike } from "../../../../api/comentario_axios";
 
-function Comentario({ avatar, name, time, text, likes, idComentario, idAutorComentario, onDeleted }) {
+function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentario, idAutorComentario, onDeleted }) {
   const { user } = useUser();
 
-  const [liked, setLiked] = useState(false);
-  const handleLike = () => setLiked(!liked);
 
-  /* Dropdown / Modal report */
+  /*LIKES*/
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(inicialLikes);
+
+  const handleLike = async () => {
+    try {
+      if (liked) {
+        await unlike_comentario(idComentario, user.id_utilizador);
+        setLikes(likes - 1);
+      } else {
+        await like_comentario(idComentario, user.id_utilizador);
+        setLikes(likes + 1);
+      }
+      setLiked(!liked);
+    } catch (error) {
+      console.error("Erro ao atualizar like:", err);
+      Swal.fire("Erro", "Não foi possível atualizar o like. Tente novamente.", "error");
+    }
+  }
+
+  const verificarLike = async () => {
+    if (!user?.id_utilizador) return;
+    try {
+      const jaCurtiu = await jaDeuLike(idComentario, user.id_utilizador);
+      setLiked(jaCurtiu);
+    } catch (error) {
+      if (err.response?.status === 404) {
+        setLiked(false);
+      } else {
+        console.error("Erro ao verificar se já deu like:", err);
+      }
+    }
+  }
+
+  useEffect(() => {
+    verificarLike();
+  }, [idComentario, user]);
+  /*LIKES*/
+
+
+  /*DENUCIA*/
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportReason, setReportReason] = useState('');
   const [tipoDenunciaList, setTipoDenunciaList] = useState([]);
@@ -56,13 +96,21 @@ function Comentario({ avatar, name, time, text, likes, idComentario, idAutorCome
     }
   };
 
+  const onShowReportModal = () => {
+    fetchDenuncias();
+    setShowReportModal(true);
+  };
+  /*DENUCIA*/
+
+
+  /*Eliminar post*/
   const handleDeleteComment = async () => {
     const result = await Swal.fire({
       title: 'Tem certeza que deseja eliminar este comentário?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
+      cancelButtonColor: '#3b5b84',
       confirmButtonText: 'Sim, eliminar!',
       cancelButtonText: 'Cancelar'
     });
@@ -78,12 +126,8 @@ function Comentario({ avatar, name, time, text, likes, idComentario, idAutorCome
       }
     }
   };
+  /*Eliminar post*/
 
-  // Fetch denuncias quando abrir modal
-  const onShowReportModal = () => {
-    fetchDenuncias();
-    setShowReportModal(true);
-  };
 
   return (
     <div className="comentario-container mb-3 pb-3 border-bottom">
@@ -135,13 +179,16 @@ function Comentario({ avatar, name, time, text, likes, idComentario, idAutorCome
           </div>
 
           <Button
-            variant={liked ? "danger" : "outline-danger"}
             size="sm"
+            className={`btn d-flex align-items-center text-white ${liked ? 'btn-primary' : 'btn-outline-secondary'}`}
             onClick={handleLike}
-            className="mt-1"
           >
-            <FaHeart className="me-1" />
-            {likes + (liked ? 1 : 0)}
+            {liked ? (
+              <AiFillLike className="me-1" style={{ fontSize: '20px' }} />
+            ) : (
+              <AiOutlineLike className="me-1" style={{ fontSize: '20px' }} />
+            )}
+            {likes}
           </Button>
         </Col>
       </Row>
