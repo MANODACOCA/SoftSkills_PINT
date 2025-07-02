@@ -29,13 +29,6 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        /* leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.white,
-          onPressed: () async {
-            context.pop(); // Return to the previous screen no matter the route or the screen we were before
-          },
-        ), */
         title: Text("Perfil", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: AppColors.primary,
@@ -130,7 +123,7 @@ class _ProfileState extends State<Profile> {
                           Spacer(),
                           IconButton(
                             onPressed: () {
-                              context.go('/alterarInformacoes');
+                              context.go('/alterarInformacoes', extra: widget.idUser);
                             },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
@@ -150,7 +143,7 @@ class _ProfileState extends State<Profile> {
                           Spacer(),
                           IconButton(
                             onPressed: () {
-                              context.go('/seeinfoprofile');
+                              context.go('/seeinfoprofile', extra: widget.idUser);
                             },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),

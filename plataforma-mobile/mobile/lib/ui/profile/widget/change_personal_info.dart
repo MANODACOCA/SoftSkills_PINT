@@ -6,9 +6,9 @@ import 'package:country_picker/country_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ChangePersonalInfo extends StatefulWidget {
-  const ChangePersonalInfo({super.key, required this.idUser});
+  const ChangePersonalInfo({super.key, this.idUser});
 
-  final String idUser;
+  final String? idUser;
 
   @override
   State<ChangePersonalInfo> createState() => _ChangePersonalInfoState();
@@ -25,7 +25,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
-            context.go('/profile');
+            context.go('/profile', extra: widget.idUser);
           },
         ),
         title: Text("Perfil", style: TextStyle(color: Colors.white)),

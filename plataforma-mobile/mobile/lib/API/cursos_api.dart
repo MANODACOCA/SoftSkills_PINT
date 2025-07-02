@@ -2,9 +2,11 @@
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 class CursosApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/cursos';
+
+
 
   Future<Map<String, dynamic>> getCurso(String id) async {
     try {
@@ -34,12 +36,28 @@ class CursosApi {
     }
   }
 
-  Future<Map<String, dynamic>> courseForYou() async {
+  Future<List<Map<String, dynamic>>> courseForYou() async {
     try {
-      final response = await http.get(Uri.parse('$urlAPI/cursos-destaque/top8foryou'));
+       final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    
+    if (token == null) {
+      throw Exception('Sessão expirada: token inexistente');
+    }
+
+
+      final response = await http.get(Uri.parse('$urlAPI/cursos-destaque/top8foryou'),
+          headers: {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    },);
       if (response.statusCode == 200) {
         print('Cursos encontrados para si: ${response.body}');
-        return jsonDecode(response.body);
+      final List<dynamic> data = jsonDecode(response.body);
+        final cursos = data.cast<Map<String, dynamic>>();
+
+        return cursos;
+        //return jsonDecode(response.body);
       }
       throw Exception('Erro ao encontrar cursos para si!');
     } catch (error) {

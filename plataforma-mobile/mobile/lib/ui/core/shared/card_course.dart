@@ -11,6 +11,7 @@ class CardCourse extends StatelessWidget {
     required this.endDate,
     required this.currentMembers,
     required this.maxMembers,
+    required this.img,
   });
 
   final String title;
@@ -19,6 +20,7 @@ class CardCourse extends StatelessWidget {
   final DateTime endDate;
   final int currentMembers;
   final int maxMembers;
+  final String img;
 
 //meter esta função num ficheiro à parte
   String _formatDateRange(DateTime start, DateTime end) {
@@ -57,12 +59,12 @@ class CardCourse extends StatelessWidget {
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
               ),
-              child: const Image(
-                image: AssetImage('assets/course-flutter.png'),
+              child: Image.network(
+                img,
                 height: 135,
                 width: double.infinity,
                 fit: BoxFit.cover,
-              ),
+              )
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),

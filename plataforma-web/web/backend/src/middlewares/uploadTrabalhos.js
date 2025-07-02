@@ -32,12 +32,13 @@ const allowed = [
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/vnd.ms-excel.sheet.macroEnabled.12',
     'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'text/plain'];
 
 const fileFilter = (req, file, cb) => {
     if (!allowed.includes(file.mimetype)) {
         return cb(
-            new Error('Só são permitidos PDF, imagens (JPG/PNG), Word (.doc/.docx) e Excel (.xls/.xlsx).'),
+            new Error('Só são permitidos PDF, imagens (JPG/PNG), Word (.doc/.docx), Excel (.xls/.xlsx) e ficheiros de texto (.txt).'),
             false
         );
     }
