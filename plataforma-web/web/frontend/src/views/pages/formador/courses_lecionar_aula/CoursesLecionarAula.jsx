@@ -16,9 +16,7 @@ import Table from '../../../components/table/Table';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
 import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
-const API_URL = 'https://softskills-api.onrender.com/';
-const toIsoTimestamp = (data, hora) => `${data}T${hora}:00`;      // Para concatenar data e hora numa string  
-const minutesToInterval = min => `00:${min.toString().padStart(2,'0')}:00`;   // para converter depois para o interval depois
+import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -29,6 +27,8 @@ const CursoLecionarAula = () => {
     const [formadores, setFormadores] = useState([]);
     const [formato, setFormato] = useState([]);
     const [resultados, setResultados] = useState([]);
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];  
 
     //#region curso
     const fetchCurso = async (id) => {
@@ -147,21 +147,19 @@ const CursoLecionarAula = () => {
         if(result.isConfirmed) {
             try{
                 if(id){
+                    const tempoMinutos = durationToMinutes(aulaData?.tempo_duracao);
+                    console.log(tempoMinutos);
                     const editarAula = await Swal.fire({
                         title: 'Editar Aula',
                         html: `
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
-                            
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
-                            
+                            <input id="dataAula" type="date" min="${todayStr}" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0,5) || ''}">
-                            
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
-                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${aulaData?.tempo_duracao?.split(':')[1] || 0}">
-                
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${tempoMinutos}">
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -189,12 +187,21 @@ const CursoLecionarAula = () => {
                                 return;
                             }
 
-                            if (!/^https?:\/\/.+/.test(url)) {
-                                Swal.showValidationMessage('Insira um URL válido!');
+                            if (!isValidMeetingLink(url)) {
+                                Swal.showValidationMessage('Link inválido! Aceitamos Zoom, Google Meet ou Teams.');
+                                return;
+                            }
+
+
+                            const selectedDateTime = new Date(`${data}T${hora}:00`);  
+                            const now              = new Date();
+
+                            if (selectedDateTime <= now) {
+                                Swal.showValidationMessage('A data e a hora têm de ser futuras!');
                                 return;
                             }
                             
-                            const data_aula     = toIsoTimestamp(data, hora);   
+                            const data_aula = toIsoTimestamp(data, hora);   
                             const tempo_duracao = minutesToInterval(tempoM);
 
                             return {
@@ -232,16 +239,12 @@ const CursoLecionarAula = () => {
                         html: `
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
-                            
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" class="form-control mb-3">
-                            
+                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}">
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3">
-                            
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
                             <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="0">
-                            
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -269,12 +272,20 @@ const CursoLecionarAula = () => {
                                 return;
                             }
 
-                            if (!/^https?:\/\/.+/.test(url)) {
-                                Swal.showValidationMessage('Insira um URL válido!');
+                            if (!isValidMeetingLink(url)) {
+                                Swal.showValidationMessage('Link inválido! Aceitamos Zoom, Google Meet ou Teams.');
                                 return;
                             }
-                        
-                            const data_aula     = toIsoTimestamp(data, hora);   
+                            
+                            const selectedDateTime = new Date(`${data}T${hora}:00`);  
+                            const now              = new Date();
+
+                            if (selectedDateTime <= now) {
+                                Swal.showValidationMessage('A data e a hora têm de ser futuras!');
+                                return;
+                            }
+
+                            const data_aula = toIsoTimestamp(data, hora);   
                             const tempo_duracao = minutesToInterval(tempoM);  
 
                             return { 
@@ -286,6 +297,7 @@ const CursoLecionarAula = () => {
                             };
                         }
                     });
+                    
                     if(adicionarAula.isConfirmed && adicionarAula.value){
                         try {
                             await create_aulas(adicionarAula.value);

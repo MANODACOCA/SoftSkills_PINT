@@ -21,13 +21,23 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
         setIsError('');
 
         try {
-            await create_post({
-                texto_post: conteudo,
-                id_utilizador: user.id_utilizador,
-                id_conteudos_partilhado: forum.id_conteudos_partilhado,
+            const formData = new FormData();
+            formData.append('texto_post', conteudo);
+            formData.append('id_utilizador', user.id_utilizador);
+            formData.append('id_conteudos_partilhado', forum.id_conteudos_partilhado);
+            formData.append('id_formato', '1');
+
+            if (ficheiroSelecionado) {
+                formData.append('ficheiro', ficheiroSelecionado);
+            }
+
+            await create_post(formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
             });
 
-         
+
             setConteudo('');
             setShowModal(false);
             if (onPostCreated) onPostCreated();

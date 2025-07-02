@@ -51,7 +51,6 @@ const ForumPosts = () => {
     </div>
   );
 
-
   if (error) return <div className="mt-4 alert alert-danger">{error}</div>;
   console.table("DAWDA", posts);
   return (
@@ -79,6 +78,8 @@ const ForumPosts = () => {
                 comentarios={post.contador_comentarios}
                 imagemAutor={autorData.img_perfil}
                 dataCriacao={post.data_criacao_post}
+                conteudo={post.caminho_ficheiro}
+                tipoFormato={post.id_formato}
                 onDeleted={handlePostDeleted}
               />
             );

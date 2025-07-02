@@ -3,9 +3,11 @@
 const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const { utilizador, likes_post, comentario } = require('../models/init-models')(sequelize);
+const { utilizador, likes_post, comentario, denuncia } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).post;
 const controllers = {};
+const fs = require('fs').promises;
+const path = require('path');
 
 
 controllers.list = async (req, res) => {
@@ -50,20 +52,35 @@ controllers.get = async (req, res) => {
 controllers.create = async (req, res) => {
   try {
     if (req.body) {
-      const { texto_post, id_utilizador, id_conteudos_partilhado } = req.body;
+      const { id_utilizador, id_conteudos_partilhado, id_formato, texto_post, caminho_ficheiro } = req.body;
 
-      const data = await model.create({
+      if (!id_utilizador || !id_conteudos_partilhado || !texto_post) {
+        return res.status(400).json({
+          erro: 'Campos obrigatórios em falta',
+          desc: 'id_utilizador, id_conteudos_partilhado e texto_post são obrigatórios'
+        });
+      }
+
+      const ficheiroRelativo = req.file
+        ? req.file.path.replace(/^.*[\\/]uploads[\\/]/, '')
+        : null;
+
+      const ficheiroURL = ficheiroRelativo
+        ? `${req.protocol}://${req.get('host')}/uploads/${ficheiroRelativo}`
+        : null;
+
+      const payload = {
+        id_utilizador: Number(id_utilizador),
+        id_conteudos_partilhado: Number(id_conteudos_partilhado),
+        id_formato: Number(id_formato),
         texto_post,
-        id_utilizador,
-        id_conteudos_partilhado,
+        caminho_ficheiro: ficheiroURL || null,
         contador_likes_post: 0,
         contador_comentarios: 0
-      });
+      };
 
-      res.status(201).json({
-        message: 'Post criado com sucesso!',
-        post: data,
-      });
+      const data = await model.create(payload);
+      res.status(201).json(data);
     } else {
       res.status(400).json({ erro: 'Erro ao criar Post!', desc: 'Corpo do pedido esta vazio.' });
     }
@@ -94,6 +111,29 @@ controllers.update = async (req, res) => {
 controllers.delete = async (req, res) => {
   try {
     const { id } = req.params;
+
+    const post = await model.findByPk(id);
+    if (!post) {
+      return res.status(404).json({ erro: 'Post não encontrado!' });
+    }
+
+    if (post.caminho_ficheiro && post.caminho_ficheiro.includes('/uploads/')) {
+      const ficheiroRelativo = post.caminho_ficheiro.replace(/^.*\/uploads\//, '');
+      const ficheiroPath = path.join(__dirname, '..', 'uploads', ficheiroRelativo);
+
+      if (!ficheiroPath.startsWith(path.join(__dirname, '..', 'uploads'))) {
+        throw new Error('Ficheiro fora da pasta uploads!');
+      }
+
+      try {
+        await fs.unlink(ficheiroPath);
+        console.log(`Ficheiro removido: ${ficheiroPath}`);
+      } catch (err) {
+        console.warn(`Ficheiro não pôde ser apagado: ${ficheiroPath}`, err.message);
+      }
+    }
+
+    await denuncia.destroy({ where: { id_post: id } });
 
     await comentario.destroy({ where: { id_post: id } });
 
