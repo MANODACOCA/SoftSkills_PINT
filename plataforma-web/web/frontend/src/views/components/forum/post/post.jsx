@@ -17,6 +17,7 @@ dayjs.extend(relativeTime);
 dayjs.locale('pt');
 
 import Comentario from "../../../components/forum/comentario/comentario";
+import CaixaComentario from "../../../components/forum/comentario/caixaComentario";
 
 const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, tipoFormato, onDeleted }) => {
 
@@ -30,14 +31,18 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     /*COMENTS*/
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState([]);
+    const [carregarComentarios, setCarregarComentarios] = useState(false);
 
     const fetchComments = async () => {
         try {
+            setCarregarComentarios(true);
             const data = await get_comentarios_by_post(idPost);
             setComments(data);
         } catch (err) {
             console.error("Erro ao encontrar comentarios:", err);
             Swal.fire("Erro", "Não foi possível encontrar comentarios. Tente novamente.", "error");
+        } finally {
+            setCarregarComentarios(false);
         }
     }
 
@@ -263,21 +268,19 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                 </div>
 
                 {/* Texto */}
-                <div className="mt-3 mb-2">
+                <div className="mt-3">
                     <p className="mb-1">{texto}</p>
                 </div>
                 {tipoFormato && conteudo && (
-                    <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light mt-4" >
-                        <div className="d-flex align-items-center">
-                            <FaFile className="text-secondary" />
-                            <a href={conteudo} className="text-decoration-none text-primary ms-2">
+                    <a href={conteudo} target='blank' className="text-decoration-none text-primary ms-2">
+                        <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light" >
+                            <div className="d-flex align-items-center gap-2">
+                                <FaFile className="text-secondary" />
                                 FICHEIRO
-                            </a>
-                        </div>
-                        <a href={conteudo} download className="text-secondary">
+                            </div>
                             <i className="bi bi-download"></i>
-                        </a>
-                    </div>
+                        </div>
+                    </a>
                 )}
 
 
@@ -304,36 +307,42 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                         onClick={() => setShowComments(!showComments)}
                     >
                         {showComments ? (
-                              <BsChatFill className="me-1" style={{ fontSize: '18px' }} />
+                            <BsChatFill className="me-1" style={{ fontSize: '18px' }} />
                         ) : (
-                               <BsChat className="me-1" style={{ fontSize: '18px' }} />
+                            <BsChat className="me-1" style={{ fontSize: '18px' }} />
                         )}
                         {comentarios} comentários
                     </Button>
 
                 </div>
             </Card.Body>
-            {showComments && (
-                <div className="mt-1 ms-5 me-3">
-                    {comments.length > 0 ? (
-                        comments.map((comment, idx) => (
-                            <Comentario
-                                key={idx}
-                                avatar={comment.id_utilizador_utilizador.img_perfil}
-                                name={comment.id_utilizador_utilizador.nome_utilizador}
-                                time={dayjs(comment.data_criacao_comentario).fromNow()}
-                                text={comment.texto_comentario}
-                                likes={comment.contador_likes_com}
-                                idComentario={comment.id_comentario}
-                            />
-                        ))
-                    ) : (
-                        <p className="text-muted text-center">Nenhum comentário ainda.</p>
-                    )}
-                </div>
-            )}
+            {
+                showComments && (
+                    <div className="mt-1 ms-5 me-3">
+                        <CaixaComentario />
+                        {carregarComentarios ? (
+                            <p className="text-muted text-center">Carregando comentários...</p>
+                        ) : comments.length > 0 ? (
+                            comments.map((comment, idx) => (
+                                <Comentario
+                                    key={idx}
+                                    avatar={comment.id_utilizador_utilizador.img_perfil}
+                                    name={comment.id_utilizador_utilizador.nome_utilizador}
+                                    time={dayjs(comment.data_criacao_comentario).fromNow()}
+                                    text={comment.texto_comentario}
+                                    likes={comment.contador_likes_com}
+                                    idComentario={comment.id_comentario}
+                                    idAutorComentario={comment.id_utilizador}
+                                />
+                            ))
+                        ) : (
+                            <p className="text-muted text-center">Nenhum comentário ainda.</p>
+                        )}
+                    </div>
+                )
+            }
 
-        </Card>
+        </Card >
     );
 };
 

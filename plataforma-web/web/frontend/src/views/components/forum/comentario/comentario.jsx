@@ -11,6 +11,7 @@ import { create_denuncia } from "../../../../api/denuncia_axios";
 import { delete_comentario, like_comentario, unlike_comentario, jaDeuLike } from "../../../../api/comentario_axios";
 
 function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentario, idAutorComentario, onDeleted }) {
+  const API_URL = 'https://softskills-api.onrender.com/';
   const { user } = useUser();
 
 
@@ -38,7 +39,7 @@ function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentari
     if (!user?.id_utilizador) return;
     try {
       const jaCurtiu = await jaDeuLike(idComentario, user.id_utilizador);
-      console.log("TSOLDKJAOISMDWD",jaCurtiu);
+      console.log("TSOLDKJAOISMDWD", jaCurtiu);
       setLiked(jaCurtiu);
     } catch (error) {
       if (err.response?.status === 404) {
@@ -118,8 +119,7 @@ function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentari
 
     if (result.isConfirmed) {
       try {
-        // Exemplo de chamada para deletar comentário (implementar conforme backend)
-        // await delete_comment(idComentario);
+        await delete_comentario(idComentario);
         Swal.fire('Eliminado!', 'Comentário removido com sucesso.', 'success');
         if (onDeleted) onDeleted(idComentario);
       } catch (error) {
@@ -134,13 +134,16 @@ function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentari
     <div className="comentario-container mb-3 pb-3 border-bottom">
       <Row className="align-items-start">
         <Col xs="auto">
-          <Image
-            src={avatar}
-            roundedCircle
+          <img
+            src={`${API_URL}${avatar}`}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random&bold=true`;
+            }}
             alt={`${name} avatar`}
             width={48}
             height={48}
-            className="comentario-avatar"
+            className="comentario-avatar rounded-5"
           />
         </Col>
 
