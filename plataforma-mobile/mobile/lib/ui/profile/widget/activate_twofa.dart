@@ -1,39 +1,36 @@
+// ignore_for_file: unnecessary_string_interpolations, unnecessary_brace_in_string_interps
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/shared/navigationbar_component.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../API/two_fa.dart';
 
 class TwoFactorActivate extends StatefulWidget {
-  const TwoFactorActivate({super.key});
+  const TwoFactorActivate({super.key, this.idUser});
+
+  final String? idUser;
 
   @override
   State<TwoFactorActivate> createState() => _TwoFactorActivate();
 }
 
 class _TwoFactorActivate extends State<TwoFactorActivate> {
-  bool _isTwoFactorEnabled = false;
+  final api = TwofaApi();
+  late bool _isTwoFactorEnabled;
 
   @override
   void initState() {
     super.initState();
-    loadTwoFactor();
+    _initializeTwoFactor();
   }
 
-  /*Falta passar a verificacao dos dois fatores para o loginpage*/
-
-  Future<void> _saveTwoFactor(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('two_factor_enabled', value);
-  }
-
-  Future<bool> loadTwoFactor() async {
-    final prefs = await SharedPreferences.getInstance();
-    final twoFactorEnabled = prefs.getBool('two_factor_enabled') ?? false;
+  Future<void> _initializeTwoFactor() async {
+    if (widget.idUser == null) return;
+    final result = await api.getTwofa(widget.idUser!);
     setState(() {
-      _isTwoFactorEnabled = twoFactorEnabled;
+      _isTwoFactorEnabled = result as bool;
     });
-    return _isTwoFactorEnabled;
   }
 
   @override
@@ -49,7 +46,7 @@ class _TwoFactorActivate extends State<TwoFactorActivate> {
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
-            context.pop('');
+            context.push('/seeinfoprofile', extra: widget.idUser);
           },
         ),
       ),
@@ -73,15 +70,29 @@ class _TwoFactorActivate extends State<TwoFactorActivate> {
                   Switch(
                     activeTrackColor: AppColors.primary,
                     value: _isTwoFactorEnabled,
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       setState(() {
                         _isTwoFactorEnabled = !_isTwoFactorEnabled;
-                        _saveTwoFactor(_isTwoFactorEnabled);
-                        // ignore: avoid_print
-                        print(
-                          'Autenticação de dois fatores: $_isTwoFactorEnabled',
-                        );
                       });
+                      if (_isTwoFactorEnabled) {
+                        if(widget.idUser != null){
+                          await api.updateTwofa(widget.idUser!, {
+                          'auten2fat': true,
+                        });
+                      } else {
+                        print('Ocorreu um erro na atualizar o TWO_FA.');
+                          return;
+                        }
+                      }else{
+                        if(widget.idUser != null){
+                          await api.updateTwofa(widget.idUser!, {
+                          'auten2fat': false,
+                        });
+                      } else {
+                        print('Ocorreu um erro na atualizar o TWO_FA.');
+                          return;
+                        }
+                      }
                     },
                     activeColor: Colors.blue,
                   ),
