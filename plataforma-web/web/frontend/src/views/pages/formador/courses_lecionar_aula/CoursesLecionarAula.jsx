@@ -4,11 +4,11 @@ import { useParams } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterialApoio';
 import { columnsAulas } from '../../../components/table/ColumnsAula';
-import { columnsNotasFinais } from '../../../components/table/ColumnsAvaliacaoFinal';
+import { getColumnsNotasFinais } from '../../../components/table/ColumnsAvaliacaoFinal';
 import { get_cursos } from '../../../../api/cursos_axios';
 import { create_material_apoio, delete_material_apoio, get_material_apoio, get_material_apoio_curso, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
-import { get_resultados } from '../../../../api/resultados_axios';
+import { get_resultados, update_resultados } from '../../../../api/resultados_axios';
 import Swal from 'sweetalert2';
 import { create_aulas, delete_aulas, getAulas_Curso, update_aulas } from '../../../../api/aulas_axios';
 import { list_formadores } from '../../../../api/formadores_axios';
@@ -17,6 +17,7 @@ import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../
 import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
+import {FaVideo,FaFileAlt, FaFilePowerpoint,FaFileImage,FaFilePdf,FaFileWord} from 'react-icons/fa';
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -28,7 +29,24 @@ const CursoLecionarAula = () => {
     const [formato, setFormato] = useState([]);
     const [resultados, setResultados] = useState([]);
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];  
+    const todayStr = today.toISOString().split('T')[0];
+    const [modoEditNotas, setModoEditNotas] = useState(false);
+    const [notasEditadas, setNotasEditadas] = useState({});  
+
+    const iconMapById = {
+        1: <FaFilePdf className="text-danger" />,
+        2: <FaFilePowerpoint className="text-warning" />,
+        3: <FaFileWord className="text-blue-600" />,
+        4: <FaFileAlt className="text-success" />,
+        5: <FaFileAlt className="text-success" />,
+        6: <FaFileImage className="text-pink-500" />,
+        7: <FaVideo className="text-primary" />, 
+    };
+    const getIconById = (id) => {
+        return iconMapById[id] || <FaFile className="text-secondary" />;
+    };
+
+    const colunasNotasFinais = getColumnsNotasFinais(modoEditNotas, notasEditadas, setNotasEditadas);
 
     //#region curso
     const fetchCurso = async (id) => {
@@ -352,8 +370,8 @@ const CursoLecionarAula = () => {
                 title: 'Adicionar Conteudo',
                 html: ` 
                     <label for="formato" class="form-label">Formato</label>
-                    <select id="formato" class="form-control mb-3">
-                        <option value="">-- Selecionar Conteúdo --</option>
+                    <select id="formato" class="form-select mb-3">
+                    <option value="">-- Selecione um formato --</option>
                         ${formatos.map(f => `
                         <option value="${f.id_formato}" ${f.id_formato == conteudos.id_formato ? 'selected' : ''}>${f.formato}</option>
                             `).join('')}
@@ -366,7 +384,7 @@ const CursoLecionarAula = () => {
                     </div>
                     <div id="file2InputWrapper" class="d-none">
                     <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                     </div>
                 `,
                 didOpen: () => {
@@ -375,12 +393,17 @@ const CursoLecionarAula = () => {
                     const file1Wrapper = document.getElementById('file1InputWrapper');
                     const label2 = document.getElementById('ficheiro2Label');
                     const label1 = document.getElementById('ficheiro1Label');
-                    const formatosComFicheiro = [2, 3, 5, 6, 7];
+                    const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                     select.addEventListener('change', () => {
                     const selectedId = parseInt(select.value);
                     const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
-
+                    
+                    if (isNaN(selectedId)) {
+                        file1Wrapper.classList.add('d-none');
+                        file2Wrapper.classList.add('d-none');
+                        return;
+                    }
                     if (formatosComFicheiro.includes(selectedId)) {
                         file2Wrapper.classList.remove('d-none');
                         file1Wrapper.classList.add('d-none');
@@ -593,7 +616,7 @@ const CursoLecionarAula = () => {
                         html: `
                             <label for="formato" class="form-label">Formato</label>
                             <select id="formato" class="form-select mb-3">
-                            <option value="">Selecione um formato</option>
+                            <option value="">-- Selecione um formato --</option>
                                 ${formatos.map(f => `
                                     <option value="${f.id_formato}" ${f.id_formato == material.id_formato ? 'selected' : ''}>${f.formato}</option>
                                 `).join('')}
@@ -605,8 +628,9 @@ const CursoLecionarAula = () => {
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
                             </div>
                             <div id="file2InputWrapper" class="d-none">
+                            <p id="ficheiroAtual" class="small mb-2"></p>
                             <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+                            <input type="file" id="ficheiroConteudo"class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
                         didOpen: () => {
@@ -618,6 +642,7 @@ const CursoLecionarAula = () => {
                             const label1 = document.getElementById('ficheiro1Label');
                             const formatosComFicheiro = [1, 2, 3, 4, 5];
 
+                            const ficheiroAtual = document.getElementById('ficheiroAtual');
                             function atualizarCampos() {
                             //select.addEventListener('change', () => {
                             const selectedId = parseInt(select.value);
@@ -631,6 +656,9 @@ const CursoLecionarAula = () => {
                             if (formatosComFicheiro.includes(selectedId)) {
                                 file2Wrapper.classList.remove('d-none');
                                 file1Wrapper.classList.add('d-none');
+                                ficheiroAtual.textContent = material.conteudo
+                                ? `Ficheiro atual: ${material.conteudo.split('/').pop()}`
+                                : 'Nenhum ficheiro carregado.';
                                 label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
                                 label1.textContent = 'Ficheiro';
                             } else {
@@ -843,38 +871,20 @@ const CursoLecionarAula = () => {
 
      //#endregion
      
+     
     //#region Resultados
-    const renderActionsResultados = (item) => {
-        return(
-        <div className="d-flex">
-            <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateResultados(item.id_resul)}>
-                <i className="bi bi-pencil"></i>
-            </button> 
-            <button className="btn btn-outline-danger" onClick={()=> HandleDeleteResultados(item.id_resul)}>
-                <i className="bi bi-trash"></i>
-            </button>
-        </div>
-        );
-    }
-
-    const handleEditCreateResultados = async (id) => {
+    const handleEditarGuardarResultados = async () => {
+    if (modoEditNotas) {
+        for (const [id, nota] of Object.entries(notasEditadas)) {
         
+        await update_resultados(id, { resul: parseFloat(nota) });
+        }
+        await fetchResultados(cursos.id_curso);
+        setNotasEditadas({});
     }
+    setModoEditNotas(!modoEditNotas);
+    };
 
-    const HandleDeleteResultados = async (id) => {
-        const result = await Swal.fire({
-            title: "Tem certeza que deseja retirar esta nota?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sim",
-            cancelButtonColor: "Cancelar",
-            customClass: {
-                confirmButton: 'btn btn-success me-2',
-                cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false,
-        });
-    }
     //#endregion
 
     useEffect(() => {
@@ -956,12 +966,16 @@ const CursoLecionarAula = () => {
                 */}
                 
                 <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
-                    <div className='mt-4'>
-                    {/* Resultados Finais */}
-                        <div className='mt-4'>
-                            <Table columns={columnsNotasFinais} data={resultados} actions={renderActionsResultados} onAddClick={{callback: handleEditCreateResultados, label: 'Resultados'}}  />
-                        </div>
-                    </div>  
+                {/* Botão que alterna entre Editar e Guardar */}
+                <div className="mt-4">
+                     <Table columns={colunasNotasFinais} data={resultados} actions={null}
+                    onAddClick={{
+                        callback: handleEditarGuardarResultados,
+                        label: modoEditNotas ? 'Guardar' : 'Editar',
+                        icon: modoEditNotas ? 'bi-save' : 'bi-pencil',
+                        variant: modoEditNotas ? 'success' : 'primary'
+                    }}/>
+                </div>
                 </Tab>
             </Tabs>
         </div>
