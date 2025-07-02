@@ -118,14 +118,21 @@ controllers.delete = async (req, res) => {
     }
 
     if (post.caminho_ficheiro && post.caminho_ficheiro.includes('/uploads/')) {
-      const ficheiroPath = path.join(__dirname, '..', 'uploads', post.caminho_ficheiro.split('/uploads/')[1]);
+      const ficheiroRelativo = post.caminho_ficheiro.replace(/^.*\/uploads\//, '');
+      const ficheiroPath = path.join(__dirname, '..', 'uploads', ficheiroRelativo);
+
+      if (!ficheiroPath.startsWith(path.join(__dirname, '..', 'uploads'))) {
+        throw new Error('Ficheiro fora da pasta uploads!');
+      }
 
       try {
         await fs.unlink(ficheiroPath);
+        console.log(`Ficheiro removido: ${ficheiroPath}`);
       } catch (err) {
-        console.warn(`Ficheiro não foi encontrado ou não pôde ser apagado: ${ficheiroPath}`);
+        console.warn(`Ficheiro não pôde ser apagado: ${ficheiroPath}`, err.message);
       }
     }
+
 
     await comentario.destroy({ where: { id_post: id } });
 
