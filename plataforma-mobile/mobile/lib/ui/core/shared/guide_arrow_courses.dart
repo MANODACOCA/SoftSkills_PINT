@@ -76,10 +76,10 @@ class TabbarCourses extends StatelessWidget {
                               child: Image.network(
                                 (curso['img_perfil'] != null && curso['img_perfil'].toString().isNotEmpty)
                                   ? 'https://softskills-api.onrender.com/${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi']}' 
-                                  : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi'])}&background=random&bold=true',
+                                  : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true',
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
-                                  final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi'])}&background=random&bold=true';
+                                  final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true';
                                   return Image.network(
                                     fallbackImg,
                                     height: 135,
