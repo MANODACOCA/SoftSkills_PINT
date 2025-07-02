@@ -38,7 +38,7 @@ const allowed = [
 const fileFilter = (req, file, cb) => {
     if (!allowed.includes(file.mimetype)) {
         return cb(
-            new Error('Só são permitidos PDF, imagens (JPG/PNG), Word (.doc/.docx) e Excel (.xls/.xlsx).'),
+            new Error('Só são permitidos PDF, imagens (JPG/PNG), Word (.doc/.docx), Excel (.xls/.xlsx) e ficheiros de texto (.txt).'),
             false
         );
     }
