@@ -29,6 +29,7 @@ const CaixaComentario = ({ idPost }) => {
             formData.append('id_post', idPost);
             formData.append('id_utilizador', user.id_utilizador);
             formData.append('texto_comentario', comment);
+             formData.append('id_formato', '1');
 
             if (selectedFile) {
                 formData.append('ficheiro', selectedFile);
