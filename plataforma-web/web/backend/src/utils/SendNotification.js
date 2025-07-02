@@ -24,7 +24,7 @@ module.exports.criarNotifacoesGenerica = async (
             return;
         }
 
-        const mensagem = `Informamos que a ${versao} do(a) ${tipo.toLowerCase()} foi concluída com sucesso. O conteúdo atualizado já está disponível para consulta.`;
+        const mensagem = `Informamos que a ${versao} do(a) ${tipo.toLowerCase()} foi concluída com sucesso. O conteúdo já está disponível para consulta.`;
         const data_hora_notificacaocurso = new Date();
 
         const notificacao = utilizadoresInscritos.map((ui) => ({
