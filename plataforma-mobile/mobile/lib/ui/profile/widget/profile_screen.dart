@@ -5,24 +5,41 @@ import 'package:go_router/go_router.dart';
 import '../../core/shared/navigationbar_component.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../API/utilizadores_api.dart';
+import 'package:provider/provider.dart';
+import 'package:mobile/provider/auth_provider.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key, this.idUser});
-
-  final String? idUser;
+  const Profile({super.key});
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  final UtilizadoresApi api = UtilizadoresApi();
-  late Future<Map<String, dynamic>> userInfo;
+  Map<String, dynamic> utilizador = {};
+  final UtilizadoresApi _api = UtilizadoresApi();
 
   @override
   void initState() {
     super.initState();
-    userInfo = api.getUtilizador(widget.idUser!);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (userId != null) {
+        print('ID do utilizador: $userId');
+        fetchUtilizador(int.parse(userId));
+      }
+    });
+  }
+
+  Future<void> fetchUtilizador (int idUtilizador) async {
+    try{
+      final esteUtilizador = await _api.getUtilizador(idUtilizador);
+      setState(() {
+        utilizador = esteUtilizador;
+      });
+    } catch(e) {
+      print('Erro ao buscar o curso: , $e');
+    }
   }
 
   @override
@@ -42,18 +59,9 @@ class _ProfileState extends State<Profile> {
               SizedBox(
                 width: double.infinity,
                 height: 170,
-                child: FutureBuilder<Map<String, dynamic>>(
-                  future: userInfo,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Erro ao carregar dados'));
-                    } else if (!snapshot.hasData || snapshot.data == null) {
-                      return Center(child: Text('Sem dados do utilizador'));
-                    }
-                    final data = snapshot.data!;
-                    return Column(
+                child: utilizador.isEmpty
+                  ? Center(child: CircularProgressIndicator())
+                  : Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
@@ -61,15 +69,29 @@ class _ProfileState extends State<Profile> {
                           height: 100,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            image: DecorationImage(
-                              image: AssetImage('${data['img_perfil']}'),
+                            border: Border.all(color: Colors.grey.shade300, width: 2),
+                          ),
+                          child: ClipOval(
+                            child: Image.network(
+                              (utilizador['img_perfil'] != null && utilizador['img_perfil'].toString().isNotEmpty)
+                                ? 'https://softskills-api.onrender.com/${utilizador['img_perfil']}' 
+                                : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true',
                               fit: BoxFit.cover,
-                            ),
+                              errorBuilder: (context, error, stackTrace) {
+                                final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
+                                return Image.network(
+                                  fallbackImg,
+                                  height: 135,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ) 
                           ),
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "${data['nome_utilizador']}",
+                          "${utilizador['nome_utilizador']}",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -77,13 +99,11 @@ class _ProfileState extends State<Profile> {
                           ),
                         ),
                         Text(
-                          "${data['email']}",
+                          "${utilizador['email']}",
                           style: TextStyle(fontSize: 13, color: Colors.grey),
                         ),
                       ],
-                    );
-                  },
-                ),
+                    ), 
               ),
               Divider(
                 color: Colors.grey,
@@ -123,7 +143,7 @@ class _ProfileState extends State<Profile> {
                           Spacer(),
                           IconButton(
                             onPressed: () {
-                              context.go('/alterarInformacoes', extra: widget.idUser);
+                              //context.go('/alterarInformacoes', extra: widget.idUser);
                             },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
@@ -143,7 +163,7 @@ class _ProfileState extends State<Profile> {
                           Spacer(),
                           IconButton(
                             onPressed: () {
-                              context.go('/seeinfoprofile', extra: widget.idUser);
+                              //context.go('/seeinfoprofile', extra: widget.idUser);
                             },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),
@@ -359,7 +379,7 @@ class _ProfileState extends State<Profile> {
           ),
         ),
       ),
-      bottomNavigationBar: Footer(idUser: widget.idUser),
+      bottomNavigationBar: Footer(),
     );
   }
 

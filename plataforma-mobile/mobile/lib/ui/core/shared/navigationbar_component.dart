@@ -2,9 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'export.dart';
 
 class Footer extends StatelessWidget {
-  const Footer({super.key, this.idUser});
-
-  final String? idUser;
+  const Footer({super.key});
 
   int _locationToIndex(String location){
   if(location.startsWith('/homepage')) return 0;
@@ -18,19 +16,19 @@ class Footer extends StatelessWidget {
   void _onTap(BuildContext context, int index) {
     switch (index) {
       case 0:
-        context.go('/homepage', extra: idUser);
+        context.go('/homepage');
         break;
       case 1:
-        context.go('/forum', extra: idUser);
+        context.go('/forum');
         break;
       case 2:
-        context.go('/cursos', extra: idUser);
+        context.go('/cursos');
         break;
       /* case 3:
         context.go("/notificacoes");
         break; */
       case 3:
-        context.go('/profile', extra: idUser);
+        context.go('/profile');
         break;
     }
   }
@@ -39,9 +37,6 @@ class Footer extends StatelessWidget {
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
     final currentIndex = _locationToIndex(location);
-
-    print('===Id do usuário: $idUser===');
-
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) => _onTap(context, index),

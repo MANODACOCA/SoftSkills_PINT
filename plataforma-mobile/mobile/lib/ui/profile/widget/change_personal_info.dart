@@ -364,7 +364,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
           ],
         ),
       ),
-      bottomNavigationBar: Footer(idUser: widget.idUser),
+      bottomNavigationBar: Footer(),
     );
   }
 
