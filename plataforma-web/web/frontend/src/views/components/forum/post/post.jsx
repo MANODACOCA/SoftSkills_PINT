@@ -45,13 +45,6 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     const API_URL = 'https://softskills-api.onrender.com/';
     const { user, setUser } = useUser();
 
-
-
-    const [liked, setLiked] = useState(false);
-    const [likes, setLikes] = useState(inicialLikes);
-
-
-
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState([]);
 
@@ -104,6 +97,9 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     /*DENUCIA*/
 
     /*LIKES*/
+    const [liked, setLiked] = useState(false);
+    const [likes, setLikes] = useState(inicialLikes);
+
     const handleLike = async () => {
         try {
             if (liked) {
