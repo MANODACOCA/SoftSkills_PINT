@@ -16,9 +16,8 @@ import Table from '../../../components/table/Table';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
 import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
+import { isValidMeetingLink, minutesToInterval, toIsoTimestamp } from '../../../components/shared_functions/FunctionsUtils';
 const API_URL = 'https://softskills-api.onrender.com/';
-const toIsoTimestamp = (data, hora) => `${data}T${hora}:00`;      // Para concatenar data e hora numa string  
-const minutesToInterval = min => `00:${min.toString().padStart(2,'0')}:00`;   // para converter depois para o interval depois
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -152,16 +151,12 @@ const CursoLecionarAula = () => {
                         html: `
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
-                            
                             <label for="dataAula" class="form-label">Data da Aula</label>
                             <input id="dataAula" type="date" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
-                            
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0,5) || ''}">
-                            
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
                             <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${aulaData?.tempo_duracao?.split(':')[1] || 0}">
-                
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -189,12 +184,12 @@ const CursoLecionarAula = () => {
                                 return;
                             }
 
-                            if (!/^https?:\/\/.+/.test(url)) {
-                                Swal.showValidationMessage('Insira um URL válido!');
+                            if (!isValidMeetingLink(url)) {
+                                Swal.showValidationMessage('Link inválido! Aceitamos Zoom, YouTube ou Teams.');
                                 return;
                             }
                             
-                            const data_aula     = toIsoTimestamp(data, hora);   
+                            const data_aula = toIsoTimestamp(data, hora);   
                             const tempo_duracao = minutesToInterval(tempoM);
 
                             return {
@@ -232,16 +227,12 @@ const CursoLecionarAula = () => {
                         html: `
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
-                            
                             <label for="dataAula" class="form-label">Data da Aula</label>
                             <input id="dataAula" type="date" class="form-control mb-3">
-                            
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3">
-                            
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
                             <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="0">
-                            
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -269,12 +260,12 @@ const CursoLecionarAula = () => {
                                 return;
                             }
 
-                            if (!/^https?:\/\/.+/.test(url)) {
-                                Swal.showValidationMessage('Insira um URL válido!');
+                            if (!isValidMeetingLink(url)) {
+                                Swal.showValidationMessage('Link inválido! Aceitamos Zoom ou Teams.');
                                 return;
                             }
-                        
-                            const data_aula     = toIsoTimestamp(data, hora);   
+                            
+                            const data_aula = toIsoTimestamp(data, hora);   
                             const tempo_duracao = minutesToInterval(tempoM);  
 
                             return { 
