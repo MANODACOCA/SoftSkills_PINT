@@ -7,6 +7,7 @@ const controllers = {};
 const materialApoio = require('../services/material_apoio.service');
 const fs = require('fs').promises;
 const path = require('path');
+const { criarNotifacoesGenerica } = require("../utils/SendNotification");
 
 controllers.list = async (req,res)=>{
   const data = await model.findAll();
