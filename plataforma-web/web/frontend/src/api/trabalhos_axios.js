@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const API_URL = 'https://softskills-api.onrender.com/trabalhos';
 
+const ONE_HUNDRED_MB = 100 * 1024 * 1024;
 
 export const list_trabalhos = async () => {
   try{
@@ -24,14 +25,27 @@ export const get_trabalhos  = async (id) => {
 };
 
 export const create_trabalhos = async ({
-    id_curso_tr, id_formato_tr, nome_tr, caminho_tr, descricao_tr, data_entrega_tr
+  id_curso_tr,
+  id_formato_tr,
+  nome_tr,
+  descricao_tr,
+  data_entrega_tr,
+  caminho_tr,
+  ficheiro
 }) => {
     try{
      const fd = new FormData();
         fd.append('id_curso_tr', id_curso_tr);
         fd.append('id_formato_tr', id_formato_tr);
         fd.append('nome_tr', nome_tr);
+        fd.append('descricao_tr', descricao_tr);
+        fd.append('data_entrega_tr', data_entrega_tr);
+        fd.append('caminho_tr', caminho_tr || '');
 
+        if (ficheiro) {
+        fd.append('ficheiro', ficheiro);
+        }
+        
         const response = await axios.post(`${API_URL}/create`, fd,
             {
                 maxBodyLength: ONE_HUNDRED_MB

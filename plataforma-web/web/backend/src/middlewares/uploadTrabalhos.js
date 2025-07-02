@@ -6,7 +6,7 @@ const BASE_DIR = path.join(__dirname, '..', 'uploads', '');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const cursoId = req.body.id_curso || 'geral';
+        const cursoId = req.body.id_curso_tr || 'geral';
         const idTrabalho = req.body.id_trabalho || 'geral';
 
         const uploadPath = path.join(BASE_DIR, `curso${cursoId}`, `entrega_trabalhos${idTrabalho}`);
