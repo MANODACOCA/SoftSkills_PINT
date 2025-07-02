@@ -18,7 +18,7 @@ import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
 import { FaVideo, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWord } from 'react-icons/fa';
-import { create_trabalhos, delete_trabalhos, get_trabalhos, update_trabalhos, list_trabalhos } from '../../../../api/trabalhos_axios';
+import { create_trabalhos, delete_trabalhos, get_trabalhos, update_trabalhos, list_trabalhos, get_trabalhos_curso } from '../../../../api/trabalhos_axios';
 import { columnsTrabalhos } from '../../../components/table/ColumnsTrabalho';
 
 const CursoLecionarAula = () => {
@@ -1031,7 +1031,7 @@ const CursoLecionarAula = () => {
                     if (editarTrabalho.isConfirmed && editarTrabalho.value) {
                         try {
                             await update_trabalhos(editarTrabalho.value);
-                            await fetchTrabalhos();
+                            await fetchTrabalhos(trabalho.id_curso_tr);
                             Swal.fire({
                                 icon: "success",
                                 title: "Material de apoio editado com sucesso!",
@@ -1162,7 +1162,7 @@ const CursoLecionarAula = () => {
                                     timer: 2000,
                                     showConfirmButton: false
                                 });
-                                fetchTrabalhos();
+                                fetchTrabalhos(trabalho.id_curso_tr);
                             } catch (error) {
                                 Swal.fire({
                                     icon: "error",
@@ -1188,9 +1188,9 @@ const CursoLecionarAula = () => {
     };
 
 
-        const fetchTrabalhos = async () => {
+        const fetchTrabalhos = async (id_curso) => {
             try {
-                const response = await list_trabalhos();
+                const response = await get_trabalhos_curso(id_curso);
                 setTrabalhos(response);
             } catch (err) {
                 console.error("Erro ao buscar trabalhos", err);
@@ -1221,7 +1221,7 @@ const CursoLecionarAula = () => {
                 await fetchAulas(id);
                 await fetchResultados(id);
                 await fetchFormatos(id);
-                await fetchTrabalhos();
+                await fetchTrabalhos(id);
             }
             carregarDados();
         }, []);
