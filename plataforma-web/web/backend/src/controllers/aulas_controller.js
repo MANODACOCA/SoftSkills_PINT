@@ -7,7 +7,6 @@ const controllers = {};
 const aulasService = require('../services/aulas.service');
 const { criarNotifacoesGenerica } = require("../utils/SendNotification");
 const { getVideoDuration } = require('../utils/youtube_aulas');
-const isYouTube = url => /^(https:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)/i.test(url);
 
 controllers.list = async (req, res) => {
   const data = await model.findAll();
@@ -32,18 +31,12 @@ controllers.create = async (req, res) => {
   try {
     if (!req.body) {
       return res.status(400).json({ erro: 'Erro ao criar Aula!', desc: 'Corpo do pedido está vazio.' });
-    } 
-    
-    const { tempo_duracao, caminho_url } = req.body;
+    }
 
-    if (tempo_duracao) {
-        const rx = /^\d{2}:\d{2}:\d{2}$/;          
-      if (!rx.test(tempo_duracao)) {
-        return res.status(400).json({erro: 'Formato de tempo_duracao inválido!', desc: 'Use hh:mm:ss — ex. 00:45:00'});
-      }
-    } else (caminho_url && isYouTube(caminho_url)) 
+    if (req.body.caminho_url) {
       try {
-        const { hours, minutes, seconds } = await getVideoDuration(caminho_url);
+        const { hours, minutes, seconds } = await getVideoDuration(req.body.caminho_url);
+
         req.body.tempo_duracao =
           `${String(hours).padStart(2, '0')}:` +
           `${String(minutes).padStart(2, '0')}:` +
@@ -51,6 +44,7 @@ controllers.create = async (req, res) => {
       } catch (err) {
         return res.status(400).json({ erro: 'Não consegui obter a duração do vídeo.', desc: err.message });
       }
+    }
 
     const data = await model.create(req.body);
 
@@ -79,27 +73,18 @@ controllers.update = async (req, res) => {
     if (req.body) {
       const { id } = req.params;
       
-    if (req.body.tempo_duracao) {
-      const rx = /^\d{2}:\d{2}:\d{2}$/;           
-      if (!rx.test(req.body.tempo_duracao)) {
-        return res.status(400).json({
-          erro: 'Formato de tempo_duracao inválido!',
-          desc: 'Use hh:mm:ss — ex. 00:45:00'
-        });
+      if (req.body.caminho_url) {
+        try {
+          const { hours, minutes, seconds } = await getVideoDuration(req.body.caminho_url);
+          req.body.tempo_duracao =
+            `${String(hours).padStart(2, '0')}:` +
+            `${String(minutes).padStart(2, '0')}:` +
+            `${String(seconds).padStart(2, '0')}`;
+        } catch (err) {
+          return res.status(400).json({ erro: 'Não consegui obter a duração do vídeo.', desc: err.message });
+        }
       }
-    }
 
-    else if (req.body.caminho_url && isYouTube(req.body.caminho_url)) {
-      try {
-        const { hours, minutes, seconds } = await getVideoDuration(req.body.caminho_url);
-        req.body.tempo_duracao =
-          `${String(hours).padStart(2, '0')}:` +
-          `${String(minutes).padStart(2, '0')}:` +
-          `${String(seconds).padStart(2, '0')}`;
-      } catch (err) {
-        return res.status(400).json({ erro: 'Não consegui obter a duração do vídeo.', desc: err.message });
-      }
-    }
       const updated = await model.update(req.body, { where: { id_aula : id } });
       if (updated) {
         const modelUpdated = await model.findByPk(id);
