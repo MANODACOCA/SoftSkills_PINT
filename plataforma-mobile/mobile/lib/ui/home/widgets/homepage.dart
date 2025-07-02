@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   List<Map<String, dynamic>> cursos = [];
-  CursosApi _api = CursosApi();
+  final CursosApi _api = CursosApi();
 
   @override
   void initState() {
