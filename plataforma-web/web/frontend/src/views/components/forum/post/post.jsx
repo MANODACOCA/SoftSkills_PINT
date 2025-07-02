@@ -319,7 +319,9 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
             {
                 showComments && (
                     <div className="mt-1 ms-5 me-3">
-                        <CaixaComentario />
+                        <CaixaComentario 
+                            idPost={idPost}
+                        />
                         {carregarComentarios ? (
                             <p className="text-muted text-center">Carregando comentários...</p>
                         ) : comments.length > 0 ? (
