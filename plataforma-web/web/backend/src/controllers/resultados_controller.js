@@ -4,25 +4,27 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).resultados;
 const controllers = {};
-
+const resultadosServices = require('../services/resultados.service');
 
 
 controllers.list = async (req,res)=>{
-  const data = await model.findAll();
-  res.status(200).json(data);
+  try{
+    const {id} = req.params;
+    const data = await model.findAll({id});
+    res.status(200).json(data);
+  } catch(err) {
+    res.status(500).json({erro: 'Erro ao procurar Resultados!',desc: err.message});
+  }
 };
 
 controllers.get = async (req,res)=>{
   try{
     const {id} = req.params;
-    const data = await model.findByPk(id);
-    if(data){
+    const data = await resultadosServices.getResultadosFormandos(id);
+    //const data = await model.findByPk(id);
       res.status(200).json(data);
-    }else{
-      res.status(404).json({erro: 'Resultado nao encontrado/a!'});
-    }
   }catch (err){
-    res.status(500).json({erro: 'Erro ao procurar Resultado!',desc: err.message});
+    res.status(500).json({erro: 'Erro ao procurar Resultados!',desc: err.message});
   }
 };
 
@@ -71,5 +73,6 @@ controllers.delete = async (req,res)=>{
     res.status(500).json({erro:'Erro ao apagar o/a Resultado!',desc: err.message});
   }
 };
+
 
 module.exports = controllers;

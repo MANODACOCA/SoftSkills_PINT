@@ -1,107 +1,85 @@
 import React, { useRef, useEffect, useState } from 'react';
 import NotificationRow from "../../../components/notification_row/notification_row";
 import { delete_notificacoes_curso, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
-import { delete_notificacoes_comentarios_post, find_notificacoes_comentarios_post  } from '../../../../api/notificacoes_comentarios_post_axios';
-
+import { useUser } from '../../../../utils/useUser';
+import Swal from 'sweetalert2';
 
 const NotificationPage = () => {
+    const { user } = useUser();
     const [notificacoes, setNotificacoes] = useState([]);
-    const [tipoFiltro, setTipoFiltro] = useState('todas');
     const [ordenacao, setOrdenacao] = useState('recente');
 
-    const fetchAllNotifications = async () => {
+    const fetchAllNotifications = async (ord = ordenacao) => {
         try {
-            const cursos = await find_notificacao_curso();
-            const posts = await find_notificacoes_comentarios_post();
-
-            const cursosComTipo = cursos.map(n => ({
-                ...n,
-                tipo: 'curso',
-                id: n.id_notificacao_cursos
-            }));
-
-            const postsComTipo = posts.map(n => ({
-                ...n,
-                tipo: 'post',
-                id: n.id_notificacao_post
-            }));
-
-            const todas = [...cursosComTipo, ...postsComTipo];
-
-            todas.sort((a, b) => new Date(b.data_hora_notificacaocurso || b.data_hora_notificacaocp) - new Date(a.data_hora_notificacaocurso || a.data_hora_notificacaocp));
-
-            setNotificacoes(todas);
+            const id = user.id_utilizador;
+            const cursos = await find_notificacao_curso(id, ord);
+            setNotificacoes(cursos);
         } catch (error) {
             console.error('Erro ao carregar notificações:', error);
         }
     };
 
-    const HandleDelete = async (id, tipo) => {
-        const confirm = window.confirm('Tem a certeza que pretende eleminar');
-
-        if (!confirm) return;
-        console.log("Tentando eliminar:", id, tipo);
-        try {
-            if (tipo == 'curso') {
-                await delete_notificacoes_curso(id);
-            } else if (tipo == 'post') {
-                console.log(id);
-                await delete_notificacoes_comentarios_post(id);
-            }
-            fetchAllNotifications();
-            console.log('Eliminado com sucesso!');
-        } catch (error) {
-            console.log('Erro ao eliminar notificação!');
-        }
-    }
-
-    const  getNotificacaoFiltradas = () => {
-        let filtradas = [...notificacoes];
-
-        if (tipoFiltro != 'todas') {
-            filtradas = filtradas.filter(n => n.tipo == tipoFiltro);
-        }
-        
-        filtradas.sort((a,b) => {
-            const dataA = new Date(a.data_hora_notificacaocurso || a.data_hora_notificacaocp);
-            const dataB = new Date(b.data_hora_notificacaocurso || b.data_hora_notificacaocp);
-
-            if(ordenacao == 'antigo') return dataA - dataB;
-            return dataB - dataA;
+    const HandleDelete = async (id) => {
+        const result = await Swal.fire({
+            title: "Tem certeza que deseja apagar a notificação?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonColor: "Cancelar",
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
         });
 
-        return filtradas;
+        if(result.isConfirmed){
+            try {
+                await delete_notificacoes_curso(id);
+                fetchAllNotifications();
+                Swal.fire({
+                    icon: "success",
+                    title: "Notificação apagada com sucesso!",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Não foi possível apagar notificação",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            }    
+        }
     }
 
     useEffect(() => {
-        fetchAllNotifications();
-    }, []);
+        if (user && user.id_utilizador) {
+            fetchAllNotifications(ordenacao);
+        }
+    }, [user, ordenacao]);
+
+    if (!user || !user.id_utilizador || !notificacoes) {
+        return <div className="text-center mt-5">A carregar...</div>;
+    }
 
     return (
         <div className='m-2'>
             <div className='d-flex justify-content-between mb-2'>
                 <h1>Notificações</h1>
-            </div>
-            <div className='d-flex mb-5 justify-content-between'>
-                    <div className="d-flex align-items-center gap-1 filtro">
-                        <label htmlFor="">Tipo:</label>
-                        <select name="filtra" id="filtra" className="form-select w-100" value={tipoFiltro} onChange={(e) => setTipoFiltro(e.target.value)}>
-                            <option value="todas">Todas</option>
-                            <option value="curso">Curso</option>
-                            <option value="post">Forum</option>
-                        </select>
-                    </div>
-                    <div className="d-flex align-items-center gap-1 filtro">
-                        <label htmlFor="">Ordenar:</label>
-                        <select name="ordena" id="ordena" className="form-select w-100" value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)}>
-                            <option value="recente">Mais Recente</option>
-                            <option value="antigo">Mais Antigas</option>
-                        </select>
-                    </div>
+                <div className="d-flex align-items-center gap-1 filtro">
+                    <label htmlFor="">Ordenar:</label>
+                    <select name="ordena" id="ordena" className="form-select w-100" value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)}>
+                        <option value="recente">Mais Recente</option>
+                        <option value="antigo">Mais Antigas</option>
+                    </select>
                 </div>
-            {getNotificacaoFiltradas().map((notification, index) => (
+            </div>
+            {notificacoes.map((notification, index) => (
                 <div key={index}>
-                    <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id, notification.tipo)} />
+                    <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id_notificacao_cursos)} />
                     <hr />
                 </div>
             ))}

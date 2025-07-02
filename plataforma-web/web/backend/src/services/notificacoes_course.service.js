@@ -1,29 +1,32 @@
+const { Sequelize, Op } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, notificacoes_curso } = require('../models/init-models')(sequelize);
+const { cursos, notificacoes_curso, utilizador } = require('../models/init-models')(sequelize);
 
-async function getNotificationOfCourse() {
+async function getNotificationOfCourse(userID, order) {
   try {
-    const notifications = await notificacoes_curso.findAll();
-    
-    const cursoIds =[...new Set(notifications.map(n => n.id_curso))];
-    const cursosList = await cursos.findAll({
-      where: {
-        id_curso: cursoIds
-      },
-      attributes: ['id_curso', 'nome_curso', 'imagem']
-    });
-
-    const cursosMap = {};
-    cursosList.forEach(c => {
-      cursosMap[c.id_curso] = c;
-    });
-
-    return notifications.map(n => {
-      const notif = n.toJSON();
-      notif.id_notificacao_cursos = n.id_notificacao_cursos;
-      notif.curso = cursosMap[n.id_curso] || null;
-      return notif;
-    });
+    const now = new Date();
+    const notifications = await notificacoes_curso.findAll(
+      {
+        where: {
+          id_utilizador: userID,
+          data_hora_notificacaocurso: { [Op.lte]: now },
+        },
+        include: [
+          {
+            model: cursos,
+            as: 'id_curso_curso',
+          },
+          { 
+            model: utilizador,
+            as: 'id_utilizador_utilizador',
+          }
+        ],
+        order: [
+          ['data_hora_notificacaocurso', order === 'antigo' ? 'ASC' : 'DESC']
+        ]
+      }
+    );
+    return notifications || [];
   } catch (error) {
     console.error('Erro ao buscar notificações de curso:', error);
     throw error;

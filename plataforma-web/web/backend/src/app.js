@@ -124,5 +124,11 @@ app.use('/trabalhos',trabalhosRouter);
 const entregaTrabalhosRouter = require('./routes/entrega_trabalhos_route.js');
 app.use('/entrega-trabalhos',entregaTrabalhosRouter);
 
+const likePostRouter = require('./routes/likes_post_route.js');
+app.use('/likes-post',likePostRouter);
+
+/* const entregaTrabalhosRouter = require('./routes/entrega_trabalhos_route.js');
+app.use('/entrega-comentario',entregaTrabalhosRouter); */
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

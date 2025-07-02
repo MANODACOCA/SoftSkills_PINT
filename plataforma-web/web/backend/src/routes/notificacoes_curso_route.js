@@ -23,6 +23,6 @@ router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 
 //Nossas rotas:
-router.get('/find_notificacoes_curso', controller.getCursoNotificationsController);
+router.get('/find_notificacoes_curso/:userID', controller.getCursoNotificationsController);
 
 module.exports = router;

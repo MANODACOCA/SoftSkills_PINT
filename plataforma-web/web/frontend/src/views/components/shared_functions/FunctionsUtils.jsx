@@ -128,3 +128,46 @@ export const calcularHorasCurso = (aulas) => {
 
   return parseFloat(hrsAula.toFixed(2));
 }
+
+
+export const toIsoTimestamp = (data, hora) => `${data}T${hora}:00`;      // Para concatenar data e hora numa string  
+
+// para converter depois para o interval depois
+export const minutesToInterval = min => {
+  const hours = Math.floor(min / 60);
+  const minutes = min % 60;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
+};  
+
+export const isValidMeetingLink = url => {
+  const patterns = [
+    // Zoom
+    /^https:\/\/([a-z0-9-]+\.)?zoom\.us\/j\/\d+(?:\?.*)?$/i,
+
+    // Microsoft Teams
+    /^https:\/\/(www\.)?teams\.microsoft\.com\/l\/meetup-join\/[\w-?&=]+$/i,
+
+    // Google Meet
+    /^https:\/\/meet\.google\.com\/[a-z]{3}-[a-z]{4}-[a-z]{3}$/i
+  ];
+  return patterns.some(rx => rx.test(url));
+}
+
+
+export const durationToMinutes = (dur) => {
+  if (!dur) return 0;
+
+  if (typeof dur === 'string') {
+    const [h = 0, m = 0] = dur.split(':').map(Number);
+    return h * 60 + m;
+  }
+
+  if (typeof dur === 'object') {
+    const hours = dur.hours || 0;
+    const minutes = dur.minutes || 0;
+    const seconds = dur.seconds || 0;
+    return Math.round(hours * 60 + minutes + seconds / 60);
+  }
+
+  return 0;
+};

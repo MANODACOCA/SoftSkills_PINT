@@ -1,0 +1,43 @@
+const {initModels} = require('../models/init-models');
+
+module.exports.criarNotifacoesGenerica = async (
+    tipo,
+    versao,
+    nome,
+    id_curso,
+    sequelize
+) => {
+    try {
+        const { inscricoes, formandos, notificacoes_curso } = initModels(sequelize);
+
+        const utilizadoresInscritos = await inscricoes.findAll({
+            where: {id_curso},
+            include: [
+                {
+                    model: formandos, 
+                    as: 'id_formando_formando',
+                }
+            ]    
+        });
+
+        if (utilizadoresInscritos.length === 0) {
+            return;
+        }
+
+        const mensagem = `Informamos que a ${versao} do(a) ${tipo.toLowerCase()} foi concluída com sucesso. O conteúdo já está disponível para consulta.`;
+        const data_hora_notificacaocurso = new Date();
+
+        const notificacao = utilizadoresInscritos.map((ui) => ({
+            id_utilizador: ui.id_formando,
+            id_curso,
+            data_hora_notificacaocurso,
+            conteudo_notif_curso: mensagem
+        }))
+
+        await notificacoes_curso.bulkCreate(notificacao);
+
+        console.log(`Notificação enviada para ${notificacao.length} utilizadores`);
+    } catch (error) {
+        console.error('Erro ao criar notificação: ', error);
+    }
+}

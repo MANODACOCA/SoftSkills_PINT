@@ -5,8 +5,12 @@ const initModels = require("../models/init-models");
 const model = initModels(sequelize).aulas;
 const controllers = {};
 const aulasService = require('../services/aulas.service');
+const { criarNotifacoesGenerica } = require("../utils/SendNotification");
 const { getVideoDuration } = require('../utils/youtube_aulas');
-
+const isYoutubeLink = (url) => {
+  return /^https:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]{11}(?:&.*)?$/i.test(url)
+      || /^https:\/\/youtu\.be\/[\w-]{11}(?:\?.*)?$/i.test(url);
+};
 
 controllers.list = async (req, res) => {
   const data = await model.findAll();
@@ -33,7 +37,7 @@ controllers.create = async (req, res) => {
       return res.status(400).json({ erro: 'Erro ao criar Aula!', desc: 'Corpo do pedido está vazio.' });
     }
 
-    if (req.body.caminho_url) {
+    if (req.body.caminho_url && isYoutubeLink(req.body.caminho_url)) {
       try {
         const { hours, minutes, seconds } = await getVideoDuration(req.body.caminho_url);
 
@@ -47,6 +51,19 @@ controllers.create = async (req, res) => {
     }
 
     const data = await model.create(req.body);
+
+    try {
+      await criarNotifacoesGenerica(
+        'aula',
+        'criação',
+        req.body.nome_aula,
+        req.body.id_curso,
+        sequelize
+      );
+    } catch (error) {
+      console.error('Erro ao enviar notificação de criação de aula');
+    }
+
     return res.status(201).json(data);
 
   } catch (err) {
@@ -60,7 +77,7 @@ controllers.update = async (req, res) => {
     if (req.body) {
       const { id } = req.params;
       
-      if (req.body.caminho_url) {
+      if (req.body.caminho_url && isYoutubeLink(req.body.caminho_url)) {
         try {
           const { hours, minutes, seconds } = await getVideoDuration(req.body.caminho_url);
           req.body.tempo_duracao =
@@ -74,6 +91,17 @@ controllers.update = async (req, res) => {
 
       const updated = await model.update(req.body, { where: { id_aula : id } });
       if (updated) {
+            try {
+              await criarNotifacoesGenerica(
+                'aula',
+                'atualização',
+                req.body.nome_aula,
+                req.body.id_curso,
+                sequelize
+              );
+            } catch (error) {
+              console.error('Erro ao enviar notificação de criação de aula');
+            }
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
       } else {

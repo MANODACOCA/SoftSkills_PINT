@@ -4,9 +4,11 @@ import { useParams } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterialApoio';
 import { columnsAulas } from '../../../components/table/ColumnsAula';
+import { columnsNotasFinais } from '../../../components/table/ColumnsAvaliacaoFinal';
 import { get_cursos } from '../../../../api/cursos_axios';
 import { create_material_apoio, delete_material_apoio, get_material_apoio, get_material_apoio_curso, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
+import { get_resultados } from '../../../../api/resultados_axios';
 import Swal from 'sweetalert2';
 import { create_aulas, delete_aulas, getAulas_Curso, update_aulas } from '../../../../api/aulas_axios';
 import { list_formadores } from '../../../../api/formadores_axios';
@@ -14,7 +16,7 @@ import Table from '../../../components/table/Table';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
 import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
-const API_URL = 'https://softskills-api.onrender.com/';
+import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -24,7 +26,9 @@ const CursoLecionarAula = () => {
     const [aulas, setAulas] = useState([]);
     const [formadores, setFormadores] = useState([]);
     const [formato, setFormato] = useState([]);
-
+    const [resultados, setResultados] = useState([]);
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];  
 
     //#region curso
     const fetchCurso = async (id) => {
@@ -45,6 +49,15 @@ const CursoLecionarAula = () => {
             console.log('Erro ao encontrar a lista de formadores', error);
         }
     }
+
+    const fetchResultados = async (id) => {
+        try{
+            const response = await get_resultados(id);
+            setResultados(response);
+        } catch(error) {
+            console.log('Erro ao encontrar a lista de resultados dos formandos', error);
+        }
+    }
     //#endregion
 
 
@@ -52,8 +65,8 @@ const CursoLecionarAula = () => {
     const fetchAulas = async (id) => {
         try {
             const response = await getAulas_Curso(id);
+            console.log('Aulas recebidas:', response);
             setAulas(response);
-            return response;
         } catch (error) {
             console.log('Erro encontrar as Aulas', error);
         }
@@ -134,12 +147,20 @@ const CursoLecionarAula = () => {
         if(result.isConfirmed) {
             try{
                 if(id){
+                    const tempoMinutos = durationToMinutes(aulaData?.tempo_duracao);
+                    console.log(tempoMinutos);
                     const editarAula = await Swal.fire({
                         title: 'Editar Aula',
                         html: `
-                            <label for="nome" class="form-label">Aula</label>
-                            <input id="nomeAula" class="form-control mb-3" placeholder="Nome da Aula" value="${aulaData?.nome_aula || ''}">
-                            <label for="conteudo" class="form-label">URL</label>
+                            <label for="nomeAula" class="form-label">Aula</label>
+                            <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
+                            <label for="dataAula" class="form-label">Data da Aula</label>
+                            <input id="dataAula" type="date" min="${todayStr}" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
+                            <label for="horaAula" class="form-label">Hora da Aula</label>
+                            <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0,5) || ''}">
+                            <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${tempoMinutos}">
+                            <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
                         showCancelButton: true,
@@ -155,25 +176,40 @@ const CursoLecionarAula = () => {
                             cancelButton: 'btn btn-danger',
                         },
                         preConfirm: () => {
-                            const nome = document.getElementById('nomeAula').value;
-                            const url = document.getElementById('urlAula').value;
+                            const nome = document.getElementById('nomeAula').value.trim();
+                            const data = document.getElementById('dataAula').value;
+                            const hora = document.getElementById('horaAula').value;
+                            const tempoM = parseInt(document.getElementById('tempoDuracao').value, 10);
+                            const url = document.getElementById('urlAula').value.trim();
 
-                            if(!nome || !url) {
+                            if (!nome || !data || !hora || !url || isNaN(tempoM)) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
                                 return;
                             }
 
-                            if (!/^https?:\/\/.+/.test(url)) {
-                                Swal.showValidationMessage('Insira um URL válido!');
+                            if (!isValidMeetingLink(url)) {
+                                Swal.showValidationMessage('Link inválido! Aceitamos Zoom, Google Meet ou Teams.');
+                                return;
+                            }
+
+
+                            const selectedDateTime = new Date(`${data}T${hora}:00`);  
+                            const now              = new Date();
+
+                            if (selectedDateTime <= now) {
+                                Swal.showValidationMessage('A data e a hora têm de ser futuras!');
                                 return;
                             }
                             
+                            const data_aula = toIsoTimestamp(data, hora);   
+                            const tempo_duracao = minutesToInterval(tempoM);
+
                             return {
                                 id_curso: cursos.id_curso,
-                                data_aula: materiais.data_aula,
+                                data_aula,
                                 nome_aula: nome, 
                                 caminho_url: url,
-                                tempo_duracao: 0,
+                                tempo_duracao
                             };
                         }
                     });
@@ -201,14 +237,16 @@ const CursoLecionarAula = () => {
                     const adicionarAula = await Swal.fire({
                         title: 'Adicionar Aula',
                         html: `
-                            <label for="nome" class="form-label">Aula</label>
+                            <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
-                            <label for="dataAula" class="form-label">Data aula</label>
-                            <input id="dataAula" class="form-control mb-3" placeholder= "Data da aula">
-                            <label for="dataAula" class="form-label">Data aula</label>
-                            <input id="dataAula" class="form-control mb-3" placeholder= "Data da aula">                            
-                            <label for="conteudo" class="form-label">URL</label>
-                            <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url?.[0] || ''}">
+                            <label for="dataAula" class="form-label">Data da Aula</label>
+                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}">
+                            <label for="horaAula" class="form-label">Hora da Aula</label>
+                            <input id="horaAula" type="time" class="form-control mb-3">
+                            <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="0">
+                            <label for="urlAula" class="form-label">URL</label>
+                            <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
                         showCancelButton: true,
                         confirmButtonText: 'Adicionar Aula',
@@ -224,32 +262,46 @@ const CursoLecionarAula = () => {
                         },
                         preConfirm: () => {
                             const nome = document.getElementById('nomeAula').value;
-                            const url = document.getElementById('urlAula').value;
-                            const data_aula = new Date().toISOString().split('T')[0];
+                            const data   = document.getElementById('dataAula').value;
+                            const hora = document.getElementById('horaAula').value;
+                            const tempoM = parseInt(document.getElementById('tempoDuracao').value, 10);
+                            const url = document.getElementById('urlAula').value.trim();
 
-                            if (!nome || !url) {
+                            if (!nome || !data || !hora || !url || isNaN(tempoM)) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
                                 return;
                             }
 
-                            if (!/^https?:\/\/.+/.test(url)) {
-                                Swal.showValidationMessage('Insira um URL válido!');
+                            if (!isValidMeetingLink(url)) {
+                                Swal.showValidationMessage('Link inválido! Aceitamos Zoom, Google Meet ou Teams.');
                                 return;
                             }
+                            
+                            const selectedDateTime = new Date(`${data}T${hora}:00`);  
+                            const now              = new Date();
+
+                            if (selectedDateTime <= now) {
+                                Swal.showValidationMessage('A data e a hora têm de ser futuras!');
+                                return;
+                            }
+
+                            const data_aula = toIsoTimestamp(data, hora);   
+                            const tempo_duracao = minutesToInterval(tempoM);  
 
                             return { 
                                 id_curso: cursos.id_curso,
                                 data_aula,
                                 nome_aula: nome, 
                                 caminho_url: url,
-                                tempo_duracao: 0
+                                tempo_duracao
                             };
                         }
                     });
+                    
                     if(adicionarAula.isConfirmed && adicionarAula.value){
                         try {
                             await create_aulas(adicionarAula.value);
-                            const aulasCarregadas = await fetchAulas(cursos.id_curso);
+                            await fetchAulas(cursos.id_curso);
                             Swal.fire({
                                 icon: "success",
                                 title: "Aula adicionada com sucesso!",
@@ -774,6 +826,39 @@ const CursoLecionarAula = () => {
 
      //#endregion
      
+    //#region Resultados
+    const renderActionsResultados = (item) => {
+        return(
+        <div className="d-flex">
+            <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateResultados(item.id_resul)}>
+                <i className="bi bi-pencil"></i>
+            </button> 
+            <button className="btn btn-outline-danger" onClick={()=> HandleDeleteResultados(item.id_resul)}>
+                <i className="bi bi-trash"></i>
+            </button>
+        </div>
+        );
+    }
+
+    const handleEditCreateResultados = async (id) => {
+        
+    }
+
+    const HandleDeleteResultados = async (id) => {
+        const result = await Swal.fire({
+            title: "Tem certeza que deseja retirar esta nota?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonColor: "Cancelar",
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+    }
+    //#endregion
 
     useEffect(() => {
         const carregarDados = async () => {
@@ -782,6 +867,7 @@ const CursoLecionarAula = () => {
             await fetchFormadores();
             await fetchCurso(id);
             await fetchAulas(id);
+            await fetchResultados(id);
         }
         carregarDados();
     }, []);
@@ -849,32 +935,13 @@ const CursoLecionarAula = () => {
                 </Tab>
                 */}
                 
-                <Tab eventKey="sobre" title={<span className='fw-bold'>Sobre</span>}>
-                    <div>
-                        <div className='mb-3 d-flex'>
-                            <div className='me-2'>
-                                <img 
-                                    src={`${API_URL}${cursos.sincrono.id_formador_formadore.id_formador_utilizador.img_perfi}` || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`}
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util)}&background=random&bold=true`;
-                                    }}
-                                    alt="Foto do formador"
-                                    className='rounded-circle'
-                                    width="60"
-                                    height="60"
-                                />
-                            </div>
-                            <div>
-                                <h5>{cursos.sincrono.id_formador_formadore.id_formador_utilizador.nome_util}</h5>
-                                <small className='alert alert-success py-1 px-2'>
-                                    <i className='bi bi-geo-alt me-2'></i>
-                                    {cursos.sincrono.id_formador_formadore.id_formador_utilizador.pais}
-                                </small>   
-                            </div>
+                <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
+                    <div className='mt-4'>
+                    {/* Resultados Finais */}
+                        <div className='mt-4'>
+                            <Table columns={columnsNotasFinais} data={resultados} actions={renderActionsResultados} onAddClick={{callback: handleEditCreateResultados, label: 'Resultados'}}  />
                         </div>
-                        <p>{cursos.sincrono.id_formador_formadore.descricao_formador}</p>
-                    </div>
+                    </div>  
                 </Tab>
             </Tabs>
         </div>
