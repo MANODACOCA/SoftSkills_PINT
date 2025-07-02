@@ -16,7 +16,7 @@ import 'dayjs/locale/pt'; // português
 dayjs.extend(relativeTime);
 dayjs.locale('pt');
 
-//import Comentario from "../../../components/forum/comentario/comentario";
+import Comentario from "../../../components/forum/comentario/comentario";
 
 const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, tipoFormato, onDeleted }) => {
 
@@ -179,7 +179,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     /*Eliminar post*/
 
 
-
+    console.log("COMENTARIOS", comments);
     return (
         <Card className="mb-3 shadow-sm rounded-4 border-0">
             <Card.Body>
@@ -271,7 +271,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                         <div className="d-flex align-items-center">
                             <FaFile className="text-secondary" />
                             <a href={conteudo} className="text-decoration-none text-primary ms-2">
-                                LINK
+                                FICHEIRO
                             </a>
                         </div>
                         <a href={conteudo} download className="text-secondary">
@@ -299,26 +299,30 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                     </Button>
 
                     <Button
-                        variant="outline-secondary"
+                        variant={showComments ? 'primary' : 'outline-primary'}
                         size="sm"
                         className="d-flex align-items-center"
-                        onClick={() => setShowComments(!showComments)}>
-                        <BsChat className="me-1" style={{ fontSize: '18px' }} /> {comentarios} comentários
+                        onClick={() => setShowComments(!showComments)}
+                    >
+                        <BsChat className="me-1" style={{ fontSize: '18px' }} />
+                        {comentarios} comentários
                     </Button>
+
                 </div>
             </Card.Body>
             {showComments && (
-                <div className="mt-3">
+                <div className="mt-1 ms-5 me-3">
                     {comments.length > 0 ? (
                         comments.map((comment, idx) => (
-                            {/* <Comentario
+                            <Comentario
                                 key={idx}
-                                avatar={wdad}
-                                name={awdawda}
-                                time={dayjs(comment.data).fromNow()}
-                                text={comment.texto}
-                                likes={comment.likes}
-                            /> */}
+                                avatar={comment.id_utilizador_utilizador.img_perfil}
+                                name={comment.id_utilizador_utilizador.nome_utilizador}
+                                time={dayjs(comment.data_criacao_comentario).fromNow()}
+                                text={comment.texto_comentario}
+                                likes={comment.contador_likes_com}
+                                idComentario={comment.id_comentario}
+                            />
                         ))
                     ) : (
                         <p className="text-muted text-center">Nenhum comentário ainda.</p>
