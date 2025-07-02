@@ -127,8 +127,8 @@ app.use('/entrega-trabalhos', entregaTrabalhosRouter);
 const likePostRouter = require('./routes/likes_post_route.js');
 app.use('/likes-post', likePostRouter);
 
-const likePostRouter = require('./routes/likes_comentario_route.js');
-app.use('/likes-comentario', likePostRouter);
+const likeComentarioRouter = require('./routes/likes_comentario_route.js');
+app.use('/likes-comentario', likeComentarioRouter);
 
 /* const entregaTrabalhosRouter = require('./routes/entrega_trabalhos_route.js');
 app.use('/entrega-comentario',entregaTrabalhosRouter); */
