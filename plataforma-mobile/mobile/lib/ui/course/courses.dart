@@ -5,9 +5,7 @@ import '../core/shared/search_bar.dart';
 import '../core/shared/export.dart';
 
 class Courses extends StatefulWidget {
-  const Courses({super.key, required this.idUser});
-
-  final String idUser;
+  const Courses({super.key});
 
   @override
   State<Courses> createState() => _Courses();
@@ -43,13 +41,15 @@ class _Courses extends State<Courses> {
         backgroundColor: AppColors.primary,
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child: (cursos.isEmpty) 
+          ? Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()),) 
+          : Column(
           children: [
             CourseScroll(cursos: cursos),
           ],
         ),
       ),
-      bottomNavigationBar: Footer(idUser: widget.idUser),
+      bottomNavigationBar: Footer(),
     );
   }
 }

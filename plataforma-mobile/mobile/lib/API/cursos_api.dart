@@ -3,14 +3,26 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+
 class CursosApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/cursos';
 
-
-
-  Future<Map<String, dynamic>> getCurso(String id) async {
+  Future<Map<String, dynamic>> getCurso(int id) async {
     try {
-      final response = await http.get(Uri.parse('$urlAPI/get/$id'));
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+    
+      if (token == null) {
+        throw Exception('Sessão expirada: token inexistente');
+      }
+
+      final response = await http.get(
+        Uri.parse('$urlAPI/get/$id'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
       if (response.statusCode == 200) {
         print('Curso encontrado: ${response.body}');
         return jsonDecode(response.body);

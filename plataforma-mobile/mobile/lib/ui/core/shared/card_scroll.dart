@@ -6,6 +6,7 @@ class CardsScroll extends StatefulWidget {
 
   final String tema;
   final List<Map<String, dynamic>> cursos;
+
   @override
   State<CardsScroll> createState() => _CardsScrollState();
 }
@@ -56,6 +57,7 @@ class _CardsScrollState extends State<CardsScroll> {
                   currentMembers: curso['contador_formandos'],
                   maxMembers: curso['sincrono'] != null ? curso['sincrono']['numero_vagas'] : 0,
                   img: curso['imagem'] ?? fallbackImg,
+                  id: curso['id_curso'],
                 ),
               );
             },

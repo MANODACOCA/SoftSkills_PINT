@@ -45,7 +45,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
   }
 
   Future<void> fetchUser() async {
-    response = await api.getUtilizador(widget.idUser!);
+    response = await api.getUtilizador(int.parse(widget.idUser!));
     setState(() {
       email = response['email'];
     });

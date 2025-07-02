@@ -45,6 +45,7 @@ class _CourseScroll extends State<CourseScroll> {
                   currentMembers: curso['contador_formandos'],
                   maxMembers: curso['sincrono'] != null ? curso['sincrono']['numero_vagas'] : 0,
                   img: curso['imagem'] ?? fallbackImg,
+                  id: curso['id_curso'],
                 ),
               );
             }).toList(),
