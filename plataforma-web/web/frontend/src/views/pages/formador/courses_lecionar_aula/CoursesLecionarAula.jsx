@@ -900,6 +900,11 @@ const CursoLecionarAula = () => {
     };
 
     //#endregion
+
+
+    
+    //#region Trabalhos
+
     const handleEditarTrabalho = async (trabalho) => {
         const isNovo = !trabalho || !trabalho.id_trabalho;
 
@@ -1013,7 +1018,7 @@ const CursoLecionarAula = () => {
                             descricao_tr: descricao,
                             data_entrega_tr,
                             id_formato_tr: id_formato,
-                            caminho_tr: ficheiro ? null : url,
+                            caminho_tr: ficheiro ? '' : url,
                             ficheiro: ficheiro || null,
                             id_curso_tr: cursos.id_curso
                         };
@@ -1071,9 +1076,6 @@ const CursoLecionarAula = () => {
             }
         }
     };
-
-    //#region Trabalhos
-
 
 
     const fetchTrabalhos = async (idCurso) => {
