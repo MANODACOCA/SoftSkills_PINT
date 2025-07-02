@@ -54,7 +54,7 @@ controllers.create = async (req, res) => {
     if (req.body) {
       const { id_utilizador, id_conteudos_partilhado, id_formato, texto_post, caminho_ficheiro } = req.body;
 
-      if (!id_utilizador || !id_conteudos_partilhado  || !texto_post ) {
+      if (!id_utilizador || !id_conteudos_partilhado || !texto_post) {
         return res.status(400).json({
           erro: 'Campos obrigatórios em falta',
           desc: 'id_utilizador, id_conteudos_partilhado e texto_post são obrigatórios'
@@ -81,10 +81,12 @@ controllers.create = async (req, res) => {
         id_conteudos_partilhado: Number(id_conteudos_partilhado),
         id_formato: Number(id_formato),
         texto_post,
-        caminho_ficheiro: ficheiroURL || caminho_ficheiro
+        caminho_ficheiro: ficheiroURL || caminho_ficheiro,
+        contador_likes_post: 0,              
+        contador_comentarios: 0              
       };
 
-     const data = await model.create(payload);
+      const data = await model.create(payload);
       res.status(201).json(data);
     } else {
       res.status(400).json({ erro: 'Erro ao criar Post!', desc: 'Corpo do pedido esta vazio.' });
