@@ -5,7 +5,9 @@ import '../../core/shared/navigationbar_component.dart';
 //import 'package:country_picker/country_picker.dart';
 
 class SeeInfoProfile extends StatefulWidget {
-  const SeeInfoProfile({super.key});
+  const SeeInfoProfile({super.key, this.idUser});
+
+  final String? idUser;
 
   @override
   State<SeeInfoProfile> createState() => _SeeInfoProfileState();
@@ -20,7 +22,7 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            context.go('/profile');
+            context.go('/profile', extra: widget.idUser);
           },
         ),
         title: Text(
@@ -63,7 +65,7 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                                     Spacer(),
                                     IconButton(
                                       onPressed: () {
-                                        context.push('/changeinfopass');
+                                        context.push('/changeinfopass', extra: widget.idUser);
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward_ios,
@@ -81,7 +83,7 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                                     Spacer(),
                                     IconButton(
                                       onPressed: () {
-                                        context.push('/activateTwofa');
+                                        context.push('/activateTwofa', extra: widget.idUser);
                                       },
                                       icon: Icon(
                                         Icons.arrow_forward_ios,

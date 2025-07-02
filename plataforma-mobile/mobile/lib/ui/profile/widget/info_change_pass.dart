@@ -1,16 +1,21 @@
-import 'package:mobile/ui/core/shared/navigationbar_component.dart';
+// ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
 
+import 'package:mobile/ui/core/shared/navigationbar_component.dart';
+import '../../../API/utilizadores_api.dart';
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
 class ChangeInfoPassword extends StatefulWidget {
-  const ChangeInfoPassword({super.key});
+  const ChangeInfoPassword({super.key, this.idUser});
+
+  final String? idUser;
 
   @override
   State<ChangeInfoPassword> createState() => _ChangeInfoPasswordState();
 }
 
 class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
+  final UtilizadoresApi api = UtilizadoresApi();
   bool isPasswordVisible = false;
   final newpass = TextEditingController();
   final pass = TextEditingController();
@@ -18,8 +23,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
     Icons.visibility_off,
     color: AppColors.primary,
   );
-
-  /*Ir buscar na base de dados a password anterior e compará-la com a nova password*/
+/* VER QUAL FUNCAO FAZ A VERIFCACAO SE ELA É IGUAL À ANTERIOR */
 
   Future<void> analisar() async {
     if (newpass.text == pass.text) {
@@ -29,6 +33,22 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
         const SnackBar(content: Text('As passwords não coincidem!')),
       );
     }
+  }
+
+  var response;
+  String email = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUser();
+  }
+
+  Future<void> fetchUser() async {
+    response = await api.getUtilizador(widget.idUser!);
+    setState(() {
+      email = response['email'];
+    });
   }
 
   @override
@@ -44,7 +64,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
-            context.go('/seeinfoprofile');
+            context.go('/seeinfoprofile', extra: widget.idUser);
           },
         ),
       ),
@@ -151,7 +171,13 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
                       fixedSize: const Size(310, 46),
                     ),
                     onPressed: () {
-                      analisar();
+                      api.alterarPassword(email, newpass.text).then((value) {
+                        analisar();
+                      }).catchError((error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Erro ao alterar a password: $error')),
+                        );
+                      });
                     },
                     child: const Text(
                       'Confirmar',
@@ -180,7 +206,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
               style: TextButton.styleFrom(backgroundColor: Colors.green),
               child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.go('/seeinfoprofile');
+                context.go('/seeinfoprofile', extra: widget.idUser);
                  // ignore: avoid_print
                 print('Alterações guardadas!');
               },

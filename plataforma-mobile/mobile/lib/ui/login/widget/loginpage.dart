@@ -221,7 +221,7 @@ class _LoginPage extends State<LoginPage> {
                         );
                         print('response: $response');
                         if (response['success'] == true) {
-                          if (response['twoFa'] == false ||response['twoFa'] == null) {
+                          if (response['twoFa'] == false || response['twoFa'] == null) {
                             final token = response['token'];
 
                             final prefs = await SharedPreferences.getInstance();
@@ -240,9 +240,9 @@ class _LoginPage extends State<LoginPage> {
                             } else {
                               context.go('/homepage', extra: userId);
                             }
-                          } else {
-                            context.go("/twofa");
-                          }
+                          //} else {
+                            //context.go("/twofa");
+                          //}
                         }
                       } catch (error) {
                         ScaffoldMessenger.of(context).showSnackBar(

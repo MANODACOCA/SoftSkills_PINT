@@ -93,10 +93,10 @@ final rotas = GoRouter(
       builder: (context, state) => ReturnLogin(),
     ),
     GoRoute(
-  path: '/profile',
-  builder: (context, state) {
-    final idUser = state.extra as String?;
-    return Profile(idUser: idUser);
+      path: '/profile',
+      builder: (context, state) {
+      final idUser = state.extra as String?;
+      return Profile(idUser: idUser);
   },
 ),
     /* GoRoute(
@@ -117,7 +117,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'seeinfoprofile',
       path: '/seeinfoprofile',
-      builder: (context, state) => SeeInfoProfile(),
+      builder: (context, state) => SeeInfoProfile(idUser: state.extra as String),
     ),
     GoRoute(
       name: 'logoutAllDevices',
@@ -132,7 +132,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'activateTwofa',
       path: '/activateTwofa',
-      builder: (context, state) => TwoFactorActivate(),
+      builder: (context, state) => TwoFactorActivate(idUser: state.extra as String),
     ),
     GoRoute(
       name: 'createPassword',
@@ -168,7 +168,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'changeinfopass',
       path: '/changeinfopass',
-      builder: (context, state) => ChangeInfoPassword(),
+      builder: (context, state) => ChangeInfoPassword(idUser: state.extra as String),
     ),
     GoRoute(
       name: 'endedcourses',

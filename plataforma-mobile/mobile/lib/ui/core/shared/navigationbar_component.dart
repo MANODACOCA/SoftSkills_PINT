@@ -18,7 +18,7 @@ class Footer extends StatelessWidget {
   void _onTap(BuildContext context, int index) {
     switch (index) {
       case 0:
-        context.go("/homepage", extra: idUser);
+        context.go('/homepage', extra: idUser);
         break;
       case 1:
         context.go("/forum");
