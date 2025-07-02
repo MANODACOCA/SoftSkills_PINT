@@ -3,7 +3,7 @@
 const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const { utilizador, likes_post, comentario } = require('../models/init-models')(sequelize);
+const { utilizador, likes_post, comentario, denuncia } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).post;
 const controllers = {};
 const fs = require('fs').promises;
@@ -133,6 +133,7 @@ controllers.delete = async (req, res) => {
       }
     }
 
+    await denuncia.destroy({ where: { id_post: id } });
 
     await comentario.destroy({ where: { id_post: id } });
 
