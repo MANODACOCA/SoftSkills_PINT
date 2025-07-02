@@ -15,7 +15,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
-  List<Map<String, dynamic>> cursos = [];
+  List<Map<String, dynamic>> cursosParaSi = [];
+  List<Map<String, dynamic>> cursosPopulares = [];
+  List<Map<String, dynamic>> cursosNovos = [];
   final CursosApi _api = CursosApi();
 
   @override
@@ -26,9 +28,13 @@ class _HomePage extends State<HomePage> {
 
   Future<void> fetchCursos () async {
     try{
-      final resultado = await _api.courseForYou(); 
+      final paraSi = await _api.courseForYou(); 
+      final populares = await _api.coursePopular();
+      final novos  = await _api.coursesNews();
       setState(() {
-        cursos = resultado;
+        cursosParaSi = paraSi;
+        cursosPopulares = populares;
+        cursosNovos = novos;
       });
     } catch(e) {
       print('Erro ao buscar os cursos: , $e');
@@ -49,11 +55,11 @@ class _HomePage extends State<HomePage> {
             SizedBox(height: 10),
             Carousel(),
             SizedBox(height: 15),
-            CardsScroll(tema: 'Para si', cursos: cursos),
+            CardsScroll(tema: 'Para si', cursos: cursosParaSi),
             SizedBox(height: 10),
-            CardsScroll(tema: 'Cursos Mais Populares', cursos: cursos),
+            CardsScroll(tema: 'Cursos Mais Populares', cursos: cursosPopulares),
             SizedBox(height: 10),
-            CardsScroll(tema: 'Novidades', cursos: cursos),
+            CardsScroll(tema: 'Novidades', cursos: cursosNovos),
             SizedBox(height: 15),
           ],
         ),

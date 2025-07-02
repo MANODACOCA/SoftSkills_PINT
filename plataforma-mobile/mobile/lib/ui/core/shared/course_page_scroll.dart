@@ -1,16 +1,16 @@
 import 'export.dart';
 import 'card_course.dart';
 
-class CardsScroll extends StatefulWidget {
-  const CardsScroll({super.key, required this.tema, required this.cursos});
+class CourseScroll extends StatefulWidget {
+  const CourseScroll({super.key, required this.cursos});
 
-  final String tema;
   final List<Map<String, dynamic>> cursos;
+
   @override
-  State<CardsScroll> createState() => _CardsScrollState();
+  State<CourseScroll> createState() => _CourseScroll();
 }
 
-class _CardsScrollState extends State<CardsScroll> {
+class _CourseScroll extends State<CourseScroll> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -24,32 +24,21 @@ class _CardsScrollState extends State<CardsScroll> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric( vertical: 8),
-          child: Text(
-            widget.tema,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
         SizedBox(
-        height: 280,
-          child: ListView.builder(
+          child: GridView.count(
             controller: _scrollController,
-            scrollDirection: Axis.horizontal,
+            crossAxisCount: 2,
+            childAspectRatio: 0.70,
             shrinkWrap: true,
-            itemCount: widget.cursos.length,
-            itemBuilder: (context, index) {
-              final curso = widget.cursos[index];
-              final nome = curso['nome_curso'];
+            physics: const NeverScrollableScrollPhysics(), 
+            children: widget.cursos.map((curso) {
+              final nome = curso['nome_curso'] ?? 'Curso';
               final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(nome)}&background=random&bold=true';
-              return Container(
-                width: 200,
-                margin: EdgeInsets.only(left: index == 0 ? 5.0 : 0.0, right: 5.0, ),
+
+              return Padding(
+                padding: EdgeInsets.symmetric( vertical: 6, horizontal: 2),
                 child: CardCourse(
-                  title: curso['nome_curso'],
+                  title: nome,
                   typeCourse: curso['issincrono'] == true ? 'Síncrono' : 'Assíncrono',
                   startDate: DateTime.parse(curso['data_inicio_curso']),
                   endDate: DateTime.parse(curso['data_fim_curso']),
@@ -58,8 +47,8 @@ class _CardsScrollState extends State<CardsScroll> {
                   img: curso['imagem'] ?? fallbackImg,
                 ),
               );
-            },
-          ),
+            }).toList(),
+          )
         )
       ]
     );

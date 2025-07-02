@@ -21,10 +21,10 @@ class Footer extends StatelessWidget {
         context.go('/homepage', extra: idUser);
         break;
       case 1:
-        context.go("/forum");
+        context.go('/forum', extra: idUser);
         break;
       case 2:
-        context.go("/cursos");
+        context.go('/cursos', extra: idUser);
         break;
       /* case 3:
         context.go("/notificacoes");

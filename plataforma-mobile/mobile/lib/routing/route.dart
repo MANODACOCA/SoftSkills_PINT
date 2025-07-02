@@ -2,6 +2,7 @@ import 'package:mobile/ui/course_assync/widget/course_assync_screen.dart';
 import 'package:mobile/ui/course_sync/widget/course_sync_screen.dart';
 import 'package:mobile/ui/forum/widget/comment_page.dart';
 import 'package:mobile/ui/forum/widget/forum.dart';
+import '../ui/course/courses.dart';
 import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';
@@ -88,6 +89,11 @@ final rotas = GoRouter(
       builder: (context, state) => HomePage(idUser: state.extra as String),
     ),
     GoRoute(
+      name: 'cursos',
+      path: '/cursos',
+      builder: (context, state) => Courses(idUser: state.extra as String),
+    ),
+    GoRoute(
       name: 'return',
       path: '/returnLogin',
       builder: (context, state) => ReturnLogin(),
@@ -107,7 +113,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'forum',
       path: '/forum',
-      builder: (context, state) => Forum(),
+      builder: (context, state) => Forum(idUser: state.extra as String),
     ),
     GoRoute(
       name: 'alterarInformacoes',
