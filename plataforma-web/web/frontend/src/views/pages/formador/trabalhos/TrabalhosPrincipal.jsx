@@ -56,7 +56,7 @@ const TrbalhosAdicionarCurso = ({ trabalho, onEdit, podeEditar }) => {
           </div>
         </div>
 
-        {/* ----------- AQUI entra o botão ---------- */}
+        
         <div className="d-flex align-items-center justify-content-between mb-2">
           <h5 className="mb-0">Entregue os trabalhos aqui:</h5>
           {podeEditar && (
@@ -68,7 +68,7 @@ const TrbalhosAdicionarCurso = ({ trabalho, onEdit, podeEditar }) => {
             </Button>
           )}
         </div>
-        {/* ----------- /botão ---------- */}
+       
       </Card.Body>
     </Card>
     );

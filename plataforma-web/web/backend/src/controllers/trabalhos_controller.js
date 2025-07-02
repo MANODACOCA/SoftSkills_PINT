@@ -26,7 +26,7 @@ controllers.get = async (req,res)=>{
 controllers.create = async (req,res)=>{
   try{
   const {id_curso_tr, id_formato_tr, nome_tr, caminho_tr, descricao_tr, data_entrega_tr } = req.body;
-    if (!id_curso_tr || id_formato_tr || !nome_tr || !caminho_tr || !descricao_tr || !data_entrega_trl) {
+    if (!id_curso_tr || id_formato_tr || !nome_tr || !caminho_tr || !descricao_tr || !data_entrega_tr) {
       return res.status(400).json({
         erro: 'Campos obrigatórios em falta',
         desc: 'Todo os campos para os trablahos são obrigatórios'
