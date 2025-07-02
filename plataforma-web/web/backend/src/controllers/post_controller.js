@@ -69,19 +69,12 @@ controllers.create = async (req, res) => {
         ? `${req.protocol}://${req.get('host')}/uploads/${ficheiroRelativo}`
         : null;
 
-      if (!ficheiroURL && !caminho_ficheiro) {
-        return res.status(400).json({
-          erro: 'Falta ficheiro ou URL',
-          desc: 'Envie um ficheiro (campo "ficheiro") ou o campo "conteudo" com o link externo'
-        });
-      }
-
       const payload = {
         id_utilizador: Number(id_utilizador),
         id_conteudos_partilhado: Number(id_conteudos_partilhado),
         id_formato: Number(id_formato),
         texto_post,
-        caminho_ficheiro: ficheiroURL || caminho_ficheiro,
+        caminho_ficheiro: ficheiroURL || null,
         contador_likes_post: 0,              
         contador_comentarios: 0              
       };
