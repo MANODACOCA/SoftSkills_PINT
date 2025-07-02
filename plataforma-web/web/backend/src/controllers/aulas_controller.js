@@ -55,7 +55,7 @@ controllers.create = async (req, res) => {
     try {
       await criarNotifacoesGenerica(
         'aula',
-        'criada',
+        'criação',
         req.body.nome_aula,
         req.body.id_curso,
         sequelize
@@ -91,6 +91,17 @@ controllers.update = async (req, res) => {
 
       const updated = await model.update(req.body, { where: { id_aula : id } });
       if (updated) {
+            try {
+              await criarNotifacoesGenerica(
+                'aula',
+                'atualização',
+                req.body.nome_aula,
+                req.body.id_curso,
+                sequelize
+              );
+            } catch (error) {
+              console.error('Erro ao enviar notificação de criação de aula');
+            }
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
       } else {

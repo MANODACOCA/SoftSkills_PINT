@@ -59,16 +59,27 @@ controllers.create = async (req,res)=>{
       conteudo:      ficheiroURL || conteudo  
     };
 
-      const data = await model.create(payload);
-      res.status(201).json(data);
-    }catch(err){
-      if (err.code === 'LIMIT_FILE_SIZE') {
-        return res.status(413).json({
-          erro: 'Ficheiro excede o limite',
-          desc: 'O ficheiro não pode ultrapassar 100 MB)'
-        });  
-      }
-      res.status(500).json({erro: 'Erro ao criar material de apoio!', desc: err.message});
+    try {
+      await criarNotifacoesGenerica(
+        'material de apoio',
+        'criação',
+        req.body.nome_material,
+        req.body.id_curso,
+        sequelize
+      );
+    } catch (error) {
+      console.error('Erro ao enviar notificação de criação de aula');
+    }
+    const data = await model.create(payload);
+    res.status(201).json(data);
+  }catch(err){
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({
+        erro: 'Ficheiro excede o limite',
+        desc: 'O ficheiro não pode ultrapassar 100 MB)'
+      });  
+    }
+    res.status(500).json({erro: 'Erro ao criar material de apoio!', desc: err.message});
   };
 };
 
@@ -107,6 +118,18 @@ controllers.update = async (req,res)=>{
 
     if (!rows) {
       return res.status(404).json({ erro: 'Material não foi actualizado' });
+    }
+
+    try {
+      await criarNotifacoesGenerica(
+        'material de apoio',
+        'atualização',
+        req.body.nome_material,
+        req.body.id_curso,
+        sequelize
+      );
+    } catch (error) {
+      console.error('Erro ao enviar notificação de criação de aula');
     }
 
     const actualizado = await model.findByPk(id);

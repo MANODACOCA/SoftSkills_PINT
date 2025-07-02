@@ -5,6 +5,7 @@ const initModels = require("../models/init-models");
 const model = initModels(sequelize).cursos;
 const controllers = {};
 const cursosService = require('../services/cursos.service');
+const { criarNotifacoesGenerica } = require("../utils/SendNotification");
 
 
 controllers.list = async (req, res) => {
@@ -52,6 +53,17 @@ controllers.update = async (req, res) => {
     const updated = await cursosService.updateCursoCompleto(reqBody);
 
     if (updated) {
+      try {
+        await criarNotifacoesGenerica(
+          'curso',
+          'atualização',
+          req.body.nome_curso,
+          req.body.id_curso,
+          sequelize
+        );
+      } catch (error) {
+        console.error('Erro ao enviar notificação de criação de aula');
+      }
       res.status(200).json(updated);
     } else {
       res.status(404).json({ erro: 'Curso não foi atualizado!' });
