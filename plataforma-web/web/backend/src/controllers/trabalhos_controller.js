@@ -138,11 +138,11 @@ controllers.delete = async (req,res)=>{
 
 controllers.getTrabalhosByCurso = async (req, res) => {
   try {
-    const id = req.params();
+    const {id} = req.params;
     const data = await model.findAll({where: {id_curso_tr : id},});
-    /* if (data.lenght === 0) {
+    if (data.lenght === 0) {
       res.status(404).json({erro: 'Não foi encontrado nenhum trabalho para este curso'});
-    } */
+    }
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({erro:'Erro ao encontrar trabalhos'});
