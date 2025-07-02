@@ -261,7 +261,7 @@ const CursoLecionarAula = () => {
                             }
 
                             if (!isValidMeetingLink(url)) {
-                                Swal.showValidationMessage('Link inválido! Aceitamos Zoom, YouTube ou Teams.');
+                                Swal.showValidationMessage('Link inválido! Aceitamos Zoom ou Teams.');
                                 return;
                             }
                             

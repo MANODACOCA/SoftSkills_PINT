@@ -138,12 +138,6 @@ export const isValidMeetingLink = url => {
     // Zoom
     /^https:\/\/([a-z0-9-]+\.)?zoom\.us\/j\/\d+(?:\?.*)?$/i,
 
-    // YouTube
-    /^https:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]{11}(?:&.*)?$/i,
-
-    // YouTube
-    /^https:\/\/youtu\.be\/[\w-]{11}(?:\?.*)?$/i,
-
     // Microsoft Teams
     /^https:\/\/(www\.)?teams\.microsoft\.com\/l\/meetup-join\/[\w-?&=]+$/i
   ];
