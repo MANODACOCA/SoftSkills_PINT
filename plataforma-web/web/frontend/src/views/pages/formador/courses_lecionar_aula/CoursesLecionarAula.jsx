@@ -900,93 +900,180 @@ const CursoLecionarAula = () => {
     };
 
     //#endregion
+    const handleEditarTrabalho = async (trabalho) => {
+        const isNovo = !trabalho || !trabalho.id_trabalho;
+
+        const result = await Swal.fire({
+            title: isNovo ? 'Tem a certeza que deseja adicionar Trabalho?' : 'Tem a certeza que deseja editar Trabalho?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                const formatos = await list_tipo_formato();
+                const formatosComFicheiro = [1, 2, 3, 4, 5]; 
+
+                const editarTrabalho = await Swal.fire({
+                    title: isNovo ? 'Adicionar Trabalho' : 'Editar Trabalho',
+                    html: `
+                        <label class="form-label">Nome do Trabalho</label>
+                        <input id="nomeTr" class="form-control mb-2" placeholder="Nome..." value="${trabalho?.nome_tr || ''}" />
+
+                        <label class="form-label">Descrição</label>
+                        <textarea id="descTr" class="form-control mb-2" placeholder="Descrição...">${trabalho?.descricao_tr || ''}</textarea>
+
+                        <label class="form-label">Data de Entrega</label>
+                        <input id="dataTr" type="date" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
+
+                        <label class="form-label">Hora de Entrega</label>
+                        <input id="horaTr" type="time" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0,5) || ''}" />
+
+                        <label for="formatoTr" class="form-label">Formato</label>
+                        <select id="formatoTr" class="form-select mb-3">
+                            <option value="">-- Selecione um formato --</option>
+                            ${formatos.map(f => `
+                                <option value="${f.id_formato}" ${f.id_formato == trabalho?.id_formato_tr ? 'selected' : ''}>${f.formato}</option>
+                            `).join('')}
+                        </select>
+
+                        <div id="fileInputWrapper" class="d-none">
+                            <p id="ficheiroAtual" class="small mb-2"></p>
+                            <label for="ficheiroTr" id="ficheiroLabel" class="form-label">Ficheiro</label>
+                            <input type="file" id="ficheiroTr" class="form-control mb-2" />
+                        </div>
+
+                        <div id="urlInputWrapper" class="d-none">
+                            <label for="urlTr" id="urlLabel" class="form-label">URL</label>
+                            <input type="text" id="urlTr" class="form-control mb-2" placeholder="https://exemplo.com/trabalho.pdf" />
+                        </div>
+                    `,
+                    didOpen: () => {
+                        const formatoEl = document.getElementById('formatoTr');
+                        const fileWrapper = document.getElementById('fileInputWrapper');
+                        const urlWrapper = document.getElementById('urlInputWrapper');
+                        const ficheiroAtual = document.getElementById('ficheiroAtual');
+                        const fileLabel = document.getElementById('ficheiroLabel');
+                        const urlLabel = document.getElementById('urlLabel');
+                        const urlInput = document.getElementById('urlTr');
+
+                        function atualizarCampos() {
+                            const selectedId = parseInt(formatoEl.value);
+                            if (isNaN(selectedId)) {
+                                fileWrapper.classList.add('d-none');
+                                urlWrapper.classList.add('d-none');
+                                return;
+                            }
+
+                            const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+
+                            if (formatosComFicheiro.includes(selectedId)) {
+                                fileWrapper.classList.remove('d-none');
+                                urlWrapper.classList.add('d-none');
+                                ficheiroAtual.textContent = trabalho?.caminho_tr
+                                    ? `Ficheiro atual: ${trabalho.caminho_tr.split('/').pop()}`
+                                    : 'Nenhum ficheiro carregado.';
+                                fileLabel.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                            } else {
+                                fileWrapper.classList.add('d-none');
+                                urlWrapper.classList.remove('d-none');
+                                urlLabel.textContent = `URL (${formatoSelecionado.formato})`;
+                                urlInput.value = trabalho?.caminho_tr || '';
+                            }
+                        }
+
+                        atualizarCampos();
+                        formatoEl.addEventListener('change', atualizarCampos);
+                    },
+                    preConfirm: () => {
+                        const nome = document.getElementById('nomeTr').value.trim();
+                        const descricao = document.getElementById('descTr').value.trim();
+                        const data = document.getElementById('dataTr').value;
+                        const hora = document.getElementById('horaTr').value;
+                        const id_formato = parseInt(document.getElementById('formatoTr').value);
+                        const ficheiro = document.getElementById('ficheiroTr').files[0];
+                        const url = document.getElementById('urlTr').value.trim();
+
+                        if (!nome || !descricao || !data || !hora || !id_formato || (!ficheiro && !url)) {
+                            Swal.showValidationMessage("Todos os campos são obrigatórios!");
+                            return false;
+                        }
+
+                        const data_entrega_tr = `${data}T${hora}:00`;
+
+                        return {
+                            nome_tr: nome,
+                            descricao_tr: descricao,
+                            data_entrega_tr,
+                            id_formato_tr: id_formato,
+                            caminho_tr: ficheiro ? null : url,
+                            ficheiro: ficheiro || null,
+                            id_curso_tr: cursos.id_curso
+                        };
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: isNovo ? 'Adicionar Trabalho' : 'Guardar Alterações',
+                    cancelButtonText: 'Cancelar',
+                    customClass: {
+                        confirmButton: 'btn btn-success me-2',
+                        cancelButton: 'btn btn-danger'
+                    }
+                });
+
+                if (editarTrabalho.isConfirmed && editarTrabalho.value) {
+                    try {
+                        if (isNovo) {
+                            await create_trabalhos(editarTrabalho.value);
+                            Swal.fire({
+                                icon: "success",
+                                title: "Trabalho adicionado com sucesso!",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            await update_trabalhos(trabalho.id_trabalho, editarTrabalho.value);
+                            Swal.fire({
+                                icon: "success",
+                                title: "Trabalho atualizado com sucesso!",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+
+                        const atualizados = await get_trabalhos(cursos.id_curso);
+                        setTrabalhos(atualizados);
+                    } catch (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Erro",
+                            text: "Não foi possível guardar o trabalho",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Erro ao preparar o formulário de trabalho.",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        }
+    };
 
     //#region Trabalhos
-    const handleEditarTrabalho = async (trabalho) => {
-    const isNovo = !trabalho || !trabalho.id_trabalho;
 
-    const result = await Swal.fire({
-        title: isNovo ? 'Adicionar Trabalho' : 'Editar Trabalho',
-        html: `
-            <label class="form-label">Nome do Trabalho</label>
-            <input id="nomeTr" placeholder="Nome..." class="form-control mb-2" value="${trabalho?.nome_tr || ''}" />
-            <label class="form-label">Descrição</label>
-            <textarea id="descTr" placeholder="Descrição..." class="form-control mb-2">${trabalho?.descricao_tr || ''}</textarea>
-            <label class="form-label">Data de Entrega</label>
-            <input id="dataTr" type="date" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
-            <label class="form-label">Hora de Entrega</label>
-            <input id="horaTr" type="time" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0,5) || ''}" />
-            <label class="form-label">Caminho (URL)</label>
-            <input id="caminhoTr" placeholder="https://www.exemplo.pt" class="form-control mb-2" value="${trabalho?.caminho_tr || ''}" />
-            <label class="form-label">Ficheiro </label>
-            <input type="file" id="ficheiroTr" class="form-control" />
-        `,
-        showCancelButton: true,
-        confirmButtonText: isNovo ? 'Adicionar' : 'Guardar',
-        cancelButtonText: 'Cancelar',
-        customClass: {
-        confirmButton: 'btn btn-success me-2',
-        cancelButton: 'btn btn-danger'
-        },
-        preConfirm: () => {
-        const nome = document.getElementById('nomeTr').value.trim();
-        const descricao = document.getElementById('descTr').value.trim();
-        const data = document.getElementById('dataTr').value;
-        const hora = document.getElementById('horaTr').value;
-        const caminho = document.getElementById('caminhoTr').value.trim();
-        const ficheiro = document.getElementById('ficheiroTr').files[0];
-
-        if (!nome || !descricao || !data || !hora || (!caminho && !ficheiro)) {
-            Swal.showValidationMessage("Todos os campos são obrigatórios!");
-            return false;
-        }
-
-        const data_entrega_tr = `${data}T${hora}:00`;
-
-        return {
-            nome_tr: nome,
-            descricao_tr: descricao,
-            data_entrega_tr,
-            caminho_tr: caminho,
-            ficheiro: ficheiro || null,
-            id_curso: cursos.id_curso,
-            id_formato_tr: 2
-        };
-        }
-    });
-
-    if (result.isConfirmed && result.value) {
-        try {
-        if (isNovo) {
-            await create_trabalhos(result.value);
-            Swal.fire({
-            icon: 'success',
-            title: 'Trabalho criado com sucesso!',
-            timer: 2000,
-            showConfirmButton: false
-            });
-        } else {
-            await update_trabalhos(trabalho.id_trabalho, result.value);
-            Swal.fire({
-            icon: 'success',
-            title: 'Trabalho atualizado com sucesso!',
-            timer: 2000,
-            showConfirmButton: false
-            });
-        }
-
-        const atualizados = await get_trabalhos(cursos.id_curso);
-        setTrabalhos(atualizados);
-
-        } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Erro',
-            text: 'Não foi possível guardar o trabalho'
-        });
-        }
-    }
-    };
 
 
     const fetchTrabalhos = async (idCurso) => {
@@ -998,11 +1085,7 @@ const CursoLecionarAula = () => {
         }
     };
 
-
-
     //#endregion
-
-
 
     useEffect(() => {
         const carregarDados = async () => {
@@ -1081,32 +1164,32 @@ const CursoLecionarAula = () => {
                  </div>
                 </Tab> */}
                 
- <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
-  <div className="mt-4">
-    {/* BOTÃO DE ADICIONAR TRABALHO */}
-    {user?.id_utilizador === cursos?.sincrono?.id_formador && (
-      <div className="text-end mb-3">
-        <button className="btn btn-success" onClick={() => handleEditarTrabalho(null)}>
-          <i className="bi bi-plus-circle me-2"></i>Adicionar Trabalho
-        </button>
-      </div>
-    )}
+            <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
+            <div className="mt-4">
+                {/* BOTÃO DE ADICIONAR TRABALHO */}
+                {user?.id_utilizador === cursos?.sincrono?.id_formador && (
+                <div className="text-end mb-3">
+                    <button className="btn btn-success" onClick={() => handleEditarTrabalho(null)}>
+                    <i className="bi bi-plus-circle me-2"></i>Adicionar Trabalho
+                    </button>
+                </div>
+                )}
 
-    {/* LISTA DE TRABALHOS */}
-    {trabalhos.length === 0 ? (
-      <div className="alert alert-info">Não há trabalhos disponíveis.</div>
-    ) : (
-      trabalhos.map((trabalho) => (
-        <TrabalhosAdicionarCurso
-          key={trabalho.id_trabalho}
-          trabalho={trabalho}
-          onEdit={() => handleEditarTrabalho(trabalho)}
-          podeEditar={user?.id_utilizador === cursos?.sincrono?.id_formador}
-        />
-      ))
-    )}
-  </div>
-</Tab>
+                {/* LISTA DE TRABALHOS */}
+                {trabalhos.length === 0 ? (
+                <div className="alert alert-info">Não há trabalhos disponíveis.</div>
+                ) : (
+                trabalhos.map((trabalho) => (
+                    <TrabalhosAdicionarCurso
+                    key={trabalho.id_trabalho}
+                    trabalho={trabalho}
+                    onEdit={() => handleEditarTrabalho(trabalho)}
+                    podeEditar={user?.id_utilizador === cursos?.sincrono?.id_formador}
+                    />
+                ))
+                )}
+            </div>
+            </Tab>
                 
             {/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   TRABLAHOS   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$444 */}
                 <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
