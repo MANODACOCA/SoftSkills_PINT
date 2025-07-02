@@ -1,5 +1,4 @@
-
-export const getColumnsNotasFinais = (modoEdicao, notasEdit,setNotasEdit) => [
+export const getColumnsNotasFinais = (modoEdicao, notasEdit, setNotasEdit) => [
   {
     label: 'Nome',
     render: (item) =>
@@ -8,10 +7,11 @@ export const getColumnsNotasFinais = (modoEdicao, notasEdit,setNotasEdit) => [
   {
     label: 'Nota final',
     render: (item) => {
-      const id = item.id_resul;                 
+      const id = item.id_resul;
+
       if (modoEdicao) {
         return (
-          <input type="number" className="form-control form-control-sm" min={0} max={20} step={0.1}
+          <input type="number" className="form-control form-control-sm text-end" min={0} max={20} step={0.1} style={{maxWidth: '60px'}}
             value={notasEdit[id] ?? item.resul ?? ''}
             onChange={(e) =>
               setNotasEdit((prev) => ({ ...prev, [id]: e.target.value }))
@@ -19,6 +19,7 @@ export const getColumnsNotasFinais = (modoEdicao, notasEdit,setNotasEdit) => [
           />
         );
       }
+
       return item.resul ?? '-';
     }
   }
