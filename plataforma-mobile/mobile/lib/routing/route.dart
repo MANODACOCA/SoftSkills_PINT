@@ -86,12 +86,12 @@ final rotas = GoRouter(
     GoRoute(
       name: 'homepage',
       path: '/homepage',
-      builder: (context, state) => HomePage(idUser: state.extra as String),
+      builder: (context, state) => HomePage(),
     ),
     GoRoute(
       name: 'cursos',
       path: '/cursos',
-      builder: (context, state) => Courses(idUser: state.extra as String),
+      builder: (context, state) => Courses(),
     ),
     GoRoute(
       name: 'return',
@@ -100,11 +100,8 @@ final rotas = GoRouter(
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) {
-      final idUser = state.extra as String?;
-      return Profile(idUser: idUser);
-  },
-),
+      builder: (context, state) => Profile(),
+    ),
     /* GoRoute(
       name: 'notificacoes',
       path: '/notificacoes',
@@ -113,7 +110,7 @@ final rotas = GoRouter(
     GoRoute(
       name: 'forum',
       path: '/forum',
-      builder: (context, state) => Forum(idUser: state.extra as String),
+      builder: (context, state) => Forum(),
     ),
     GoRoute(
       name: 'alterarInformacoes',
@@ -159,16 +156,14 @@ final rotas = GoRouter(
       name: 'Assync',
       path: '/assync',
       builder: (context, state) {
-        final title = state.extra as String;
-        return Assincrono(title: title);
+        return Assincrono(idCurso: state.extra as int);
       },
     ),
     GoRoute(
       name: 'Sync',
       path: '/sync',
       builder: (context, state) {
-        final title = state.extra as String;
-        return Sincrono(title: title);
+        return Sincrono(idCurso: state.extra as int);
       },
     ),
     GoRoute(

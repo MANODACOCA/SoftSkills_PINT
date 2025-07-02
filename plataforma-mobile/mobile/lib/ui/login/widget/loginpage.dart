@@ -2,6 +2,10 @@
 //import 'package:mobile/data/services/basedados.dart';
 // ignore_for_file: use_build_context_synchronously, await_only_futures
 
+import 'package:mobile/data/model/user.dart';
+import 'package:mobile/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -238,7 +242,12 @@ class _LoginPage extends State<LoginPage> {
                               );
                               return;
                             } else {
-                              context.go('/homepage', extra: userId);
+                              final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+                              final user = User(id: userId);
+
+                              authProvider.setUser(user);
+                              context.go('/homepage');
                             }
                           //} else {
                             //context.go("/twofa");

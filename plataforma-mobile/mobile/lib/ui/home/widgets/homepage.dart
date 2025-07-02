@@ -6,9 +6,7 @@ import '../../core/shared/search_bar.dart';
 import '../../core/shared/export.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.idUser});
-
-  final String idUser;
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePage();
@@ -50,7 +48,9 @@ class _HomePage extends State<HomePage> {
         backgroundColor: AppColors.primary,
       ),
       body: SingleChildScrollView(
-        child: Column(
+        child: (cursosNovos.isEmpty && cursosParaSi.isEmpty && cursosPopulares.isEmpty) 
+          ? Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()),) 
+          : Column(
           children: [
             SizedBox(height: 10),
             Carousel(),
@@ -64,7 +64,7 @@ class _HomePage extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: Footer(idUser: widget.idUser),
+      bottomNavigationBar: Footer(),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
-
+import '../../../utils/uteis.dart';
 import 'export.dart';
-import 'package:intl/intl.dart';
+
 class CardCourse extends StatelessWidget {
   const CardCourse({
     super.key,
@@ -12,6 +12,7 @@ class CardCourse extends StatelessWidget {
     required this.currentMembers,
     required this.maxMembers,
     required this.img,
+    required this.id,
   });
 
   final String title;
@@ -21,12 +22,12 @@ class CardCourse extends StatelessWidget {
   final int currentMembers;
   final int maxMembers;
   final String img;
+  final int id;
 
-//meter esta função num ficheiro à parte
-  String _formatDateRange(DateTime start, DateTime end) {
+  /* String _formatDateRange(DateTime start, DateTime end) {
     final formatter = DateFormat('d MMM yyyy', 'pt_PT');
     return '${formatter.format(start)} - ${formatter.format(end)}';
-  }
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +37,13 @@ class CardCourse extends StatelessWidget {
           //if(inscrito){
 
           //} else {
-            context.push('/assync', extra: title);
+            context.push('/assync', extra: id);
           //}
         } else if (typeCourse == 'Síncrono') {
           //if(inscrito){
 
           //} else {
-            context.push('/sync', extra: title);
+            context.push('/sync', extra: id);
           //}
         }
       },
@@ -117,7 +118,7 @@ class CardCourse extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom:5.0),
                     child:Text(
-                      _formatDateRange(startDate, endDate),
+                      formatDateRange(startDate, endDate),
                       style: AppTextStyles.body.copyWith(color: Colors.grey[600]),
                     ),
                   )

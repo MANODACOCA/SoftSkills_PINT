@@ -57,6 +57,7 @@ dependencies:
   comment_box: ^0.0.18
   file_picker: ^10.2.0
   http: ^1.4.0
+  provider: 
 
 dev_dependencies:
   flutter_test:

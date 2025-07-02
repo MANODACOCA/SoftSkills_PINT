@@ -6,7 +6,7 @@ import 'dart:convert';
 class UtilizadoresApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/utilizador';
 
-  Future<Map<String, dynamic>> getUtilizador(String id) async {
+  Future<Map<String, dynamic>> getUtilizador(int id) async {
     try {
       final response = await http.get(Uri.parse('$urlAPI/get/$id'));
       if (response.statusCode == 200) {
