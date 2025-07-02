@@ -36,7 +36,7 @@ const HomePageFormador = () => {
                 <div className="card-stat card-cursos shadow rounded-4 p-4 text-white text-start">
                 <div className="d-flex justify-content-between align-items-start mb-3">
                     <div>
-                    <h6 className="fw-semibold text-uppercase opacity-75">
+                    <h6 className="fw-semibold text-uppercase opacity-75 text-white">
                         Cursos a
                     </h6>
                     <h3 className="fw-bold">Lecionar</h3>
@@ -53,7 +53,7 @@ const HomePageFormador = () => {
                 <div className="card-stat card-utilizadores shadow rounded-4 p-4 text-white text-start">
                 <div className="d-flex justify-content-between align-items-start mb-3">
                     <div>
-                    <h6 className="fw-semibold text-uppercase opacity-75">
+                    <h6 className="fw-semibold text-uppercase opacity-75 text-white">
                         Cursos
                     </h6>
                     <h3 className="fw-bold">Lecionados</h3>

@@ -62,7 +62,7 @@ const HomePageAdmin = () => {
             <div className="card-stat card-cursos shadow rounded-4 p-4 text-white text-start">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                  <h6 className="fw-semibold text-uppercase opacity-75">Gestão de</h6>
+                  <h6 className="fw-semibold text-uppercase opacity-75 text-white">Gestão de</h6>
                   <h3 className="fw-bold">Cursos</h3>
                 </div>
                 <i className="bi bi-book"></i> 
@@ -77,7 +77,7 @@ const HomePageAdmin = () => {
             <div className="card-stat card-utilizadores shadow rounded-4 p-4 text-white text-start">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                  <h6 className="fw-semibold text-uppercase opacity-75">Gestão de</h6>
+                  <h6 className="fw-semibold text-uppercase opacity-75 text-white">Gestão de</h6>
                   <h3 className="fw-bold">Utilizadores</h3>
                 </div>
                 <i className="bi bi-person"></i> 
@@ -92,7 +92,7 @@ const HomePageAdmin = () => {
             <div className="card-stat card-forum shadow rounded-4 p-4 text-white text-start">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                  <h6 className="fw-semibold text-uppercase opacity-75">Gestão de</h6>
+                  <h6 className="fw-semibold text-uppercase opacity-75 text-white">Gestão de</h6>
                   <h3 className="fw-bold">Fórum</h3>
                 </div>
                 <i className="bi bi-chat-dots"></i> 
@@ -107,7 +107,7 @@ const HomePageAdmin = () => {
             <div className="card-stat card-queixas shadow rounded-4 p-4 text-white text-start">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                  <h6 className="fw-semibold text-uppercase opacity-75">Gestão de</h6>
+                  <h6 className="fw-semibold text-uppercase opacity-75 text-white">Gestão de</h6>
                   <h3 className="fw-bold">Queixas</h3>
                 </div>
                 <i className="bi bi-megaphone"></i> 
@@ -122,7 +122,7 @@ const HomePageAdmin = () => {
             <div className="card-stat card-categoria shadow rounded-4 p-4 text-white text-start">
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>
-                  <h6 className="fw-semibold text-uppercase opacity-75">Gestão de</h6>
+                  <h6 className="fw-semibold text-uppercase opacity-75 text-white">Gestão de</h6>
                   <h3 className="fw-bold">Categoria/Área/Tópico</h3>
                 </div>
                 <i className="bi bi-tag"></i> 

@@ -23,4 +23,6 @@ router.post('/create',uploadTrabalhos.single('ficheiro'),controller.create);
 router.put('/update/:id',uploadTrabalhos.single('ficheiro'),controller.update);
 router.delete('/delete/:id',controller.delete);
 
+router.get('getTrabalhosCursos/:id', controller.getTrabalhosByCurso);
+
 module.exports = router;
