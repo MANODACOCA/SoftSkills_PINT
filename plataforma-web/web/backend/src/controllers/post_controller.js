@@ -6,6 +6,8 @@ const initModels = require("../models/init-models");
 const { utilizador, likes_post, comentario } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).post;
 const controllers = {};
+const fs = require('fs').promises;
+const path = require('path');
 
 
 controllers.list = async (req, res) => {
