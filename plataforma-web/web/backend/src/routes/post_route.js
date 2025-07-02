@@ -2,6 +2,7 @@ const express = require('express');
 const controller = require('../controllers/post_controller');
 const router = express.Router();
 const uploadConteudoPost = require('../middlewares/uploadConteudoPost');
+const multer = require('multer');
 
 // Rotas básicas do CRUD
 router.get('/', (req, res) => {
