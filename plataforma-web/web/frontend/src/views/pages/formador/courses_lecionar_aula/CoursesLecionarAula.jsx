@@ -18,6 +18,8 @@ import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
 import {FaVideo,FaFileAlt, FaFilePowerpoint,FaFileImage,FaFilePdf,FaFileWord} from 'react-icons/fa';
+import ListaTrabalhosEditor from '../trabalhos/TrabalhosPrincipal';
+import { create_trabalhos, delete_trabalhos, get_trabalhos, update_trabalhos } from '../../../../api/trabalhos_axios';
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -32,6 +34,7 @@ const CursoLecionarAula = () => {
     const todayStr = today.toISOString().split('T')[0];
     const [modoEditNotas, setModoEditNotas] = useState(false);
     const [notasEditadas, setNotasEditadas] = useState({});  
+    const [trabalhos, setTrabalhos] = useState([]);
 
     const iconMapById = {
         1: <FaFilePdf className="text-danger" />,
@@ -871,21 +874,135 @@ const CursoLecionarAula = () => {
 
      //#endregion
      
-     
+
     //#region Resultados
     const handleEditarGuardarResultados = async () => {
     if (modoEditNotas) {
-        for (const [id, nota] of Object.entries(notasEditadas)) {
-        
-        await update_resultados(id, { resul: parseFloat(nota) });
-        }
+        try {
+        await Promise.all(
+            Object.entries(notasEditadas).map(([id, nota]) => {
+            const val = Number(nota);
+            if (isNaN(val) || val < 0 || val > 20) {
+                throw new Error(`Nota ${nota} inválida`);
+            }
+            return update_resultados(id, { resul: val });
+            })
+        );
         await fetchResultados(cursos.id_curso);
         setNotasEditadas({});
+        Swal.fire({ icon: 'success', title: 'Notas guardadas!' });
+        } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Erro ao guardar', text: err.message });
+        return; 
+        }
     }
     setModoEditNotas(!modoEditNotas);
     };
 
     //#endregion
+
+    //#region Trabalhos
+    const handleEditarTrabalho = async (trabalho) => {
+    const isNovo = !trabalho || !trabalho.id_trabalho;
+
+    const result = await Swal.fire({
+        title: isNovo ? 'Adicionar Trabalho' : 'Editar Trabalho',
+        html: `
+            <label class="form-label">Nome do Trabalho</label>
+            <input id="nomeTr" placeholder="Nome..." class="form-control mb-2" value="${trabalho?.nome_tr || ''}" />
+            <label class="form-label">Descrição</label>
+            <textarea id="descTr" placeholder="Descrição..." class="form-control mb-2">${trabalho?.descricao_tr || ''}</textarea>
+            <label class="form-label">Data de Entrega</label>
+            <input id="dataTr" type="date" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
+            <label class="form-label">Hora de Entrega</label>
+            <input id="horaTr" type="time" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0,5) || ''}" />
+            <label class="form-label">Caminho (URL)</label>
+            <input id="caminhoTr" placeholder="https://www.exemplo.pt" class="form-control mb-2" value="${trabalho?.caminho_tr || ''}" />
+            <label class="form-label">Ficheiro </label>
+            <input type="file" id="ficheiroTr" class="form-control" />
+        `,
+        showCancelButton: true,
+        confirmButtonText: isNovo ? 'Adicionar' : 'Guardar',
+        cancelButtonText: 'Cancelar',
+        customClass: {
+        confirmButton: 'btn btn-success me-2',
+        cancelButton: 'btn btn-danger'
+        },
+        preConfirm: () => {
+        const nome = document.getElementById('nomeTr').value.trim();
+        const descricao = document.getElementById('descTr').value.trim();
+        const data = document.getElementById('dataTr').value;
+        const hora = document.getElementById('horaTr').value;
+        const caminho = document.getElementById('caminhoTr').value.trim();
+        const ficheiro = document.getElementById('ficheiroTr').files[0];
+
+        if (!nome || !descricao || !data || !hora || (!caminho && !ficheiro)) {
+            Swal.showValidationMessage("Todos os campos são obrigatórios!");
+            return false;
+        }
+
+        const data_entrega_tr = `${data}T${hora}:00`;
+
+        return {
+            nome_tr: nome,
+            descricao_tr: descricao,
+            data_entrega_tr,
+            caminho_tr: caminho,
+            ficheiro: ficheiro || null,
+            id_curso: cursos.id_curso,
+            id_formato_tr: 2
+        };
+        }
+    });
+
+    if (result.isConfirmed && result.value) {
+        try {
+        if (isNovo) {
+            await create_trabalhos(result.value);
+            Swal.fire({
+            icon: 'success',
+            title: 'Trabalho criado com sucesso!',
+            timer: 2000,
+            showConfirmButton: false
+            });
+        } else {
+            await update_trabalhos(trabalho.id_trabalho, result.value);
+            Swal.fire({
+            icon: 'success',
+            title: 'Trabalho atualizado com sucesso!',
+            timer: 2000,
+            showConfirmButton: false
+            });
+        }
+
+        const atualizados = await get_trabalhos(cursos.id_curso);
+        setTrabalhos(atualizados);
+
+        } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro',
+            text: 'Não foi possível guardar o trabalho'
+        });
+        }
+    }
+    };
+
+
+    const fetchTrabalhos = async (idCurso) => {
+        try {
+            const lista = await get_trabalhos(idCurso);
+            setTrabalhos(lista);
+        } catch (err) {
+            console.error("Erro ao buscar trabalhos", err);
+        }
+    };
+
+
+
+    //#endregion
+
+
 
     useEffect(() => {
         const carregarDados = async () => {
@@ -895,6 +1012,8 @@ const CursoLecionarAula = () => {
             await fetchCurso(id);
             await fetchAulas(id);
             await fetchResultados(id);
+            await fetchFormatos(id);
+            await fetchTrabalhos(id);
         }
         carregarDados();
     }, []);
@@ -954,25 +1073,48 @@ const CursoLecionarAula = () => {
                         </div>
                     </div>
                 </Tab>
-    
-                <Tab eventKey="eventos" title={<span className='fw-bold'>Trabalhos</span>}>
-                    
-                </Tab>
 
-                {/*
-                <Tab eventKey="notasTrabalhos" title={<span className='fw-bold'>Trabalhos</span>}>
-                    
-                </Tab>
-                */}
+            {/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ TRABLAHOS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$444 */}
+                {/* <Tab eventKey="eventos" title={<span className='fw-bold'>Trabalhos</span>}>    
+                 <div className='mt-4'>
+             
+                 </div>
+                </Tab> */}
                 
+ <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
+  <div className="mt-4">
+    {/* BOTÃO DE ADICIONAR TRABALHO */}
+    {user?.id_utilizador === cursos?.sincrono?.id_formador && (
+      <div className="text-end mb-3">
+        <button className="btn btn-success" onClick={() => handleEditarTrabalho(null)}>
+          <i className="bi bi-plus-circle me-2"></i>Adicionar Trabalho
+        </button>
+      </div>
+    )}
+
+    {/* LISTA DE TRABALHOS */}
+    {trabalhos.length === 0 ? (
+      <div className="alert alert-info">Não há trabalhos disponíveis.</div>
+    ) : (
+      trabalhos.map((trabalho) => (
+        <TrabalhosAdicionarCurso
+          key={trabalho.id_trabalho}
+          trabalho={trabalho}
+          onEdit={() => handleEditarTrabalho(trabalho)}
+          podeEditar={user?.id_utilizador === cursos?.sincrono?.id_formador}
+        />
+      ))
+    )}
+  </div>
+</Tab>
+                
+            {/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   TRABLAHOS   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$444 */}
                 <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
-                {/* Botão que alterna entre Editar e Guardar */}
                 <div className="mt-4">
                      <Table columns={colunasNotasFinais} data={resultados} actions={null}
-                    onAddClick={{
-                        callback: handleEditarGuardarResultados,
+                    onAddClick={{ callback: handleEditarGuardarResultados,
                         label: modoEditNotas ? 'Guardar' : 'Editar',
-                        icon: modoEditNotas ? 'bi-save' : 'bi-pencil',
+                        icon: modoEditNotas ? 'bi-check-lg' : 'bi-pencil',
                         variant: modoEditNotas ? 'success' : 'primary'
                     }}/>
                 </div>
