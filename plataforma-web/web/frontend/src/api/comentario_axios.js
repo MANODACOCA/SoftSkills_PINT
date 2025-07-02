@@ -59,10 +59,13 @@ export const delete_comentario = async (id) => {
   }
 };
 
-export const like_comentario = async (id) => {
+export const like_comentario = async (id_comentario, id_utilizador) => {
   try {
-    axios.put(`${API_URL_LIKES}/addLike/${id}`);
-    const response = await axios.put(`${API_URL_COMENTARIOS}/addLike/${id}`);
+    axios.put(`${API_URL_COMENTARIOS}/addLike/${id_comentario}`);
+    const response = await axios.post(`${API_URL_LIKES}/create`, {
+      id_comentario: id_comentario,
+      id_utilizador: id_utilizador,
+    });
     return response.data;
   } catch (error) {
     console.error('Erro ao dar like no Comentário!');
@@ -70,10 +73,15 @@ export const like_comentario = async (id) => {
   }
 };
 
-export const unlike_comentario = async (id) => {
+export const unlike_comentario = async (id_comentario, id_utilizador) => {
   try {
-     axios.put(`${API_URL_LIKES}/deleteLike/${id}`);
-    const response = await axios.put(`${API_URL_COMENTARIOS}/deleteLike/${id}`);
+    axios.put(`${API_URL_COMENTARIOS}/deleteLike/${id_comentario}`);
+    const response = await axios.delete(`${API_URL_LIKES}/delete`, {
+      data: {
+        id_comentario: id_comentario,
+        id_utilizador: id_utilizador,
+      }
+    });
     return response.data;
   } catch (error) {
     console.error('Erro ao remover like do Comentário!');

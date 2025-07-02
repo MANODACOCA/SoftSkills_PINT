@@ -29,7 +29,7 @@ function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentari
       }
       setLiked(!liked);
     } catch (error) {
-      console.error("Erro ao atualizar like:", err);
+      console.error("Erro ao atualizar like:", error);
       Swal.fire("Erro", "Não foi possível atualizar o like. Tente novamente.", "error");
     }
   }
@@ -38,6 +38,7 @@ function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentari
     if (!user?.id_utilizador) return;
     try {
       const jaCurtiu = await jaDeuLike(idComentario, user.id_utilizador);
+      console.log("TSOLDKJAOISMDWD",jaCurtiu);
       setLiked(jaCurtiu);
     } catch (error) {
       if (err.response?.status === 404) {
