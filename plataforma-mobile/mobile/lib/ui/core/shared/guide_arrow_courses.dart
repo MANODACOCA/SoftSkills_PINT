@@ -12,7 +12,7 @@ class TabbarCourses extends StatelessWidget {
     final bool hasFormador = curso['sincrono'] != null;
 
     return DefaultTabController(
-      length: hasFormador ? 2:3,
+      length: hasFormador ? 3:2,
       child: Column(
         children: [
           TabBar(
