@@ -49,12 +49,12 @@ controllers.get = async (req, res) => {
 controllers.create = async (req, res) => {
   try {
     if (req.body) {
-      const { id_post, id_utilizador, id_formato, texto_comentario, caminho_ficheiro } = req.body;
+      const { id_comentario, id_utilizador, id_formato, texto_comentario, caminho_ficheiro } = req.body;
 
-      if (!id_post || !id_utilizador || !texto_comentario) {
+      if (!id_comentario || !id_utilizador || !texto_comentario) {
         return res.status(400).json({
           erro: 'Campos obrigatórios em falta',
-          desc: 'id_post, id_utilizador e texto_comentario são obrigatórios'
+          desc: 'id_comentario, id_utilizador e texto_comentario são obrigatórios'
         });
       }
 
@@ -67,7 +67,7 @@ controllers.create = async (req, res) => {
         : null;
 
       const payload = {
-        id_post: Number(id_post),
+        id_comentario: Number(id_comentario),
         id_utilizador: Number(id_utilizador),
         id_formato: Number(id_formato),
         texto_comentario,

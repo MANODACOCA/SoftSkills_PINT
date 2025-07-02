@@ -25,18 +25,15 @@ export const get_comentarios_by_post = async (id_post) => {
   }
 };
 
-export const create_comentario = async (formData) => {
-  try {
-    const response = await axios.post(`${API_URL_COMENTARIOS}/create`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao criar Comentário!');
-    throw error;
-  }
+
+export const create_comentario = async (formData, config) => {
+    try {
+        const response = await axios.post(`${API_URL_COMENTARIOS}/create`, formData, config);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao criar Comentário!');
+        throw error;
+    }
 };
 
 export const update_comentario = async (id, data) => {
