@@ -17,6 +17,7 @@ export const list_trabalhos = async () => {
 
 export const get_trabalhos  = async (id) => {
     try{
+        const {id} = req.params;
         const response = await axios.get(`${API_URL}/get/${id}`);
         return response.data;
     }catch(error){
@@ -95,3 +96,13 @@ export const delete_trabalhos = async (id) => {
         throw error;
     }
 };
+
+export const get_trabalhos_curso = async (id) => {
+    try {
+        const response = await axios.get(`${API_URL}/getTrabalhosCursos/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao encontrar trabalhos');
+        throw error;
+    }
+}
