@@ -593,6 +593,7 @@ const CursoLecionarAula = () => {
                         html: `
                             <label for="formato" class="form-label">Formato</label>
                             <select id="formato" class="form-select mb-3">
+                            <option value="">Selecione um formato</option>
                                 ${formatos.map(f => `
                                     <option value="${f.id_formato}" ${f.id_formato == material.id_formato ? 'selected' : ''}>${f.formato}</option>
                                 `).join('')}
@@ -612,12 +613,19 @@ const CursoLecionarAula = () => {
                             const select = document.getElementById('formato');
                             const file2Wrapper = document.getElementById('file2InputWrapper');
                             const file1Wrapper = document.getElementById('file1InputWrapper');
+                            const urlInput = document.getElementById('urlConteudo');
                             const label2 = document.getElementById('ficheiro2Label');
                             const label1 = document.getElementById('ficheiro1Label');
-                            const formatosComFicheiro = [2, 3, 5, 6, 7];
+                            const formatosComFicheiro = [1, 2, 3, 4, 5];
 
-                            select.addEventListener('change', () => {
+                            function atualizarCampos() {
+                            //select.addEventListener('change', () => {
                             const selectedId = parseInt(select.value);
+                            if (isNaN(selectedId)) {
+                                file1Wrapper.classList.add('d-none');
+                                file2Wrapper.classList.add('d-none');
+                                return;
+                            }
                             const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
                             if (formatosComFicheiro.includes(selectedId)) {
@@ -630,8 +638,11 @@ const CursoLecionarAula = () => {
                                 file1Wrapper.classList.remove('d-none');
                                 label2.textContent = 'Ficheiro';
                                 label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                urlInput.value = material.conteudo || '';
                             }
-                            });
+                            }
+                            atualizarCampos();
+                            select.addEventListener('change', atualizarCampos);
                         },
                         preConfirm: () => {
                             const id_formato = document.getElementById("formato").value;
@@ -687,7 +698,8 @@ const CursoLecionarAula = () => {
                         title: 'Adicionar Material de apoio',
                         html: `
                             <label for="formato" class="form-label">Formato</label>
-                            <select id="formato" class="form-control mb-3">
+                            <select id="formato" class="form-select mb-3">
+                            <option value="">-- Selecione um formato --</option>
                                 ${formatos.map(f => `
                                     <option value="${f.id_formato}" ${f.id_formato}>${f.formato}</option>
                                 `).join('')}
@@ -709,10 +721,15 @@ const CursoLecionarAula = () => {
                             const file1Wrapper = document.getElementById('file1InputWrapper');
                             const label2 = document.getElementById('ficheiro2Label');
                             const label1 = document.getElementById('ficheiro1Label');
-                            const formatosComFicheiro = [2, 3, 5, 6, 7];
+                            const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                             select.addEventListener('change', () => {
                             const selectedId = parseInt(select.value);
+                            if (isNaN(selectedId)) {
+                                file1Wrapper.classList.add('d-none');
+                                file2Wrapper.classList.add('d-none');
+                                return;
+                            }
                             const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
                             if (formatosComFicheiro.includes(selectedId)) {

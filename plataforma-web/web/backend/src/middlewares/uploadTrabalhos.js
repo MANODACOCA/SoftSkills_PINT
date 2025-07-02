@@ -32,7 +32,8 @@ const allowed = [
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/vnd.ms-excel.sheet.macroEnabled.12',
     'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'text/plain'];
 
 const fileFilter = (req, file, cb) => {
     if (!allowed.includes(file.mimetype)) {
