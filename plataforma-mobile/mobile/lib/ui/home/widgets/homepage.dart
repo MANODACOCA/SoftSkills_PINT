@@ -1,3 +1,4 @@
+import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/carousel.dart';
 import 'package:mobile/ui/core/shared/card_scroll.dart';
 import '../../core/shared/navigationbar_component.dart';
@@ -14,6 +15,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePage extends State<HomePage> {
+  List<Map<String, dynamic>> cursos = [];
+  CursosApi _api = CursosApi();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCursos();
+  }
+
+  Future<void> fetchCursos () async {
+    try{
+      final resultado = await _api.courseForYou(); 
+      setState(() {
+        cursos = resultado;
+      });
+    } catch(e) {
+      print('Erro ao buscar os cursos: , $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,11 +49,11 @@ class _HomePage extends State<HomePage> {
             SizedBox(height: 10),
             Carousel(),
             SizedBox(height: 15),
-            CardsScroll(tema: 'Para si'),
+            CardsScroll(tema: 'Para si', cursos: cursos),
             SizedBox(height: 10),
-            CardsScroll(tema: 'Cursos Mais Populares'),
+            CardsScroll(tema: 'Cursos Mais Populares', cursos: cursos),
             SizedBox(height: 10),
-            CardsScroll(tema: 'Novidades'),
+            CardsScroll(tema: 'Novidades', cursos: cursos),
             SizedBox(height: 15),
           ],
         ),
