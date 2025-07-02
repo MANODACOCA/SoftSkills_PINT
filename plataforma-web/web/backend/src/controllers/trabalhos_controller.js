@@ -72,20 +72,53 @@ controllers.create = async (req,res)=>{
 
 controllers.update = async (req,res)=>{
   try {
-    if(req.body){
-      const {id} = req.params;
-      const updated = await model.update(req.body,{where:{id:id}});
-      if(updated){
-        const modelUpdated = await model.findByPk(id);
-        res.status(200).json(modelUpdated);
-      }else{
-        res.status(404).json({erro:'Trabalhos nao foi atualizado/a!'});
-      }
-    }else{
-      res.status(400).json({erro: 'Erro ao atualizar o/a trabalhos!',desc: 'Corpo do pedido esta vazio.'});
+    const {id} = req.parms;
+
+    const current = await model.findByPk(id);
+    if (!current) return res.status(404).json({ erro: 'Trabalho não encontrado' });
+      
+    const ficheiroRelativo = req.file
+      ? req.file.path.replace(/^.*[\\/]uploads[\\/]/, '')
+      : null;
+
+    const ficheiroURL = ficheiroRelativo
+      ? `${req.protocol}://${req.get('host')}/uploads/${ficheiroRelativo}`
+      : null;
+
+    const {id_curso_tr, id_formato_tr, nome_tr, caminho_tr, descricao_tr, data_entrega_tr} = req.body;
+
+    if(ficheiroURL === null && id_formato_tr === undefined && id_curso_tr === undefined && nome_tr === undefined && caminho_tr === undefined && descricao_tr === undefined && data_entrega_tr === undefined) {
+      return res.status(400).json({
+        erro: 'Corpo do pedido está vazio para update',
+        desc: 'Envie pelo menos um campo para atualizar'});
     }
+
+    const payload = {};
+    if (id_curso_tr !== undefined) payload.id_curso_tr = Number(id_curso_tr);
+    if (id_formato_tr !== undefined) payload.id_formato_tr = Number(id_formato_tr);
+    if (nome_tr !== undefined) payload.nome_tr = nome_tr;
+    if (descricao_tr !== undefined) payload.descricao_tr = descricao_tr;
+    if (data_entrega_tr !== undefined) payload.data_entrega_tr = data_entrega_tr;
+    if (ficheiroURL) payload.caminho_tr = ficheiroURL;
+    else if (caminho_tr !== undefined)  payload.caminho_tr = caminho_tr;
+
+    const [rows] = await model.update(payload, { where: { id_trabalho: id } });
+
+    if (!rows) {
+      return res.status(404).json({ erro: 'Trabalho não foi actualizado' });
+    }
+
+    const actualizado = await model.findByPk(id);
+    res.status(200).json(actualizado);
+
   }catch(err){
-    res.status(500).json({erro: 'Erro ao atualizar o/a trabalhos!',desc: err.message});
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({
+        erro: 'Ficheiro excede o limite',
+        desc: 'O ficheiro não pode ultrapassar 100 MB'
+      });
+    }
+    res.status(500).json({ erro: 'Erro ao atualizar Trabalho', desc: err.message });
   }
 };
 
