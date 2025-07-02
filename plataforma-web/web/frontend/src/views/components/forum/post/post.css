@@ -6,3 +6,44 @@
   background-color: #f8f9fa !important; /* tom leve de cinza */
   color: #ff0000 !important;
 }
+
+
+
+.comentario-container {
+  background-color: #f7f9fc; /* Fundo azul claro suave */
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px; /* espaço entre os comentários */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease;
+}
+
+.comentario-avatar {
+  border: 2px solid #00A9E0; /* borda azul no avatar */
+}
+
+.comentario-texto {
+  font-size: 1rem;
+  color: #333;
+  margin-top: 6px;
+  margin-bottom: 10px;
+}
+
+.fw-semibold {
+  color: #00A9E0;
+}
+
+.comentario-time {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+button.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+button.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}

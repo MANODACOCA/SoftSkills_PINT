@@ -15,19 +15,7 @@ import Swal from 'sweetalert2';
 import Table from '../../../components/table/Table';
 import { columnsAulas } from '../../../components/table/ColumnsAula';
 import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterialApoio';
-import {
-  FaVideo,
-  FaFileAlt,
-  FaFilePowerpoint,
-  FaFileImage,
-  FaFileAudio,
-  FaFilePdf,
-  FaLink,
-  FaFile,
-  FaChevronDown,
-  FaInfoCircle,
-  FaPlayCircle
-} from 'react-icons/fa';
+import {FaVideo,FaFileAlt, FaFilePowerpoint,FaFileImage,FaFilePdf,FaFileWord} from 'react-icons/fa';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
 
 const EditCourse = () => {
@@ -58,14 +46,13 @@ const EditCourse = () => {
     const error = null;
     const successMessage = null;
     const iconMapById = {
-        1: <FaVideo className="text-primary" />,
-        2: <FaFilePdf className="text-danger" />,
-        3: <FaFilePowerpoint className="text-warning" />,
+        1: <FaFilePdf className="text-danger" />,
+        2: <FaFilePowerpoint className="text-warning" />,
+        3: <FaFileWord className="text-blue-600" />,
         4: <FaFileAlt className="text-success" />,
-        5: <FaFileImage className="text-pink-500" />,
-        6: <FaFileAudio className="text-indigo-500" />,
-        7: <FaInfoCircle className="text-cyan-600" />,
-        8: <FaLink className="text-blue-500" />,
+        5: <FaFileAlt className="text-success" />,
+        6: <FaFileImage className="text-pink-500" />,
+        7: <FaVideo className="text-primary" />, 
     };
     const [horasCursoFormato, setHorasCursoFormato] = useState();
 
@@ -580,8 +567,8 @@ const EditCourse = () => {
                 title: 'Adicionar Conteudo',
                 html: ` 
                     <label for="formato" class="form-label">Formato</label>
-                    <select id="formato" class="form-control mb-3">
-                        <option value="">-- Selecionar Conteúdo --</option>
+                    <select id="formato" class="form-select mb-3">
+                    <option value="">-- Selecione um formato --</option>
                         ${formatos.map(f => `
                         <option value="${f.id_formato}" ${f.id_formato == conteudos.id_formato ? 'selected' : ''}>${f.formato}</option>
                             `).join('')}
@@ -594,7 +581,7 @@ const EditCourse = () => {
                     </div>
                     <div id="file2InputWrapper" class="d-none">
                     <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                     </div>
                 `,
                 didOpen: () => {
@@ -603,10 +590,15 @@ const EditCourse = () => {
                     const file1Wrapper = document.getElementById('file1InputWrapper');
                     const label2 = document.getElementById('ficheiro2Label');
                     const label1 = document.getElementById('ficheiro1Label');
-                    const formatosComFicheiro = [2, 3, 5, 6, 7];
+                    const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                     select.addEventListener('change', () => {
                     const selectedId = parseInt(select.value);
+                    if (isNaN(selectedId)) {
+                        file1Wrapper.classList.add('d-none');
+                        file2Wrapper.classList.add('d-none');
+                        return;
+                    }
                     const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
                     if (formatosComFicheiro.includes(selectedId)) {
@@ -823,6 +815,7 @@ const EditCourse = () => {
                         html: `
                             <label for="formato" class="form-label">Formato</label>
                             <select id="formato" class="form-select mb-3">
+                            <option value="">-- Selecione um formato --</option>
                                 ${formatos.map(f => `
                                     <option value="${f.id_formato}" ${f.id_formato == material.id_formato ? 'selected' : ''}>${f.formato}</option>
                                 `).join('')}
@@ -835,7 +828,7 @@ const EditCourse = () => {
                             </div>
                             <div id="file2InputWrapper" class="d-none">
                             <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
                         didOpen: () => {
@@ -844,10 +837,15 @@ const EditCourse = () => {
                             const file1Wrapper = document.getElementById('file1InputWrapper');
                             const label2 = document.getElementById('ficheiro2Label');
                             const label1 = document.getElementById('ficheiro1Label');
-                            const formatosComFicheiro = [2, 3, 5, 6, 7];
+                            const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                             select.addEventListener('change', () => {
                             const selectedId = parseInt(select.value);
+                            if (isNaN(selectedId)) {
+                                file1Wrapper.classList.add('d-none');
+                                file2Wrapper.classList.add('d-none');
+                                return;
+                            }
                             const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
                             if (formatosComFicheiro.includes(selectedId)) {
@@ -917,7 +915,8 @@ const EditCourse = () => {
                         title: 'Adicionar Material de apoio',
                         html: `
                             <label for="formato" class="form-label">Formato</label>
-                            <select id="formato" class="form-control mb-3">
+                            <select id="formato" class="form-select mb-3">
+                            <option value="">-- Selecione um formato --</option>
                                 ${formatos.map(f => `
                                     <option value="${f.id_formato}" ${f.id_formato}>${f.formato}</option>
                                 `).join('')}
@@ -930,7 +929,7 @@ const EditCourse = () => {
                             </div>
                             <div id="file2InputWrapper" class="d-none">
                             <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
                             didOpen: () => {
@@ -939,10 +938,15 @@ const EditCourse = () => {
                             const file1Wrapper = document.getElementById('file1InputWrapper');
                             const label2 = document.getElementById('ficheiro2Label');
                             const label1 = document.getElementById('ficheiro1Label');
-                            const formatosComFicheiro = [2, 3, 5, 6, 7];
+                            const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                             select.addEventListener('change', () => {
                             const selectedId = parseInt(select.value);
+                            if (isNaN(selectedId)) {
+                                file1Wrapper.classList.add('d-none');
+                                file2Wrapper.classList.add('d-none');
+                                return;
+                            }
                             const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
                             if (formatosComFicheiro.includes(selectedId)) {

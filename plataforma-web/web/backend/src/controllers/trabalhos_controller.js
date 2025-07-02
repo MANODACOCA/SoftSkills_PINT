@@ -25,15 +25,49 @@ controllers.get = async (req,res)=>{
 
 controllers.create = async (req,res)=>{
   try{
-    if(req.body){
-      const data = await model.create(req.body);
-      res.status(201).json(data);
-    }else{
-      res.status(400).json({erro: 'Erro ao criar trabalhos!',desc: 'Corpo do pedido esta vazio.'});
+  const {id_curso_tr, id_formato_tr, nome_tr, caminho_tr, descricao_tr, data_entrega_tr } = req.body;
+    if (!id_curso_tr || !id_formato_tr || !nome_tr || !descricao_tr || !data_entrega_tr) {
+      return res.status(400).json({
+        erro: 'Campos obrigatórios em falta',
+        desc: 'Todo os campos para os trablahos são obrigatórios'
+      });
     }
+    
+    const ficheiroRelativo = req.file
+      ? req.file.path.replace(/^.*[\\/]uploads[\\/]/, '') 
+      : null;
+
+    const ficheiroURL = ficheiroRelativo
+      ? `${req.protocol}://${req.get('host')}/uploads/${ficheiroRelativo}`
+      : null;
+
+    if (!ficheiroURL) {
+      return res.status(400).json({
+        erro: 'Falta ficheiro ou URL',
+        desc: 'Envie um ficheiro (campo "ficheiro") ou link externo'
+      });
+    }
+
+    const payload = {
+      id_curso_tr:      Number(id_curso_tr),
+      id_formato_tr:    Number(id_formato_tr),
+      nome_tr,
+      caminho_tr:       ficheiroURL,
+      descricao_tr,
+      data_entrega_tr
+    };
+
+      const data = await model.create(payload);
+      res.status(201).json(data);
   }catch(err){
-    res.status(500).json({erro: 'Erro ao criar trabalhos!',desc: err.message});
-  }
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({
+        erro: 'Ficheiro excede o limite',
+        desc: 'O ficheiro não pode ultrapassar 100 MB)'
+      });  
+    }
+    res.status(500).json({erro: 'Erro ao criar trabalho!', desc: err.message});
+  };
 };
 
 controllers.update = async (req,res)=>{

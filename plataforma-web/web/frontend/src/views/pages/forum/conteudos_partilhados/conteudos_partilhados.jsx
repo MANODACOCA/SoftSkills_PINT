@@ -48,13 +48,13 @@ const Foruns = () => {
 
     return (
       <div key={`forum-${forum.id_conteudos_partilhado}`} className="col">
-        <div className="card h-100 shadow-sm">
+        <div className="card h-100 shadow-sm rounded-4">
           <div className="d-flex h-100">
             <div className="w-100" style={{ maxWidth: "200px" }}>
               <img
                 src={`https://ui-avatars.com/api/?name=${encodeURIComponent(topico.nome_topico || 'F')}&background=random&bold=true`}
                 alt={`Imagem do fórum ${topico.nome_topico}`}
-                className="img-fluid h-100 object-fit-cover"
+                className="img-fluid h-100 object-fit-cover rounded-start-4"
                 style={{ width: '200px' }}
               />
             </div>

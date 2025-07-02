@@ -4,11 +4,11 @@ import { useParams } from 'react-router-dom';
 import { Tabs, Tab } from 'react-bootstrap';
 import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterialApoio';
 import { columnsAulas } from '../../../components/table/ColumnsAula';
-import { columnsNotasFinais } from '../../../components/table/ColumnsAvaliacaoFinal';
+import { getColumnsNotasFinais } from '../../../components/table/ColumnsAvaliacaoFinal';
 import { get_cursos } from '../../../../api/cursos_axios';
 import { create_material_apoio, delete_material_apoio, get_material_apoio, get_material_apoio_curso, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
-import { get_resultados } from '../../../../api/resultados_axios';
+import { get_resultados, update_resultados } from '../../../../api/resultados_axios';
 import Swal from 'sweetalert2';
 import { create_aulas, delete_aulas, getAulas_Curso, update_aulas } from '../../../../api/aulas_axios';
 import { list_formadores } from '../../../../api/formadores_axios';
@@ -17,6 +17,9 @@ import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../
 import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
+import {FaVideo,FaFileAlt, FaFilePowerpoint,FaFileImage,FaFilePdf,FaFileWord} from 'react-icons/fa';
+import ListaTrabalhosEditor from '../trabalhos/TrabalhosPrincipal';
+import { create_trabalhos, delete_trabalhos, get_trabalhos, update_trabalhos } from '../../../../api/trabalhos_axios';
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -28,7 +31,25 @@ const CursoLecionarAula = () => {
     const [formato, setFormato] = useState([]);
     const [resultados, setResultados] = useState([]);
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];  
+    const todayStr = today.toISOString().split('T')[0];
+    const [modoEditNotas, setModoEditNotas] = useState(false);
+    const [notasEditadas, setNotasEditadas] = useState({});  
+    const [trabalhos, setTrabalhos] = useState([]);
+
+    const iconMapById = {
+        1: <FaFilePdf className="text-danger" />,
+        2: <FaFilePowerpoint className="text-warning" />,
+        3: <FaFileWord className="text-blue-600" />,
+        4: <FaFileAlt className="text-success" />,
+        5: <FaFileAlt className="text-success" />,
+        6: <FaFileImage className="text-pink-500" />,
+        7: <FaVideo className="text-primary" />, 
+    };
+    const getIconById = (id) => {
+        return iconMapById[id] || <FaFile className="text-secondary" />;
+    };
+
+    const colunasNotasFinais = getColumnsNotasFinais(modoEditNotas, notasEditadas, setNotasEditadas);
 
     //#region curso
     const fetchCurso = async (id) => {
@@ -352,8 +373,8 @@ const CursoLecionarAula = () => {
                 title: 'Adicionar Conteudo',
                 html: ` 
                     <label for="formato" class="form-label">Formato</label>
-                    <select id="formato" class="form-control mb-3">
-                        <option value="">-- Selecionar Conteúdo --</option>
+                    <select id="formato" class="form-select mb-3">
+                    <option value="">-- Selecione um formato --</option>
                         ${formatos.map(f => `
                         <option value="${f.id_formato}" ${f.id_formato == conteudos.id_formato ? 'selected' : ''}>${f.formato}</option>
                             `).join('')}
@@ -366,7 +387,7 @@ const CursoLecionarAula = () => {
                     </div>
                     <div id="file2InputWrapper" class="d-none">
                     <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx">
+                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                     </div>
                 `,
                 didOpen: () => {
@@ -375,12 +396,17 @@ const CursoLecionarAula = () => {
                     const file1Wrapper = document.getElementById('file1InputWrapper');
                     const label2 = document.getElementById('ficheiro2Label');
                     const label1 = document.getElementById('ficheiro1Label');
-                    const formatosComFicheiro = [2, 3, 5, 6, 7];
+                    const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                     select.addEventListener('change', () => {
                     const selectedId = parseInt(select.value);
                     const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
-
+                    
+                    if (isNaN(selectedId)) {
+                        file1Wrapper.classList.add('d-none');
+                        file2Wrapper.classList.add('d-none');
+                        return;
+                    }
                     if (formatosComFicheiro.includes(selectedId)) {
                         file2Wrapper.classList.remove('d-none');
                         file1Wrapper.classList.add('d-none');
@@ -593,7 +619,7 @@ const CursoLecionarAula = () => {
                         html: `
                             <label for="formato" class="form-label">Formato</label>
                             <select id="formato" class="form-select mb-3">
-                            <option value="">Selecione um formato</option>
+                            <option value="">-- Selecione um formato --</option>
                                 ${formatos.map(f => `
                                     <option value="${f.id_formato}" ${f.id_formato == material.id_formato ? 'selected' : ''}>${f.formato}</option>
                                 `).join('')}
@@ -605,8 +631,9 @@ const CursoLecionarAula = () => {
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
                             </div>
                             <div id="file2InputWrapper" class="d-none">
+                            <p id="ficheiroAtual" class="small mb-2"></p>
                             <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+                            <input type="file" id="ficheiroConteudo"class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
                         didOpen: () => {
@@ -618,6 +645,7 @@ const CursoLecionarAula = () => {
                             const label1 = document.getElementById('ficheiro1Label');
                             const formatosComFicheiro = [1, 2, 3, 4, 5];
 
+                            const ficheiroAtual = document.getElementById('ficheiroAtual');
                             function atualizarCampos() {
                             //select.addEventListener('change', () => {
                             const selectedId = parseInt(select.value);
@@ -631,6 +659,9 @@ const CursoLecionarAula = () => {
                             if (formatosComFicheiro.includes(selectedId)) {
                                 file2Wrapper.classList.remove('d-none');
                                 file1Wrapper.classList.add('d-none');
+                                ficheiroAtual.textContent = material.conteudo
+                                ? `Ficheiro atual: ${material.conteudo.split('/').pop()}`
+                                : 'Nenhum ficheiro carregado.';
                                 label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
                                 label1.textContent = 'Ficheiro';
                             } else {
@@ -843,38 +874,219 @@ const CursoLecionarAula = () => {
 
      //#endregion
      
+
     //#region Resultados
-    const renderActionsResultados = (item) => {
-        return(
-        <div className="d-flex">
-            <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateResultados(item.id_resul)}>
-                <i className="bi bi-pencil"></i>
-            </button> 
-            <button className="btn btn-outline-danger" onClick={()=> HandleDeleteResultados(item.id_resul)}>
-                <i className="bi bi-trash"></i>
-            </button>
-        </div>
+    const handleEditarGuardarResultados = async () => {
+    if (modoEditNotas) {
+        try {
+        await Promise.all(
+            Object.entries(notasEditadas).map(([id, nota]) => {
+            const val = Number(nota);
+            if (isNaN(val) || val < 0 || val > 20) {
+                throw new Error(`Nota ${nota} inválida`);
+            }
+            return update_resultados(id, { resul: val });
+            })
         );
+        await fetchResultados(cursos.id_curso);
+        setNotasEditadas({});
+        Swal.fire({ icon: 'success', title: 'Notas guardadas!' });
+        } catch (err) {
+        Swal.fire({ icon: 'error', title: 'Erro ao guardar', text: err.message });
+        return; 
+        }
     }
+    setModoEditNotas(!modoEditNotas);
+    };
 
-    const handleEditCreateResultados = async (id) => {
-        
-    }
+    //#endregion
 
-    const HandleDeleteResultados = async (id) => {
+
+    
+    //#region Trabalhos
+
+    const handleEditarTrabalho = async (trabalho) => {
+        const isNovo = !trabalho || !trabalho.id_trabalho;
+
         const result = await Swal.fire({
-            title: "Tem certeza que deseja retirar esta nota?",
-            icon: "warning",
+            title: isNovo ? 'Tem a certeza que deseja adicionar Trabalho?' : 'Tem a certeza que deseja editar Trabalho?',
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: "Sim",
-            cancelButtonColor: "Cancelar",
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
             customClass: {
                 confirmButton: 'btn btn-success me-2',
                 cancelButton: 'btn btn-danger'
             },
             buttonsStyling: false,
         });
-    }
+
+        if (result.isConfirmed) {
+            try {
+                const formatos = await list_tipo_formato();
+                const formatosComFicheiro = [1, 2, 3, 4, 5]; 
+
+                const editarTrabalho = await Swal.fire({
+                    title: isNovo ? 'Adicionar Trabalho' : 'Editar Trabalho',
+                    html: `
+                        <label class="form-label">Nome do Trabalho</label>
+                        <input id="nomeTr" class="form-control mb-2" placeholder="Nome..." value="${trabalho?.nome_tr || ''}" />
+
+                        <label class="form-label">Descrição</label>
+                        <textarea id="descTr" class="form-control mb-2" placeholder="Descrição...">${trabalho?.descricao_tr || ''}</textarea>
+
+                        <label class="form-label">Data de Entrega</label>
+                        <input id="dataTr" type="date" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
+
+                        <label class="form-label">Hora de Entrega</label>
+                        <input id="horaTr" type="time" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0,5) || ''}" />
+
+                        <label for="formatoTr" class="form-label">Formato</label>
+                        <select id="formatoTr" class="form-select mb-3">
+                            <option value="">-- Selecione um formato --</option>
+                            ${formatos.map(f => `
+                                <option value="${f.id_formato}" ${f.id_formato == trabalho?.id_formato_tr ? 'selected' : ''}>${f.formato}</option>
+                            `).join('')}
+                        </select>
+
+                        <div id="fileInputWrapper" class="d-none">
+                            <p id="ficheiroAtual" class="small mb-2"></p>
+                            <label for="ficheiroTr" id="ficheiroLabel" class="form-label">Ficheiro</label>
+                            <input type="file" id="ficheiroTr" class="form-control mb-2" />
+                        </div>
+
+                        <div id="urlInputWrapper" class="d-none">
+                            <label for="urlTr" id="urlLabel" class="form-label">URL</label>
+                            <input type="text" id="urlTr" class="form-control mb-2" placeholder="https://exemplo.com/trabalho.pdf" />
+                        </div>
+                    `,
+                    didOpen: () => {
+                        const formatoEl = document.getElementById('formatoTr');
+                        const fileWrapper = document.getElementById('fileInputWrapper');
+                        const urlWrapper = document.getElementById('urlInputWrapper');
+                        const ficheiroAtual = document.getElementById('ficheiroAtual');
+                        const fileLabel = document.getElementById('ficheiroLabel');
+                        const urlLabel = document.getElementById('urlLabel');
+                        const urlInput = document.getElementById('urlTr');
+
+                        function atualizarCampos() {
+                            const selectedId = parseInt(formatoEl.value);
+                            if (isNaN(selectedId)) {
+                                fileWrapper.classList.add('d-none');
+                                urlWrapper.classList.add('d-none');
+                                return;
+                            }
+
+                            const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+
+                            if (formatosComFicheiro.includes(selectedId)) {
+                                fileWrapper.classList.remove('d-none');
+                                urlWrapper.classList.add('d-none');
+                                ficheiroAtual.textContent = trabalho?.caminho_tr
+                                    ? `Ficheiro atual: ${trabalho.caminho_tr.split('/').pop()}`
+                                    : 'Nenhum ficheiro carregado.';
+                                fileLabel.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                            } else {
+                                fileWrapper.classList.add('d-none');
+                                urlWrapper.classList.remove('d-none');
+                                urlLabel.textContent = `URL (${formatoSelecionado.formato})`;
+                                urlInput.value = trabalho?.caminho_tr || '';
+                            }
+                        }
+
+                        atualizarCampos();
+                        formatoEl.addEventListener('change', atualizarCampos);
+                    },
+                    preConfirm: () => {
+                        const nome = document.getElementById('nomeTr').value.trim();
+                        const descricao = document.getElementById('descTr').value.trim();
+                        const data = document.getElementById('dataTr').value;
+                        const hora = document.getElementById('horaTr').value;
+                        const id_formato = parseInt(document.getElementById('formatoTr').value);
+                        const ficheiro = document.getElementById('ficheiroTr').files[0];
+                        const url = document.getElementById('urlTr').value.trim();
+
+                        if (!nome || !descricao || !data || !hora || !id_formato || (!ficheiro && !url)) {
+                            Swal.showValidationMessage("Todos os campos são obrigatórios!");
+                            return false;
+                        }
+
+                        const data_entrega_tr = `${data}T${hora}:00`;
+
+                        return {
+                            nome_tr: nome,
+                            descricao_tr: descricao,
+                            data_entrega_tr,
+                            id_formato_tr: id_formato,
+                            caminho_tr: ficheiro ? '' : url,
+                            ficheiro: ficheiro || null,
+                            id_curso_tr: cursos.id_curso
+                        };
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: isNovo ? 'Adicionar Trabalho' : 'Guardar Alterações',
+                    cancelButtonText: 'Cancelar',
+                    customClass: {
+                        confirmButton: 'btn btn-success me-2',
+                        cancelButton: 'btn btn-danger'
+                    }
+                });
+
+                if (editarTrabalho.isConfirmed && editarTrabalho.value) {
+                    try {
+                        if (isNovo) {
+                            await create_trabalhos(editarTrabalho.value);
+                            Swal.fire({
+                                icon: "success",
+                                title: "Trabalho adicionado com sucesso!",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            await update_trabalhos(trabalho.id_trabalho, editarTrabalho.value);
+                            Swal.fire({
+                                icon: "success",
+                                title: "Trabalho atualizado com sucesso!",
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
+                        }
+
+                        const atualizados = await get_trabalhos(cursos.id_curso);
+                        setTrabalhos(atualizados);
+                    } catch (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Erro",
+                            text: "Não foi possível guardar o trabalho",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    }
+                }
+
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Erro",
+                    text: "Erro ao preparar o formulário de trabalho.",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        }
+    };
+
+
+    const fetchTrabalhos = async (idCurso) => {
+        try {
+            const lista = await get_trabalhos(idCurso);
+            setTrabalhos(lista);
+        } catch (err) {
+            console.error("Erro ao buscar trabalhos", err);
+        }
+    };
+
     //#endregion
 
     useEffect(() => {
@@ -885,6 +1097,8 @@ const CursoLecionarAula = () => {
             await fetchCurso(id);
             await fetchAulas(id);
             await fetchResultados(id);
+            await fetchFormatos(id);
+            await fetchTrabalhos(id);
         }
         carregarDados();
     }, []);
@@ -944,24 +1158,51 @@ const CursoLecionarAula = () => {
                         </div>
                     </div>
                 </Tab>
-    
-                <Tab eventKey="eventos" title={<span className='fw-bold'>Trabalhos</span>}>
-                    
-                </Tab>
 
-                {/*
-                <Tab eventKey="notasTrabalhos" title={<span className='fw-bold'>Trabalhos</span>}>
-                    
-                </Tab>
-                */}
+            {/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ TRABLAHOS $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$444 */}
+                {/* <Tab eventKey="eventos" title={<span className='fw-bold'>Trabalhos</span>}>    
+                 <div className='mt-4'>
+             
+                 </div>
+                </Tab> */}
                 
+            <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
+            <div className="mt-4">
+                {/* BOTÃO DE ADICIONAR TRABALHO */}
+                {user?.id_utilizador === cursos?.sincrono?.id_formador && (
+                <div className="text-end mb-3">
+                    <button className="btn btn-success" onClick={() => handleEditarTrabalho(null)}>
+                    <i className="bi bi-plus-circle me-2"></i>Adicionar Trabalho
+                    </button>
+                </div>
+                )}
+
+                {/* LISTA DE TRABALHOS */}
+                {trabalhos.length === 0 ? (
+                <div className="alert alert-info">Não há trabalhos disponíveis.</div>
+                ) : (
+                trabalhos.map((trabalho) => (
+                    <TrabalhosAdicionarCurso
+                    key={trabalho.id_trabalho}
+                    trabalho={trabalho}
+                    onEdit={() => handleEditarTrabalho(trabalho)}
+                    podeEditar={user?.id_utilizador === cursos?.sincrono?.id_formador}
+                    />
+                ))
+                )}
+            </div>
+            </Tab>
+                
+            {/*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   TRABLAHOS   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$444 */}
                 <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
-                    <div className='mt-4'>
-                    {/* Resultados Finais */}
-                        <div className='mt-4'>
-                            <Table columns={columnsNotasFinais} data={resultados} actions={renderActionsResultados} onAddClick={{callback: handleEditCreateResultados, label: 'Resultados'}}  />
-                        </div>
-                    </div>  
+                <div className="mt-4">
+                     <Table columns={colunasNotasFinais} data={resultados} actions={null}
+                    onAddClick={{ callback: handleEditarGuardarResultados,
+                        label: modoEditNotas ? 'Guardar' : 'Editar',
+                        icon: modoEditNotas ? 'bi-check-lg' : 'bi-pencil',
+                        variant: modoEditNotas ? 'success' : 'primary'
+                    }}/>
+                </div>
                 </Tab>
             </Tabs>
         </div>

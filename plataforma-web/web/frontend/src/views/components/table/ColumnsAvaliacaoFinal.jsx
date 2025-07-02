@@ -1,7 +1,26 @@
+export const getColumnsNotasFinais = (modoEdicao, notasEdit, setNotasEdit) => [
+  {
+    label: 'Nome',
+    render: (item) =>
+      item.id_formando_formando.id_formando_utilizador.nome_util
+  },
+  {
+    label: 'Nota final',
+    render: (item) => {
+      const id = item.id_resul;
 
-export const columnsNotasFinais = [
-    {label: 'Nº', key: 'id_formando'},
-    {label: 'Nome', render: (item) => { 
-        return item.id_formando_formando.id_formando_utilizador.nome_util; }},
-    {label: 'Nota final', render: (item) => { return item.resul; }},
+      if (modoEdicao) {
+        return (
+          <input type="number" className="form-control form-control-sm text-end" min={0} max={20} step={0.1} style={{maxWidth: '60px'}}
+            value={notasEdit[id] ?? item.resul ?? ''}
+            onChange={(e) =>
+              setNotasEdit((prev) => ({ ...prev, [id]: e.target.value }))
+            }
+          />
+        );
+      }
+
+      return item.resul ?? '-';
+    }
+  }
 ];

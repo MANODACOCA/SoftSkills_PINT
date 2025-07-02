@@ -24,8 +24,6 @@ controllers.get = async (req, res) => {
         if (data) {
             const deuLike = !!data;
             res.status(200).json(deuLike);
-        } else {
-            res.status(404).json({ erro: "Like post não encontrado/a!" });
         }
     } catch (err) {
         res.status(500).json({ erro: "Erro ao procurar Like post!", desc: err.message });
@@ -53,7 +51,7 @@ controllers.delete = async (req, res) => {
             return res.status(400).json({ erro: 'id_post e id_utilizador são obrigatórios para eliminar o like.' })
         }
 
-        const deleted = await model.destroy({ where: { id_post, id_utilizador } }); // CORREÇÃO AQUI
+        const deleted = await model.destroy({ where: { id_post, id_utilizador } }); 
         if (deleted) {
             res.status(200).json({ msg: "Like post apagado/a com sucesso!" });
         } else {
