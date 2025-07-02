@@ -7,7 +7,9 @@ import '../../core/shared/navigationbar_component.dart';
 import '../../core/shared/search_bar.dart';
 
 class Forum extends StatefulWidget {
-  const Forum({super.key});
+  const Forum({super.key, required this.idUser});
+
+  final String idUser;
 
   @override
   State<Forum> createState() => _ForumState();

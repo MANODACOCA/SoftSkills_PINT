@@ -64,6 +64,15 @@ class CardCourse extends StatelessWidget {
                 height: 135,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(title)}&background=random&bold=true';
+                  return Image.network(
+                    fallbackImg,
+                    height: 135,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  );
+                },
               )
             ),
             Padding(
