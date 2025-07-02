@@ -53,7 +53,7 @@ controllers.delete = async (req, res) => {
             return res.status(400).json({ erro: 'id_comentario e id_utilizador são obrigatórios para eliminar o like.' })
         }
 
-        const deleted = await model.destroy({ where: { id_comentario, id_utilizador } }); // CORREÇÃO AQUI
+        const deleted = await model.destroy({ where: { id_comentario, id_utilizador } }); 
         if (deleted) {
             res.status(200).json({ msg: "Like post apagado/a com sucesso!" });
         } else {
