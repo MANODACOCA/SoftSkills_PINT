@@ -141,8 +141,8 @@ controllers.delete = async (req, res) => {
       }
     }
 
-    if (comentario.caminho_ficheiro && comentario.caminho_ficheiro.includes('/uploads/')) {
-      const ficheiroRelativo = comentario.caminho_ficheiro.replace(/^.*\/uploads\//, '');
+    if (comentarios.caminho_ficheiro && comentarios.caminho_ficheiro.includes('/uploads/')) {
+      const ficheiroRelativo = comentarios.caminho_ficheiro.replace(/^.*\/uploads\//, '');
       const ficheiroPath = path.join(__dirname, '..', 'uploads', ficheiroRelativo);
 
       if (!ficheiroPath.startsWith(path.join(__dirname, '..', 'uploads'))) {
