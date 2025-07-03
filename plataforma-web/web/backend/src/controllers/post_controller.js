@@ -3,7 +3,7 @@
 const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const { utilizador, likes_post, comentario, denuncia, likes_comentario } = require('../models/init-models')(sequelize);
+const { utilizador, likes_post, denuncia, comentario, likes_comentario } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).post;
 const controllers = {};
 const fs = require('fs').promises;
@@ -117,6 +117,14 @@ controllers.delete = async (req, res) => {
       return res.status(404).json({ erro: 'Post não encontrado!' });
     }
 
+    const comentarios = await comentario.findAll({
+      where: { id_post: id },
+    });
+    if (!comentarios) {
+      return res.status(404).json({ erro: 'Comentário/s não encontrado!' });
+    }
+
+
     if (post.caminho_ficheiro && post.caminho_ficheiro.includes('/uploads/')) {
       const ficheiroRelativo = post.caminho_ficheiro.replace(/^.*\/uploads\//, '');
       const ficheiroPath = path.join(__dirname, '..', 'uploads', ficheiroRelativo);
@@ -137,9 +145,11 @@ controllers.delete = async (req, res) => {
 
     await comentario.destroy({ where: { id_post: id } });
 
+    const idsComentarios = comentarios.map(c=> c.id_comentario);
+    await likes_comentario.destroy({ where: { id_comentario: idsComentarios} });
+
     await likes_post.destroy({ where: { id_post: id } });
 
-    await likes_comentario.destroy({ where: { id_post: id } });
 
     const deleted = await model.destroy({ where: { id_post: id } });
     if (deleted) {
