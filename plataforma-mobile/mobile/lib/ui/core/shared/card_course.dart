@@ -62,19 +62,15 @@ class _CardCourseState extends State<CardCourse> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if(widget.typeCourse == 'Assíncrono'){
           if(inscrito){
-            context.push('/cursos-inscritos-assincrono', extra: widget.id);
+            if(widget.typeCourse == 'Assíncrono'){
+              context.go('/cursos-inscritos-assincrono', extra: widget.id);
+            } else if (widget.typeCourse == 'Síncrono') {
+              context.go('/cursos-inscritos-sincrono', extra: widget.id);
+            }
           } else {
-            context.push('/assync', extra: widget.id);
+            context.go('/inscrever', extra: widget.id);
           }
-        } else if (widget.typeCourse == 'Síncrono') {
-          if(inscrito){
-            context.push('/cursos-inscritos-sincrono', extra: widget.id);
-          } else {
-            context.push('/sync', extra: widget.id);
-          }
-        }
       },
       child: Card(
         elevation: 4,

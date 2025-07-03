@@ -1,8 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:io';
-
-import 'package:http/http.dart' as http;
+//import 'dart:io';
+//import 'package:http/http.dart' as http;
 import 'package:mobile/API/utilizadores_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/shared/navigationbar_component.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class ChangePersonalInfo extends StatefulWidget {
   const ChangePersonalInfo({super.key});
@@ -23,15 +22,23 @@ class ChangePersonalInfo extends StatefulWidget {
 class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   Map<String, dynamic> utilizador = {};
   final UtilizadoresApi _api = UtilizadoresApi();
+  late final String userIdd;
+  final TextEditingController _nomeController = TextEditingController();
+  final TextEditingController _telemovelController = TextEditingController();
+  final TextEditingController _moradaController = TextEditingController();
+  final TextEditingController _dataNascController = TextEditingController();
+  String? _selectedPais;
+  String? _selectedGenero;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
-      if (userId != null) {
-        print('ID do utilizador: $userId');
-        fetchUtilizador(int.parse(userId));
+      final id = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (id != null) {
+        userIdd = id;
+        print('ID do utilizador: $id');
+        fetchUtilizador(int.parse(id));
       }
     });
   }
@@ -41,10 +48,56 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
       final esteUtilizador = await _api.getUtilizador(idUtilizador);
       setState(() {
         utilizador = esteUtilizador;
+        _nomeController.text = esteUtilizador['nome_utilizador'] ?? '';
+        _telemovelController.text = esteUtilizador['telemovel']?.toString() ?? '';
+        _moradaController.text = esteUtilizador['morada'] ?? '';
+        _dataNascController.text = esteUtilizador['data_nasc'] ?? '';
+        _selectedPais = esteUtilizador['pais']?.toString();
+        _selectedGenero = (esteUtilizador['genero'] == 1) ? 'Masculino' : 'Feminino';
       });
     } catch (e) {
       print('Erro ao buscar o curso: , $e');
     }
+  }
+
+  Future<void> _enviar(ImageSource source) async {
+    try{
+      final res = await _api.alterarImgPerfil(userIdd, source);
+      await fetchUtilizador(int.parse(userIdd));
+      setState(() => utilizador['img_perfil'] = res['img_perfil']);
+    } catch(e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Falha ao enviar imagem')),
+      );
+    } 
+  }
+
+  void choosePhoto() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Escolher foto'),
+        content: const Text('Seleciona a origem da imagem'),
+        actions: [
+          TextButton(
+            style: TextButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Galeria', style: TextStyle(color: Colors.white)),
+            onPressed: () async {
+              await _enviar(ImageSource.gallery);
+              context.pop();
+            },
+          ),
+          TextButton(
+            style: TextButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Câmara', style: TextStyle(color: Colors.white)),
+            onPressed: () async {
+              await _enviar(ImageSource.camera);
+              context.pop(); 
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -164,6 +217,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                             width: 400,
                             height: 38,
                             child: TextField(
+                              controller: _nomeController,
                               decoration: InputDecoration(
                                 labelText: 'Nome do user',
                                 border: OutlineInputBorder(
@@ -197,6 +251,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                       width: 400,
                       height: 38,
                       child: TextField(
+                        controller: _telemovelController,
                         decoration: InputDecoration(
                           labelText: '+351',
                           border: OutlineInputBorder(
@@ -227,6 +282,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                       width: 400,
                       height: 38,
                       child: TextField(
+                        controller: _dataNascController,
                         decoration: InputDecoration(
                           labelText: 'dd/mm/aaaa',
                           border: OutlineInputBorder(
@@ -257,6 +313,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                       width: 400,
                       height: 38,
                       child: TextField(
+                        controller: _moradaController,
                         decoration: InputDecoration(
                           labelText: 'Rua, nº, andar, código postal',
                           border: OutlineInputBorder(
@@ -305,6 +362,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                                 context: context,
                                                 showPhoneCode: false,
                                                 onSelect: (Country country) {
+                                                  setState(() {
+                                                    _selectedPais = country.displayNameNoCountryCode;
+                                                  });
                                                   // ignore: avoid_print
                                                   print(
                                                     'Selected country: ${country.flagEmoji} ${country.displayName}',
@@ -350,8 +410,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                                     leading: Icon(Icons.male),
                                                     title: Text('Masculino'),
                                                     onTap: () {
-                                                      selectedGender =
-                                                          'Masculino';
+                                                      setState(() {
+                                                        _selectedGenero = 'Masculino';
+                                                      });
                                                       context.pop(context);
                                                     },
                                                   ),
@@ -359,8 +420,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                                     leading: Icon(Icons.female),
                                                     title: Text('Feminino'),
                                                     onTap: () {
-                                                      selectedGender =
-                                                          'Feminino';
+                                                      setState(() {
+                                                        _selectedGenero = 'Feminino';
+                                                      });
                                                       context.pop(context);
                                                     },
                                                   ),
@@ -438,7 +500,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   }
 
   confirm() {
-    return showDialog(
+    return showDialog(  
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -448,18 +510,50 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.green),
               child: Text('Sim', style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                context.go('/profile');
-                // ignore: avoid_print
-                print('Alterações guardadas!');
+                onPressed: () async {
+                  try {
+                    final body = {
+                      'nome_utilizador': _nomeController.text,
+                      'telemovel': int.tryParse(_telemovelController.text),
+                      'morada': _moradaController.text,
+                    };
+
+                    if (_dataNascController.text.isNotEmpty) {
+                      try {
+                        final nasc = DateFormat('dd/MM/yyyy')
+                            .parseStrict(_dataNascController.text);
+                        body['data_nasc'] = DateFormat('yyyy-MM-dd').format(nasc);
+                      } catch (_) {
+                        //
+                      }
+                    }
+                    if (_selectedGenero != null) {
+                      body['genero'] = _selectedGenero;
+                    }
+                    if (_selectedPais != null) {
+                      body['pais'] = _selectedPais; 
+                    }
+
+                  body.removeWhere((k, v) => v == null || (v is String && v.isEmpty));
+
+                  await _api.updateUtilizador(userIdd, body);
+                  Navigator.pop(context);
+                  context.go('/profile');
+                  print('Alterações guardadas!');
+                } catch (e) {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Erro ao atualizar dados')),
+                  );
+                }
+
               },
             ),
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.red),
               child: Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.pop(); // Close the dialog
-                // ignore: avoid_print
+                context.pop(); 
                 print('Alterações não foram guardadas!');
               },
             ),
@@ -467,84 +561,5 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         );
       },
     );
-  }
-
-  choosePhoto() {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Escolher foto'),
-          content: Text('Escolha ficheiros png ou jpeg'),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('Galeria', style: TextStyle(color: Colors.white)),
-              onPressed: () async {
-                await uploadImage();
-                context.pop();
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('Câmara', style: TextStyle(color: Colors.white)),
-              onPressed: () async {
-                await takeAPicture();
-                context.pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Future<void> enviarImagemParaServidor(File imagem) async {
-    final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
-    final uri = Uri.parse(
-      'https://softskills-api.onrender.com/utilizador/alterar-imgperfil/$userId',
-    );
-
-    final request = http.MultipartRequest('POST', uri)
-      ..files.add(await http.MultipartFile.fromPath('imagem', imagem.path));
-
-    try {
-      final response = await request.send();
-
-      if (response.statusCode == 200) {
-        final respostaTexto = await response.stream.bytesToString();
-        print('✅ Upload com sucesso: $respostaTexto');
-        await fetchUtilizador(
-          int.parse(userId!),
-        ); // <-- Atualiza o perfil após upload
-        setState(() {});
-      } else {
-        print('❌ Falha no upload. Código: ${response.statusCode}');
-      }
-    } catch (e) {
-      print('⚠️ Erro ao enviar imagem: $e');
-    }
-  }
-
-  Future<void> uploadImage() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 50,
-    );
-    if (image != null) {
-      await enviarImagemParaServidor(File(image.path));
-    }
-  }
-
-  Future<void> takeAPicture() async {
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
-      source: ImageSource.camera,
-      imageQuality: 50,
-    );
-    if (image != null) {
-      await enviarImagemParaServidor(File(image.path));
-    }
   }
 }

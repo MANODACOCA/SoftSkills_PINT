@@ -7,6 +7,38 @@ import 'package:shared_preferences/shared_preferences.dart';
 class CursosApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/cursos';
 
+  Future<Map<String, dynamic>> updateCurso(int cursoId, Map<String,dynamic> curso) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+    
+      if (token == null) {
+        throw Exception('Sessão expirada: token inexistente');
+      }
+
+      final response = await http.put(
+        Uri.parse('$urlAPI/update/$cursoId'),
+        body: jsonEncode(curso),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Estado de inscrição encontrado: ${response.body}');
+        final data = jsonDecode(response.body);
+        return data;
+      }
+
+      print('Erro no update: ${response.statusCode} - ${response.body}');
+      throw Exception('Erro ao encontrar estado da inscrição!');
+    } catch (error) {
+      print('Erro ao encontrar estado da inscrição: $error');
+      throw error;
+    }
+  }
+
   Future<Map<String, dynamic>> getCurso(int id) async {
     try {
       final prefs = await SharedPreferences.getInstance();
