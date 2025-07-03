@@ -132,6 +132,11 @@ controllers.delete = async (req, res) => {
       }
     }
 
+    await post.update(
+      { contador_comentarios: contador_comentarios - 1 },
+      { where: { id_post: comentario.id_post } }
+    );
+
     await denuncia.destroy({ where: { id_comentario: id } });
 
     await likes_comentario.destroy({ where: { id_comentario: id } });
