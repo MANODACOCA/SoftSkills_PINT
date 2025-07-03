@@ -25,7 +25,12 @@ const ForumPosts = () => {
       }
 
       const data = await get_post(forum.id_conteudos_partilhado);
-      setPosts(data.posts || []);
+      const novosPosts = data.posts || [];
+
+      if (JSON.stringify(novosPosts) !== JSON.stringify(posts)) {
+        setPosts(novosPosts);
+      }
+      
     } catch (err) {
       console.error(err);
       setError("Erro ao carregar posts.");
@@ -53,8 +58,11 @@ const ForumPosts = () => {
     window.scrollTo(0, 0);
     if (!forum) {
       setError("Fórum indisponível no momento. Por favor, tente mais tarde novamente!");
+      return;
     }
+
     fetchPosts();
+
   }, [forum]);
 
 
@@ -88,6 +96,7 @@ const ForumPosts = () => {
                 idPost={post.id_post}
                 idAutor={autorData.id_utilizador}
                 autor={autorData.nome_utilizador || "Usuário desconhecido"}
+                email={autorData.email || "Email desconhecido"}
                 texto={post.texto_post}
                 likes={post.contador_likes_post}
                 comentarios={post.contador_comentarios}

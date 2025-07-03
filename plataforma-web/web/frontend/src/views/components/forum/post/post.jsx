@@ -12,14 +12,14 @@ import { get_comentarios_by_post } from "../../../../api/comentario_axios";
 import { useUser } from '../../../../utils/useUser';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import 'dayjs/locale/pt'; // português
+import 'dayjs/locale/pt'; // dia e hora portuguesa
 dayjs.extend(relativeTime);
 dayjs.locale('pt');
 
 import Comentario from "../../../components/forum/comentario/comentario";
 import CaixaComentario from "../../../components/forum/comentario/caixaComentario";
 
-const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, onLikeChanged, tipoFormato, onDeleted, jaCurtiu }) => {
+const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, onLikeChanged, tipoFormato, onDeleted, jaCurtiu }) => {
 
     const getIconById = (id) => {
         return iconMapById[id] || <FaFile className="text-secondary" />;
@@ -205,7 +205,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                             height="60"
                         />
                         <div className="ms-2">
-                            <div className="fw-semibold">{autor}</div>
+                            <div className="fw-semibold">{autor} <span className="text-muted" style={{ fontSize: '0.8em' }}>&lt;{email}&gt;</span></div>
                             <div className="text-muted small">{dayjs(dataCriacao).fromNow()}</div>
                         </div>
                     </div>
@@ -271,10 +271,10 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
 
                 {/* Texto */}
                 <div className="mt-3">
-                    <p className="mb-1">{texto}</p>
+                    <p className="mb-3">{texto}</p>
                 </div>
                 {tipoFormato && conteudo && (
-                    <a href={conteudo} target='blank' className="text-decoration-none text-primary ms-2">
+                    <a href={conteudo} target='blank' className="text-decoration-none text-primary">
                         <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light" >
                             <div className="d-flex align-items-center gap-2">
                                 <FaFile className="text-secondary" />
@@ -333,6 +333,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                                     key={idx}
                                     avatar={comment.id_utilizador_utilizador.img_perfil}
                                     name={comment.id_utilizador_utilizador.nome_utilizador}
+                                    email={comment.id_utilizador_utilizador.email}
                                     time={dayjs(comment.data_criacao_comentario).fromNow()}
                                     text={comment.texto_comentario}
                                     conteudo={comment.caminho_ficheiro}

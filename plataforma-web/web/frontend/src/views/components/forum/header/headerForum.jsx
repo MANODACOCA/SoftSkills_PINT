@@ -111,7 +111,7 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
 
             {/* Modal de criação de post */}
             <Modal show={showModal} onHide={() => setShowModal(false)} centered>
-                <Modal.Header closeButton>
+                <Modal.Header>
                     <Modal.Title>Criar novo post</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -140,20 +140,24 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
                         <Form.Label>Adicionar ficheiro (opcional)</Form.Label>
                         <Form.Control
                             type="file"
-                            onChange={(e) => setFicheiroSelecionado(e.target.files[0])}
+                            accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.xlsm,.ppt,.pptx,.txt"
                         />
                     </Form.Group>
                     <Form.Control
                         as="textarea"
                         rows={4}
+                        maxLength={1024}
                         placeholder="Partilhe aqui os seu conhecimentos..."
                         value={conteudo}
                         onChange={(e) => setConteudo(e.target.value)}
                         style={{ height: '300px', resize: 'none' }}
                     />
+                    <small className="text-muted">
+                        {conteudo.length}/1024 caracteres
+                    </small>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                    <Button variant="secondary" onClick={() => { setShowModal(false), setConteudo(''); }}>
                         Cancelar
                     </Button>
                     <Button
