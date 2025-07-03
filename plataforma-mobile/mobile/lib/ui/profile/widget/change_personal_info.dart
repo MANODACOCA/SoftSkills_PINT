@@ -82,17 +82,17 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
           TextButton(
             style: TextButton.styleFrom(backgroundColor: Colors.green),
             child: const Text('Galeria', style: TextStyle(color: Colors.white)),
-            onPressed: () async {
-              await _enviar(ImageSource.gallery);
+            onPressed: () {
               context.pop();
+              Future.microtask(() => _enviar(ImageSource.gallery));
             },
           ),
           TextButton(
             style: TextButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Câmara', style: TextStyle(color: Colors.white)),
-            onPressed: () async {
-              await _enviar(ImageSource.camera);
-              context.pop(); 
+            onPressed: () {
+              context.pop();
+              Future.microtask(() => _enviar(ImageSource.camera));
             },
           ),
         ],
