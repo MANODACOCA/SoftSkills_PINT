@@ -1030,7 +1030,7 @@ const CursoLecionarAula = () => {
 
                     if (editarTrabalho.isConfirmed && editarTrabalho.value) {
                         try {
-                            await update_trabalhos(trabalho.id_trabalho ,editarTrabalho.value);
+                            await update_trabalhos(trabalho.id_trabalho, editarTrabalho.value);
                             await fetchTrabalhos(trabalho.id_curso_tr);
                             Swal.fire({
                                 icon: "success",
@@ -1050,7 +1050,7 @@ const CursoLecionarAula = () => {
                     } else {
                     }
                 } else {
-                    
+
                 }
             } catch (error) {
 
@@ -1058,7 +1058,7 @@ const CursoLecionarAula = () => {
         }
     }
 
-            
+
 
     const handleCreateTrabalho = async (trabalho) => {
         const result = await Swal.fire({
@@ -1284,83 +1284,83 @@ const CursoLecionarAula = () => {
         carregarDados();
     }, []);
 
-            if (!user || !user.id_utilizador || !cursos || !cursos.sincrono) {
-                return <SpinnerBorder />
-            }
-            /* if(cursos.sincrono === null) {
-                        return <div className="alert alert-danger text-center mt-4">
-                            <i className='bi bi-x-circle fs-1'></i><br />
-                            O curso <strong>{cursos.nome_curso}</strong> é assincrono, apenas administradores podem editar!
-                        </div>;
-                    } */
-            if (user.id_utilizador !== cursos.sincrono.id_formador) {
-                return <div className="alert alert-danger text-center mt-4">
-                    <i className='bi bi-x-circle fs-1'></i><br />
-                    Não pode aceder à página visto que não é formador do curso <strong>{cursos.nome_curso}</strong>
-                </div>;
-            }
+    if (!user || !user.id_utilizador || !cursos || !cursos.sincrono) {
+        return <SpinnerBorder />
+    }/* 
+    if (cursos.sincrono === null) {
+        return <div className="alert alert-danger text-center mt-4">
+            <i className='bi bi-x-circle fs-1'></i><br />
+            O curso <strong>{cursos.nome_curso}</strong> é assincrono, apenas administradores podem editar!
+        </div>;
+    } */
+    if (user.id_utilizador !== cursos.sincrono.id_formador) {
+        return <div className="alert alert-danger text-center mt-4">
+            <i className='bi bi-x-circle fs-1'></i><br />
+            Não pode aceder à página visto que não é formador do curso <strong>{cursos.nome_curso}</strong>
+        </div>;
+    }
 
-            return (
-                <div className="">
-                    <div className='w-100'>
-                        {cursos && (
-                            <img
-                                src={cursos.nome_curso || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`}
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`;
-                                }}
-                                alt="Imagem de perfil"
-                                className='w-100 img-profile rounded-2 mb-3 img-header-course'
-                            />
-                        )}
+    return (
+        <div className="">
+            <div className='w-100'>
+                {cursos && (
+                    <img
+                        src={cursos.nome_curso || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`}
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`;
+                        }}
+                        alt="Imagem de perfil"
+                        className='w-100 img-profile rounded-2 mb-3 img-header-course'
+                    />
+                )}
+            </div>
+            <div className='mb-3'>
+                <h2>{cursos.nome_curso}</h2>
+            </div>
+            <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs" >
+                <Tab eventKey="aulas" title={<span className='fw-bold'>Aulas</span>}>
+                    <div className="mt-4">
+                        {/* Aulas */}
+                        <div className='mt-4'>
+                            <Table columns={columnsAulas} data={aulas || []} actions={renderActionsAula} onAddClick={{ callback: HandleEditCreateAula, label: 'Aula' }} conteudos={renderConteudos} />
+                        </div>
                     </div>
-                    <div className='mb-3'>
-                        <h2>{cursos.nome_curso}</h2>
+                </Tab>
+
+                <Tab eventKey="material" title={<span className='fw-bold'>Material de apoio</span>}>
+                    <div className="mt-4">
+                        {/* Material de Apoio */}
+                        <div className='mt-4'>
+                            <Table columns={ColumnsMaterialApoio} data={materiais || []} actions={renderActionsMaterialApoio} onAddClick={{ callback: handleEditCreateMaterialApoio, label: 'Material Apoio' }} />
+                        </div>
                     </div>
-                    <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs" >
-                        <Tab eventKey="aulas" title={<span className='fw-bold'>Aulas</span>}>
-                            <div className="mt-4">
-                                {/* Aulas */}
-                                <div className='mt-4'>
-                                    <Table columns={columnsAulas} data={aulas || []} actions={renderActionsAula} onAddClick={{ callback: HandleEditCreateAula, label: 'Aula' }} conteudos={renderConteudos} />
-                                </div>
-                            </div>
-                        </Tab>
-
-                        <Tab eventKey="material" title={<span className='fw-bold'>Material de apoio</span>}>
-                            <div className="mt-4">
-                                {/* Material de Apoio */}
-                                <div className='mt-4'>
-                                    <Table columns={ColumnsMaterialApoio} data={materiais || []} actions={renderActionsMaterialApoio} onAddClick={{ callback: handleEditCreateMaterialApoio, label: 'Material Apoio' }} />
-                                </div>
-                            </div>
-                        </Tab>
+                </Tab>
 
 
-                        <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
-                            <div className="mt-4">
-                                {/* Trabalhos */}
-                                <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{ callback: handleCreateTrabalho, label: 'Trabalhos' }} />
-                            </div>
-                        </Tab>
+                <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
+                    <div className="mt-4">
+                        {/* Trabalhos */}
+                        <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{ callback: handleCreateTrabalho, label: 'Trabalhos' }} />
+                    </div>
+                </Tab>
 
-                        <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
-                            <div className="mt-4">
-                                <Table columns={colunasNotasFinais} data={resultados} actions={null}
-                                    onAddClick={{
-                                        callback: handleEditarGuardarResultados,
-                                        label: modoEditNotas ? 'Guardar' : 'Editar',
-                                        icon: modoEditNotas ? 'bi-check-lg' : 'bi-pencil',
-                                        variant: modoEditNotas ? 'success' : 'primary'
-                                    }} />
-                            </div>
-                        </Tab>
-                    </Tabs>
-                </div>
-            )
+                <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
+                    <div className="mt-4">
+                        <Table columns={colunasNotasFinais} data={resultados} actions={null}
+                            onAddClick={{
+                                callback: handleEditarGuardarResultados,
+                                label: modoEditNotas ? 'Guardar' : 'Editar',
+                                icon: modoEditNotas ? 'bi-check-lg' : 'bi-pencil',
+                                variant: modoEditNotas ? 'success' : 'primary'
+                            }} />
+                    </div>
+                </Tab>
+            </Tabs>
+        </div>
+    )
 
-        }
+}
 
 
-        export default CursoLecionarAula;
+export default CursoLecionarAula;
