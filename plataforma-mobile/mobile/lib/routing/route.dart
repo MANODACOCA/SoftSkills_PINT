@@ -1,4 +1,6 @@
+import 'package:mobile/ui/course_assync/widget/course_assync_inscrito.dart';
 import 'package:mobile/ui/course_assync/widget/course_assync_screen.dart';
+import 'package:mobile/ui/course_sync/widget/course_sync_inscrito.dart';
 import 'package:mobile/ui/course_sync/widget/course_sync_screen.dart';
 import 'package:mobile/ui/forum/widget/comment_page.dart';
 import 'package:mobile/ui/forum/widget/forum.dart';
@@ -205,6 +207,16 @@ final rotas = GoRouter(
       name: 'likedcourses',
       path: '/likedcourses',
       builder: (context, state) => LikedCourses(),
+    ),
+    GoRoute(
+      name: '',
+      path: '/cursos-inscritos-sincrono',
+      builder: (context, state) => SincronoInscrito(idCurso: state.extra as int),
+    ),
+    GoRoute(
+      name: '',
+      path: '/cursos-inscritos-assincrono',
+      builder: (context, state) => AssincronoInscrito(idCurso: state.extra as int),  
     ),
     GoRoute(
       name: 'forumPage',

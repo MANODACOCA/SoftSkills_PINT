@@ -157,4 +157,35 @@ class CursosApi {
       throw error;
     }
   }
+  
+  Future<bool> verificarInscricao(int userId, int cursoId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+    
+      if (token == null) {
+        throw Exception('Sessão expirada: token inexistente');
+      }
+
+      final response = await http.get(
+        Uri.parse('$urlAPI/verificar/$userId/$cursoId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Estado de inscrição encontrado: ${response.body}');
+        final data = jsonDecode(response.body);
+        final bool inscrito = data['inscrito'];
+        return inscrito;
+      }
+
+      throw Exception('Erro ao encontrar estado da inscrição!');
+    } catch (error) {
+      print('Erro ao encontrar estado da inscrição: $error');
+      throw error;
+    }
+  }
 }
