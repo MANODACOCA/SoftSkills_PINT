@@ -170,11 +170,12 @@ const EditProfile = () => {
         try {
             const { value: file } = await Swal.fire({
                 title: "Seleciona a tua imagem de perfil",
-                input: "file",
-                inputAttributes: {
-                    "accept": "image/*",
-                    "aria-label": "Upload da imagem de perfil"
-                },
+                html: `
+                <div>
+                    <input type="file" id="custom-profile-upload" accept="image/*" class="form-control" />
+                    <small class="text-muted d-block mt-2">Formatos suportados: JPG, PNG, etc.</small>
+                </div>
+            `,
                 showCancelButton: true,
                 confirmButtonText: 'Pré-visualizar',
                 cancelButtonText: 'Cancelar',
@@ -182,6 +183,14 @@ const EditProfile = () => {
                     confirmButton: 'btn btn-primary me-2',
                     cancelButton: 'btn btn-danger',
                 },
+                preConfirm: () => {
+                    const input = document.getElementById('custom-profile-upload');
+                    if (!input.files.length) {
+                        Swal.showValidationMessage('Por favor, selecione uma imagem.');
+                        return false;
+                    }
+                    return input.files[0];
+                }
             });
             if (file) {
                 const reader = new FileReader();
@@ -204,8 +213,8 @@ const EditProfile = () => {
                             const img = document.querySelector('.swal2-image');
                             if (img) {
                                 img.style.borderRadius = '50%';
-                                img.style.width = '100%';
-                                img.style.height = '100%';
+                                img.style.width = '200px';
+                                img.style.height = '200px';
                                 img.style.objectFit = 'cover';
                                 img.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
                             }
