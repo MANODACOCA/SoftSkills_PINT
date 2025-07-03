@@ -1,7 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/app_bar_arrow.dart';
-import 'package:mobile/ui/core/shared/guide_arrow_courses.dart';
+import 'package:mobile/ui/core/shared/tabbar_cursos_inscrito.dart';
 import '../../core/shared/export.dart';
 import '../../core/shared/navigationbar_component.dart';
 
@@ -38,9 +38,9 @@ class _SincronoInscritoState extends State<SincronoInscrito> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    //double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBarArrow(onBack: () => context.pop(),title: 'Curso'),
+      appBar: AppBarArrow(onBack: () => context.go('/cursos'),title: 'Curso'),
       body: Center(
         child: curso.isEmpty 
           ? Padding(padding: EdgeInsets.all(4), child: Center(child: CircularProgressIndicator()),) 
@@ -76,29 +76,20 @@ class _SincronoInscritoState extends State<SincronoInscrito> {
                     SizedBox(height: 5,),
                     Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        "${curso['nome_curso']}",
-                        style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.start,
+                      child: Container(
+                        height: 70,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "${curso['nome_curso']}",
+                          style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.start,
+                        ),  
                       ),
+                      
                     ),
-                    TabbarCourses(curso: curso),
+                    TabbarCoursesInscrito(curso: curso),
                   ],
                 ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  fixedSize: Size(screenWidth - 10, 46),
-                ),
-                onPressed: () {}, 
-                child: Text('Inscrito', style: TextStyle(color: Colors.white),)
               ),
             ),
           ],

@@ -1,9 +1,8 @@
 import 'package:go_router/go_router.dart';
+import 'package:mobile/ui/course/course_screen_inscrever.dart';
 import 'package:mobile/ui/course/courses.dart';
 import 'package:mobile/ui/course_assync/widget/course_assync_inscrito.dart';
-import 'package:mobile/ui/course_assync/widget/course_assync_screen.dart';
 import 'package:mobile/ui/course_sync/widget/course_sync_inscrito.dart';
-import 'package:mobile/ui/course_sync/widget/course_sync_screen.dart';
 import 'package:mobile/ui/profile/widget/courser_joined.dart';
 import 'package:mobile/ui/profile/widget/ended_courses.dart';
 //import 'package:mobile/ui/profile/widget/liked_coursed.dart';
@@ -52,17 +51,10 @@ final List<GoRoute> cursosRoutes = [
     builder: (context, state) => Courses(),
   ),
   GoRoute(
-    name: 'Assync',
-    path: '/assync',
+    name: 'Inscrever',
+    path: '/inscrever',
     builder: (context, state) {
-      return Assincrono(idCurso: state.extra as int);
-    },
-  ),
-  GoRoute(
-    name: 'Sync',
-    path: '/sync',
-    builder: (context, state) {
-      return Sincrono(idCurso: state.extra as int);
+      return Inscrever(idCurso: state.extra as int);
     },
   ),
 ];

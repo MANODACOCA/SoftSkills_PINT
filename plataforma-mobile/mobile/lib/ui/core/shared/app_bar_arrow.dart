@@ -14,8 +14,19 @@ class AppBarArrow extends StatelessWidget implements PreferredSizeWidget {
         color: Colors.white,
         onPressed: onBack,
       ),
-      title: Text(title, style: TextStyle(color: Colors.white)),
+      title: Flexible(
+        child: Text(
+          title,
+          style: const TextStyle(color: Colors.white, fontSize: 18),
+          maxLines: 2, 
+          overflow: TextOverflow.ellipsis, 
+          textAlign: TextAlign.center,
+        ),
+      ),
       centerTitle: true,
+      actions: const [
+        SizedBox(width: kToolbarHeight),
+      ],
       backgroundColor: AppColors.primary,
     );
   }

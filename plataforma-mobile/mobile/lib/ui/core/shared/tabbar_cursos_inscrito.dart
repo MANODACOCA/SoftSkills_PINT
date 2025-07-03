@@ -1,32 +1,32 @@
-import 'package:flutter/material.dart';
+import 'export.dart';
 import '../../../utils/uteis.dart';
 
-class TabbarCourses extends StatelessWidget {
-  const TabbarCourses({super.key, required this.curso});
+class TabbarCoursesInscrito extends StatelessWidget {
+  const TabbarCoursesInscrito({super.key, required this.curso});
 
   final Map<String, dynamic> curso;
 
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    final bool hasFormador = curso['sincrono'] != null;
 
     return DefaultTabController(
-      length: hasFormador ? 3:2,
+      length: 4,
       child: Column(
         children: [
           TabBar(
             tabs: [
-              Tab(text: "Informações"),
-              Tab(text: "Descrição"),
-              if(hasFormador) Tab(text: "Formador"),
+              Tab(text: "Aulas"),
+              Tab(text: "Material apoio"),
+              Tab(text: "Eventos"),
+              Tab(text: "Sobre"),
             ],
           ),
           SizedBox(
-            height: screenHeight - 550, 
+            height: screenHeight - 490, 
             child: TabBarView(
               children: [
-                //Informaçoes
+                //Aulas
                 ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -36,19 +36,25 @@ class TabbarCourses extends StatelessWidget {
                         Text('Datas de inscrição: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         Text(formatDateRange(DateTime.parse(curso['data_inicio_inscricao']), DateTime.parse(curso['data_fim_inscricao'])), style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
                         SizedBox(height: 5,),
-                        Text('Datas de curso: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text(formatDateRange(DateTime.parse(curso['data_inicio_curso']), DateTime.parse(curso['data_fim_curso'])), style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
-                        SizedBox(height: 5,),
-                        Text('Categoria/Área/Tópico: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text("${curso['id_topico_topico']?['id_area_area']?['id_categoria_categorium']?['nome_cat']}/${curso['id_topico_topico']?['id_area_area']?['nome_area']}/${curso['id_topico_topico']?['nome_topico']}", style: TextStyle(fontSize: 15)),
-                        SizedBox(height: 5,),
-                        Text('Idioma: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text("${curso['idioma']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
                       ],
                     ),  
                   ),
                 ]),
-                //descricao
+                //Materia Apoio
+                ListView(children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Datas de inscrição: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(formatDateRange(DateTime.parse(curso['data_inicio_inscricao']), DateTime.parse(curso['data_fim_inscricao'])), style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                        SizedBox(height: 5,),
+                      ],
+                    ),  
+                  ),
+                ]),
+                //Sobre
                 ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -64,9 +70,8 @@ class TabbarCourses extends StatelessWidget {
                   ),
                 ]),
                 //formador
-                if (hasFormador)
                 ListView(children: [
-                  Padding(
+                 /*  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                     child: Column(
                       children: [
@@ -94,10 +99,10 @@ class TabbarCourses extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 5,),
-                        Text("${curso['sincrono']?['id_formador_formadore']?['descricao_formador']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify,),      
+                        Text("${curso['sincrono']?['id_formador_formadore']?['descricao_formador']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.left,),      
                       ],
                     ),
-                  ),
+                  ), */
                 ]),
               ],
             ),
