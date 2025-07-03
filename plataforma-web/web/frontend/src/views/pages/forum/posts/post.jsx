@@ -34,6 +34,21 @@ const ForumPosts = () => {
     }
   };
 
+  const handleLikeChanged = (postId) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id_post === postId
+          ? {
+            ...post,
+            contador_likes: post.ja_curtiu ? post.contador_likes - 1 : post.contador_likes + 1,
+            ja_curtiu: !post.ja_curtiu
+          }
+          : post
+      )
+    );
+  };
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!forum) {
@@ -66,7 +81,7 @@ const ForumPosts = () => {
         ) : (
           posts.map((post) => {
             const autorData = post.id_utilizador_utilizador || {};
-            
+
             return (
               <PostCard
                 key={post.id_post}
@@ -80,7 +95,9 @@ const ForumPosts = () => {
                 dataCriacao={post.data_criacao_post}
                 conteudo={post.caminho_ficheiro}
                 tipoFormato={post.id_formato}
+                onLikeChanged={handleLikeChanged}
                 onDeleted={handlePostDeleted}
+                jaCurtiu={post.ja_curtiu}
               />
             );
           })

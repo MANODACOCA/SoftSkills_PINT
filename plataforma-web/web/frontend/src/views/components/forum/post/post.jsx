@@ -19,7 +19,7 @@ dayjs.locale('pt');
 import Comentario from "../../../components/forum/comentario/comentario";
 import CaixaComentario from "../../../components/forum/comentario/caixaComentario";
 
-const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, tipoFormato, onDeleted }) => {
+const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, onLikeChanged, tipoFormato, onDeleted, jaCurtiu }) => {
 
     const getIconById = (id) => {
         return iconMapById[id] || <FaFile className="text-secondary" />;
@@ -103,7 +103,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     /*DENUCIA*/
 
     /*LIKES*/
-    const [liked, setLiked] = useState(false);
+    const [liked, setLiked] = useState(jaCurtiu || false);
     const [likes, setLikes] = useState(inicialLikes);
 
     const handleLike = async () => {
@@ -116,6 +116,10 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                 setLikes(likes + 1);
             }
             setLiked(!liked);
+
+            if (typeof onLikeChanged === 'function') {
+                onLikeChanged(idPost);
+            }
         } catch (err) {
             console.error("Erro ao atualizar like:", err);
             Swal.fire("Erro", "Não foi possível atualizar o like. Tente novamente.", "error");
@@ -317,8 +321,9 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
             {
                 showComments && (
                     <div className="mt-1 ms-5 me-3">
-                        <CaixaComentario 
+                        <CaixaComentario
                             idPost={idPost}
+                            onCommentCreated={() => fetchComments()}
                         />
                         {carregarComentarios ? (
                             <p className="text-muted text-center">Carregando comentários...</p>
@@ -334,6 +339,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                                     likes={comment.contador_likes_com}
                                     idComentario={comment.id_comentario}
                                     idAutorComentario={comment.id_utilizador}
+                                    onDeleted={() => fetchComments()}
                                 />
                             ))
                         ) : (
