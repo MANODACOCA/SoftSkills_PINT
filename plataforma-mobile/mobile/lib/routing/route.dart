@@ -4,6 +4,7 @@ import 'package:mobile/ui/course_sync/widget/course_sync_inscrito.dart';
 import 'package:mobile/ui/course_sync/widget/course_sync_screen.dart';
 import 'package:mobile/ui/forum/widget/comment_page.dart';
 import 'package:mobile/ui/forum/widget/forum.dart';
+import '../ui/course/courses.dart';
 import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';
@@ -98,8 +99,8 @@ final rotas = GoRouter(
       path: '/profile',
       builder: (context, state) {
       return Profile();
-  },
-),
+      },
+    ),
     /* GoRoute(
       name: 'notificacoes',
       path: '/notificacoes',
@@ -149,6 +150,11 @@ final rotas = GoRouter(
       name: 'coursejoined',
       path: '/coursejoined',
       builder: (context, state) => CourserJoined(),
+    ),
+    GoRoute(
+      name: 'cursos',
+      path: '/cursos',
+      builder: (context, state) => Courses(),
     ),
     GoRoute(
       name: 'Assync',
@@ -205,12 +211,12 @@ final rotas = GoRouter(
       builder: (context, state) => LikedCourses(),
     ),
     GoRoute(
-      name: '',
+      name: 'cursos-inscritos-sincrono',
       path: '/cursos-inscritos-sincrono',
       builder: (context, state) => SincronoInscrito(idCurso: state.extra as int),
     ),
     GoRoute(
-      name: '',
+      name: 'cursos-inscritos-assincrono',
       path: '/cursos-inscritos-assincrono',
       builder: (context, state) => AssincronoInscrito(idCurso: state.extra as int),  
     ),
