@@ -5,7 +5,7 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { create_comentario } from "../../../../api/comentario_axios";
 import { useUser } from '../../../../utils/useUser';
 
-const CaixaComentario = ({ idPost, onCommentCreated}) => {
+const CaixaComentario = ({ idPost, onCommentCreated }) => {
     const [comment, setComment] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
@@ -29,7 +29,7 @@ const CaixaComentario = ({ idPost, onCommentCreated}) => {
             formData.append('id_post', idPost);
             formData.append('id_utilizador', user.id_utilizador);
             formData.append('texto_comentario', comment);
-             formData.append('id_formato', '1');
+            formData.append('id_formato', '1');
 
             if (selectedFile) {
                 formData.append('ficheiro', selectedFile);
@@ -94,14 +94,23 @@ const CaixaComentario = ({ idPost, onCommentCreated}) => {
                 >
                     <FaPaperclip />
                 </Button>
+                <div className='w-100 position-relative'>
+                    <Form.Control
+                        type="text"
+                        placeholder="Escreva um comentário..."
+                        maxLength={512}
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        style={{ paddingRight: '50px' }} 
+                    />
+                    <span
+                        className="text-muted position-absolute top-50 end-0 translate-middle-y pe-2"
+                        style={{ fontSize: '0.8rem' }}
+                    >
+                        {comment.length}/512
+                    </span>
+                </div>
 
-                <Form.Control
-                    type="text"
-                    placeholder="Escreva um comentário..."
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    style={{ flexGrow: 1 }}
-                />
 
                 <Button
                     variant="primary"
@@ -118,7 +127,7 @@ const CaixaComentario = ({ idPost, onCommentCreated}) => {
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileSelect}
-                accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt"
+                accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.xlsm,.ppt,.pptx,.txt"
                 style={{ display: 'none' }}
             />
 

@@ -11,7 +11,7 @@ import { list_tipo_denuncia } from "../../../../api/tipo_denuncia_axios";
 import { create_denuncia } from "../../../../api/denuncia_axios";
 import { delete_comentario, like_comentario, unlike_comentario, jaDeuLike } from "../../../../api/comentario_axios";
 
-function Comentario({ avatar, name, time, text, conteudo, likes: inicialLikes, idComentario, idAutorComentario, onDeleted }) {
+function Comentario({ avatar, name, email, time, text, conteudo, likes: inicialLikes, idComentario, idAutorComentario, onDeleted }) {
   const API_URL = 'https://softskills-api.onrender.com/';
   const { user } = useUser();
 
@@ -121,10 +121,22 @@ function Comentario({ avatar, name, time, text, conteudo, likes: inicialLikes, i
     if (result.isConfirmed) {
       try {
         await delete_comentario(idComentario);
-        Swal.fire('Eliminado!', 'Comentário removido com sucesso.', 'success');
+        Swal.fire({
+          title: 'Eliminado!',
+          text: 'Comentário removido com sucesso.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 3000,
+        });
         if (onDeleted) onDeleted(idComentario);
       } catch (error) {
-        Swal.fire('Erro!', 'Não foi possível eliminar o comentário.', 'error');
+        Swal.fire({
+          title: 'Erro!',
+          text: 'Não foi possível eliminar o comentário.',
+          icon: 'error',
+          showConfirmButton: false,
+          timer: 3000,
+        });
       }
     }
   };
@@ -151,11 +163,11 @@ function Comentario({ avatar, name, time, text, conteudo, likes: inicialLikes, i
         <Col>
           <div className="d-flex justify-content-between align-items-start">
             <div className='w-100'>
-              <Row className="align-items-center mb-1">
-                <Col xs="auto" className="fw-semibold pe-0">{name}</Col>
+              <div>
+                <Col xs="auto" className="fw-semibold pe-0">{name} <span className="text-muted" style={{ fontSize: '0.8em' }}>&lt;{email}&gt;</span></Col>
                 <Col xs="auto" className="comentario-time small ps-1">{time}</Col>
-              </Row>
-              <p className="comentario-texto mb-4">{text}</p>
+              </div>
+              <p className="comentario-texto mb-2 mt-2">{text}</p>
               {conteudo && (
                 <a href={conteudo} target='blank' className="text-decoration-none text-primary">
                   <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light" >
@@ -193,7 +205,7 @@ function Comentario({ avatar, name, time, text, conteudo, likes: inicialLikes, i
               </Dropdown.Menu>
             </Dropdown>
           </div>
-<hr />
+          <hr />
           <Button
             size="sm"
             className={`btn d-flex align-items-center text-white ${liked ? 'btn-primary' : 'btn-outline-secondary'}`}
