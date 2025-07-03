@@ -5,7 +5,7 @@ import { Form, Button, Alert } from 'react-bootstrap';
 import { create_comentario } from "../../../../api/comentario_axios";
 import { useUser } from '../../../../utils/useUser';
 
-const CaixaComentario = ({ idPost }) => {
+const CaixaComentario = ({ idPost, onCommentCreated}) => {
     const [comment, setComment] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const fileInputRef = useRef(null);
