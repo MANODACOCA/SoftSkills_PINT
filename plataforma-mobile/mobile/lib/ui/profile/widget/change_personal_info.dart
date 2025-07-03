@@ -63,7 +63,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   Future<void> _enviar(ImageSource source) async {
     try{
       final res = await _api.alterarImgPerfil(userIdd, source);
-      await fetchUtilizador(int.parse(userIdd));
+      //await fetchUtilizador(int.parse(userIdd));
       setState(() => utilizador['img_perfil'] = res['img_perfil']);
     } catch(e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -373,7 +373,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                               );
                                             },
                                             child: Text(
-                                              'Selecionar país',
+                                              _selectedPais ?? 'Selecionar país',
                                               style: TextStyle(
                                                 color: Colors.black,
                                               ),
@@ -413,7 +413,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                                       setState(() {
                                                         _selectedGenero = 'Masculino';
                                                       });
-                                                      context.pop(context);
+                                                      context.pop();
                                                     },
                                                   ),
                                                   ListTile(
@@ -423,7 +423,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                                       setState(() {
                                                         _selectedGenero = 'Feminino';
                                                       });
-                                                      context.pop(context);
+                                                      context.pop();
                                                     },
                                                   ),
                                                 ],
@@ -450,7 +450,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                             horizontal: 4,
                                           ),
                                           child: Text(
-                                            'Selecionar género',
+                                            _selectedGenero ?? 'Selecionar género',
                                             style: TextStyle(
                                               color: Colors.black,
                                             ),
@@ -528,7 +528,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                       }
                     }
                     if (_selectedGenero != null) {
-                      body['genero'] = _selectedGenero;
+                      body['genero'] = _selectedGenero == 'Masculino' ? 1 : 2;
                     }
                     if (_selectedPais != null) {
                       body['pais'] = _selectedPais; 
