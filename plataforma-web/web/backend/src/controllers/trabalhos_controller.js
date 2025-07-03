@@ -72,7 +72,7 @@ controllers.create = async (req,res)=>{
 
 controllers.update = async (req,res)=>{
   try {
-    const {id} = req.parms;
+    const {id} = req.params;
 
     const current = await model.findByPk(id);
     if (!current) return res.status(404).json({ erro: 'Trabalho não encontrado' });
