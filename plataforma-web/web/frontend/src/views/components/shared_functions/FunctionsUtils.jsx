@@ -12,6 +12,13 @@ export const formatDayMonthYear = (isoDate) => {
   return date.toLocaleDateString('pt-PT', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
+export function formatHoraMinutos(isoDate) {
+  const data = new Date(isoDate);
+  const horas = data.getHours().toString().padStart(2, '0');
+  const minutos = data.getMinutes().toString().padStart(2, '0');
+  return `${horas}h${minutos}`;
+}
+
 export const formatYearMonthDay = (isoDate) => {
   const date = new Date(isoDate);
   const year = date.getFullYear();

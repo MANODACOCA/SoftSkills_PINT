@@ -907,7 +907,7 @@ const CursoLecionarAula = () => {
 
     const handleEditarTrabalho = async (trabalho) => {
         const result = await Swal.fire({
-            title: id == null ? 'Tem a certeza que deseja adicionar Trabalho?' : 'Tem a certeza que deseja editar o Trabalho?',
+            title: 'Tem a certeza que deseja editar o Trabalho?',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sim',
@@ -927,36 +927,36 @@ const CursoLecionarAula = () => {
                     const editarTrabalho = await Swal.fire({
                         title: 'Editar trabalho',
                         html: `
-                            <label class="form-label">Nome do Trabalho</label>
-                            <input id="nomeTr" class="form-control mb-2" placeholder="Nome..." value="${trabalho?.nome_tr || ''}" />
+                        <label class="form-label">Nome do Trabalho</label>
+                        <input id="nomeTr" class="form-control mb-3" placeholder="Nome..." value="${trabalho?.nome_tr || ''}" />
 
-                            <label class="form-label">Descrição</label>
-                            <textarea id="descTr" class="form-control mb-2" placeholder="Descrição...">${trabalho?.descricao_tr || ''}</textarea>
+                        <label for="descTr" class="form-label">Descrição</label>
+                        <textarea id="descTr" class="form-control mb-3" placeholder="Descrição...">${trabalho?.descricao_tr || ''}</textarea>
 
-                            <label class="form-label">Data de Entrega</label>
-                            <input id="dataTr" type="date" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
+                        <label class="form-label">Data de Entrega</label>
+                        <input id="dataTr" type="date" class="form-control mb-3" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
 
-                            <label class="form-label">Hora de Entrega</label>
-                            <input id="horaTr" type="time" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0, 5) || ''}" />
+                        <label class="form-label">Hora de Entrega</label>
+                        <input id="horaTr" type="time" class="form-control mb-3" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0, 5) || ''}" />
 
-                            <label for="formatoTr" class="form-label">Formato</label>
-                            <select id="formatoTr" class="form-select mb-3">
-                                <option value="">-- Selecione um formato --</option>
-                                ${formatos.map(f => `
-                                    <option value="${f.id_formato}" ${f.id_formato == trabalho?.id_formato_tr ? 'selected' : ''}>${f.formato}</option>
-                                `).join('')}
-                            </select>
+                        <label for="formatoTr" class="form-label">Formato</label>
+                        <select id="formatoTr" class="form-select mb-3">
+                            <option value="">-- Selecione um formato --</option>
+                            ${formatos.map(f => `
+                                <option value="${f.id_formato}" ${f.id_formato == trabalho?.id_formato_tr ? 'selected' : ''}>${f.formato}</option>
+                            `).join('')}
+                        </select>
 
-                            <div id="fileInputWrapper" class="d-none">
-                                <p id="ficheiroAtual" class="small mb-2"></p>
-                                <label for="ficheiroTr" id="ficheiroLabel" class="form-label">Ficheiro</label>
-                                <input type="file" id="ficheiroTr" class="form-control mb-2" />
-                            </div>
+                        <div id="fileInputWrapper" class="d-none">
+                            <p id="ficheiroAtual" class="small mb-3"></p>
+                            <label for="ficheiroTr" id="ficheiroLabel" class="form-label">Ficheiro</label>
+                            <input type="file" id="ficheiroTr" class="form-control mb-3" value="${trabalho.caminho_tr}" />
+                        </div>
 
-                            <div id="urlInputWrapper" class="d-none">
-                                <label for="urlTr" id="urlLabel" class="form-label">URL</label>
-                                <input type="text" id="urlTr" class="form-control mb-2" placeholder="https://exemplo.com/trabalho.pdf" />
-                            </div>
+                        <div id="urlInputWrapper" class="d-none">
+                            <label for="urlTr" id="urlLabel" class="form-label">URL</label>
+                            <input type="text" id="urlTr" class="form-control mb-2" value="${trabalho.caminho_tr}" placeholder="https://exemplo.com/trabalho.pdf" />
+                        </div>
                         `,
                         didOpen: () => {
                             const formatoEl = document.getElementById('formatoTr');
@@ -1003,7 +1003,7 @@ const CursoLecionarAula = () => {
                             const id_formato = parseInt(document.getElementById('formatoTr').value);
                             const ficheiro = document.getElementById('ficheiroTr').files[0];
 
-                            if (!nome || !descricao || !data || !hora || !id_formato || !ficheiro) {
+                            if (!nome || !descricao || !data || !hora || !id_formato) {
                                 Swal.showValidationMessage("Todos os campos são obrigatórios!");
                                 return false;
                             }
@@ -1020,7 +1020,7 @@ const CursoLecionarAula = () => {
                             };
                         },
                         showCancelButton: true,
-                        confirmButtonText: 'Adicionar Trabalho',
+                        confirmButtonText: 'Editar Trabalho',
                         cancelButtonText: 'Cancelar',
                         customClass: {
                             confirmButton: 'btn btn-success me-2',
@@ -1030,11 +1030,11 @@ const CursoLecionarAula = () => {
 
                     if (editarTrabalho.isConfirmed && editarTrabalho.value) {
                         try {
-                            await update_trabalhos(editarTrabalho.value);
+                            await update_trabalhos(trabalho.id_trabalho ,editarTrabalho.value);
                             await fetchTrabalhos(trabalho.id_curso_tr);
                             Swal.fire({
                                 icon: "success",
-                                title: "Material de apoio editado com sucesso!",
+                                title: "Trabalho editado com sucesso!",
                                 timer: 2000,
                                 showConfirmButton: false
                             });
@@ -1048,263 +1048,319 @@ const CursoLecionarAula = () => {
                             });
                         }
                     } else {
-                        const formatos = await list_tipo_formato();
-                        const formatosComFicheiro = [1, 2, 3, 4, 5];
-                        const adicionarTrabalho = await Swal.fire({
-                            title: 'Adicionar Trabalho',
-                            html: `
-                            <label class="form-label">Nome do Trabalho</label>
-                            <input id="nomeTr" class="form-control mb-2" placeholder="Nome..." value="${trabalho?.nome_tr || ''}" />
+                    }
+                } else {
+                    
+                }
+            } catch (error) {
 
-                            <label class="form-label">Descrição</label>
-                            <textarea id="descTr" class="form-control mb-2" placeholder="Descrição...">${trabalho?.descricao_tr || ''}</textarea>
+            }
+        }
+    }
 
-                            <label class="form-label">Data de Entrega</label>
-                            <input id="dataTr" type="date" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
+            
 
-                            <label class="form-label">Hora de Entrega</label>
-                            <input id="horaTr" type="time" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0, 5) || ''}" />
+    const handleCreateTrabalho = async (trabalho) => {
+        const result = await Swal.fire({
+            title: 'Tem a certeza que deseja adicionar trabalho?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+        if (result.isConfirmed) {
+            try {
+                const formatos = await list_tipo_formato();
+                const formatosComFicheiro = [1, 2, 3, 4, 5];
+                const adicionarTrabalho = await Swal.fire({
+                    title: 'Adicionar Trabalho',
+                    html: `
+                    <label class="form-label">Nome do Trabalho</label>
+                    <input id="nomeTr" class="form-control mb-2" placeholder="Nome..." value="${trabalho?.nome_tr || ''}" />
 
-                            <label for="formatoTr" class="form-label">Formato</label>
-                            <select id="formatoTr" class="form-select mb-3">
-                                <option value="">-- Selecione um formato --</option>
-                                ${formatos.map(f => `
-                                    <option value="${f.id_formato}" ${f.id_formato == trabalho?.id_formato_tr ? 'selected' : ''}>${f.formato}</option>
-                                `).join('')}
-                            </select>
+                    <label class="form-label">Descrição</label>
+                    <textarea id="descTr" class="form-control mb-2" placeholder="Descrição...">${trabalho?.descricao_tr || ''}</textarea>
 
-                            <div id="fileInputWrapper" class="d-none">
-                                <p id="ficheiroAtual" class="small mb-2"></p>
-                                <label for="ficheiroTr" id="ficheiroLabel" class="form-label">Ficheiro</label>
-                                <input type="file" id="ficheiroTr" class="form-control mb-2" />
-                            </div>
+                    <label class="form-label">Data de Entrega</label>
+                    <input id="dataTr" type="date" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
 
-                            <div id="urlInputWrapper" class="d-none">
-                                <label for="urlTr" id="urlLabel" class="form-label">URL</label>
-                                <input type="text" id="urlTr" class="form-control mb-2" placeholder="https://exemplo.com/trabalho.pdf" />
-                            </div>
-                        `,
-                            didOpen: () => {
-                                const formatoEl = document.getElementById('formatoTr');
-                                const fileWrapper = document.getElementById('fileInputWrapper');
-                                const urlWrapper = document.getElementById('urlInputWrapper');
-                                const ficheiroAtual = document.getElementById('ficheiroAtual');
-                                const fileLabel = document.getElementById('ficheiroLabel');
-                                const urlLabel = document.getElementById('urlLabel');
-                                const urlInput = document.getElementById('urlTr');
+                    <label class="form-label">Hora de Entrega</label>
+                    <input id="horaTr" type="time" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0, 5) || ''}" />
 
-                                function atualizarCampos() {
-                                    const selectedId = parseInt(formatoEl.value);
-                                    if (isNaN(selectedId)) {
-                                        fileWrapper.classList.add('d-none');
-                                        urlWrapper.classList.add('d-none');
-                                        return;
-                                    }
+                    <label for="formatoTr" class="form-label">Formato</label>
+                    <select id="formatoTr" class="form-select mb-3">
+                        <option value="">-- Selecione um formato --</option>
+                        ${formatos.map(f => `
+                            <option value="${f.id_formato}" ${f.id_formato == trabalho?.id_formato_tr ? 'selected' : ''}>${f.formato}</option>
+                        `).join('')}
+                    </select>
 
-                                    const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+                    <div id="fileInputWrapper" class="d-none">
+                        <p id="ficheiroAtual" class="small mb-2"></p>
+                        <label for="ficheiroTr" id="ficheiroLabel" class="form-label">Ficheiro</label>
+                        <input type="file" id="ficheiroTr" class="form-control mb-2" />
+                    </div>
 
-                                    if (formatosComFicheiro.includes(selectedId)) {
-                                        fileWrapper.classList.remove('d-none');
-                                        urlWrapper.classList.add('d-none');
-                                        ficheiroAtual.textContent = trabalho?.caminho_tr
-                                            ? `Ficheiro atual: ${trabalho.caminho_tr.split('/').pop()}`
-                                            : 'Nenhum ficheiro carregado.';
-                                        fileLabel.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                                    } else {
-                                        fileWrapper.classList.add('d-none');
-                                        urlWrapper.classList.remove('d-none');
-                                        urlLabel.textContent = `URL (${formatoSelecionado.formato})`;
-                                        urlInput.value = trabalho?.caminho_tr || '';
-                                    }
-                                }
+                    <div id="urlInputWrapper" class="d-none">
+                        <label for="urlTr" id="urlLabel" class="form-label">URL</label>
+                        <input type="text" id="urlTr" class="form-control mb-2" placeholder="https://exemplo.com/trabalho.pdf" />
+                    </div>
+                    `,
+                    didOpen: () => {
+                        const formatoEl = document.getElementById('formatoTr');
+                        const fileWrapper = document.getElementById('fileInputWrapper');
+                        const urlWrapper = document.getElementById('urlInputWrapper');
+                        const ficheiroAtual = document.getElementById('ficheiroAtual');
+                        const fileLabel = document.getElementById('ficheiroLabel');
+                        const urlLabel = document.getElementById('urlLabel');
+                        const urlInput = document.getElementById('urlTr');
 
-                                atualizarCampos();
-                                formatoEl.addEventListener('change', atualizarCampos);
-                            },
-                            preConfirm: () => {
-                                const nome = document.getElementById('nomeTr').value.trim();
-                                const descricao = document.getElementById('descTr').value.trim();
-                                const data = document.getElementById('dataTr').value;
-                                const hora = document.getElementById('horaTr').value;
-                                const id_formato = parseInt(document.getElementById('formatoTr').value);
-                                const ficheiro = document.getElementById('ficheiroTr').files[0];
-
-                                if (!nome || !descricao || !data || !hora || !id_formato || !ficheiro) {
-                                    Swal.showValidationMessage("Todos os campos são obrigatórios!");
-                                    return false;
-                                }
-
-                                const data_entrega_tr = `${data}T${hora}:00`;
-
-                                return {
-                                    nome_tr: nome,
-                                    descricao_tr: descricao,
-                                    data_entrega_tr,
-                                    id_formato_tr: id_formato,
-                                    ficheiro: ficheiro,
-                                    id_curso_tr: cursos.id_curso
-                                };
-                            },
-                            showCancelButton: true,
-                            confirmButtonText: 'Adicionar Trabalho',
-                            cancelButtonText: 'Cancelar',
-                            customClass: {
-                                confirmButton: 'btn btn-success me-2',
-                                cancelButton: 'btn btn-danger'
+                        function atualizarCampos() {
+                            const selectedId = parseInt(formatoEl.value);
+                            if (isNaN(selectedId)) {
+                                fileWrapper.classList.add('d-none');
+                                urlWrapper.classList.add('d-none');
+                                return;
                             }
-                        });
-                        if (adicionarTrabalho.isConfirmed && adicionarTrabalho.value) {
-                            try {
-                                await create_trabalhos(adicionarTrabalho.value);
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Trabalho adicionado com sucesso!",
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                });
-                                fetchTrabalhos(trabalho.id_curso_tr);
-                            } catch (error) {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Erro",
-                                    text: "Não foi possível adicionar o trabalho",
-                                    timer: 2000,
-                                    showConfirmButton: false
-                                });
+
+                            const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+
+                            if (formatosComFicheiro.includes(selectedId)) {
+                                fileWrapper.classList.remove('d-none');
+                                urlWrapper.classList.add('d-none');
+                                ficheiroAtual.textContent = trabalho?.caminho_tr
+                                    ? `Ficheiro atual: ${trabalho.caminho_tr.split('/').pop()}`
+                                    : 'Nenhum ficheiro carregado.';
+                                fileLabel.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                            } else {
+                                fileWrapper.classList.add('d-none');
+                                urlWrapper.classList.remove('d-none');
+                                urlLabel.textContent = `URL (${formatoSelecionado.formato})`;
+                                urlInput.value = trabalho?.caminho_tr || '';
                             }
                         }
+
+                        atualizarCampos();
+                        formatoEl.addEventListener('change', atualizarCampos);
+                    },
+                    preConfirm: () => {
+                        const nome = document.getElementById('nomeTr').value.trim();
+                        const descricao = document.getElementById('descTr').value.trim();
+                        const data = document.getElementById('dataTr').value;
+                        const hora = document.getElementById('horaTr').value;
+                        const id_formato = parseInt(document.getElementById('formatoTr').value);
+                        const ficheiro = document.getElementById('ficheiroTr').files[0];
+
+                        if (!nome || !descricao || !data || !hora || !id_formato || !ficheiro) {
+                            Swal.showValidationMessage("Todos os campos são obrigatórios!");
+                            return false;
+                        }
+
+                        const data_entrega_tr = `${data}T${hora}:00`;
+
+                        return {
+                            nome_tr: nome,
+                            descricao_tr: descricao,
+                            data_entrega_tr,
+                            id_formato_tr: id_formato,
+                            ficheiro: ficheiro,
+                            id_curso_tr: cursos.id_curso
+                        };
+                    },
+                    showCancelButton: true,
+                    confirmButtonText: 'Adicionar Trabalho',
+                    cancelButtonText: 'Cancelar',
+                    customClass: {
+                        confirmButton: 'btn btn-success me-2',
+                        cancelButton: 'btn btn-danger'
+                    }
+                });
+                if (adicionarTrabalho.isConfirmed && adicionarTrabalho.value) {
+                    try {
+                        const data = await create_trabalhos(adicionarTrabalho.value);
+                        fetchTrabalhos(data.id_curso_tr);
+                        Swal.fire({
+                            icon: "success",
+                            title: "Trabalho adicionado com sucesso!",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } catch (error) {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Erro",
+                            text: "Não foi possível adicionar o trabalho",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
                     }
                 }
             } catch (error) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Erro",
-                    text: "Erro ao preparar o formulário de trabalho.",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
+
             }
         }
-    };
-
-
-        const fetchTrabalhos = async (id_curso) => {
-            try {
-                const response = await get_trabalhos_curso(id_curso);
-                setTrabalhos(response);
-            } catch (err) {
-                console.error("Erro ao buscar trabalhos", err);
-            }
-        };
-
-        const renderActionsTrabalhos = (item) => {
-            return (
-                <div className="d-flex">
-                    <button className="btn btn-outline-primary me-2" onClick={() => handleEditarTrabalho(item.id_material_apoio)}>
-                        <i className="bi bi-pencil"></i>
-                    </button>
-                    <button className="btn btn-outline-danger" onClick={() => handleEditarTrabalho(item.id_material_apoio)}>
-                        <i className="bi bi-trash"></i>
-                    </button>
-                </div>
-            );
-        }
-
-        //#endregion
-
-        useEffect(() => {
-            const carregarDados = async () => {
-                await fetchFormatos();
-                await fetchMaterialApoio(id);
-                await fetchFormadores();
-                await fetchCurso(id);
-                await fetchAulas(id);
-                await fetchResultados(id);
-                await fetchFormatos(id);
-                await fetchTrabalhos(id);
-            }
-            carregarDados();
-        }, []);
-
-        if (!user || !user.id_utilizador || !cursos || !cursos.sincrono) {
-
-            return <SpinnerBorder />
-
-
-        }
-        /* if(cursos.sincrono === null) {
-                    return <div className="alert alert-danger text-center mt-4">
-                        <i className='bi bi-x-circle fs-1'></i><br />
-                        O curso <strong>{cursos.nome_curso}</strong> é assincrono, apenas administradores podem editar!
-                    </div>;
-                } */
-        if (user.id_utilizador !== cursos.sincrono.id_formador) {
-            return <div className="alert alert-danger text-center mt-4">
-                <i className='bi bi-x-circle fs-1'></i><br />
-                Não pode aceder à página visto que não é formador do curso <strong>{cursos.nome_curso}</strong>
-            </div>;
-        }
-
-        return (
-            <div className="">
-                <div className='w-100'>
-                    {cursos && (
-                        <img
-                            src={cursos.nome_curso || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`}
-                            onError={(e) => {
-                                e.target.onerror = null;
-                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`;
-                            }}
-                            alt="Imagem de perfil"
-                            className='w-100 img-profile rounded-2 mb-3 img-header-course'
-                        />
-                    )}
-                </div>
-                <div className='mb-3'>
-                    <h2>{cursos.nome_curso}</h2>
-                </div>
-                <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs" >
-                    <Tab eventKey="aulas" title={<span className='fw-bold'>Aulas</span>}>
-                        <div className="mt-4">
-                            {/* Aulas */}
-                            <div className='mt-4'>
-                                <Table columns={columnsAulas} data={aulas || []} actions={renderActionsAula} onAddClick={{ callback: HandleEditCreateAula, label: 'Aula' }} conteudos={renderConteudos} />
-                            </div>
-                        </div>
-                    </Tab>
-
-                    <Tab eventKey="material" title={<span className='fw-bold'>Material de apoio</span>}>
-                        <div className="mt-4">
-                            {/* Material de Apoio */}
-                            <div className='mt-4'>
-                                <Table columns={ColumnsMaterialApoio} data={materiais || []} actions={renderActionsMaterialApoio} onAddClick={{ callback: handleEditCreateMaterialApoio, label: 'Material Apoio' }} />
-                            </div>
-                        </div>
-                    </Tab>
-
-
-                    <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
-                        <div className="mt-4">
-                            {/* Trabalhos */}
-                            <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{ callback: handleEditarTrabalho, label: 'Trabalhos' }} />
-                        </div>
-                    </Tab>
-
-                    <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
-                        <div className="mt-4">
-                            <Table columns={colunasNotasFinais} data={resultados} actions={null}
-                                onAddClick={{
-                                    callback: handleEditarGuardarResultados,
-                                    label: modoEditNotas ? 'Guardar' : 'Editar',
-                                    icon: modoEditNotas ? 'bi-check-lg' : 'bi-pencil',
-                                    variant: modoEditNotas ? 'success' : 'primary'
-                                }} />
-                        </div>
-                    </Tab>
-                </Tabs>
-            </div>
-        )
 
     }
 
-    export default CursoLecionarAula;
+
+    const handleDeleteTrabalho = async (item) => {
+        const result = await Swal.fire({
+            title: "Tem certeza que deseja excluir este trabalho?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim",
+            cancelButtonColor: "Cancelar",
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await delete_trabalhos(item.id_trabalho);
+                await fetchTrabalhos(item.id_curso_tr);
+                Swal.fire({
+                    icon: "success",
+                    title: "Trabalho excluído com sucesso!",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } catch (error) {
+                console.error("Erro ao excluir trabalho:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Elimine os conteúdos!",
+                    text: "Não foi possível excluir a aula",
+                    timer: 2000,
+                    showConfirmButton: false,
+                });
+            }
+        }
+    }
+
+
+    const fetchTrabalhos = async (id_curso) => {
+        try {
+            const response = await get_trabalhos_curso(id_curso);
+            setTrabalhos(response);
+        } catch (err) {
+            console.error("Erro ao buscar trabalhos", err);
+        }
+    };
+
+    const renderActionsTrabalhos = (item) => {
+        return (
+            <div className="d-flex">
+                <button className="btn btn-outline-primary me-2" onClick={() => handleEditarTrabalho(item)}>
+                    <i className="bi bi-pencil"></i>
+                </button>
+                <button className="btn btn-outline-danger" onClick={() => handleDeleteTrabalho(item)}>
+                    <i className="bi bi-trash"></i>
+                </button>
+            </div>
+        );
+    }
+
+    //#endregion
+
+    useEffect(() => {
+        const carregarDados = async () => {
+            await fetchFormatos();
+            await fetchMaterialApoio(id);
+            await fetchFormadores();
+            await fetchCurso(id);
+            await fetchAulas(id);
+            await fetchResultados(id);
+            await fetchFormatos(id);
+            await fetchTrabalhos(id);
+        }
+        carregarDados();
+    }, []);
+
+            if (!user || !user.id_utilizador || !cursos || !cursos.sincrono) {
+                return <SpinnerBorder />
+            }
+            /* if(cursos.sincrono === null) {
+                        return <div className="alert alert-danger text-center mt-4">
+                            <i className='bi bi-x-circle fs-1'></i><br />
+                            O curso <strong>{cursos.nome_curso}</strong> é assincrono, apenas administradores podem editar!
+                        </div>;
+                    } */
+            if (user.id_utilizador !== cursos.sincrono.id_formador) {
+                return <div className="alert alert-danger text-center mt-4">
+                    <i className='bi bi-x-circle fs-1'></i><br />
+                    Não pode aceder à página visto que não é formador do curso <strong>{cursos.nome_curso}</strong>
+                </div>;
+            }
+
+            return (
+                <div className="">
+                    <div className='w-100'>
+                        {cursos && (
+                            <img
+                                src={cursos.nome_curso || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`;
+                                }}
+                                alt="Imagem de perfil"
+                                className='w-100 img-profile rounded-2 mb-3 img-header-course'
+                            />
+                        )}
+                    </div>
+                    <div className='mb-3'>
+                        <h2>{cursos.nome_curso}</h2>
+                    </div>
+                    <Tabs defaultActiveKey="aulas" className="mb-4 nav-justified custom-tabs" >
+                        <Tab eventKey="aulas" title={<span className='fw-bold'>Aulas</span>}>
+                            <div className="mt-4">
+                                {/* Aulas */}
+                                <div className='mt-4'>
+                                    <Table columns={columnsAulas} data={aulas || []} actions={renderActionsAula} onAddClick={{ callback: HandleEditCreateAula, label: 'Aula' }} conteudos={renderConteudos} />
+                                </div>
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="material" title={<span className='fw-bold'>Material de apoio</span>}>
+                            <div className="mt-4">
+                                {/* Material de Apoio */}
+                                <div className='mt-4'>
+                                    <Table columns={ColumnsMaterialApoio} data={materiais || []} actions={renderActionsMaterialApoio} onAddClick={{ callback: handleEditCreateMaterialApoio, label: 'Material Apoio' }} />
+                                </div>
+                            </div>
+                        </Tab>
+
+
+                        <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
+                            <div className="mt-4">
+                                {/* Trabalhos */}
+                                <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{ callback: handleCreateTrabalho, label: 'Trabalhos' }} />
+                            </div>
+                        </Tab>
+
+                        <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
+                            <div className="mt-4">
+                                <Table columns={colunasNotasFinais} data={resultados} actions={null}
+                                    onAddClick={{
+                                        callback: handleEditarGuardarResultados,
+                                        label: modoEditNotas ? 'Guardar' : 'Editar',
+                                        icon: modoEditNotas ? 'bi-check-lg' : 'bi-pencil',
+                                        variant: modoEditNotas ? 'success' : 'primary'
+                                    }} />
+                            </div>
+                        </Tab>
+                    </Tabs>
+                </div>
+            )
+
+        }
+
+
+        export default CursoLecionarAula;

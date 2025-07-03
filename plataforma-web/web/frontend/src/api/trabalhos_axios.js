@@ -67,12 +67,12 @@ export const update_trabalhos = async (id,
 
         if(ficheiro) {
             const fd = new FormData();
-            if (id_curso_tr !== undefined) fd.append('id_curso', id_curso_tr);
-            if (id_formato_tr !== undefined) fd.append('id_formato', id_formato_tr);
-            if (descricao_tr !== undefined) fd.append('nome_material', descricao_tr);
-            if (data_entrega_tr !== undefined) fd.append('nome_material', data_entrega_tr);
-            if (nome_tr !== undefined) fd.append('nome_material', nome_tr);
-            fd.append('ficheiro', ficheiro);          
+            if (id_curso_tr !== undefined) fd.append('id_curso_tr', id_curso_tr);
+            if (id_formato_tr !== undefined) fd.append('id_formato_tr', id_formato_tr);
+            if (descricao_tr !== undefined) fd.append('descricao_tr', descricao_tr);
+            if (data_entrega_tr !== undefined) fd.append('data_entrega_tr', data_entrega_tr);
+            if (nome_tr !== undefined) fd.append('nome_tr', nome_tr);
+            fd.append('caminho_tr', ficheiro);          
             payload = fd;
             headers = { maxBodyLength: ONE_HUNDRED_MB }; 
         }else{

@@ -2,7 +2,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).trabalhos;
 const controllers = {};
-
+const { criarNotifacoesGenerica } = require("../utils/SendNotification");
 
 controllers.list = async (req,res)=>{
   const data = await model.findAll();
@@ -57,8 +57,20 @@ controllers.create = async (req,res)=>{
       data_entrega_tr
     };
 
-      const data = await model.create(payload);
-      res.status(201).json(data);
+    const data = await model.create(payload);
+    try {
+      await criarNotifacoesGenerica(
+        'trabalho',
+        'criação',
+        req.body.nome_tr,
+        req.body.id_curso_tr,
+        sequelize
+      );
+    } catch (error) {
+      console.error('Erro ao enviar notificação de criação de trabalho');
+    }
+
+    res.status(201).json(data);
   }catch(err){
     if (err.code === 'LIMIT_FILE_SIZE') {
       return res.status(413).json({
@@ -72,7 +84,7 @@ controllers.create = async (req,res)=>{
 
 controllers.update = async (req,res)=>{
   try {
-    const {id} = req.parms;
+    const {id} = req.params;
 
     const current = await model.findByPk(id);
     if (!current) return res.status(404).json({ erro: 'Trabalho não encontrado' });
@@ -106,6 +118,18 @@ controllers.update = async (req,res)=>{
 
     if (!rows) {
       return res.status(404).json({ erro: 'Trabalho não foi actualizado' });
+    }
+
+    try {
+      await criarNotifacoesGenerica(
+        'trabalho',
+        'atualização',
+        req.body.nome_tr,
+        req.body.id_curso_tr,
+        sequelize
+      );
+    } catch (error) {
+      console.error('Erro ao enviar notificação de criação de trabalho');
     }
 
     const actualizado = await model.findByPk(id);
