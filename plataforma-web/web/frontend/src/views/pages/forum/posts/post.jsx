@@ -7,6 +7,7 @@ import PostCard from "../../../components/forum/post/post";
 import { get_post } from "../../../../api/post_axios";
 
 const ForumPosts = () => {
+  const [ordenar, setOrdenar] = useState('Mais Recentes');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -24,13 +25,13 @@ const ForumPosts = () => {
         throw new Error("Fórum inválido ou ausente.");
       }
 
-      const data = await get_post(forum.id_conteudos_partilhado);
+      const data = await get_post(forum.id_conteudos_partilhado, ordenar);
       const novosPosts = data.posts || [];
 
       if (JSON.stringify(novosPosts) !== JSON.stringify(posts)) {
         setPosts(novosPosts);
       }
-      
+
     } catch (err) {
       console.error(err);
       setError("Erro ao carregar posts.");
@@ -63,7 +64,7 @@ const ForumPosts = () => {
 
     fetchPosts();
 
-  }, [forum]);
+  }, [forum, ordenar]);
 
 
   if (loading) return (
@@ -83,7 +84,23 @@ const ForumPosts = () => {
         forum={forum}
         onPostCreated={fetchPosts}
       />
-      <div className="container mt-5" style={{ maxWidth: '1500px' }}>
+
+      <div className="container mt-4" style={{ maxWidth: '1500px' }}>
+
+        <div className="d-flex justify-content-end align-items-center mb-3">
+          <p className="mb-0 me-2">Ordenar:</p>
+          <select
+            className="form-select w-auto"
+            value={ordenar}
+            onChange={(e) => setOrdenar(e.target.value)}
+          >
+            <option value="Mais Recentes">Mais Recentes</option>
+            <option value="Mais Antigos">Mais Antigos</option>
+            <option value="Mais Antigos">Mais Populares</option>
+            <option value="Mais Antigos">Menos Populares</option>
+          </select>
+        </div>
+
         {posts.length === 0 ? (
           <div className="alert alert-warning mt-3">Ainda não existem posts.</div>
         ) : (

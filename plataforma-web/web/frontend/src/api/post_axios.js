@@ -14,9 +14,11 @@ export const list_post = async () => {
     }
 }
 
-export const get_post = async (id) => {
+export const get_post = async (id, ordenar = "Mais Recentes") => {
     try {
-        const response = await axios.get(`${API_URL_POSTS}/get/posts?id_conteudos_partilhado=${id}`);
+        let url = `${API_URL_POSTS}/get/posts?id_conteudos_partilhado=${id}&ordenar=${ordenar}`
+
+        const response = await axios.get(url);
         return response.data;
     } catch (error) {
         console.error('Erro ao buscar Post!');
