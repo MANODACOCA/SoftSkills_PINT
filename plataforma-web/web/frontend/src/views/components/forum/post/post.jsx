@@ -273,7 +273,7 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
                 <div className="mt-3">
                     <p className="mb-3">{texto}</p>
                 </div>
-                {tipoFormato && conteudo && (
+                {conteudo && (
                     <a href={conteudo} target='blank' className="text-decoration-none text-primary">
                         <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light" >
                             <div className="d-flex align-items-center gap-2">

@@ -141,6 +141,7 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
                         <Form.Control
                             type="file"
                             accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.xlsm,.ppt,.pptx,.txt"
+                            onChange={(e) => setFicheiroSelecionado(e.target.files[0])}
                         />
                     </Form.Group>
                     <Form.Control
