@@ -14,13 +14,13 @@ const uploadOptional = (req, res, next) => {
 
   uploader(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      // Erro do multer (ex: tamanho, tipo)
+
       return res.status(400).json({ erro: 'Erro no upload', desc: err.message });
     } else if (err) {
-      // Outro erro qualquer
+
       return res.status(400).json({ erro: 'Erro inesperado', desc: err.message });
     }
-    // Continua mesmo sem ficheiro
+
     next();
   });
 };

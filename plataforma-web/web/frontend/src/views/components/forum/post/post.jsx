@@ -183,8 +183,6 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
     };
     /*Eliminar post*/
 
-
-    console.log("COMENTARIOS", comments);
     return (
         <Card className="mb-3 shadow-sm rounded-4 border-0">
             <Card.Body>
@@ -332,6 +330,7 @@ const PostCard = ({ idPost, idAutor, autor, tempo, texto, likes: inicialLikes, c
                                     name={comment.id_utilizador_utilizador.nome_utilizador}
                                     time={dayjs(comment.data_criacao_comentario).fromNow()}
                                     text={comment.texto_comentario}
+                                    conteudo={comment.caminho_ficheiro}
                                     likes={comment.contador_likes_com}
                                     idComentario={comment.id_comentario}
                                     idAutorComentario={comment.id_utilizador}

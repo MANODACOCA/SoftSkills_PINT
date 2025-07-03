@@ -4,13 +4,14 @@ import { FaHeart } from "react-icons/fa";
 import { Image, Button, Row, Col, Dropdown, Modal, Form } from "react-bootstrap";
 import { BsThreeDots, BsFillTrash3Fill, BsExclamationTriangleFill } from 'react-icons/bs';
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
+import { FaFile } from 'react-icons/fa';
 import Swal from "sweetalert2";
 import { useUser } from '../../../../utils/useUser';
 import { list_tipo_denuncia } from "../../../../api/tipo_denuncia_axios";
 import { create_denuncia } from "../../../../api/denuncia_axios";
 import { delete_comentario, like_comentario, unlike_comentario, jaDeuLike } from "../../../../api/comentario_axios";
 
-function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentario, idAutorComentario, onDeleted }) {
+function Comentario({ avatar, name, time, text, conteudo, likes: inicialLikes, idComentario, idAutorComentario, onDeleted }) {
   const API_URL = 'https://softskills-api.onrender.com/';
   const { user } = useUser();
 
@@ -149,12 +150,23 @@ function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentari
 
         <Col>
           <div className="d-flex justify-content-between align-items-start">
-            <div>
+            <div className='w-100'>
               <Row className="align-items-center mb-1">
                 <Col xs="auto" className="fw-semibold pe-0">{name}</Col>
                 <Col xs="auto" className="comentario-time small ps-1">{time}</Col>
               </Row>
-              <p className="comentario-texto">{text}</p>
+              <p className="comentario-texto mb-4">{text}</p>
+              {conteudo && (
+                <a href={conteudo} target='blank' className="text-decoration-none text-primary">
+                  <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light" >
+                    <div className="d-flex align-items-center gap-2">
+                      <FaFile className="text-secondary" />
+                      FICHEIRO
+                    </div>
+                    <i className="bi bi-download"></i>
+                  </div>
+                </a>
+              )}
             </div>
 
             <Dropdown align="end" drop="down">
@@ -181,7 +193,7 @@ function Comentario({ avatar, name, time, text, likes: inicialLikes, idComentari
               </Dropdown.Menu>
             </Dropdown>
           </div>
-
+<hr />
           <Button
             size="sm"
             className={`btn d-flex align-items-center text-white ${liked ? 'btn-primary' : 'btn-outline-secondary'}`}

@@ -132,6 +132,15 @@ controllers.delete = async (req, res) => {
       }
     }
 
+    const postAtual = await post.findByPk(comentario.id_post);
+    if (postAtual) {
+      const novoContador = postAtual.contador_comentarios - 1;
+      await post.update(
+        { contador_comentarios: novoContador < 0 ? 0 : novoContador },
+        { where: { id_post: comentario.id_post } }
+      );
+    }
+
     await denuncia.destroy({ where: { id_comentario: id } });
 
     await likes_comentario.destroy({ where: { id_comentario: id } });
