@@ -1,8 +1,11 @@
 import 'package:go_router/go_router.dart';
+import 'package:mobile/API/cursos_api.dart';
+import 'package:mobile/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
 import '../../../utils/uteis.dart';
 import 'export.dart';
 
-class CardCourse extends StatelessWidget {
+class CardCourse extends StatefulWidget {
   const CardCourse({
     super.key,
     required this.title,
@@ -24,27 +27,53 @@ class CardCourse extends StatelessWidget {
   final String img;
   final int id;
 
-  /* String _formatDateRange(DateTime start, DateTime end) {
-    final formatter = DateFormat('d MMM yyyy', 'pt_PT');
-    return '${formatter.format(start)} - ${formatter.format(end)}';
-  } */
+  @override
+  State<CardCourse> createState() => _CardCourseState();
+}
+
+class _CardCourseState extends State<CardCourse> {
+  final CursosApi _api = CursosApi();
+  bool inscrito = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (userId != null) {
+        print('ID do utilizador: $userId');
+        verificaInscrito(int.parse(userId), widget.id);
+      }
+    });
+  }
+
+  Future<void> verificaInscrito (int userId, int cursoId) async {
+    try {
+      final estaInscrito = await _api.verificarInscricao(userId, cursoId);
+      setState(() {
+        inscrito = estaInscrito;
+      });
+    } catch (e) {
+      print('Erro ao verificar inscrição: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if(typeCourse == 'Assíncrono'){
-          //if(inscrito){
-
-          //} else {
-            context.push('/assync', extra: id);
-          //}
-        } else if (typeCourse == 'Síncrono') {
-          //if(inscrito){
-
-          //} else {
-            context.push('/sync', extra: id);
-          //}
+        if(widget.typeCourse == 'Assíncrono'){
+          if(inscrito){
+            context.push('/cursos-inscritos-assincrono', extra: widget.id);
+          } else {
+            context.push('/assync', extra: widget.id);
+          }
+        } else if (widget.typeCourse == 'Síncrono') {
+          if(inscrito){
+            context.push('/cursos-inscritos-sincrono', extra: widget.id);
+          } else {
+            context.push('/sync', extra: widget.id);
+          }
         }
       },
       child: Card(
@@ -61,12 +90,12 @@ class CardCourse extends StatelessWidget {
                 topRight: Radius.circular(12),
               ),
               child: Image.network(
-                img,
+                widget.img,
                 height: 135,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(title)}&background=random&bold=true';
+                  final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(widget.title)}&background=random&bold=true';
                   return Image.network(
                     fallbackImg,
                     height: 135,
@@ -91,14 +120,14 @@ class CardCourse extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          typeCourse,
+                          widget.typeCourse,
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
                       Row(
                         children: [
                           Text(
-                            '$currentMembers/$maxMembers',
+                            '${widget.currentMembers}/${widget.maxMembers}',
                             style: AppTextStyles.body,
                           ),
                           const Icon(Ionicons.people, size: 20),
@@ -109,7 +138,7 @@ class CardCourse extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    title,
+                    widget.title,
                     style: AppTextStyles.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -118,7 +147,7 @@ class CardCourse extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(bottom:5.0),
                     child:Text(
-                      formatDateRange(startDate, endDate),
+                      formatDateRange(widget.startDate, widget.endDate),
                       style: AppTextStyles.body.copyWith(color: Colors.grey[600]),
                     ),
                   )

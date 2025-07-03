@@ -74,9 +74,11 @@ class UtilizadoresApi {
       request.files.add(
         http.MultipartFile.fromBytes('imagem', fileBytes, filename: fileName),
       );
-
       final response = await request.send();
       final responseData = await response.stream.bytesToString();
+
+      print('Status: ${response.statusCode}');
+      print('Response: $responseData');
 
       if (response.statusCode == 200) {
         return jsonDecode(responseData);

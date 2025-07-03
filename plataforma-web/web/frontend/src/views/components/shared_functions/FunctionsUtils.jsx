@@ -14,7 +14,7 @@ export const formatDayMonthYear = (isoDate) => {
 
 export function formatHoraMinutos(isoDate) {
   const data = new Date(isoDate);
-  const horas = data.getHours().toString().padStart(2, '0');
+  const horas = data.getHours().toString().padStart(2, '0') - 1;
   const minutos = data.getMinutes().toString().padStart(2, '0');
   return `${horas}h${minutos}`;
 }
