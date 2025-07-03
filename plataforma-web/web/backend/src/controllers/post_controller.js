@@ -141,21 +141,24 @@ controllers.delete = async (req, res) => {
       }
     }
 
-    if (comentario.caminho_ficheiro && comentario.caminho_ficheiro.includes('/uploads/')) {
-      const ficheiroRelativo = comentario.caminho_ficheiro.replace(/^.*\/uploads\//, '');
-      const ficheiroPath = path.join(__dirname, '..', 'uploads', ficheiroRelativo);
+    for (const c of comentarios) {
+      if (c.caminho_ficheiro && c.caminho_ficheiro.includes('/uploads/')) {
+        const ficheiroRelativo = c.caminho_ficheiro.replace(/^.*\/uploads\//, '');
+        const ficheiroPath = path.join(__dirname, '..', 'uploads', ficheiroRelativo);
 
-      if (!ficheiroPath.startsWith(path.join(__dirname, '..', 'uploads'))) {
-        throw new Error('Ficheiro fora da pasta uploads!');
-      }
+        if (!ficheiroPath.startsWith(path.join(__dirname, '..', 'uploads'))) {
+          throw new Error('Ficheiro fora da pasta uploads!');
+        }
 
-      try {
-        await fs.unlink(ficheiroPath);
-        console.log(`Ficheiro removido: ${ficheiroPath}`);
-      } catch (err) {
-        console.warn(`Ficheiro não pôde ser apagado: ${ficheiroPath}`, err.message);
+        try {
+          await fs.unlink(ficheiroPath);
+          console.log(`Ficheiro removido: ${ficheiroPath}`);
+        } catch (err) {
+          console.warn(`Ficheiro não pôde ser apagado: ${ficheiroPath}`, err.message);
+        }
       }
     }
+
 
     await denuncia.destroy({ where: { id_post: id } });
 
