@@ -143,7 +143,7 @@ class _ProfileState extends State<Profile> {
                           Spacer(),
                           IconButton(
                             onPressed: () {
-                              //context.go('/alterarInformacoes', extra: widget.idUser);
+                              context.go('/alterarInformacoes');
                             },
                             icon: Icon(Icons.arrow_forward_ios, size: 15),
                           ),

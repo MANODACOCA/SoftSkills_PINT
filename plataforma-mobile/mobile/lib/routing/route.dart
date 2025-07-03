@@ -2,7 +2,6 @@ import 'package:mobile/ui/course_assync/widget/course_assync_screen.dart';
 import 'package:mobile/ui/course_sync/widget/course_sync_screen.dart';
 import 'package:mobile/ui/forum/widget/comment_page.dart';
 import 'package:mobile/ui/forum/widget/forum.dart';
-import '../ui/course/courses.dart';
 import '../ui/home/widgets/homepage.dart';
 import '../ui/login/widget/alterarpassword.dart';
 import '../ui/login/widget/confirm_2fa.dart';
@@ -89,19 +88,16 @@ final rotas = GoRouter(
       builder: (context, state) => HomePage(),
     ),
     GoRoute(
-      name: 'cursos',
-      path: '/cursos',
-      builder: (context, state) => Courses(),
-    ),
-    GoRoute(
       name: 'return',
       path: '/returnLogin',
       builder: (context, state) => ReturnLogin(),
     ),
     GoRoute(
       path: '/profile',
-      builder: (context, state) => Profile(),
-    ),
+      builder: (context, state) {
+      return Profile();
+  },
+),
     /* GoRoute(
       name: 'notificacoes',
       path: '/notificacoes',
@@ -115,12 +111,12 @@ final rotas = GoRouter(
     GoRoute(
       name: 'alterarInformacoes',
       path: '/alterarInformacoes',
-      builder: (context, state) => ChangePersonalInfo(idUser: state.extra as String),
+      builder: (context, state) => ChangePersonalInfo(),
     ),
     GoRoute(
       name: 'seeinfoprofile',
       path: '/seeinfoprofile',
-      builder: (context, state) => SeeInfoProfile(idUser: state.extra as String),
+      builder: (context, state) => SeeInfoProfile(),
     ),
     GoRoute(
       name: 'logoutAllDevices',
