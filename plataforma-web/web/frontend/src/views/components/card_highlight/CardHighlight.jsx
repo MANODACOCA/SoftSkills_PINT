@@ -169,7 +169,7 @@ const FeaturedCourseCard = ({
     const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60));
 
-    const showWarning = course.tipo === 'assincrono' && diffTime > 0 && diffTime <= 15 * 24 * 60 * 60 * 1000;
+    const showWarning = diffTime > 0 && diffTime <= 15 * 24 * 60 * 60 * 1000;//se faltatem 15 dias para terminar o curso
     const tipoBadge = course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono';
 
     return (
@@ -203,7 +203,7 @@ const FeaturedCourseCard = ({
               {showWarning ? (
                 <>
                   <FaExclamationTriangle className="me-2" />
-                  Curso expira em {diffDays !== 0 && `${diffDays}d`} {/* //dias */}
+                  Curso termina em {diffDays !== 0 && `${diffDays}d`} {/* //dias */}
                   {diffHours !== 0 && `${diffHours}h`} {/* //horas */}
                   {diffMinutes !== 0 && diffHours === 0 && diffDays === 0 && `${diffMinutes}m`} {/* //minutos */}
                 </>

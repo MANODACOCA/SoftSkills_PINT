@@ -23,12 +23,8 @@ export const get_inscricoes = async (id_formando, id_curso) => {
         });
         return response.data;
     } catch (error) {
-        if (error.response && error.response.status === 404) {
-            return null;
-        } else {
-            console.error('Erro ao buscar Inscricoes!');
-            throw error;
-        }
+        console.error('Erro ao buscar Inscricoes!');
+        throw error;
     }
 };
 

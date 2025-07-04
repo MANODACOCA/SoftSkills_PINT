@@ -56,7 +56,7 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                     ],
                 }
             ],
-            order: [['id_aula', 'ASC']]
+            order: [['data_aula', 'ASC']]
         });
 
         if (todasAulas.length === 0) {
