@@ -277,6 +277,8 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
       cursoWhere.isassincrono = true;
     }
 
+    console.log('Filtro aplicado para cursos:', JSON.stringify(cursoWhere, null, 2));
+
     const enrolledCourses = await inscricoes.findAll({
       where: whereClause,
       include: [
@@ -313,13 +315,14 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
       order: [['data_inscricao', 'DESC']]
     });
 
+    console.log(`Encontradas ${enrolledCourses.length} inscrições para o utilizador ${userId} com tipologia ${tipologia || 'todos'}`);
+
     return enrolledCourses.filter(inscricao => inscricao.id_curso_curso);
   } catch (error) {
     console.error('Erro ao encontrar cursos inscritos para o utilizador:', error);
     throw error;
   }
 }
-
 
 /*Esta funcao vai buscar todos os cursos completosa de um determinado formando*/
 async function getCompleteCoursesFromUser(userId, tipologia = null) {
@@ -667,11 +670,12 @@ async function verifyInscription(userId, cursoId) {
   try {
 
     const inscricaoUser = await inscricoes.findOne({
-      where: {
-        id_formando: userId,
-        id_curso: cursoId,
-        status_inscricao: 1
-      }
+      where:
+        {
+          id_formando: userId,
+          id_curso: cursoId,
+          status_inscricao: 1
+        }
     });
 
     if (!inscricaoUser) {
