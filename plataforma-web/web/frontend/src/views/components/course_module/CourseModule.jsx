@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import {
-  FaVideo,
   FaFileAlt,
   FaFilePowerpoint,
+  FaFileExcel,
   FaFileImage,
-  FaFileAudio,
   FaFilePdf,
   FaLink,
   FaFile,
   FaChevronDown,
-  FaInfoCircle,
   FaPlayCircle,
   FaDownload,
   FaChalkboardTeacher
 } from 'react-icons/fa';
 import { IoTimeSharp } from "react-icons/io5";
 import { MdDateRange } from "react-icons/md";
+import { BsFiletypeTxt } from "react-icons/bs";
 import './CourseModule.css';
 
 
 const iconMapById = {
-  1: <FaVideo className="text-primary" />,
-  2: <FaFilePdf className="text-danger" />,
-  3: <FaFilePowerpoint className="text-warning" />,
-  4: <FaFileAlt className="text-success" />,
-  5: <FaFileImage className="text-pink-500" />,
-  6: <FaFileAudio className="text-indigo-500" />,
-  7: <FaInfoCircle className="text-cyan-600" />,
-  8: <FaLink className="text-blue-500" />,
+  1: <FaFilePdf className="text-danger" />,
+  2: <FaFilePowerpoint className="text-warning" />,
+  3: <FaFileAlt className="text-success" />,
+  4: <FaFileExcel className="text-success" />,
+  5: <BsFiletypeTxt className="text-cyan-600" />,
+  6: <FaFileImage className="text-pink-500" />,
+  7: <FaLink className="text-blue-500" />,
 };
 
 const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onChangeAula, cursoTipo }) => {
