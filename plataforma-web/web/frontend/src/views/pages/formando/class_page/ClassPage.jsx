@@ -6,7 +6,7 @@ import VideoPlayer from '../../../components/video_player/VideoPlayer';
 import CourseModule from '../../../components/course_module/CourseModule';
 import TrabalhosList from '../../../components/envents_(trabalhos)/trabalhos_list';
 import TrabalhosEntrega from '../../../components/envents_(trabalhos)/trabalhos_entrega';
-import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
+import { Spinner, Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../../api/aulas_axios';
 import {
     FaFileAlt,

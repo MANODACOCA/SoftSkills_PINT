@@ -14,9 +14,6 @@ controllers.list = async (req, res) => {
 controllers.get = async (req, res) => {
   try {
     const { id_formando, id_curso } = req.query;
-  console.log('URL:', req.url);
-console.log('Query:', req.query);
-console.log('Params:', req.params);
 
     const data = await model.findOne({
       where: {
@@ -27,7 +24,7 @@ console.log('Params:', req.params);
     if (data) {
       res.status(200).json(data);
     } else {
-      res.status(404).json({ erro: 'Inscricoes nao encontrado/a!' });
+      res.status(200).json(null);//sem inscricao
     }
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao procurar Inscricoes!', desc: err.message });
