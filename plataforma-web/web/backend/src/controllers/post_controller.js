@@ -17,11 +17,25 @@ controllers.list = async (req, res) => {
 
 controllers.get = async (req, res) => {
   try {
+    const ordenar = req.query.ordenar || 'Mais Recentes';
     const { id_conteudos_partilhado } = req.query;
 
-    if (!id_conteudos_partilhado) {
+
+    if (!id_conteudos_partilhado || !ordenar) {
       return res.status(400).json({ erro: 'Falta id_conteudos_partilhados na query.' });
     }
+
+    let order = [];
+    if (ordenar === "Mais Recentes") {
+      order = [['data_criacao_post', 'DESC']];
+    } else if (ordenar === "Mais Antigos") {
+      order = [['data_criacao_post', 'ASC']];
+    } else if (ordenar === "Mais Populares") {
+      order = [['contador_likes_post', 'DESC']];
+    } else {
+      order = [['contador_likes_post', 'ASC']];
+    }
+
 
     const data = await model.findAll({
       where: {
@@ -33,7 +47,7 @@ controllers.get = async (req, res) => {
           as: 'id_utilizador_utilizador'
         }
       ],
-      order: [['data_criacao_post', 'DESC']],
+      order
     });
 
     if (data) {
@@ -141,21 +155,24 @@ controllers.delete = async (req, res) => {
       }
     }
 
-    if (comentarios.caminho_ficheiro && comentarios.caminho_ficheiro.includes('/uploads/')) {
-      const ficheiroRelativo = comentarios.caminho_ficheiro.replace(/^.*\/uploads\//, '');
-      const ficheiroPath = path.join(__dirname, '..', 'uploads', ficheiroRelativo);
+    for (const c of comentarios) {
+      if (c.caminho_ficheiro && c.caminho_ficheiro.includes('/uploads/')) {
+        const ficheiroRelativo = c.caminho_ficheiro.replace(/^.*\/uploads\//, '');
+        const ficheiroPath = path.join(__dirname, '..', 'uploads', ficheiroRelativo);
 
-      if (!ficheiroPath.startsWith(path.join(__dirname, '..', 'uploads'))) {
-        throw new Error('Ficheiro fora da pasta uploads!');
-      }
+        if (!ficheiroPath.startsWith(path.join(__dirname, '..', 'uploads'))) {
+          throw new Error('Ficheiro fora da pasta uploads!');
+        }
 
-      try {
-        await fs.unlink(ficheiroPath);
-        console.log(`Ficheiro removido: ${ficheiroPath}`);
-      } catch (err) {
-        console.warn(`Ficheiro não pôde ser apagado: ${ficheiroPath}`, err.message);
+        try {
+          await fs.unlink(ficheiroPath);
+          console.log(`Ficheiro removido: ${ficheiroPath}`);
+        } catch (err) {
+          console.warn(`Ficheiro não pôde ser apagado: ${ficheiroPath}`, err.message);
+        }
       }
     }
+
 
     await denuncia.destroy({ where: { id_post: id } });
 

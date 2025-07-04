@@ -115,7 +115,7 @@ const CaixaComentario = ({ idPost, onCommentCreated }) => {
                 <Button
                     variant="primary"
                     type="submit"
-                    disabled={!comment.trim() && !selectedFile}
+                    disabled={!comment.trim()}
                     title="Enviar"
                 >
                     <FaPaperPlane />
