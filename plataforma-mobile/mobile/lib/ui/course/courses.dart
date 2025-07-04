@@ -1,7 +1,7 @@
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/course_page_scroll.dart';
-import '../core/shared/navigationbar_component.dart';
-import '../core/shared/search_bar.dart';
+import '../core/shared/base_comp/navigationbar_component.dart';
+import '../core/shared/base_comp/search_bar.dart';
 import '../core/shared/export.dart';
 
 class Courses extends StatefulWidget {

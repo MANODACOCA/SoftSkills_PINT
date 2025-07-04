@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/core/shared/navigationbar_component.dart';
+import 'package:mobile/ui/core/shared/base_comp/navigationbar_component.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
 import 'package:file_picker/file_picker.dart';

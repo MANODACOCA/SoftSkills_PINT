@@ -1,4 +1,4 @@
-import 'export.dart';
+import '../export.dart';
 
 class AppBarArrow extends StatelessWidget implements PreferredSizeWidget {
   const AppBarArrow({super.key, required this.title, required this.onBack});

@@ -1,8 +1,8 @@
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/carousel.dart';
-import 'package:mobile/ui/core/shared/card_scroll.dart';
-import '../../core/shared/navigationbar_component.dart';
-import '../../core/shared/search_bar.dart';
+import 'package:mobile/ui/core/shared/cursos/card_cursos/card_scroll.dart';
+import '../../core/shared/base_comp/navigationbar_component.dart';
+import '../../core/shared/base_comp/search_bar.dart';
 import '../../core/shared/export.dart';
 
 class HomePage extends StatefulWidget {
