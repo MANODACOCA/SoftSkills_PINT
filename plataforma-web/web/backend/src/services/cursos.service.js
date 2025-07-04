@@ -313,14 +313,13 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
       order: [['data_inscricao', 'DESC']]
     });
 
-    console.log(`Encontradas ${enrolledCourses.length} inscrições para o utilizador ${userId} com tipologia ${tipologia || 'todos'}`);
-
     return enrolledCourses.filter(inscricao => inscricao.id_curso_curso);
   } catch (error) {
     console.error('Erro ao encontrar cursos inscritos para o utilizador:', error);
     throw error;
   }
 }
+
 
 /*Esta funcao vai buscar todos os cursos completosa de um determinado formando*/
 async function getCompleteCoursesFromUser(userId, tipologia = null) {
