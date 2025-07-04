@@ -19,7 +19,7 @@ dayjs.locale('pt');
 import Comentario from "../../../components/forum/comentario/comentario";
 import CaixaComentario from "../../../components/forum/comentario/caixaComentario";
 
-const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialLikes, comentarios, imagemAutor, dataCriacao, conteudo, onLikeChanged, tipoFormato, onDeleted, jaCurtiu }) => {
+const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialLikes, comentarios: comentariosIniciais, imagemAutor, dataCriacao, conteudo, onLikeChanged, tipoFormato, onDeleted, jaCurtiu }) => {
 
     const getIconById = (id) => {
         return iconMapById[id] || <FaFile className="text-secondary" />;
@@ -32,12 +32,15 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
     const [showComments, setShowComments] = useState(false);
     const [comments, setComments] = useState([]);
     const [carregarComentarios, setCarregarComentarios] = useState(false);
+    const [comentariosCount, setComentariosCount] = useState(comentariosIniciais);
+
 
     const fetchComments = async () => {
         try {
             setCarregarComentarios(true);
             const data = await get_comentarios_by_post(idPost);
             setComments(data);
+            setComentariosCount(data.length);
         } catch (err) {
             console.error("Erro ao encontrar comentarios:", err);
             Swal.fire("Erro", "Não foi possível encontrar comentarios. Tente novamente.", "error");
@@ -313,7 +316,7 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
                         ) : (
                             <BsChat className="me-1" style={{ fontSize: '18px' }} />
                         )}
-                        {comentarios} comentários
+                        {comentariosCount} comentários
                     </Button>
 
                 </div>

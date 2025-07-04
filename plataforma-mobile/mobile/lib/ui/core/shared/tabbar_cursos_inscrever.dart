@@ -76,24 +76,34 @@ class TabbarCoursesInscrever extends StatelessWidget {
                         Row(
                           children: [
                             ClipOval(
-                              child: Image.network(
-                                (curso['img_perfil'] != null && curso['img_perfil'].toString().isNotEmpty)
-                                  ? 'https://softskills-api.onrender.com/${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi']}' 
-                                  : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true',
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true';
-                                  return Image.network(
-                                    fallbackImg,
-                                    height: 135,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  );
-                                },
-                              ) 
+                              child: SizedBox(
+                                height: 60,
+                                width: 60,
+                                child: Image.network(
+                                  ((curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi']).toString().isNotEmpty)
+                                    ? 'https://softskills-api.onrender.com/${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi']}' 
+                                    : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true',
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true';
+                                    return Image.network(
+                                      fallbackImg,
+                                      height: 135,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    );
+                                  },
+                                )   
+                              ),
                             ),
                             SizedBox(width: 15,),
-                            Text("${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.left,),
+                                Text('${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['email']}', textAlign: TextAlign.left,),
+                              ],
+                            ),
                           ],
                         ),
                         SizedBox(height: 5,),

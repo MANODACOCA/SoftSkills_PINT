@@ -17,11 +17,25 @@ controllers.list = async (req, res) => {
 
 controllers.get = async (req, res) => {
   try {
+    const ordenar = req.query.ordenar || 'Mais Recentes';
     const { id_conteudos_partilhado } = req.query;
 
-    if (!id_conteudos_partilhado) {
+
+    if (!id_conteudos_partilhado || !ordenar) {
       return res.status(400).json({ erro: 'Falta id_conteudos_partilhados na query.' });
     }
+
+    let order = [];
+    if (ordenar === "Mais Recentes") {
+      order = [['data_criacao_post', 'DESC']];
+    } else if (ordenar === "Mais Antigos") {
+      order = [['data_criacao_post', 'ASC']];
+    } else if (ordenar === "Mais Populares") {
+      order = [['contador_likes_post', 'DESC']];
+    } else {
+      order = [['contador_likes_post', 'ASC']];
+    }
+
 
     const data = await model.findAll({
       where: {
@@ -33,7 +47,7 @@ controllers.get = async (req, res) => {
           as: 'id_utilizador_utilizador'
         }
       ],
-      order: [['data_criacao_post', 'DESC']],
+      order
     });
 
     if (data) {
