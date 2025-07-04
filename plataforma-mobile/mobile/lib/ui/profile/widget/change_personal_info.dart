@@ -64,7 +64,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
     try{
       final res = await _api.alterarImgPerfil(userIdd, source);
       //await fetchUtilizador(int.parse(userIdd));
-      setState(() => utilizador['img_perfil'] = res['img_perfil']);
+      setState(() {
+        utilizador['img_perfil'] = res['img_perfil'];
+      });
     } catch(e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Falha ao enviar imagem')),
@@ -537,16 +539,44 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                   body.removeWhere((k, v) => v == null || (v is String && v.isEmpty));
 
                   await _api.updateUtilizador(userIdd, body);
-                  Navigator.pop(context);
+              
+                  await showDialog(
+                    context: context, barrierDismissible: false,
+                    builder: (diagolCtx) {
+                      Future.delayed(Duration(seconds: 1), () {
+                        Navigator.of(diagolCtx).pop();
+                      });
+                     return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      contentPadding: const EdgeInsets.all(24),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: const [
+                          Icon(Icons.check_circle,
+                            color:Colors.green, size: 72),
+                          SizedBox(height: 16),
+                          Text(
+                            'Dados atualizados com sucesso!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
                   context.go('/profile');
-                  print('Alterações guardadas!');
                 } catch (e) {
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Erro ao atualizar dados')),
+                    SnackBar(content: Text('Erro ao atualizar dados'),
+                    backgroundColor: Colors.red,),
                   );
                 }
-
               },
             ),
             TextButton(
@@ -554,7 +584,6 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
               child: Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.pop(); 
-                print('Alterações não foram guardadas!');
               },
             ),
           ],
