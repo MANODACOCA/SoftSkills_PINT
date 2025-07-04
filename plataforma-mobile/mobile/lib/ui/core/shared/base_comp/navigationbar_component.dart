@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'export.dart';
+import '../export.dart';
 
 class Footer extends StatelessWidget {
   const Footer({super.key});

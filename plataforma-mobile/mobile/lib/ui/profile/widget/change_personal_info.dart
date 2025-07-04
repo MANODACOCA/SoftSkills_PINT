@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../core/shared/export.dart';
 //import 'package:gender_picker/source/enums.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/shared/navigationbar_component.dart';
+import '../../core/shared/base_comp/navigationbar_component.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';

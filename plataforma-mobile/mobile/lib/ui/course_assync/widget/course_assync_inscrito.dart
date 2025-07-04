@@ -1,9 +1,9 @@
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/cursos_api.dart';
-import 'package:mobile/ui/core/shared/app_bar_arrow.dart';
-import 'package:mobile/ui/core/shared/tabbar_cursos_inscrito.dart';
+import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
+import 'package:mobile/ui/core/shared/cursos/cursos_comp/tabbar_cursos_inscrito.dart';
 import '../../core/shared/export.dart';
-import '../../core/shared/navigationbar_component.dart';
+import '../../core/shared/base_comp/navigationbar_component.dart';
 
 
 class AssincronoInscrito extends StatefulWidget {

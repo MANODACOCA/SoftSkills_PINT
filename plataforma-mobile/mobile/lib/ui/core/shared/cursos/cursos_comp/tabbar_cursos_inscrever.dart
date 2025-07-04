@@ -1,5 +1,5 @@
-import 'export.dart';
-import '../../../utils/uteis.dart';
+import '../../export.dart';
+import '../../../../../utils/uteis.dart';
 
 class TabbarCoursesInscrever extends StatelessWidget {
   const TabbarCoursesInscrever({super.key, required this.curso});

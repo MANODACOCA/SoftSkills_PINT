@@ -1,5 +1,5 @@
 import 'export.dart';
-import 'card_course.dart';
+import 'cursos/card_cursos/card_course.dart';
 
 class CourseScroll extends StatefulWidget {
   const CourseScroll({super.key, required this.cursos});
