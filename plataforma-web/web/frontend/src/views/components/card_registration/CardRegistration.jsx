@@ -17,7 +17,18 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
 
   if (!course) return null;
 
+
   const duration = course.horas_curso || 0;
+  const [horasCursoFormato, setHorasCursoFormato] = useState();
+
+  useEffect(() => {
+    let hora = Math.floor(duration);
+    let minuto = Math.floor((duration - hora) * 60);
+    const formato = hora !== 0 && minuto !== 0 ? `${hora}h ${minuto}min` : hora !== 0 ? `${hora}h` : minuto !== 0 ? `${minuto}h` : 'Tempo inválido';
+    setHorasCursoFormato(formato);
+  }, [duration]);
+
+
 
   const { user, setUser } = useUser();
   const [dadosInscricao, setDadosInscricao] = useState(null);
@@ -115,14 +126,14 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
             <FaClock className="detail-icon" />
             <div>
               <span className="detail-label">Duração:</span>
-              <span className="detail-value">{duration} horas</span>
+              <span className="detail-value">{horasCursoFormato}</span>
             </div>
           </div>
 
           <div className="detail-row">
             <FaCalendarAlt className="detail-icon" />
             <div>
-              <span className="detail-label">Período:</span>
+              <span className="detail-label">Período do curso:</span>
               <span className="detail-value">
                 {new Date(course.data_inicio_curso).toLocaleDateString()} - {new Date(course.data_fim_curso).toLocaleDateString()}
               </span>
