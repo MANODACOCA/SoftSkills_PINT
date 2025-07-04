@@ -206,6 +206,7 @@ const FeaturedCourseCard = ({
                   Curso termina em {diffDays !== 0 && `${diffDays}d`} {/* //dias */}
                   {diffHours !== 0 && `${diffHours}h`} {/* //horas */}
                   {diffMinutes !== 0 && diffHours === 0 && diffDays === 0 && `${diffMinutes}m`} {/* //minutos */}
+                  {diffMinutes === 0 && diffHours === 0 && diffDays === 0 && `poucos segundos`} {/* //segundos */}
                 </>
               ) : (
                 'Em curso...'

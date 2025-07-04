@@ -16,7 +16,6 @@ import { IoTimeSharp } from "react-icons/io5";
 import { MdDateRange } from "react-icons/md";
 import { BsFiletypeTxt } from "react-icons/bs";
 import './CourseModule.css';
-import { formatDayMonthYear, formatHoraMinutos } from '../shared_functions/FunctionsUtils';
 
 
 const iconMapById = {
@@ -120,9 +119,12 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
                   </div>
                 </a>
               )}
-              {DataAtual < DataInicioAula && module.conteudo === null && (
+              {DataAtual < DataInicioAula && (
                 <div className="text-white rounded-circle d-flex justify-content-center align-items-center p-0"
-                  style={{ width: '32px', height: '32px', backgroundColor: '#3b5b84' }}>
+                  style={{ width: '32px', height: '32px', backgroundColor: '#3b5b84' }} onClick={(e) => {
+                    e.stopPropagation();
+                    onChangeAula();
+                  }}>
                   <FaChalkboardTeacher />
                 </div>
               )}
@@ -147,7 +149,7 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
                 <MdDateRange size={20} />
                 <div>
                   <strong>Data e hora da aula:</strong>{' '}
-                  {formatDayMonthYear(module.dataAula)} | {formatHoraMinutos(module.dataAula)}
+                  {module.dataAula.split('T')[0]} | {module.dataAula.split('T')[1].slice(0, 5)}
                 </div>
               </div>
             )}
