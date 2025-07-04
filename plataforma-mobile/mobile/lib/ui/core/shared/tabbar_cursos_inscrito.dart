@@ -22,8 +22,8 @@ class TabbarCoursesInscrito extends StatelessWidget {
         children: [
           TabBar(
             tabs: [
-              Tab(text: "Aulas"),
-              Tab(child: Text("Material\napoio", textAlign: TextAlign.center,),),
+              hasFormador ? Tab(child: Text("Material\napoio", textAlign: TextAlign.center,),) : Tab(text: "Aulas"),
+              hasFormador ? Tab(text: "Eventos") : Tab(child: Text("Material\napoio", textAlign: TextAlign.center,),),
               hasFormador ? Tab(text: "Sobre") : Tab(text: "Eventos"),
               hasFormador ? Tab(text: "Formador") : Tab(text: "Sobre"),
             ],
