@@ -262,7 +262,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
     };
 
     let cursoWhere = {
-      data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE::date') },
+      data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
     };
 
     if (tipologia === 'sincrono') {
