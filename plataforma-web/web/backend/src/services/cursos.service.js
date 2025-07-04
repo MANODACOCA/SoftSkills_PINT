@@ -263,11 +263,8 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
 
     let cursoWhere = {
       [Op.and]: [
-        Sequelize.where(
-          Sequelize.fn('DATE', Sequelize.col('data_fim_curso')),
-          Op.gte,
-          Sequelize.literal('CURRENT_DATE')
-        )
+        fn('DATE', col('data_fim_curso')),
+        { [Op.gte]: literal('CURRENT_DATE') }
       ]
     };
 
@@ -276,8 +273,6 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
     } else if (tipologia === 'assincrono') {
       cursoWhere.isassincrono = true;
     }
-
-    console.log('Filtro aplicado para cursos:', JSON.stringify(cursoWhere, null, 2));
 
     const enrolledCourses = await inscricoes.findAll({
       where: whereClause,
@@ -344,14 +339,11 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
       status_inscricao: 1,
     };
 
-    let cursoWhere = {
-       [Op.and]: [
-    Sequelize.where(
-      Sequelize.fn('DATE', Sequelize.col('data_fim_curso')),
-      Op.lt,
-      Sequelize.literal('CURRENT_DATE')
-    )
-  ]
+    let cursoWhereCompleted = {
+      [Op.and]: [
+        fn('DATE', col('data_fim_curso')),
+        { [Op.lt]: literal('CURRENT_DATE') }
+      ]
     };
 
     if (tipologia === 'sincrono') {
@@ -670,12 +662,11 @@ async function verifyInscription(userId, cursoId) {
   try {
 
     const inscricaoUser = await inscricoes.findOne({
-      where:
-        {
-          id_formando: userId,
-          id_curso: cursoId,
-          status_inscricao: 1
-        }
+      where: {
+        id_formando: userId,
+        id_curso: cursoId,
+        status_inscricao: 1
+      }
     });
 
     if (!inscricaoUser) {
