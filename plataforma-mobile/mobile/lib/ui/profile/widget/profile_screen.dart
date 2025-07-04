@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/shared/navigationbar_component.dart';
+import '../../core/shared/base_comp/navigationbar_component.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../API/utilizadores_api.dart';
 import 'package:provider/provider.dart';

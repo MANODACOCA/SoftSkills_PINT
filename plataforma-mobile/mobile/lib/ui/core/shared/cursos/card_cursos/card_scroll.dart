@@ -1,4 +1,4 @@
-import 'export.dart';
+import '../../export.dart';
 import 'card_course.dart';
 
 class CardsScroll extends StatefulWidget {

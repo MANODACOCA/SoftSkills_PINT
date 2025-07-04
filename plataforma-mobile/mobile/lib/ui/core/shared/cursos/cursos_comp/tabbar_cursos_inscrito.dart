@@ -1,7 +1,7 @@
-import 'package:mobile/ui/core/shared/card_aulas.dart';
+import 'package:mobile/ui/core/shared/aulas/card_aulas.dart';
 
-import 'export.dart';
-import '../../../utils/uteis.dart';
+import '../../export.dart';
+import '../../../../../utils/uteis.dart';
 
 class TabbarCoursesInscrito extends StatelessWidget {
   const TabbarCoursesInscrito({super.key, required this.curso});
@@ -22,8 +22,8 @@ class TabbarCoursesInscrito extends StatelessWidget {
         children: [
           TabBar(
             tabs: [
-              Tab(text: "Aulas"),
-              Tab(child: Text("Material\napoio", textAlign: TextAlign.center,),),
+              hasFormador ? Tab(child: Text("Material\napoio", textAlign: TextAlign.center,),) : Tab(text: "Aulas"),
+              hasFormador ? Tab(text: "Eventos") : Tab(child: Text("Material\napoio", textAlign: TextAlign.center,),),
               hasFormador ? Tab(text: "Sobre") : Tab(text: "Eventos"),
               hasFormador ? Tab(text: "Formador") : Tab(text: "Sobre"),
             ],
@@ -32,26 +32,55 @@ class TabbarCoursesInscrito extends StatelessWidget {
             height: screenHeight - 490, 
             child: TabBarView(
               children: [
-                //Aulas
-                ListView(children: [
+                //Material Apoio
+                hasFormador
+                ? ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text('Material de apoio')
+                      ],
+                    ),  
+                  ),
+                ])
+                //Aulas
+                : ListView(children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Aulas'),
                         CardAula(aulas :{'title': 'Nome Aula', 'duracao': {'horas': 3, 'minutes': 5}, 'caminho': 'url', 'data': agora}),
                       ],
                     ),  
                   ),
                 ]),
-                //Materia Apoio
-                ListView(children: [
+                //Eventos
+                hasFormador
+                ? ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Datas de inscrição: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text('Eventos', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        Text(formatDateRange(DateTime.parse(curso['data_inicio_inscricao']), DateTime.parse(curso['data_fim_inscricao'])), style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
+                        SizedBox(height: 5,),
+                      ],
+                    ),  
+                  ),
+                ])
+                //Materia Apoio
+                : ListView(children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Material de apoio', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         Text(formatDateRange(DateTime.parse(curso['data_inicio_inscricao']), DateTime.parse(curso['data_fim_inscricao'])), style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
                         SizedBox(height: 5,),
                       ],
@@ -59,7 +88,6 @@ class TabbarCoursesInscrito extends StatelessWidget {
                   ),
                 ]),
                 //Sobre
-                //Eventos
                 hasFormador 
                 ? ListView(children: [
                   Padding(
@@ -75,6 +103,7 @@ class TabbarCoursesInscrito extends StatelessWidget {
                     ) 
                   ),
                 ])
+                //Eventos
                 : ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -89,7 +118,6 @@ class TabbarCoursesInscrito extends StatelessWidget {
                     ) 
                   ),
                 ]),
-                
                 //formador
                 hasFormador
                 ? ListView(children: [

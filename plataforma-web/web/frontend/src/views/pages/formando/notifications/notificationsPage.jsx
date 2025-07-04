@@ -2,20 +2,26 @@ import React, { useRef, useEffect, useState } from 'react';
 import NotificationRow from "../../../components/notification_row/notification_row";
 import { delete_notificacoes_curso, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
 import { useUser } from '../../../../utils/useUser';
+import { Spinner } from 'react-bootstrap';
 import Swal from 'sweetalert2';
+import { use } from 'react';
 
 const NotificationPage = () => {
     const { user } = useUser();
     const [notificacoes, setNotificacoes] = useState([]);
     const [ordenacao, setOrdenacao] = useState('recente');
+    const [loading, setLoading] = useState(false);
 
     const fetchAllNotifications = async (ord = ordenacao) => {
         try {
+            setLoading(true);
             const id = user.id_utilizador;
             const cursos = await find_notificacao_curso(id, ord);
             setNotificacoes(cursos);
         } catch (error) {
             console.error('Erro ao carregar notificações:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -33,7 +39,7 @@ const NotificationPage = () => {
             buttonsStyling: false,
         });
 
-        if(result.isConfirmed){
+        if (result.isConfirmed) {
             try {
                 await delete_notificacoes_curso(id);
                 fetchAllNotifications();
@@ -51,19 +57,24 @@ const NotificationPage = () => {
                     timer: 2000,
                     showConfirmButton: false,
                 });
-            }    
+            }
         }
     }
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         if (user && user.id_utilizador) {
             fetchAllNotifications(ordenacao);
         }
     }, [user, ordenacao]);
 
-    if (!user || !user.id_utilizador || !notificacoes) {
-        return <div className="text-center mt-5">A carregar...</div>;
+
+    if (loading) {
+        return <div className="text-center py-5">
+            <Spinner animation="border" variant="primary" />
+        </div>;
     }
+
 
     return (
         <div className='m-2'>
@@ -77,6 +88,11 @@ const NotificationPage = () => {
                     </select>
                 </div>
             </div>
+            {
+                notificacoes.length === 0 && (
+                    <div className="text-center mt-5">Não existem notificações neste momento.</div>
+                )
+            }
             {notificacoes.map((notification, index) => (
                 <div key={index}>
                     <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id_notificacao_cursos)} />

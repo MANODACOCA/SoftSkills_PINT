@@ -1,7 +1,7 @@
 /* import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart'; */
-import 'export.dart';
+import '../export.dart';
 
 class CardAula extends StatefulWidget {
   const CardAula({super.key, required this.aulas});
