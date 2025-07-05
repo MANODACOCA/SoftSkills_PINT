@@ -4,12 +4,10 @@ import 'cursos_routes.dart';
 import 'profile_routes.dart';
 import 'login_routes.dart';
 import 'forum_routes.dart';
-import 'splash_routes.dart';
 
 final rotas = GoRouter(
   initialLocation: '/',
   routes: [
-    ...splashRoutes,
     ...homeRoutes,
     ...loginRoutes,
     ...forumRoutes,
