@@ -46,7 +46,7 @@ class _ConteudoScrollState extends State<ConteudoScroll> {
               final conteudo = widget.conteudos[index];
               return Container(
                 width: 200,
-                margin: EdgeInsets.only(left: index == 0 ? 5.0 : 0.0, right: 5.0, ),
+                margin: EdgeInsets.symmetric(horizontal: 5),
                 child: CardConteudo(conteudos: conteudo)
               );
             },
