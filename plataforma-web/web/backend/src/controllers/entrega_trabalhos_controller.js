@@ -11,12 +11,17 @@ controllers.list = async (req, res) => {
 
 controllers.get = async (req, res) => {
   try {
-    const { id } = req.params;
-    const data = await model.findByPk(id);
+    const { id_trabalho, id_formando } = req.params;
+    const data = await model.findOne({
+      where: {
+        id_trabalho_et: id_trabalho,
+        id_formando: id_formando,
+      }
+    });
+
     if (data) {
-      res.status(200).json(data);
-    } else {
-      res.status(404).json({ erro: 'Entrega de trabalhos nao encontrado/a!' });
+      const jaEntregou = !!data;
+      res.status(200).json(jaEntregou);
     }
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao procurar entrega de trabalhos!', desc: err.message });
