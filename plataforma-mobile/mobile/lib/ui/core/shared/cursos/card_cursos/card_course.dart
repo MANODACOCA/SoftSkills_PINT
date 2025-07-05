@@ -63,11 +63,7 @@ class _CardCourseState extends State<CardCourse> {
     return GestureDetector(
       onTap: () {
           if(inscrito){
-            if(widget.typeCourse == 'Assíncrono'){
-              context.go('/cursos-inscritos-assincrono', extra: widget.id);
-            } else if (widget.typeCourse == 'Síncrono') {
-              context.go('/cursos-inscritos-sincrono', extra: widget.id);
-            }
+              context.go('/cursos-inscritos', extra: widget.id);            
           } else {
             context.go('/inscrever', extra: widget.id);
           }

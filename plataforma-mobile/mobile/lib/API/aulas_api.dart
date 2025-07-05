@@ -7,7 +7,7 @@ import 'dart:convert';
 class AulasApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/aulas';
 
-  Future<Map<String, dynamic>> getAulasCurso(int cursoId) async {
+  Future<List<Map<String, dynamic>>> getAulasCurso(int cursoId) async {
     try {
       /* final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -26,8 +26,9 @@ class AulasApi {
 
       if (response.statusCode == 200) {
         print('Aulas encontradas: ${response.body}');
-        final data = jsonDecode(response.body);
-        return data;
+        final List<dynamic> data = jsonDecode(response.body);
+        final aulas = data.cast<Map<String, dynamic>>();
+        return aulas;
       }
 
       throw Exception('Erro ao encontrar aulas!');

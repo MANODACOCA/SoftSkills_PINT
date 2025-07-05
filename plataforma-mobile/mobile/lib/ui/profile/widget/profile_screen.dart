@@ -190,7 +190,7 @@ class _ProfileState extends State<Profile> {
                       title: const Text('Cursos inscritos'),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 15),
                       dense: true,
-                      onTap: () => context.go('/coursejoined'),
+                      onTap: () => context.go('/cursos-inscritos'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.only(left:18, right:18),
@@ -201,9 +201,9 @@ class _ProfileState extends State<Profile> {
                       title: const Text('Cursos terminados'),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 15),
                       dense: true,
-                      onTap: () => context.push('/endedcourses'),
+                      onTap: () => context.push('/cursos-completed'),
                     ),
-                    ListTile(
+                    /* ListTile(
                       contentPadding: const EdgeInsets.only(left: 18, right:18),
                       leading: const Icon(
                         Icons.favorite,
@@ -213,11 +213,11 @@ class _ProfileState extends State<Profile> {
                       trailing: const Icon(Icons.arrow_forward_ios, size: 15),
                       dense: true,
                       onTap: () => context.push('/likedcourses'),
-                    ),
+                    ), */
                   ],
                 ),
               ),
-              Divider(
+              /* Divider(
                 color: Colors.grey,
                 thickness: 1,
                 indent: 10,
@@ -251,7 +251,7 @@ class _ProfileState extends State<Profile> {
                     ),
                   ],
                 ),
-              ),
+              ), */
               Divider(
                 color: Colors.grey,
                 thickness: 1,
