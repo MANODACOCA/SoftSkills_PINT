@@ -31,6 +31,8 @@ const InfoProfile = () => {
 
     const handleSubmitNewPassword = async () => {
         setError('');
+        setSuccessMessage('');
+
         try {
             if (novapassword && repNovapassword) {
                 if (novapassword !== repNovapassword) {
@@ -53,14 +55,15 @@ const InfoProfile = () => {
                 },
                 buttonsStyling: true
             });
-            swalWithBootstrapButtons.fire({
+            
+            const result = await swalWithBootstrapButtons.fire({
                 title: "Têm a certeza que quer alterar a sua password?",
                 text: "Não podes reverter esta alteração!",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Sim, alterar.",
                 cancelButtonText: "Não, cancelar!",
-            }).then(async (result) => {
+            });
                 if (result.isConfirmed) {
                     await alterarPassword(user.email, novapassword);
                     setNovapassword('');
@@ -72,9 +75,7 @@ const InfoProfile = () => {
                         timer: 3000,
                         showConfirmButton: false
                     });
-                } else if (
-                    result.dismiss === Swal.DismissReason.cancel
-                ) {
+                } else {
                     setNovapassword('');
                     setRepNovapassword('');
                     swalWithBootstrapButtons.fire({
@@ -84,7 +85,6 @@ const InfoProfile = () => {
                         showConfirmButton: false
                     });
                 }
-            });
 
         } catch (error) {
             if (error.message === 'Essa é a sua password antiga! Tente outra.') {
@@ -189,7 +189,7 @@ const InfoProfile = () => {
                         </small>
                     </div>
 
-          {/*           <hr />
+                    {/*           <hr />
 
                     <div className="mb-3 d-flex align-items-center justify-content-between">
                         <h4 className="m-0">Queres ser Formador?</h4>

@@ -96,8 +96,8 @@ const ForumPosts = () => {
           >
             <option value="Mais Recentes">Mais Recentes</option>
             <option value="Mais Antigos">Mais Antigos</option>
-            <option value="Mais Antigos">Mais Populares</option>
-            <option value="Mais Antigos">Menos Populares</option>
+            <option value="Mais Populares">Mais Populares</option>
+            <option value="Menos Populares">Menos Populares</option>
           </select>
         </div>
 

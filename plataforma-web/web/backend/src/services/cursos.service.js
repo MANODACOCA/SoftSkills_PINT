@@ -1,4 +1,4 @@
-const { Sequelize, Op, where, Model } = require('sequelize');
+const { Sequelize, Op, where, Model, literal } = require('sequelize');
 const sequelize = require('../models/database');
 const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria } = require('../models/init-models')(sequelize);
 
@@ -29,13 +29,13 @@ async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null,
   }
 
   if (search) {
-   
+
     const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
     const searchFilter = Sequelize.where(
       Sequelize.fn('unaccent', Sequelize.col('nome_curso')),
       {
-        [Op.iLike]: `%${unaccentedSearch}%` 
+        [Op.iLike]: `%${unaccentedSearch}%`
       }
     );
 
@@ -262,7 +262,9 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
     };
 
     let cursoWhere = {
-      data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
+      data_fim_curso: {
+        [Op.gte]: literal('CURRENT_DATE')
+      }
     };
 
     if (tipologia === 'sincrono') {
@@ -337,7 +339,9 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
     };
 
     let cursoWhere = {
-      data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE') },
+      data_fim_curso: {
+        [Op.lt]: literal('CURRENT_DATE')
+      }
     };
 
     if (tipologia === 'sincrono') {
@@ -682,7 +686,7 @@ async function getCursosLecionadosTerminadosService(userId) {
   try {
     const cursoLecionado = await sincrono.findAll({
       where: {
-        id_formador : userId,
+        id_formador: userId,
       },
       include: [
         {
@@ -694,7 +698,7 @@ async function getCursosLecionadosTerminadosService(userId) {
         }
       ]
     });
-    
+
     return cursoLecionado;
   } catch (error) {
     console.error('Erro ao encontrar cursos lecionados terminados para o utilizador:', error);
@@ -706,7 +710,7 @@ async function getCursosLecionadosAtualmenteService(userId) {
   try {
     const cursoLecionado = await sincrono.findAll({
       where: {
-        id_formador : userId,
+        id_formador: userId,
       },
       include: [
         {

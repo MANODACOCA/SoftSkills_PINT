@@ -40,7 +40,7 @@ const FeaturedCourseCard = ({
       }
     }
   };
-
+  
   const [img, setImg] = useState(course.imagem);
 
   const nameFormador = course.nome_formador || "Formador";
@@ -60,7 +60,7 @@ const FeaturedCourseCard = ({
     return (
       <div className="card flex-row rounded-4 card-highlight favorite-card position-relative">
         <img
-          src={img}
+          src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
@@ -114,7 +114,7 @@ const FeaturedCourseCard = ({
     return (
       <div className="card flex-row rounded-4 card-highlight evaluation-card">
         <img
-          src={img}
+          src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
@@ -169,13 +169,13 @@ const FeaturedCourseCard = ({
     const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60));
 
-    const showWarning = course.tipo === 'assincrono' && diffTime > 0 && diffTime <= 15 * 24 * 60 * 60 * 1000;
+    const showWarning = diffTime > 0 && diffTime <= 15 * 24 * 60 * 60 * 1000;//se faltatem 15 dias para terminar o curso
     const tipoBadge = course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono';
 
     return (
       <div className="card flex-row rounded-4 card-highlight enrolled-card">
         <img
-          src={img}
+          src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
@@ -203,9 +203,10 @@ const FeaturedCourseCard = ({
               {showWarning ? (
                 <>
                   <FaExclamationTriangle className="me-2" />
-                  Curso expira em {diffDays !== 0 && `${diffDays}d`} {/* //dias */}
+                  Curso termina em {diffDays !== 0 && `${diffDays}d`} {/* //dias */}
                   {diffHours !== 0 && `${diffHours}h`} {/* //horas */}
                   {diffMinutes !== 0 && diffHours === 0 && diffDays === 0 && `${diffMinutes}m`} {/* //minutos */}
+                  {diffMinutes === 0 && diffHours === 0 && diffDays === 0 && `poucos segundos`} {/* //segundos */}
                 </>
               ) : (
                 'Em curso...'
@@ -225,7 +226,7 @@ const FeaturedCourseCard = ({
   return (
     <div className="card flex-row rounded-4 card-highlight">
       <img
-        src={img}
+        src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
