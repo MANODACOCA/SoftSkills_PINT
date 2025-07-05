@@ -166,8 +166,13 @@ const ClassPage = () => {
                                 )}
                                 {tipoCurso === 'Síncrono' && (
                                     <img
+                                        src={imagemCurso || `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCurso)}&background=random&bold=true`}
+                                        onError={(e) => {
+                                            e.target.onerror = null;
+                                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCurso)}&background=random&bold=true`;
+                                        }}
+                                        alt="Foto do curso"
                                         className='rounded-4'
-                                        src={imagemCurso} alt="imagem do curso"
                                         style={{ width: "100%", height: "575px", objectFit: "cover" }}
                                     />
                                 )}

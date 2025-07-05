@@ -21,18 +21,21 @@ const storage = multer.diskStorage({
 });
 
 const allowed = [
-    'image/jpeg', 'image/png', 
-    'application/pdf', 
+    'image/jpeg', 'image/png',
+    'application/pdf',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'application/vnd.ms-excel',
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/vnd.ms-excel.sheet.macroEnabled.12',
     'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/zip',
+    'application/x-zip-compressed',
+];
 
 const fileFilter = (req, file, cb) => {
-    if(!allowed.includes(file.mimetype)){
+    if (!allowed.includes(file.mimetype)) {
         return cb(
             new Error('Só são permitidos PDF, imagens (JPG/PNG), Word (.doc/.docx) e Excel (.xls/.xlsx).'),
             false

@@ -33,7 +33,10 @@ const allowed = [
     'application/vnd.ms-excel.sheet.macroEnabled.12',
     'application/vnd.ms-powerpoint',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'text/plain'];
+    'text/plain',
+    'application/zip',
+    'application/x-zip-compressed',
+];
 
 const fileFilter = (req, file, cb) => {
     if (!allowed.includes(file.mimetype)) {
