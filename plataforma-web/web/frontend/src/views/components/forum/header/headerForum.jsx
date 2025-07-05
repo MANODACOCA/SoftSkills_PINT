@@ -140,7 +140,7 @@ const ForumHeader = ({ totalPosts, forum, onPostCreated }) => {
                         <Form.Label>Adicionar ficheiro (opcional)</Form.Label>
                         <Form.Control
                             type="file"
-                            accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.xlsm,.ppt,.pptx,.txt"
+                            accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.xlsm,.ppt,.pptx,.txt,.zip"
                             onChange={(e) => setFicheiroSelecionado(e.target.files[0])}
                         />
                     </Form.Group>
