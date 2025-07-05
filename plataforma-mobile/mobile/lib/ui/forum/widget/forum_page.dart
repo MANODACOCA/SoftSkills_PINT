@@ -59,7 +59,7 @@ class _ForumPageState extends State<ForumPage> {
 
   Future<void> atribuicaoDeInfo() async {
     try{
-      final result = await ForumAPI.getConteudosPartilhado(widget.forumID as String);
+      final result = await ForumAPI.getConteudosPartilhado(widget.forumID);
       setState((){
         forumName = result['nome_topico'];
       });

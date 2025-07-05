@@ -46,7 +46,7 @@ class _MaterialScrollState extends State<MaterialScroll> {
               final materiais = widget.material[index];
               return Container(
                 width: 200,
-                margin: EdgeInsets.only(left: index == 0 ? 5.0 : 0.0, right: 5.0, ),
+                margin: EdgeInsets.symmetric(horizontal: 5),
                 child: CardMaterial(materiais: materiais,)
               );
             },

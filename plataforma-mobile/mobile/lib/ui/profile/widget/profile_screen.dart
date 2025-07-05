@@ -190,7 +190,7 @@ class _ProfileState extends State<Profile> {
                       title: const Text('Cursos inscritos'),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 15),
                       dense: true,
-                      onTap: () => context.go('/cursos-inscritos'),
+                      onTap: () => context.push('/list-cursos-inscrito'),
                     ),
                     ListTile(
                       contentPadding: const EdgeInsets.only(left:18, right:18),
