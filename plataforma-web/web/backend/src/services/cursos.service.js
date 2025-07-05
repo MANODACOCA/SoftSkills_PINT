@@ -261,12 +261,11 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
       status_inscricao: 1,
     };
 
-    let cursoWhere = where(
-      fn('DATE', col('data_fim_curso')),
-      {
+    let cursoWhere = {
+      data_fim_curso: {
         [Op.gte]: literal('CURRENT_DATE')
       }
-    );
+    };
 
     if (tipologia === 'sincrono') {
       cursoWhere.issincrono = true;
@@ -339,12 +338,11 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
       status_inscricao: 1,
     };
 
-    let cursoWhere = where(
-      fn('DATE', col('data_fim_curso')),
-      {
+    let cursoWhere = {
+      data_fim_curso: {
         [Op.lt]: literal('CURRENT_DATE')
       }
-    );
+    };
 
     if (tipologia === 'sincrono') {
       cursoWhere.issincrono = true;
