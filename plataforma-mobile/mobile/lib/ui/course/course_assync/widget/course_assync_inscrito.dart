@@ -2,20 +2,20 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import 'package:mobile/ui/core/shared/cursos/cursos_comp/tabbar_cursos_inscrito.dart';
-import '../../core/shared/export.dart';
-import '../../core/shared/base_comp/navigationbar_component.dart';
+import '../../../core/shared/export.dart';
+import '../../../core/shared/base_comp/navigationbar_component.dart';
 
 
-class SincronoInscrito extends StatefulWidget {
-  const SincronoInscrito({super.key , required this.idCurso});
+class AssincronoInscrito extends StatefulWidget {
+  const AssincronoInscrito({super.key , required this.idCurso});
 
   final int idCurso;
 
   @override
-  State<SincronoInscrito> createState() => _SincronoInscritoState();
+  State<AssincronoInscrito> createState() => _AssincronoInscritoState();
 }
 
-class _SincronoInscritoState extends State<SincronoInscrito> {
+class _AssincronoInscritoState extends State<AssincronoInscrito> {
   Map<String, dynamic> curso = {};
   final CursosApi _api = CursosApi();
 
@@ -85,7 +85,6 @@ class _SincronoInscritoState extends State<SincronoInscrito> {
                           textAlign: TextAlign.start,
                         ),  
                       ),
-                      
                     ),
                     TabbarCoursesInscrito(curso: curso),
                   ],

@@ -100,9 +100,9 @@ class _InscreverState extends State<Inscrever> {
       final isSincrono = curso['issincrono'];
       
       if (isSincrono) {
-        context.push('/cursos-inscritos-sincrono', extra: widget.idCurso);
+        context.go('/cursos-inscritos-sincrono', extra: widget.idCurso);
       } else {
-        context.push('/cursos-inscritos-assincrono', extra: widget.idCurso);
+        context.go('/cursos-inscritos-assincrono', extra: widget.idCurso);
       }
     } else {
       scaffoldMessenger.showSnackBar(

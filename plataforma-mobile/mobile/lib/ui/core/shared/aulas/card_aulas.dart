@@ -2,35 +2,30 @@
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart'; */
 import '../export.dart';
+import 'package:go_router/go_router.dart';
 
 class CardAula extends StatefulWidget {
-  const CardAula({super.key, required this.aulas});
+  const CardAula({super.key, required this.aulas, required this.sincrono});
 
   final Map<String, dynamic> aulas;
+  final bool sincrono;
 
   @override
   State<CardAula> createState() => _CardAulaState();
 }
 
 class _CardAulaState extends State<CardAula> {
-  //final CursosApi _api = CursosApi();
-  //bool inscrito = false;
-
-  /* @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
-      if (userId != null) {
-        print('ID do utilizador: $userId');
-      }
-    });
-  } */
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () { },
+      onTap: () async {
+        if (widget.sincrono == false) {
+          context.push('/aulas-async', extra: widget.aulas);
+        } else {
+          context.push('/aulas-sync', extra: widget.aulas);
+        }
+      },
       child: Card(
         elevation: 4,
         shadowColor: Colors.black,
@@ -53,28 +48,31 @@ class _CardAulaState extends State<CardAula> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.aulas['title'],
-                            style: AppTextStyles.title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ), 
-                          SizedBox(height: 10),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-                            decoration: BoxDecoration(
-                              color: AppColors.primary,
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            child: Text(
-                              'Duração: ${widget.aulas['duracao']?['horas'].toString().padLeft(2, '0')}h ${widget.aulas['duracao']?['minutes'].toString().padLeft(2, '0')}min',
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                          ),    
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.aulas['nome_aula'],
+                              style: AppTextStyles.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ), 
+                            SizedBox(height: 10),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: AppColors.primary,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Text(
+                                '${(widget.aulas['tempo_duracao']?['hours'] ?? 0).toString().padLeft(2, '0')} : ${(widget.aulas['tempo_duracao']?['minutes'] ?? 0).toString().padLeft(2, '0')}',
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),    
+                          ],
+                        ),
+                        
                       ),
                       Icon(Icons.chevron_right_rounded),
                     ],
