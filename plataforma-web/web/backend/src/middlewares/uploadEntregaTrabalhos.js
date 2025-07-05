@@ -6,17 +6,19 @@ const BASE_DIR = path.join(__dirname, '..', 'uploads', '');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const cursoId = req.body.id_curso || 'geral';
-        const aulaId = req.body.id_aula || 'aula0'
-        const uploadPath = path.join(BASE_DIR, `curso${cursoId}`, `aula${aulaId}`);
+        const cursoId = req.body.id_curso_tr || 'geral';
+        const idTrabalho = req.body.id_trabalho || 'geral';
+
+        const uploadPath = path.join(BASE_DIR, `curso${cursoId}`, `entrega_trabalhos${idTrabalho}`);
 
         fs.mkdirSync(uploadPath, { recursive: true });
 
         cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
+        const userId = req.body.id_utilizador || 'geral';
         const ext = path.extname(file.originalname).toLowerCase();
-        const filename = `conteudo-${Date.now()}${ext}`;
+        const filename = `trabalho-${userId}-${Date.now()}${ext}`;
         cb(null, filename);
     }
 });

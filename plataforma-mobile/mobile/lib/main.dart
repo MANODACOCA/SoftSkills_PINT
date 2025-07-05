@@ -1,4 +1,5 @@
 //import 'package:flutter/material.dart';
+import 'package:mobile/data/local/auth_local_data_source.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'ui/core/shared/export.dart';
@@ -8,10 +9,11 @@ import 'package:intl/date_symbol_data_local.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('pt_PT', null);
+  final authLocal = AuthLocalDataSource();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider(authLocal)),
       ],
       child: const MyApp(),
     ),

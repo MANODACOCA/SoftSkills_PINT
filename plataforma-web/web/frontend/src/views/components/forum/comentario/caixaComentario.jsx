@@ -127,7 +127,7 @@ const CaixaComentario = ({ idPost, onCommentCreated }) => {
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileSelect}
-                accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.xlsm,.ppt,.pptx,.txt"
+                accept=".jpeg,.jpg,.png,.pdf,.doc,.docx,.xls,.xlsx,.xlsm,.ppt,.pptx,.txt,.zip"
                 style={{ display: 'none' }}
             />
 

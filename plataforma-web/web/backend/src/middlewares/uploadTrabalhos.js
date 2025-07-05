@@ -9,16 +9,15 @@ const storage = multer.diskStorage({
         const cursoId = req.body.id_curso_tr || 'geral';
         const idTrabalho = req.body.id_trabalho || 'geral';
 
-        const uploadPath = path.join(BASE_DIR, `curso${cursoId}`, `entrega_trabalhos${idTrabalho}`);
+        const uploadPath = path.join(BASE_DIR, `curso${cursoId}`, `trabalhos${idTrabalho}`);
 
         fs.mkdirSync(uploadPath, { recursive: true });
 
         cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-        const userId = req.body.id_utilizador || 'geral';
         const ext = path.extname(file.originalname).toLowerCase();
-        const filename = `trabalho-${userId}-${Date.now()}${ext}`;
+        const filename = `trabalho-${Date.now()}${ext}`;
         cb(null, filename);
     }
 });
@@ -33,7 +32,10 @@ const allowed = [
     'application/vnd.ms-excel.sheet.macroEnabled.12',
     'application/vnd.ms-powerpoint',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'text/plain'];
+    'text/plain',
+    'application/zip',
+    'application/x-zip-compressed',
+];
 
 const fileFilter = (req, file, cb) => {
     if (!allowed.includes(file.mimetype)) {

@@ -1,7 +1,7 @@
 const express = require('express');
 const controller = require('../controllers/entrega_trabalhos_controller.js')
 const router = express.Router();
-const uploadTrabalhos = require('../middlewares/uploadTrabalhos');
+const uploadEntregaTrabalhos = require('../middlewares/uploadEntregaTrabalhos');
 
 router.get('/',(req, res) => {
   res.send("<h1>Ups! Está vazio aqui...</h1><br><b>Caminhos:</b><br>/list<br>/get/{id}<br>/create<br>/update/{id}<br>/delete/{id}");
@@ -18,9 +18,9 @@ router.get('/delete',(req, res) => {
 });
 
 router.get('/list',controller.list);
-router.get('/get/:id',controller.get);
-router.post('/create', uploadTrabalhos.single('ficheiro'), controller.create);
-router.put('/update/:id', uploadTrabalhos.single('ficheiro'),controller.update);
+router.get('/get/:id_trabalho/:id_formando',controller.get);
+router.post('/create', uploadEntregaTrabalhos.single('ficheiro'), controller.create);
+router.put('/update', uploadEntregaTrabalhos.single('ficheiro'),controller.update);
 router.delete('/delete/:id',controller.delete);
 
 module.exports = router;
