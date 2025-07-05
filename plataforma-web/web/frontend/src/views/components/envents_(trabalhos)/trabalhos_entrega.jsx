@@ -164,25 +164,27 @@ const WorkSubmit = ({ trabalho }) => {
                 )}
 
                 {/* Botão Submissão */}
-                <div className="text-center pt-3">
-                    <Button
-                        onClick={handleSubmit}
-                        disabled={isSubmitted}
-                        variant={isSubmitted ? 'success' : 'primary'}
-                        className="px-4 py-2 fw-medium"
-                    >
-                        {isSubmitted ? (
-                            <>
-                                <FaCheckCircle className="me-2" />
-                                Submetido
-                            </>
-                        ) : (
-                            'Submeter'
-                        )}
-                    </Button>
-                </div>
+                {DataAtual <= DataEntrega && (
+                    <div className="text-center pt-3">
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={isSubmitted}
+                            variant={isSubmitted ? 'secondary' : 'primary'}
+                            className="px-4 py-2 fw-medium"
+                        >
+                            {isSubmitted ? (
+                                <>
+                                    <FaCheckCircle className="me-2" />
+                                    Editar
+                                </>
+                            ) : (
+                                'Submeter'
+                            )}
+                        </Button>
+                    </div>
+                )}
             </Card.Body>
-        </Card>
+        </Card >
     );
 };
 

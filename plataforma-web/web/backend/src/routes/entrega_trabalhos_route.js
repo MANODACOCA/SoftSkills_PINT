@@ -1,7 +1,7 @@
 const express = require('express');
 const controller = require('../controllers/entrega_trabalhos_controller.js')
 const router = express.Router();
-const uploadTrabalhos = require('../middlewares/uploadTrabalhos');
+const uploadTrabalhos = require('../middlewares/uploadEntregaTrabalhos');
 
 router.get('/',(req, res) => {
   res.send("<h1>Ups! Está vazio aqui...</h1><br><b>Caminhos:</b><br>/list<br>/get/{id}<br>/create<br>/update/{id}<br>/delete/{id}");
