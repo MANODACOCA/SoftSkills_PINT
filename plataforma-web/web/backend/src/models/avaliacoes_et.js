@@ -1,48 +1,36 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('aulas', {
-    id_aula: {
+  return sequelize.define('avaliacoes_et', {
+    'id_avaliaÇÕes_aet': {
       autoIncrement: true,
       autoIncrementIdentity: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    id_curso: {
+    id_entrega_trabalho_aet: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'cursos',
-        key: 'id_curso'
+        model: 'entrega_trabalhos',
+        key: 'id_entrega_trabalho'
       }
     },
-    data_aula: {
-      type: DataTypes.DATE,
+    avaliacao: {
+      type: DataTypes.DOUBLE,
       allowNull: false
-    },
-    nome_aula: {
-      type: DataTypes.STRING(50),
-      allowNull: false
-    },
-    caminho_url: {
-      type: DataTypes.STRING(1024),
-      allowNull: true
-    },
-    tempo_duracao: {
-      type: DataTypes.INTEGER,
-      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'aulas',
+    tableName: 'avaliacoes_et',
     schema: 'public',
     timestamps: false,
     indexes: [
       {
-        name: "pk_aulas",
+        name: "pk_avaliaoes_aet",
         unique: true,
         fields: [
-          { name: "id_aula" },
+          { name: "id_avaliaÇÕes_aet" },
         ]
       },
     ]

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   return sequelize.define('entrega_trabalhos', {
     id_entrega_trabalho: {
       autoIncrement: true,
@@ -18,31 +18,11 @@ module.exports = function (sequelize, DataTypes) {
     },
     id_formando_et: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'formandos',
         key: 'id_formando'
       }
-    },
-    id_formato_et: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'tipo_formato',
-        key: 'id_formato'
-      }
-    },
-    id_resultado_et: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'resultados',
-        key: 'id_resul'
-      }
-    },
-    nome_et: {
-      type: DataTypes.STRING(300),
-      allowNull: false
     },
     caminho_et: {
       type: DataTypes.STRING(1024),
