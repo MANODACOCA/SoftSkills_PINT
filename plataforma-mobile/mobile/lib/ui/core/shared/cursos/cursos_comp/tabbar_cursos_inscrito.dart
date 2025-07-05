@@ -1,31 +1,81 @@
-import 'package:mobile/ui/core/shared/card_aulas.dart';
+import 'package:mobile/API/aulas_api.dart';
+import 'package:mobile/API/materialapoio_api.dart';
+import 'package:mobile/ui/core/shared/aulas/aulas_scroll.dart';
+import 'package:mobile/ui/core/shared/material_apoio/material_scroll.dart';
+//import 'package:mobile/ui/core/shared/aulas/card_aulas.dart';
+import 'package:mobile/ui/core/shared/text_expand.dart';
 
-import 'export.dart';
-import '../../../utils/uteis.dart';
+import '../../export.dart';
 
-class TabbarCoursesInscrito extends StatelessWidget {
+class TabbarCoursesInscrito extends StatefulWidget {
   const TabbarCoursesInscrito({super.key, required this.curso});
 
   final Map<String, dynamic> curso;
 
   @override
+  State<TabbarCoursesInscrito> createState() => _TabbarCoursesInscritoState();
+}
+
+class _TabbarCoursesInscritoState extends State<TabbarCoursesInscrito> {
+  List<Map<String, dynamic>> aulas = [];
+  List<Map<String,dynamic>> materialapoio = [];
+  final AulasApi _apiaulas = AulasApi();
+  final MaterialApoioApi _apimaterial = MaterialApoioApi();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAulas(widget.curso['id_curso']);
+    fetchMateriais(widget.curso['id_curso']);
+  }
+
+  Future<void> fetchAulas (int idCurso) async {
+    try{
+      final estasAulas = await _apiaulas.getAulasCurso(idCurso);
+      setState(() {
+        aulas = estasAulas;
+      });
+    } catch(e) {
+      print('Erro ao encontrar aulas: , $e');
+    }
+  }
+
+  Future<void> fetchMateriais (int idCurso) async {
+    try {
+      final esteMaterial = await _apimaterial.getMaterialApoioCurso(idCurso);
+      setState(() {
+        materialapoio = esteMaterial;
+      });
+    } catch (e) {
+      print('Erro ao encontrar materiais de apoio');
+    }
+  }
+
+  bool hasSincrono () {
+    if(widget.curso['sincrono'] == null){
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
-    DateTime agora = DateTime.now();
-    final bool hasFormador = curso['sincrono'] != null;
-    final imgPerfil = curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi'];
-    final nomeFormador = curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'];
+    final bool hasFormador = widget.curso['sincrono'] != null;
+    final imgPerfil = widget.curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi'];
+    final nomeFormador = widget.curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'];
     print('Imagem do formador: $imgPerfil');
     return DefaultTabController(
-      length: 4,
+      length: hasFormador ? 4 : 3,
       child: Column(
         children: [
           TabBar(
             tabs: [
               Tab(text: "Aulas"),
               Tab(child: Text("Material\napoio", textAlign: TextAlign.center,),),
-              hasFormador ? Tab(text: "Sobre") : Tab(text: "Eventos"),
-              hasFormador ? Tab(text: "Formador") : Tab(text: "Sobre"),
+              hasFormador ? Tab(text: "Trabalhos") : Tab(text: "Sobre"),
+              if(hasFormador) Tab(text: "Sobre"),
             ],
           ),
           SizedBox(
@@ -39,7 +89,7 @@ class TabbarCoursesInscrito extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CardAula(aulas :{'title': 'Nome Aula', 'duracao': {'horas': 3, 'minutes': 5}, 'caminho': 'url', 'data': agora}),
+                        AulasScroll(aulas: aulas, sincrono: hasSincrono(),)
                       ],
                     ),  
                   ),
@@ -51,31 +101,14 @@ class TabbarCoursesInscrito extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Datas de inscrição: ', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        Text(formatDateRange(DateTime.parse(curso['data_inicio_inscricao']), DateTime.parse(curso['data_fim_inscricao'])), style: TextStyle(fontSize: 15), textAlign: TextAlign.justify),
-                        SizedBox(height: 5,),
+                        MaterialScroll(material: materialapoio,),
                       ],
                     ),  
                   ),
                 ]),
-                //Sobre
-                //Eventos
                 hasFormador 
+                //Eventos
                 ? ListView(children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5,),
-                        Text("Descrição de curso", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 10,),
-                        Text("${curso['descricao_curso']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify,), 
-                      ],
-                    ) 
-                  ),
-                ])
-                : ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                     child: Column(
@@ -84,18 +117,33 @@ class TabbarCoursesInscrito extends StatelessWidget {
                         SizedBox(height: 5,),
                         Text("Eventos", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         SizedBox(height: 10,),
-                        Text("${curso['descricao_curso']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify,), 
+                        Text('Por fazer...')
+                      ],
+                    ) 
+                  ),
+                ])
+                //Sobre
+                : ListView(children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 5,),
+                        Text("Descrição de curso", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 10,),
+                        TextExpand(text: widget.curso['descricao_curso']),
                       ],
                     ) 
                   ),
                 ]),
-                
-                //formador
-                hasFormador
-                ? ListView(children: [
+                //Sobre
+                if (hasFormador)
+                 ListView(children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
@@ -124,33 +172,22 @@ class TabbarCoursesInscrito extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.left,),
-                                Text('${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['email']}', textAlign: TextAlign.left,),
+                                Text("${widget.curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util']}", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold), textAlign: TextAlign.left,),
+                                Text('${widget.curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['email']}', textAlign: TextAlign.left,),
                               ],
                             ),
                           ],
                         ),
-                        SizedBox(height: 5,),
-                        Text("${curso['sincrono']?['id_formador_formadore']?['descricao_formador']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.left,),      
+                        SizedBox(height: 10,),
+                        TextExpand(text: widget.curso['sincrono']?['id_formador_formadore']?['descricao_formador']),
+                        SizedBox(height: 25,),
+                        Text("Descrição de curso", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 10,),
+                        TextExpand(text: widget.curso['descricao_curso']),
                       ],
                     ),
                   ),
                 ])
-                //Sobre
-                : ListView(children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(height: 5,),
-                        Text("Descrição de curso", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 10,),
-                        Text("${curso['descricao_curso']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify,), 
-                      ],
-                    ) 
-                  ),
-                ]),
               ],
             ),
           )

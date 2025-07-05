@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables
-
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/shared/navigationbar_component.dart';
+import '../../core/shared/base_comp/navigationbar_component.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../API/utilizadores_api.dart';
 import 'package:provider/provider.dart';
@@ -130,45 +129,29 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     SizedBox(height: 12),
-                    SizedBox(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 18),
-                          Icon(
-                            Icons.person,
-                            color: const Color.fromARGB(255, 88, 85, 85),
-                          ),
-                          SizedBox(width: 5),
-                          Text('Alteração de dados pessoais'),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              context.go('/alterarInformacoes');
-                            },
-                            icon: Icon(Icons.arrow_forward_ios, size: 15),
-                          ),
-                        ],
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 18, right: 18),
+                      leading: const Icon(
+                        Icons.person,
+                        color: Color.fromARGB(255, 88, 85, 85),
                       ),
+                      title: const Text('Alteração de dados pessoais'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,
+                      onTap: () => context.go('/alterarInformacoes'),
                     ),
-                    SizedBox(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 18),
-                          Icon(
-                            Icons.key,
-                            color: const Color.fromARGB(255, 88, 85, 85),
-                          ),
-                          SizedBox(width: 5),
-                          Text('Informações de login'),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              //context.go('/seeinfoprofile', extra: widget.idUser);
-                            },
-                            icon: Icon(Icons.arrow_forward_ios, size: 15),
-                          ),
-                        ],
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 18, right: 18),
+                      leading: const Icon(
+                        Icons.key,
+                        color: Color.fromARGB(255, 88, 85, 85),
                       ),
+                      title: const Text('Informações de login'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,
+                      onTap: () {
+                        //context.go('/seeinfoprofile');
+                      },
                     ),
                   ],
                 ),
@@ -198,65 +181,38 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                     SizedBox(height: 12),
-                    SizedBox(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 18),
-                          Icon(
-                            Icons.computer,
-                            color: const Color.fromARGB(255, 88, 85, 85),
-                          ),
-                          SizedBox(width: 5),
-                          Text('Cursos inscritos'),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              context.go('/coursejoined');
-                            },
-                            icon: Icon(Icons.arrow_forward_ios, size: 15),
-                          ),
-                        ],
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 18, right: 18),
+                      leading: const Icon(
+                        Icons.computer,
+                        color: Color.fromARGB(255, 88, 85, 85),
                       ),
+                      title: const Text('Cursos inscritos'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,
+                      onTap: () => context.go('/coursejoined'),
                     ),
-                    SizedBox(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 18),
-                          Icon(
-                            Icons.flag_outlined,
-                            color: const Color.fromARGB(255, 88, 85, 85),
-                          ),
-                          SizedBox(width: 5),
-                          Text('Cursos terminados'),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              context.push('/endedcourses');
-                            },
-                            icon: Icon(Icons.arrow_forward_ios, size: 15),
-                          ),
-                        ],
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left:18, right:18),
+                      leading: const Icon(
+                        Icons.flag_outlined,
+                        color: Color.fromARGB(255,88,85,85),
                       ),
+                      title: const Text('Cursos terminados'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,
+                      onTap: () => context.push('/endedcourses'),
                     ),
-                    SizedBox(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 18),
-                          Icon(
-                            Icons.favorite,
-                            color: const Color.fromARGB(255, 88, 85, 85),
-                          ),
-                          SizedBox(width: 5),
-                          Text('Cursos que gostaste'),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              context.push('/likedcourses');
-                            },
-                            icon: Icon(Icons.arrow_forward_ios, size: 15),
-                          ),
-                        ],
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 18, right:18),
+                      leading: const Icon(
+                        Icons.favorite,
+                        color: Color.fromARGB(255, 88, 85, 85),
                       ),
+                      title: const Text('Cursos que gostate'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,
+                      onTap: () => context.push('/likedcourses'),
                     ),
                   ],
                 ),
@@ -282,25 +238,16 @@ class _ProfileState extends State<Profile> {
                       ],
                     ),
                     SizedBox(height: 12),
-                    SizedBox(
-                      child: Row(
-                        children: <Widget>[
-                          SizedBox(width: 18),
-                          Icon(
-                            Icons.notifications,
-                            color: const Color.fromARGB(255, 88, 85, 85),
-                          ),
-                          SizedBox(width: 5),
-                          Text('Notificações'),
-                          Spacer(),
-                          IconButton(
-                            onPressed: () {
-                              context.push('/gerirnotification');
-                            },
-                            icon: Icon(Icons.arrow_forward_ios, size: 15),
-                          ),
-                        ],
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 18, right: 18),
+                      leading: const Icon(
+                        Icons.notifications,
+                        color: Color.fromARGB(255, 88, 85, 85),
                       ),
+                      title: const Text('Notificações'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,                          
+                      onTap: () => context.push('/gerirnotification'),
                     ),
                   ],
                 ),
@@ -313,64 +260,43 @@ class _ProfileState extends State<Profile> {
               ),
               SizedBox(
                 child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        SizedBox(width: 18),
-                        Icon(
-                          Icons.contact_support,
-                          color: const Color.fromARGB(255, 88, 85, 85),
-                        ),
-                        SizedBox(width: 5),
-                        Text('Central de suporte'),
-                        Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            context.push('/support');
-                          },
-                          icon: Icon(Icons.arrow_forward_ios, size: 15),
-                        ),
-                      ],
+                  children: [
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 18, right: 18),
+                      leading: const Icon(
+                        Icons.contact_support,
+                        color: Color.fromARGB(255, 88, 85, 85),
+                      ),
+                      title: const Text('Central de suporte'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,
+                      onTap: () => context.push('/support'),
                     ),
-                    SizedBox(height: 2),
-                    Row(
-                      children: <Widget>[
-                        SizedBox(width: 18),
-                        Icon(
-                          Icons.privacy_tip_outlined,
-                          color: const Color.fromARGB(255, 88, 85, 85),
-                        ),
-                        SizedBox(width: 5),
-                        Text('Politica de privacidade'),
-                        Spacer(),
-                        IconButton(
-                          onPressed: () {
-                            context.push('/privacypolitics');
-                          },
-                          icon: Icon(Icons.arrow_forward_ios, size: 15),
-                        ),
-                      ],
+                    const SizedBox(height: 2),
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 18, right: 18),
+                      leading: const Icon(
+                        Icons.privacy_tip_outlined,
+                        color: Color.fromARGB(255, 88, 85, 85),
+                      ),
+                      title: const Text('Política de privacidade'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,
+                      onTap: () => context.push('/privacypolitics'),
                     ),
-                    SizedBox(height: 2),
-                    Row(
-                      children: <Widget>[
-                        SizedBox(width: 18),
-                        Icon(Icons.logout, color: Colors.red),
-                        SizedBox(width: 5),
-                        Text(
-                          'Encerrar sessão',
-                          style: TextStyle(color: Colors.red),
-                        ),
-                        Spacer(),
-                        IconButton(
-                          onPressed: () async {
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setBool('remember_me', false);
-                            confirm();
-                          },
-                          icon: Icon(Icons.arrow_forward_ios, size: 15),
-                        ),
-                      ],
+                    const SizedBox(height: 2),
+                    ListTile(
+                      contentPadding: const EdgeInsets.only(left: 18, right: 18),
+                      leading: const Icon(Icons.logout, color: Colors.red),
+                      title: const Text( 'Encerrar sessão',style: TextStyle(color: Colors.red),
+                      ),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 15),
+                      dense: true,
+                      onTap: () async {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setBool('remember_me', false);
+                        confirm();   
+                      },
                     ),
                   ],
                 ),

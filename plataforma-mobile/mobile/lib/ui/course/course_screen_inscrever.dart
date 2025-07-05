@@ -3,11 +3,11 @@ import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/API/inscricao_api.dart';
 import 'package:mobile/API/utilizadores_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
-import 'package:mobile/ui/core/shared/app_bar_arrow.dart';
-import 'package:mobile/ui/core/shared/tabbar_cursos_inscrever.dart';
+import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
+import 'package:mobile/ui/core/shared/cursos/cursos_comp/tabbar_cursos_inscrever.dart';
 import 'package:provider/provider.dart';
 import '../core/shared/export.dart';
-import '../core/shared/navigationbar_component.dart';
+import '../core/shared/base_comp/navigationbar_component.dart';
 
 
 class Inscrever extends StatefulWidget {
@@ -100,9 +100,9 @@ class _InscreverState extends State<Inscrever> {
       final isSincrono = curso['issincrono'];
       
       if (isSincrono) {
-        context.push('/cursos-inscritos-sincrono', extra: widget.idCurso);
+        context.go('/cursos-inscritos-sincrono', extra: widget.idCurso);
       } else {
-        context.push('/cursos-inscritos-assincrono', extra: widget.idCurso);
+        context.go('/cursos-inscritos-assincrono', extra: widget.idCurso);
       }
     } else {
       scaffoldMessenger.showSnackBar(

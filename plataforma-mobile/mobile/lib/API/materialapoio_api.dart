@@ -7,7 +7,7 @@ import 'dart:convert';
 class MaterialApoioApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/material_apoio';
 
-  Future<Map<String, dynamic>> getMaterialApoioCurso(int cursoId) async {
+  Future<List<Map<String, dynamic>>> getMaterialApoioCurso(int cursoId) async {
     try {
       /* final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -25,9 +25,10 @@ class MaterialApoioApi {
       );
 
       if (response.statusCode == 200) {
-        print('Aulas encontradas: ${response.body}');
-        final data = jsonDecode(response.body);
-        return data;
+        print('Materiais encontrados: ${response.body}');
+        final List<dynamic> data = jsonDecode(response.body);
+        final materiais = data.cast<Map<String, dynamic>>();
+        return materiais;
       }
 
       throw Exception('Erro ao encontrar material de apoio!');

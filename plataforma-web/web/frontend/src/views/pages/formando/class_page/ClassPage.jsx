@@ -6,22 +6,18 @@ import VideoPlayer from '../../../components/video_player/VideoPlayer';
 import CourseModule from '../../../components/course_module/CourseModule';
 import TrabalhosList from '../../../components/envents_(trabalhos)/trabalhos_list';
 import TrabalhosEntrega from '../../../components/envents_(trabalhos)/trabalhos_entrega';
-import { Spinner, Alert, Tabs, Tab, Card } from 'react-bootstrap';
+import { Spinner, Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../../api/aulas_axios';
 import {
-    FaVideo,
     FaFileAlt,
     FaFilePowerpoint,
+    FaFileExcel,
     FaFileImage,
-    FaFileAudio,
     FaFilePdf,
     FaLink,
-    FaFile,
-    FaInfoCircle,
-    FaUserTie
+    FaFile
 } from 'react-icons/fa';
-
-
+import { BsFiletypeTxt } from "react-icons/bs";
 
 const ClassPage = () => {
     const API_URL = 'https://softskills-api.onrender.com/';
@@ -105,14 +101,13 @@ const ClassPage = () => {
     const tituloAula = aulaAtual ? aulaAtual.nome_aula : "Aula não disponível";
 
     const iconMapById = {
-        1: <FaVideo className="text-primary" />,
-        2: <FaFilePdf className="text-danger" />,
-        3: <FaFilePowerpoint className="text-warning" />,
-        4: <FaFileAlt className="text-success" />,
-        5: <FaFileImage className="text-pink-500" />,
-        6: <FaFileAudio className="text-indigo-500" />,
-        7: <FaInfoCircle className="text-cyan-600" />,
-        8: <FaLink className="text-blue-500" />,
+        1: <FaFilePdf className="text-danger" />,
+        2: <FaFilePowerpoint className="text-warning" />,
+        3: <FaFileAlt className="text-success" />,
+        4: <FaFileExcel className="text-success" />,
+        5: <BsFiletypeTxt className="text-cyan-600" />,
+        6: <FaFileImage className="text-pink-500" />,
+        7: <FaLink className="text-blue-500" />,
     };
 
     const renderIconoFormato = (id) => {
@@ -317,14 +312,14 @@ const ClassPage = () => {
                                                                         {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
                                                                     </h4>
                                                                     <div>
-                                                                    { curso.sincrono.id_formador_formadore.id_formador_utilizador.pais &&
-                                                                        <small className='alert alert-success mb-0 py-1 px-2'>
-                                                                            <i className='bi bi-geo-alt me-2'></i>
-                                                                            {curso.sincrono.id_formador_formadore.id_formador_utilizador.pais}
-                                                                        </small>  
-                                                                    }    
+                                                                        {curso.sincrono.id_formador_formadore.id_formador_utilizador.pais &&
+                                                                            <small className='alert alert-success mb-0 py-1 px-2'>
+                                                                                <i className='bi bi-geo-alt me-2'></i>
+                                                                                {curso.sincrono.id_formador_formadore.id_formador_utilizador.pais}
+                                                                            </small>
+                                                                        }
                                                                     </div>
-                                                                       
+
                                                                 </div>
                                                                 <small className="text-muted">
                                                                     {curso.sincrono.id_formador_formadore.id_formador_utilizador.email || ""}

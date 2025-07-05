@@ -1,8 +1,10 @@
 import 'package:mobile/API/cursos_api.dart';
-import 'package:mobile/ui/core/shared/course_page_scroll.dart';
-import '../core/shared/navigationbar_component.dart';
-import '../core/shared/search_bar.dart';
+import 'package:mobile/ui/core/shared/cursos/card_cursos/course_page_scroll.dart';
+import '../core/shared/base_comp/navigationbar_component.dart';
+import '../core/shared/base_comp/search_bar.dart';
 import '../core/shared/export.dart';
+import 'package:go_router/go_router.dart';
+
 
 class Courses extends StatefulWidget {
   const Courses({super.key});
@@ -40,15 +42,44 @@ class _Courses extends State<Courses> {
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),
-      body: SingleChildScrollView(
-        child: (cursos.isEmpty) 
-          ? Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()),) 
-          : Column(
-          children: [
-            CourseScroll(cursos: cursos),
-          ],
-        ),
+      body: Column(
+        children: [
+          GestureDetector(
+            onTap: () => context.push('/list-cursos-inscrito'),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.school),
+                        SizedBox(width: 10),
+                        Text('Cursos Inscritos'),
+                      ],
+                    ),
+                    Icon(Icons.chevron_right_rounded),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: (cursos.isEmpty) 
+                ? Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()),) 
+                : Column(
+                children: [
+                  CourseScroll(cursos: cursos),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
+      
+      
       bottomNavigationBar: Footer(),
     );
   }

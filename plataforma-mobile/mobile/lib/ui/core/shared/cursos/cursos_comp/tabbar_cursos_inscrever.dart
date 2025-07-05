@@ -1,5 +1,7 @@
-import 'export.dart';
-import '../../../utils/uteis.dart';
+import 'package:mobile/ui/core/shared/text_expand.dart';
+
+import '../../export.dart';
+import '../../../../../utils/uteis.dart';
 
 class TabbarCoursesInscrever extends StatelessWidget {
   const TabbarCoursesInscrever({super.key, required this.curso});
@@ -61,7 +63,7 @@ class TabbarCoursesInscrever extends StatelessWidget {
                         SizedBox(height: 5,),
                         Text("Descrição de curso", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                         SizedBox(height: 10,),
-                        Text("${curso['descricao_curso']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify,), 
+                        TextExpand(text: curso['descricao_curso']),
                       ],
                     ) 
                   ),
@@ -107,7 +109,7 @@ class TabbarCoursesInscrever extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 5,),
-                        Text("${curso['sincrono']?['id_formador_formadore']?['descricao_formador']}", style: TextStyle(fontSize: 15), textAlign: TextAlign.justify,),      
+                        TextExpand(text: curso['sincrono']?['id_formador_formadore']?['descricao_formador']),
                       ],
                     ),
                   ),

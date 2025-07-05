@@ -1,16 +1,17 @@
-import 'export.dart';
+import '../../export.dart';
 import 'card_course.dart';
 
-class CourseScroll extends StatefulWidget {
-  const CourseScroll({super.key, required this.cursos});
+class CardsScroll extends StatefulWidget {
+  const CardsScroll({super.key, required this.tema, required this.cursos});
 
+  final String tema;
   final List<Map<String, dynamic>> cursos;
 
   @override
-  State<CourseScroll> createState() => _CourseScroll();
+  State<CardsScroll> createState() => _CardsScrollState();
 }
 
-class _CourseScroll extends State<CourseScroll> {
+class _CardsScrollState extends State<CardsScroll> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -24,21 +25,32 @@ class _CourseScroll extends State<CourseScroll> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        Padding(
+          padding: EdgeInsets.symmetric( vertical: 8),
+          child: Text(
+            widget.tema,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
         SizedBox(
-          child: GridView.count(
+        height: 280,
+          child: ListView.builder(
             controller: _scrollController,
-            crossAxisCount: 2,
-            childAspectRatio: 0.70,
+            scrollDirection: Axis.horizontal,
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(), 
-            children: widget.cursos.map((curso) {
-              final nome = curso['nome_curso'] ?? 'Curso';
+            itemCount: widget.cursos.length,
+            itemBuilder: (context, index) {
+              final curso = widget.cursos[index];
+              final nome = curso['nome_curso'];
               final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(nome)}&background=random&bold=true';
-
-              return Padding(
-                padding: EdgeInsets.symmetric( vertical: 6, horizontal: 2),
+              return Container(
+                width: 200,
+                margin: EdgeInsets.only(left: index == 0 ? 5.0 : 0.0, right: 5.0, ),
                 child: CardCourse(
-                  title: nome,
+                  title: curso['nome_curso'],
                   typeCourse: curso['issincrono'] == true ? 'Síncrono' : 'Assíncrono',
                   startDate: DateTime.parse(curso['data_inicio_curso']),
                   endDate: DateTime.parse(curso['data_fim_curso']),
@@ -48,8 +60,8 @@ class _CourseScroll extends State<CourseScroll> {
                   id: curso['id_curso'],
                 ),
               );
-            }).toList(),
-          )
+            },
+          ),
         )
       ]
     );

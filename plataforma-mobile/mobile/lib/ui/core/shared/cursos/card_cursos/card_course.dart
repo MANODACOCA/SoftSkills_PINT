@@ -2,8 +2,8 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-import '../../../utils/uteis.dart';
-import 'export.dart';
+import '../../../../../utils/uteis.dart';
+import '../../export.dart';
 
 class CardCourse extends StatefulWidget {
   const CardCourse({

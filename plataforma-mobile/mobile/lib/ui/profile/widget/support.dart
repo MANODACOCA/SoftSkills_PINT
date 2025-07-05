@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import '../../core/shared/navigationbar_component.dart';
+import '../../core/shared/base_comp/navigationbar_component.dart';
 import '../../core/shared/export.dart';
 
 class Support extends StatefulWidget {
