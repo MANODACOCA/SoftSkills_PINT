@@ -31,7 +31,7 @@ const ForumTable = () => {
         }
     }
 
-    const renderActions = (item) => {
+    /* const renderActions = (item) => {
         return(
             <div className="d-flex">
                 <button className="btn btn-outline-primary me-2" onClick={() => HandleEdit(item.id_conteudos_partilhado)}>
@@ -42,7 +42,7 @@ const ForumTable = () => {
                 </button>
             </div>
         );
-    }
+    } */
 
     useEffect(() => {
         FetchForum();
@@ -50,7 +50,7 @@ const ForumTable = () => {
 
     return(
         <div>
-            <Table columns={columnsForum} data={forum} actions={renderActions} />
+            <Table columns={columnsForum} data={forum} /* actions={renderActions} */ />
         </div>
     );
 }

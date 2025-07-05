@@ -19,7 +19,7 @@ const QueixasTables = () => {
     }
 
     const HandleEdit = (id) => {
-        navigate(`/queixas/editar/${id}`);
+        navigate(`/admin/queixas/editar/${id}`);
     };
 
     const HandleDelete = async (id) => {
