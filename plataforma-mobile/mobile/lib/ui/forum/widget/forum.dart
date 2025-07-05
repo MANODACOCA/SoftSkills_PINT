@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:go_router/go_router.dart';
-
+import '../../../API/forum.dart';
 import '../../core/shared/export.dart';
 import '../../core/shared/navigationbar_component.dart';
 import '../../core/shared/search_bar.dart';
@@ -14,6 +14,31 @@ class Forum extends StatefulWidget {
 }
 
 class _ForumState extends State<Forum> {
+  final _forumAPI = ForumAPI();
+  List<dynamic> foruns = [];
+  bool loading = true;
+
+  Future<void> carregarForuns() async {
+    try {
+      final resultado = await ForumAPI.listConteudosPartilhado();
+      setState(() {
+        foruns = resultado;
+        loading = false;
+      });
+    } catch (e) {
+      setState(() {
+        loading = false;
+      });
+      // Podes mostrar um erro aqui se quiseres
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    carregarForuns();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -26,26 +51,36 @@ class _ForumState extends State<Forum> {
           title: SearchBarCustom(),
           centerTitle: true,
         ),
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              /*Falta dar import da database e fazer o list de todos os foruns que a database tem*/
-              GestureDetector(
-                onTap: () {
-                  context.push('/forumPage', extra: 'Facebook');
-                  print('Entra no forum Facebook');
-                },
-                child: CardForum(
-                  title: 'Facebook',
-                  description: 'Discussões sobre Facebook',
-                  imageUrl: 'assets/facebook-logo.png',
+        body:
+            loading
+                ? Center(child: CircularProgressIndicator())
+                : SingleChildScrollView(
+                  padding: EdgeInsets.all(20),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: foruns.length,
+                    itemBuilder: (context, index) {
+                      final forum = foruns[index];
+                      return GestureDetector(
+                        onTap: () {
+                          context.push('/forumPage', extra: forum['titulo']);
+                          print('Entra no forum ${forum['nome_topico']}');
+                        },
+                        child: CardForum(
+                          title:
+                              forum['id_topico_topico']?['nome_topico'] ??
+                              'Sem título',
+                          description:
+                              forum['id_topico_topico']?['descricao_top'] ?? '',
+                          imageUrl:
+                              forum['imagem'] ??
+                              'https://ui-avatars.com/api/?name=${Uri.encodeComponent(forum['id_topico_topico']?['nome_topico'] ?? 'Forum')}&background=random&bold=true',
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
         bottomNavigationBar: Footer(),
       ),
     );
@@ -68,10 +103,59 @@ class CardForum extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Image.asset(imageUrl, width: 50, height: 50),
+        leading: Image.network(
+          imageUrl,
+          width: 50,
+          height: 50,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return CircleAvatar(
+              backgroundColor: Colors.grey[300],
+              child: Text(
+                title.isNotEmpty
+                    ? title
+                        .trim()
+                        .split(' ')
+                        .map((e) => e[0])
+                        .take(2)
+                        .join()
+                        .toUpperCase()
+                    : '',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            );
+          },
+          errorBuilder:
+              (context, error, stackTrace) => CircleAvatar(
+                backgroundColor: Colors.grey[300],
+                child: Text(
+                  title.isNotEmpty
+                      ? title
+                          .trim()
+                          .split(' ')
+                          .map((e) => e[0])
+                          .take(2)
+                          .join()
+                          .toUpperCase()
+                      : '',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+        ),
         contentPadding: EdgeInsets.all(10),
         title: Text(title),
-        subtitle: Text(description),
+        subtitle: Text(
+          description,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
       ),
     );
   }
