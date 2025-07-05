@@ -15,7 +15,7 @@ controllers.get = async (req, res) => {
     const data = await model.findOne({
       where: {
         id_trabalho_et: id_trabalho,
-        id_formando: id_formando,
+        id_formando_et: id_formando,
       }
     });
 
@@ -32,12 +32,12 @@ controllers.create = async (req, res) => {
   try {
     if (req.body) {
 
-      const { id_trabalho_et, id_formando_et, id_formato_et, nome_et, caminho_et } = req.body;
+      const { id_trabalho_et, id_formando_et, caminho_et } = req.body;
 
-      if (!id_trabalho_et || !id_formando_et || !id_formato_et || !nome_et || !caminho_et) {
+      if (!id_trabalho_et || !id_formando_et || !caminho_et) {
         return res.status(400).json({
           erro: 'Campos obrigatórios em falta',
-          desc: 'id_trabalho_et, id_formando_et, id_formato_et, nome_et e caminho_et são obrigatórios'
+          desc: 'id_trabalho_et, id_formando_et e caminho_et são obrigatórios'
         });
       }
 
@@ -59,8 +59,6 @@ controllers.create = async (req, res) => {
       const payload = {
         id_trabalho_et: Number(id_trabalho_et),
         id_formando_et: Number(id_formando_et),
-        id_formato_et: Number(id_formato_et),
-        nome_et,
         caminho_et: ficheiroURL || caminho_et
       };
 
@@ -76,7 +74,7 @@ controllers.create = async (req, res) => {
         desc: 'O ficheiro não pode ultrapassar 100 MB)'
       });
     }
-    res.status(500).json({ erro: 'Erro ao criar material de apoio!', desc: err.message });
+    res.status(500).json({ erro: 'Erro ao criar entrega de trabalhos!', desc: err.message });
   }
 };
 
