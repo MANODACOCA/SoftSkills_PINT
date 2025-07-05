@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('entrega_trabalhos', {
     id_entrega_trabalho: {
       autoIncrement: true,
@@ -50,7 +50,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     data_entrega_et: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.fn('now')
     }
   }, {
     sequelize,
