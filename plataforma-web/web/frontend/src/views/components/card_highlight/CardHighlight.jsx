@@ -40,7 +40,7 @@ const FeaturedCourseCard = ({
       }
     }
   };
-
+  
   const [img, setImg] = useState(course.imagem);
 
   const nameFormador = course.nome_formador || "Formador";
@@ -60,7 +60,7 @@ const FeaturedCourseCard = ({
     return (
       <div className="card flex-row rounded-4 card-highlight favorite-card position-relative">
         <img
-          src={img}
+          src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
@@ -114,7 +114,7 @@ const FeaturedCourseCard = ({
     return (
       <div className="card flex-row rounded-4 card-highlight evaluation-card">
         <img
-          src={img}
+          src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
@@ -175,7 +175,7 @@ const FeaturedCourseCard = ({
     return (
       <div className="card flex-row rounded-4 card-highlight enrolled-card">
         <img
-          src={img}
+          src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
@@ -226,7 +226,7 @@ const FeaturedCourseCard = ({
   return (
     <div className="card flex-row rounded-4 card-highlight">
       <img
-        src={img}
+        src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
         onError={(e) => {
           e.target.onerror = null;
           e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
