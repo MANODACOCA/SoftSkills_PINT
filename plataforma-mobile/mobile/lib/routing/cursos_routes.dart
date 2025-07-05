@@ -3,14 +3,15 @@ import 'package:mobile/ui/aulas/aula_async_page.dart';
 import 'package:mobile/ui/aulas/aula_sync_page.dart';
 import 'package:mobile/ui/course/course_screen_inscrever.dart';
 import 'package:mobile/ui/course/courses.dart';
-import 'package:mobile/ui/course/course_assync/widget/course_assync_inscrito.dart';
-import 'package:mobile/ui/course/course_sync/widget/course_sync_inscrito.dart';
+//import 'package:mobile/ui/course/course_assync/widget/course_assync_inscrito.dart';
+import 'package:mobile/ui/course/course_inscrito.dart';
 /* import 'package:mobile/ui/profile/widget/courser_joined.dart';
 import 'package:mobile/ui/profile/widget/ended_courses.dart';
 //import 'package:mobile/ui/profile/widget/liked_coursed.dart';
 import 'package:mobile/ui/profile/widget/rated_courses.dart';
 import 'package:mobile/ui/profile/widget/unrated.dart'; */
 import 'package:mobile/ui/course/course_enrolled.dart';
+import 'package:mobile/ui/course/courses_completed.dart';
 
 final List<GoRoute> cursosRoutes = [
   GoRoute(
@@ -19,14 +20,14 @@ final List<GoRoute> cursosRoutes = [
     builder: (context, state) => Courses(),
   ),
   GoRoute(
-    name: 'cursos-inscritos-sincrono',
-    path: '/cursos-inscritos-sincrono',
-    builder: (context, state) => SincronoInscrito(idCurso: state.extra as int),
+    name: 'cursos-inscritos',
+    path: '/cursos-inscritos',
+    builder: (context, state) => CourseInscrito(idCurso: state.extra as int),
   ),
   GoRoute(
-    name: 'cursos-inscritos-assincrono',
-    path: '/cursos-inscritos-assincrono',
-    builder: (context, state) => AssincronoInscrito(idCurso: state.extra as int),  
+    name: 'cursos-completed',
+    path: '/cursos-completed',
+    builder: (context, state) => CoursesCompleted(),
   ),
   GoRoute(
     name: 'list-cursos-inscrito',

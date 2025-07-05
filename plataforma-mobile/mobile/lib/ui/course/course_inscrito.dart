@@ -2,20 +2,20 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import 'package:mobile/ui/core/shared/cursos/cursos_comp/tabbar_cursos_inscrito.dart';
-import '../../../core/shared/export.dart';
-import '../../../core/shared/base_comp/navigationbar_component.dart';
+import '../core/shared/export.dart';
+import '../core/shared/base_comp/navigationbar_component.dart';
 
 
-class SincronoInscrito extends StatefulWidget {
-  const SincronoInscrito({super.key , required this.idCurso});
+class CourseInscrito extends StatefulWidget {
+  const CourseInscrito({super.key , required this.idCurso});
 
   final int idCurso;
 
   @override
-  State<SincronoInscrito> createState() => _SincronoInscritoState();
+  State<CourseInscrito> createState() => _CourseInscritoState();
 }
 
-class _SincronoInscritoState extends State<SincronoInscrito> {
+class _CourseInscritoState extends State<CourseInscrito> {
   Map<String, dynamic> curso = {};
   final CursosApi _api = CursosApi();
 

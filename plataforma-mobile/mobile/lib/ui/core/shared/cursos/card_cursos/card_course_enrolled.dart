@@ -10,12 +10,8 @@ class CardCourseEnrolled extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () { 
-        if (curso['id_curso_curso']?['sincrono'] == null){
-          context.push('/cursos-inscritos-assincrono', extra: curso['id_curso']);
-        } else {
-          context.push('/cursos-inscritos-sincrono', extra: curso['id_curso']);
-        }
+      onTap: () {
+          context.push('/cursos-inscritos', extra: curso['id_curso']);
        },
       child: Card(
         elevation: 4,
