@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print
-
+// ignore: unused_import
+import '../../../routing/forum_routes.dart';
 import 'package:go_router/go_router.dart';
 import '../../../API/forum.dart';
 import '../../core/shared/export.dart';
@@ -14,7 +15,6 @@ class Forum extends StatefulWidget {
 }
 
 class _ForumState extends State<Forum> {
-  final _forumAPI = ForumAPI();
   List<dynamic> foruns = [];
   bool loading = true;
 
@@ -64,8 +64,7 @@ class _ForumState extends State<Forum> {
                       final forum = foruns[index];
                       return GestureDetector(
                         onTap: () {
-                          context.push('/forumPage', extra: forum['titulo']);
-                          print('Entra no forum ${forum['nome_topico']}');
+                          context.push('/forumPage', extra: forum['id_topico_topico']);
                         },
                         child: CardForum(
                           title:

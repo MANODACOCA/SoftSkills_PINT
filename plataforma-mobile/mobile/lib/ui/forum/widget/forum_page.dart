@@ -3,15 +3,16 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/API/forum.dart';
 import 'package:mobile/ui/core/shared/base_comp/navigationbar_component.dart';
 import 'package:mobile/ui/core/themes/colors.dart';
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
 
 // ignore: must_be_immutable
 class ForumPage extends StatefulWidget {
-  const ForumPage({super.key, required this.forumName});
+  const ForumPage({super.key, required this.forumID});
 
-  final String forumName;
+  final String forumID;
 
   @override
   State<ForumPage> createState() => _ForumPageState();
@@ -19,7 +20,15 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage> {
   List<File> files = [];
+  final String personName = 'John Doe'; //Preciso Trocar
+  final int forumLike = 100; //Preciso Trocar
+  final int forumComments = 50; //Preciso Trocar
+  Color paint = Colors.white;
+  bool addPost = false;
+  final TextEditingController textControllerPost = TextEditingController();
+  final TextEditingController textControllerTitlePost = TextEditingController();
   final TextEditingController fileController = TextEditingController();
+  late String forumName;
 
   Future<void> pickFile() async {
     try {
@@ -36,7 +45,6 @@ class _ForumPageState extends State<ForumPage> {
                   .map((path) => File(path!))
                   .toList();
 
-          // Update TextField to show selected files
           String fileNames = files
               .map((file) => '[${file.path.split('\\').last}]')
               .join(' ');
@@ -49,13 +57,22 @@ class _ForumPageState extends State<ForumPage> {
     }
   }
 
-  final String personName = 'John Doe';
-  final int forumLike = 100;
-  final int forumComments = 50;
-  Color paint = Colors.white;
-  bool addPost = false;
-  final TextEditingController textControllerPost = TextEditingController();
-  final TextEditingController textControllerTitlePost = TextEditingController();
+  Future<void> atribuicaoDeInfo() async {
+    try{
+      final result = await ForumAPI.getConteudosPartilhado(widget.forumID as String);
+      setState((){
+        forumName = result['nome_topico'];
+      });
+    }catch(e){
+      print('Erro ao buscar informações do fórum! $e');
+    }
+  }
+
+  @override
+  initState(){
+    super.initState();
+    atribuicaoDeInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,13 +87,16 @@ class _ForumPageState extends State<ForumPage> {
             onPressed: () => context.pop(),
           ),
           backgroundColor: AppColors.primary,
-          title: Text(widget.forumName, style: TextStyle(color: Colors.white)),
+          title: Text(
+            widget.forumID.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
           centerTitle: true,
           actions: [
             IconButton(
               icon: Icon(Icons.add_box_outlined, color: paint, size: 30),
               onPressed: () {
-                print('Add new post to ${widget.forumName}');
+                print('Add new post to ${forumName}');
                 setState(() {
                   addPost = !addPost;
                   if (addPost) {
@@ -99,7 +119,6 @@ class _ForumPageState extends State<ForumPage> {
                   children: <Widget>[
                     if (addPost)
                       Container(
-                        
                         padding: EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -163,7 +182,10 @@ class _ForumPageState extends State<ForumPage> {
                                 ),
                                 ElevatedButton.icon(
                                   icon: Icon(Icons.send, color: Colors.white),
-                                  label: Text("Publicar", style: TextStyle(color: Colors.white)),
+                                  label: Text(
+                                    "Publicar",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.primary,
                                   ),
