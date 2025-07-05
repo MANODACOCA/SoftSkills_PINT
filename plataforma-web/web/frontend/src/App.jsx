@@ -54,6 +54,7 @@ import CreateCourse from './views/pages/admin/course/Criar_Course.jsx';
 import EditCourse from './views/pages/admin/course/Editar_Course.jsx';
 import HistoryUser from './views/pages/admin/user/Historico_User.jsx';
 import CategoriaAreaTopicoTable from './views/pages/admin/categoria_area_topico/CategoriaAreaTopico';
+import EditarQueixas from './views/pages/admin/forum/Editar_Queixa.jsx';
 
 
 
@@ -145,6 +146,7 @@ function App() {
           <Route path='/admin/cursos' element={<CourseTable />} />
           <Route path='/admin/utilizadores' element={<UsersTables />} />
           <Route path='/admin/queixas' element={<QueixasTables />} />
+          <Route path='/admin/queixas/editar/:id' element={<EditarQueixas />} />
           <Route path='/admin/gerirforum' element={<ForumTable />} />
           <Route path='/admin/cursos/criar' element={<CreateCourse />} />
           <Route path='/admin/cursos/editar/:id' element={<EditCourse />} />
