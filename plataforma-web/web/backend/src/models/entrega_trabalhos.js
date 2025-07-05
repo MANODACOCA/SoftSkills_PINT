@@ -18,31 +18,11 @@ module.exports = function(sequelize, DataTypes) {
     },
     id_formando_et: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'formandos',
         key: 'id_formando'
       }
-    },
-    id_formato_et: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'tipo_formato',
-        key: 'id_formato'
-      }
-    },
-    id_resultado_et: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'resultados',
-        key: 'id_resul'
-      }
-    },
-    nome_et: {
-      type: DataTypes.STRING(300),
-      allowNull: false
     },
     caminho_et: {
       type: DataTypes.STRING(1024),
@@ -50,7 +30,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     data_entrega_et: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
+      defaultValue: Sequelize.Sequelize.fn('now')
     }
   }, {
     sequelize,

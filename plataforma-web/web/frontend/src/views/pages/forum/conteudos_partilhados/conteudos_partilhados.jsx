@@ -36,7 +36,7 @@ const Foruns = () => {
 
   const handleParticiparClick = (id) => {
     const selectForum = foruns.find(f => f.id_conteudos_partilhado === id);
-    navigate(`/forum/${id}`, { state: {forum: selectForum} });
+    navigate(`/forum/${id}`, { state: { forum: selectForum } });
   };
 
   const renderForumCard = (forum) => {
@@ -48,31 +48,35 @@ const Foruns = () => {
 
     return (
       <div key={`forum-${forum.id_conteudos_partilhado}`} className="col">
-        <div className="card h-100 shadow-sm rounded-4">
-          <div className="d-flex h-100">
-            <div className="w-100" style={{ maxWidth: "200px" }}>
-              <img
-                src={`https://ui-avatars.com/api/?name=${encodeURIComponent(topico.nome_topico || 'F')}&background=random&bold=true`}
-                alt={`Imagem do fórum ${topico.nome_topico}`}
-                className="img-fluid h-100 object-fit-cover rounded-start-4"
-                style={{ width: '200px' }}
-              />
-            </div>
-            <div className="card-body d-flex flex-column justify-content-between">
+        <div className="card shadow-sm rounded-4 h-100">
+          <div className="d-flex flex-column flex-sm-row">
+            <img
+              src={`https://ui-avatars.com/api/?name=${encodeURIComponent(topico.nome_topico || 'F')}&background=random&bold=true`}
+              alt={`Imagem do fórum ${topico.nome_topico}`}
+              className="rounded-start-4 img-fluid"
+              style={{
+                width: '100%',
+                maxWidth: '120px',
+                height: '100%',
+                objectFit: 'cover',
+                flexShrink: 0,
+              }}
+            />
+            <div className="card-body d-flex flex-column justify-content-between p-3">
               <div>
-                <h5 className="card-title">{topico.nome_topico || 'Tópico desconhecido'}</h5>
-                <p className="card-text">{topico.descricao_top || 'Sem descrição'}</p>
-                <div className="d-flex gap-3 flex-wrap mb-2">
-                  <small className="text-muted">Criado em: {dataCriacao}</small>
-                </div>
-                <div className="d-flex gap-3 flex-wrap">
-                  <small className="text-muted">Categoria: {topico.id_area_area.id_categoria_categorium.nome_cat || 'Categoria desconhecida'}</small>
-                  <small className="text-muted">Área: {topico.id_area_area.nome_area || 'Área desconhecida'}</small>
+                <h6 className="card-title mb-1">{topico.nome_topico || 'Tópico desconhecido'}</h6>
+                <p className="card-text small text-truncate" title={topico.descricao_top}>
+                  {topico.descricao_top || 'Sem descrição'}
+                </p>
+                <div className="d-flex flex-wrap gap-2 small text-muted">
+                  <div>Criado em: {dataCriacao}</div>
+                  <div>Categoria: {topico.id_area_area.id_categoria_categorium.nome_cat || 'Desconhecida'}</div>
+                  <div>Área: {topico.id_area_area.nome_area || 'Desconhecida'}</div>
                 </div>
               </div>
-              <div className="text-end">
+              <div className="text-end mt-2">
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-sm btn-primary"
                   onClick={() => handleParticiparClick(forum.id_conteudos_partilhado)}
                 >
                   Participar

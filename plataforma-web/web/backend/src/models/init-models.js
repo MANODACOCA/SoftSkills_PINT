@@ -2,6 +2,7 @@ var DataTypes = require("sequelize").DataTypes;
 var _area = require("./area");
 var _assincrono = require("./assincrono");
 var _aulas = require("./aulas");
+var _avaliacoes_et = require("./avaliacoes_et");
 var _categoria = require("./categoria");
 var _certificados = require("./certificados");
 var _comentario = require("./comentario");
@@ -37,6 +38,7 @@ function initModels(sequelize) {
   var area = _area(sequelize, DataTypes);
   var assincrono = _assincrono(sequelize, DataTypes);
   var aulas = _aulas(sequelize, DataTypes);
+  var avaliacoes_et = _avaliacoes_et(sequelize, DataTypes);
   var categoria = _categoria(sequelize, DataTypes);
   var certificados = _certificados(sequelize, DataTypes);
   var comentario = _comentario(sequelize, DataTypes);
@@ -104,6 +106,8 @@ function initModels(sequelize) {
   cursos.hasOne(sincrono, { as: "sincrono", foreignKey: "id_curso_sincrono"});
   trabalhos.belongsTo(cursos, { as: "id_curso_tr_curso", foreignKey: "id_curso_tr"});
   cursos.hasMany(trabalhos, { as: "trabalhos", foreignKey: "id_curso_tr"});
+  avaliacoes_et.belongsTo(entrega_trabalhos, { as: "id_entrega_trabalho_aet_entrega_trabalho", foreignKey: "id_entrega_trabalho_aet"});
+  entrega_trabalhos.hasMany(avaliacoes_et, { as: "avaliacoes_ets", foreignKey: "id_entrega_trabalho_aet"});
   sincrono.belongsTo(formadores, { as: "id_formador_formadore", foreignKey: "id_formador"});
   formadores.hasMany(sincrono, { as: "sincronos", foreignKey: "id_formador"});
   certificados.belongsTo(formandos, { as: "id_formando_formando", foreignKey: "id_formando"});
@@ -124,8 +128,6 @@ function initModels(sequelize) {
   post.hasMany(denuncia, { as: "denuncia", foreignKey: "id_post"});
   likes_post.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
   post.hasMany(likes_post, { as: "likes_posts", foreignKey: "id_post"});
-  entrega_trabalhos.belongsTo(resultados, { as: "id_resultado_et_resultado", foreignKey: "id_resultado_et"});
-  resultados.hasMany(entrega_trabalhos, { as: "entrega_trabalhos", foreignKey: "id_resultado_et"});
   resultados.belongsTo(sincrono, { as: "id_curso_sincrono_sincrono", foreignKey: "id_curso_sincrono"});
   sincrono.hasMany(resultados, { as: "resultados", foreignKey: "id_curso_sincrono"});
   denuncia.belongsTo(tipo_denuncia, { as: "id_tipo_denuncia_tipo_denuncium", foreignKey: "id_tipo_denuncia"});
@@ -136,8 +138,6 @@ function initModels(sequelize) {
   tipo_formato.hasMany(conteudos, { as: "conteudos", foreignKey: "id_formato"});
   conteudos_forum.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
   tipo_formato.hasMany(conteudos_forum, { as: "conteudos_forums", foreignKey: "id_formato"});
-  entrega_trabalhos.belongsTo(tipo_formato, { as: "id_formato_et_tipo_formato", foreignKey: "id_formato_et"});
-  tipo_formato.hasMany(entrega_trabalhos, { as: "entrega_trabalhos", foreignKey: "id_formato_et"});
   material_apoio.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
   tipo_formato.hasMany(material_apoio, { as: "material_apoios", foreignKey: "id_formato"});
   post.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
@@ -179,6 +179,7 @@ function initModels(sequelize) {
     area,
     assincrono,
     aulas,
+    avaliacoes_et,
     categoria,
     certificados,
     comentario,
