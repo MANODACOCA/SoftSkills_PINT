@@ -14,9 +14,6 @@ controllers.list = async (req, res) => {
 controllers.get = async (req, res) => {
   try {
     const { id_formando, id_curso } = req.query;
-  console.log('URL:', req.url);
-console.log('Query:', req.query);
-console.log('Params:', req.params);
 
     const data = await model.findOne({
       where: {

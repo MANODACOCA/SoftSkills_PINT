@@ -61,7 +61,11 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
       await get_inscricoes(id_utilizador, id_curso);
       setInscrito(true);
     } catch (error) {
-      console.error("Erro ao buscar inscrição:", error);
+      if(error.response && error.response.status === 404){
+        setInscrito(false);
+      } else {
+        console.error("Erro ao buscar inscrição:", error);
+      }
     }
   }
 

@@ -220,4 +220,64 @@ class CursosApi {
       throw error;
     }
   }
+  Future<List<Map<String, dynamic>>> listCursosInscritos(int userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+    
+      if (token == null) {
+        throw Exception('Sessão expirada: token inexistente');
+      }
+
+      final response = await http.get(
+        Uri.parse('$urlAPI/users/$userId/enrolled-courses'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Cursos encontrados: ${response.body}');
+        final List<dynamic> data = jsonDecode(response.body);
+        final cursos = data.cast<Map<String, dynamic>>();
+        return cursos;
+      }
+      
+      throw Exception('Erro ao encontrar curso!');
+    } catch (error) {
+      print('Erro ao encontrar cursos: $error');
+      throw error;
+    }
+  }
+  Future<List<Map<String, dynamic>>> listCursoscompleted(int userId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+    
+      if (token == null) {
+        throw Exception('Sessão expirada: token inexistente');
+      }
+
+      final response = await http.get(
+        Uri.parse('$urlAPI/users/$userId/completed-courses'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Cursos encontrados: ${response.body}');
+        final List<dynamic> data = jsonDecode(response.body);
+        final cursos = data.cast<Map<String, dynamic>>();
+        return cursos;
+      }
+      
+      throw Exception('Erro ao encontrar curso!');
+    } catch (error) {
+      print('Erro ao encontrar cursos: $error');
+      throw error;
+    }
+  }
 }

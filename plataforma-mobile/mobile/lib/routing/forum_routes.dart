@@ -13,8 +13,8 @@ final List<GoRoute> forumRoutes = [
     name: 'forumPage',
     path: '/forumPage',
     builder: (context, state) {
-      final forumName = state.extra as String;
-      return ForumPage(forumName: forumName);
+      final forumID = state.extra;
+      return ForumPage(forumID: forumID as String);
     },
   ),
   GoRoute(
