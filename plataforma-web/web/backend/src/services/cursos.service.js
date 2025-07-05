@@ -1,4 +1,4 @@
-const { Sequelize, Op, fn, col, where, Model, literal } = require('sequelize');
+const { Sequelize, Op, where, Model, literal } = require('sequelize');
 const sequelize = require('../models/database');
 const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria } = require('../models/init-models')(sequelize);
 
