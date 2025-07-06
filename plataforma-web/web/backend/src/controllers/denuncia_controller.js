@@ -133,7 +133,7 @@ controllers.getConteudoDenunciado = async (req, res) => {
     }
     res.status(200).json(conteudoDenunciado);
   } catch (error) {
-    res.status(500).json('Erro ao encontrar denuncias');
+    res.status(500).json('Erro ao encontrar denuncias', error);
   }
 }
 
