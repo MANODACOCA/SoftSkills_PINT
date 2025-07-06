@@ -1,10 +1,11 @@
 //const model = require('../models/denuncia');;
 
+const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).denuncia;
 const controllers = {};
-const { comentario, post} = require('../models/init-models')(sequelize);
+const { comentario, post, utilizador} = require('../models/init-models')(sequelize);
 
 const denunciasService = require('../services/denuncias.service');
 
@@ -96,11 +97,39 @@ controllers.getConteudoDenunciado = async (req, res) => {
     if(!d) return;
     let conteudoDenunciado;
     if(d.id_post) {
-        conteudoDenunciado = await post.findByPk(d.id_post);
-        //res.json(conteudoDenunciado);
+        conteudoDenunciado = await post.findOne({
+          where: {id_utilizador: d.id_post.id_utilizador},
+            include: [
+              {
+                model: utilizador,
+                as: 'id_utilizador_utilizador',
+                attributes: [
+                  [sequelize.col('id_utilizador'), 'id_util'],
+                  [sequelize.col('nome_utilizador'), 'nome_util'],
+                  [sequelize.col('img_perfil'), 'img_util'],
+                  'email',
+                ]
+              }
+            ]
+        },
+      );
     } else {
-        conteudoDenunciado = await comentario.findByPk(d.id_comentario);
-        //res.json(conteudoDenunciado);
+        conteudoDenunciado = await comentario.findOne(d.id_comentario, {
+          where: {id_post : d.id_post},
+          include: [
+            {
+              model: utilizador,
+                as: 'id_utilizador_utilizador',
+                attributes: [
+                  [sequelize.col('id_utilizador'), 'id_util'],
+                  [sequelize.col('nome_utilizador'), 'nome_util'],
+                  [sequelize.col('img_perfil'), 'img_util'],
+                  'email',
+              ]
+            }
+          ],
+        },
+      );
     }
     res.status(200).json(conteudoDenunciado);
   } catch (error) {
