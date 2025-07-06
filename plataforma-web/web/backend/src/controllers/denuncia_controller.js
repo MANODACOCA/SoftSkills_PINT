@@ -4,6 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).denuncia;
 const controllers = {};
+const { comentario, post} = require('../models/init-models')(sequelize);
 
 const denunciasService = require('../services/denuncias.service');
 
@@ -91,11 +92,21 @@ controllers.countDenuncias = async (req, res) => {
 controllers.getConteudoDenunciado = async (req, res) => {
   try {
     const {id} = req.params;
-    const data = denunciasService.getComentarioPostDenunciado(id);
-    res.status(200).json(data);
+    const d = await model.findByPk(id);
+    if(!d) return;
+    let conteudoDenunciado;
+    if(d.id_post) {
+        conteudoDenunciado = await post.findByPk(d.id_post);
+        //res.json(conteudoDenunciado);
+    } else {
+        conteudoDenunciado = await comentario.findByPk(d.id_comentario);
+        //res.json(conteudoDenunciado);
+    }
+    res.status(200).json(conteudoDenunciado);
   } catch (error) {
     res.status(500).json('Erro ao encontrar denuncias');
   }
 }
+
 
 module.exports = controllers;

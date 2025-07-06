@@ -139,24 +139,6 @@ async function getDenunciasAll() {
     }
 }
 
-async function getComentarioPostDenunciado(id_denuncia) {
-    try {
-        const d = await denuncia.findByPk(id_denuncia);
-        if(!d) return;
-        let conteudoDenunciado;
-        if(d.id_post) {
-            conteudoDenunciado = await post.findByPk(d.id_post);
-        } else {
-            conteudoDenunciado = await comentario.findByPk(d.id_comentario);
-        }
-        return conteudoDenunciado;
-    } catch (error) {
-        console.error('Erro ao encontrar comentario ou post denunciado');
-        throw error;
-    }
-}
-
 module.exports = {
     getDenunciasAll,
-    getComentarioPostDenunciado
 };
