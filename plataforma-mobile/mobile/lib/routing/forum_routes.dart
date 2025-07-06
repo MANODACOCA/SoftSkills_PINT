@@ -9,14 +9,19 @@ final List<GoRoute> forumRoutes = [
     path: '/forum',
     builder: (context, state) => Forum(),
   ),
-  GoRoute(
-    name: 'forumPage',
-    path: '/forumPage',
-    builder: (context, state) {
-      final forumID = state.extra;
-      return ForumPage(forumID: forumID as String);
-    },
-  ),
+GoRoute(
+  name: 'forumPage',
+  path: '/forumPage',
+  builder: (context, state) {
+    final extra = state.extra as Map<String, dynamic>;
+    final forumID = extra['forumID'] as String;
+    final name = extra['name'] as String;
+    return ForumPage(
+      forumID: forumID,
+      name: name,
+    );
+  },
+),
   GoRoute(
     name: 'commentPage',
     path: '/commentPage',

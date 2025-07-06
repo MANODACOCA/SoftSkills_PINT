@@ -116,7 +116,7 @@ class _CommentPageState extends State<CommentPage> {
           ),
         ],
       ),
-      body: Container(
+      body: SingleChildScrollView(
         padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +174,8 @@ class _CommentPageState extends State<CommentPage> {
               indent: 10,
               endIndent: 10,
             ),
-            Expanded(
+            SizedBox(
+              height: 300,
               child: ListView.builder(
                 itemCount: 10, // Replace with actual number of comments
                 itemBuilder: (context, index) {

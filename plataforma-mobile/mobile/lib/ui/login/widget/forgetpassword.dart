@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
+import '../../../API/utilizadores_api.dart';
 
 class ForgetPassword extends StatefulWidget {
   const ForgetPassword({super.key});
@@ -9,6 +12,8 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPassword extends State<ForgetPassword> {
+  final _api = UtilizadoresApi();
+  TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -36,14 +41,18 @@ class _ForgetPassword extends State<ForgetPassword> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Image.asset('assets/forget.png', width: double.infinity, height: 200),
+                  Image.asset(
+                    'assets/forget.png',
+                    width: double.infinity,
+                    height: 200,
+                  ),
                   SizedBox(height: 15),
                   Text(
                     'Não se preocupe! Acontece. Por favor introduza o e-mail associado na sua conta',
                     style: TextStyle(
                       fontSize: 16,
                       fontStyle: FontStyle.italic,
-                      color: Color.fromRGBO(105, 105, 105, 100)
+                      color: Color.fromRGBO(105, 105, 105, 100),
                     ),
                   ),
                   SizedBox(height: 23),
@@ -51,6 +60,7 @@ class _ForgetPassword extends State<ForgetPassword> {
                     width: screenWidth,
                     height: 46,
                     child: TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
@@ -71,8 +81,25 @@ class _ForgetPassword extends State<ForgetPassword> {
                       ),
                       fixedSize: Size(screenWidth, 46),
                     ),
-                    onPressed: () {
-                      context.go("/confirmacao");
+                    onPressed: () async {
+                      final email = emailController.text.trim();
+                      if (email.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Por favor, insira o seu email.'),
+                          ),
+                        );
+                        return;
+                      }
+                      try {
+                        final resposta = await _api.esqueceuPassword(email);
+                        print(resposta);
+                        context.go("/confirmacao");
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Erro ao enviar email.')),
+                        );
+                      }
                     },
                     child: const Text(
                       'Enviar Email',
