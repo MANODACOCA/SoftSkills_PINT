@@ -25,7 +25,7 @@ export const formatYearMonthDay = (isoDate) => {
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
 
-  return `${year}-${month}-${day}`;  
+  return `${year}-${month}-${day}`;
 }
 
 export const daysMonthsYears = (isoDate) => {
@@ -115,7 +115,7 @@ export const calcularHorasCurso = (aulas) => {
   let hrsAula = 0;
   let minAulas = 0;
   let secAulas = 0;
-  for(let i = 0; i < aulas.length; i++) {
+  for (let i = 0; i < aulas.length; i++) {
     const aula = aulas[i];
     const tempo = aula?.tempo_duracao
     if (tempo != undefined) {
@@ -127,11 +127,11 @@ export const calcularHorasCurso = (aulas) => {
       }
       if (tempo.seconds != undefined) {
         secAulas += tempo.seconds;
-      }      
+      }
     }
   }
-  
-  hrsAula = hrsAula + (minAulas/60) + (secAulas/3600);
+
+  hrsAula = hrsAula + (minAulas / 60) + (secAulas / 3600);
 
   return parseFloat(hrsAula.toFixed(2));
 }
@@ -144,7 +144,7 @@ export const minutesToInterval = min => {
   const hours = Math.floor(min / 60);
   const minutes = min % 60;
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
-};  
+};
 
 export const isValidMeetingLink = url => {
   const patterns = [
@@ -178,3 +178,13 @@ export const durationToMinutes = (dur) => {
 
   return 0;
 };
+
+export function parseDateWithoutTimezone(dateString) {
+  const cleanString = dateString.replace('Z', '');
+
+  const [datePart, timePart] = cleanString.split('T');
+  const [year, month, day] = datePart.split('-').map(Number);
+  const [hour, minute, second] = timePart.split(':').map(Number);
+
+  return new Date(year, month - 1, day, hour, minute, second);
+}

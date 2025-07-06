@@ -263,7 +263,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
 
     let cursoWhere = {
       data_fim_curso: {
-        [Op.gte]: literal('CURRENT_DATE')
+        [Op.gte]: literal('NOW()')
       }
     };
 
@@ -340,7 +340,7 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
 
     let cursoWhere = {
       data_fim_curso: {
-        [Op.lt]: literal('CURRENT_DATE')
+        [Op.lt]: literal('NOW()')
       }
     };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { formatDayMonthYear } from '../../components/shared_functions/FunctionsUtils';
+import { formatDayMonthYear, parseDateWithoutTimezone } from '../../components/shared_functions/FunctionsUtils';
 import { FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
 import { verificar_acesso_curso } from '../../../api/cursos_axios';
@@ -26,7 +26,7 @@ const FeaturedCourseCard = ({
     const verificacao = await verificar_acesso_curso(userId, course.id_curso);//verifica se o formando tem acesso ao curso
 
     const now = new Date();
-    const dataInicioCurso = new Date(course.data_inicio_curso);
+    const dataInicioCurso = parseDateWithoutTimezone(course.data_inicio_curso)
 
     if (verificacao.inscrito) {
       if (now >= dataInicioCurso) {

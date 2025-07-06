@@ -1,10 +1,9 @@
 // ignore_for_file: use_rethrow_when_possible, depend_on_referenced_packages
-
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';     
+import 'package:mime/mime.dart';
 
 class UtilizadoresApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/utilizador';
@@ -23,9 +22,13 @@ class UtilizadoresApi {
     }
   }
 
-  Future<Map<String, dynamic>> createUtilizador(String nomeUtilizador,String email) async {
+  Future<Map<String, dynamic>> createUtilizador(
+    String nomeUtilizador,
+    String email,
+  ) async {
     try {
-      final response = await http.post( Uri.parse('$urlAPI/create'),
+      final response = await http.post(
+        Uri.parse('$urlAPI/create'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'nome_utilizador': nomeUtilizador, 'email': email}),
       );
@@ -40,10 +43,14 @@ class UtilizadoresApi {
     }
   }
 
-  Future<Map<String, dynamic>> updateUtilizador(String id, Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> updateUtilizador(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final uri = Uri.parse('$urlAPI/update/$id');
-      final response = await http.put(uri,
+      final response = await http.put(
+        uri,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(data),
       );
@@ -58,36 +65,44 @@ class UtilizadoresApi {
     }
   }
 
-Future<Map<String, dynamic>> alterarImgPerfil(String id, ImageSource source) async {
-  final picker = ImagePicker();
-  final pickedFile = await picker.pickImage(source: source, imageQuality: 75);
+  Future<Map<String, dynamic>> alterarImgPerfil(
+    String id,
+    ImageSource source,
+  ) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source, imageQuality: 75);
 
-  if (pickedFile == null) {
-    throw Exception('Nenhuma imagem selecionada');
+    if (pickedFile == null) {
+      throw Exception('Nenhuma imagem selecionada');
+    }
+
+    final mimeType = lookupMimeType(pickedFile.path) ?? 'image/jpeg';
+    final typeSplit = mimeType.split('/');
+
+    final uri = Uri.parse(
+      'https://softskills-api.onrender.com/utilizador/alterar-imgperfil/$id',
+    );
+
+    final request =
+        http.MultipartRequest('POST', uri)
+          ..files.add(
+            await http.MultipartFile.fromPath(
+              'imagem',
+              pickedFile.path,
+              filename: pickedFile.name,
+              contentType: MediaType(typeSplit[0], typeSplit[1]),
+            ),
+          )
+          ..headers.addAll({'Accept': 'application/json'});
+
+    final res = await request.send();
+    final body = await res.stream.bytesToString();
+
+    if (res.statusCode != 200) {
+      throw Exception('Erro ao enviar imagem: $body');
+    }
+    return jsonDecode(body) as Map<String, dynamic>;
   }
-
-  final mimeType = lookupMimeType(pickedFile.path) ?? 'image/jpeg';
-  final typeSplit = mimeType.split('/');       
-
-  final uri = Uri.parse('https://softskills-api.onrender.com/utilizador/alterar-imgperfil/$id');
-
-  final request = http.MultipartRequest('POST', uri)
-    ..files.add(await http.MultipartFile.fromPath(
-      'imagem',
-      pickedFile.path,
-      filename: pickedFile.name,
-      contentType: MediaType(typeSplit[0], typeSplit[1]),
-    ))
-    ..headers.addAll({'Accept': 'application/json'});     
-
-  final res = await request.send();
-  final body = await res.stream.bytesToString();
-
-  if (res.statusCode != 200) {
-    throw Exception('Erro ao enviar imagem: $body');
-  }
-  return jsonDecode(body) as Map<String, dynamic>;
-}
 
   Future<Map<String, dynamic>> deleteUtilizador(String id) async {
     try {

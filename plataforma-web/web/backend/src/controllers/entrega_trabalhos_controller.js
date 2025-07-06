@@ -2,6 +2,8 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).entrega_trabalhos;
 const controllers = {};
+const fs = require('fs').promises;
+const path = require('path');
 
 
 controllers.list = async (req, res) => {
@@ -21,7 +23,9 @@ controllers.get = async (req, res) => {
 
     if (data) {
       const jaEntregou = !!data;
-      res.status(200).json(jaEntregou);
+      res.status(200).json(data);
+    } else {
+      res.status(200).json(data);
     }
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao procurar entrega de trabalhos!', desc: err.message });
@@ -34,10 +38,10 @@ controllers.create = async (req, res) => {
 
       const { id_trabalho_et, id_formando_et, caminho_et } = req.body;
 
-      if (!id_trabalho_et || !id_formando_et || !caminho_et) {
+      if (!id_trabalho_et || !id_formando_et ) {
         return res.status(400).json({
           erro: 'Campos obrigatórios em falta',
-          desc: 'id_trabalho_et, id_formando_et e caminho_et são obrigatórios'
+          desc: 'id_trabalho_et e caminho_et são obrigatórios'
         });
       }
 

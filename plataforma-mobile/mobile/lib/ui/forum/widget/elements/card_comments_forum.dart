@@ -62,7 +62,7 @@ class _PostState extends State<Post> {
           SizedBox(
             child: ListTile(
               leading: CircleAvatar(
-                backgroundImage: AssetImage(widget.photo),
+                backgroundImage: NetworkImage(widget.photo),
                 radius: 30,
               ),
               title: Text(
@@ -119,7 +119,7 @@ class _PostState extends State<Post> {
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: Text(
               widget.description,
-              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+              style: TextStyle(fontSize: 13, color: Colors.grey[700]),
             ),
           ),
           SizedBox(
@@ -190,9 +190,7 @@ class _PostState extends State<Post> {
           content: Container(
             width: double.infinity,
             height: 250,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -204,7 +202,10 @@ class _PostState extends State<Post> {
                 Row(
                   children: <Widget>[
                     TextButton(
-                      child: Text('Conteúdo Inapropriado', style: TextStyle(fontSize: 13)),
+                      child: Text(
+                        'Conteúdo Inapropriado',
+                        style: TextStyle(fontSize: 13),
+                      ),
                       onPressed: () {
                         _denunciar = 'Conteúdo Inapropriado';
                         print('Denunciar: $_denunciar');
@@ -226,7 +227,10 @@ class _PostState extends State<Post> {
                 Row(
                   children: <Widget>[
                     TextButton(
-                      child: Text('Informação Falsa', style: TextStyle(fontSize: 13)),
+                      child: Text(
+                        'Informação Falsa',
+                        style: TextStyle(fontSize: 13),
+                      ),
                       onPressed: () {
                         _denunciar = 'Informação Falsa';
                         print('Denunciar: $_denunciar');
@@ -246,7 +250,10 @@ class _PostState extends State<Post> {
                     print('Denunciar: $_denunciar');
                     // Envia para a base de dados uma denúncia com o motivo selecionado
                   },
-                  child: Text('Denunciar', style: TextStyle(fontSize: 13, color: Colors.white)),
+                  child: Text(
+                    'Denunciar',
+                    style: TextStyle(fontSize: 13, color: Colors.white),
+                  ),
                 ),
               ],
             ),
