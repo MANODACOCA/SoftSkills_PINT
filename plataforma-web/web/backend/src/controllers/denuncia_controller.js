@@ -98,7 +98,7 @@ controllers.getConteudoDenunciado = async (req, res) => {
     let conteudoDenunciado;
     if(d.id_post) {
         conteudoDenunciado = await post.findOne({
-          where: {id_utilizador: d.id_post.id_utilizador},
+          where: {id_post : d.id_post},
             include: [
               {
                 model: utilizador,
@@ -114,8 +114,8 @@ controllers.getConteudoDenunciado = async (req, res) => {
         },
       );
     } else {
-        conteudoDenunciado = await comentario.findOne(d.id_comentario, {
-          where: {id_post : d.id_post},
+        conteudoDenunciado = await comentario.findOne({
+          where: {id_comentario : d.id_comentario},
           include: [
             {
               model: utilizador,
