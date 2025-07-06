@@ -93,12 +93,15 @@ controllers.getConteudoDenunciado = async (req, res) => {
   try {
     const {id} = req.params;
     const d = await model.findByPk(id);
+    res.json(d);
     if(!d) return;
     let conteudoDenunciado;
     if(d.id_post) {
         conteudoDenunciado = await post.findByPk(d.id_post);
+        res.json(d.id_post);
     } else {
         conteudoDenunciado = await comentario.findByPk(d.id_comentario);
+        res.json(d.id_comentario);
     }
     res.status(200).json(conteudoDenunciado);
   } catch (error) {
