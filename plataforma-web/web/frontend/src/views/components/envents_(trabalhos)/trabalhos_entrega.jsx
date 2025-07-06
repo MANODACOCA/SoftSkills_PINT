@@ -14,6 +14,7 @@ import {
 } from 'react-icons/fa';
 import { BsFiletypeTxt } from "react-icons/bs";
 import { MdDateRange } from "react-icons/md";
+import { parseDateWithoutTimezone } from '../shared_functions/FunctionsUtils';
 
 
 const iconMapById = {
@@ -31,16 +32,6 @@ const WorkSubmit = ({ trabalho }) => {
     //seccao que trata das horas do trabalhos e verificacoes
     let DataAtual = null;
     let DataEntrega = null;
-
-    function parseDateWithoutTimezone(dateString) {
-        const cleanString = dateString.replace('Z', '');
-
-        const [datePart, timePart] = cleanString.split('T');
-        const [year, month, day] = datePart.split('-').map(Number);
-        const [hour, minute, second] = timePart.split(':').map(Number);
-
-        return new Date(year, month - 1, day, hour, minute, second);
-    }
 
     if (trabalho.data_entrega_tr) {
         DataAtual = new Date();

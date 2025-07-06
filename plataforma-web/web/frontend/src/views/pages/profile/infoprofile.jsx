@@ -55,7 +55,7 @@ const InfoProfile = () => {
                 },
                 buttonsStyling: true
             });
-            
+
             const result = await swalWithBootstrapButtons.fire({
                 title: "Têm a certeza que quer alterar a sua password?",
                 text: "Não podes reverter esta alteração!",
@@ -64,27 +64,27 @@ const InfoProfile = () => {
                 confirmButtonText: "Sim, alterar.",
                 cancelButtonText: "Não, cancelar!",
             });
-                if (result.isConfirmed) {
-                    await alterarPassword(user.email, novapassword);
-                    setNovapassword('');
-                    setRepNovapassword('');
-                    setSuccessMessage('A sua password foi alterada com sucesso!');
-                    swalWithBootstrapButtons.fire({
-                        title: "Alteração realizada com sucesso!",
-                        icon: "success",
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                } else {
-                    setNovapassword('');
-                    setRepNovapassword('');
-                    swalWithBootstrapButtons.fire({
-                        title: "Alterção Cancelada",
-                        icon: "error",
-                        timer: 3000,
-                        showConfirmButton: false
-                    });
-                }
+            if (result.isConfirmed) {
+                await alterarPassword(user.email, novapassword);
+                setNovapassword('');
+                setRepNovapassword('');
+                setSuccessMessage('A sua password foi alterada com sucesso!');
+                swalWithBootstrapButtons.fire({
+                    title: "Alteração realizada com sucesso!",
+                    icon: "success",
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            } else {
+                setNovapassword('');
+                setRepNovapassword('');
+                swalWithBootstrapButtons.fire({
+                    title: "Alterção Cancelada",
+                    icon: "error",
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            }
 
         } catch (error) {
             if (error.message === 'Essa é a sua password antiga! Tente outra.') {
@@ -99,6 +99,7 @@ const InfoProfile = () => {
     useEffect(() => {
         setIs2FAEnabled(user?.auten2fat || false);
     }, [user]);
+
 
     return (
         <div>
