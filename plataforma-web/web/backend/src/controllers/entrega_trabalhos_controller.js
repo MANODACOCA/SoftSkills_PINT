@@ -2,6 +2,8 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).entrega_trabalhos;
 const controllers = {};
+const fs = require('fs').promises;
+const path = require('path');
 
 
 controllers.list = async (req, res) => {
