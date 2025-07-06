@@ -1,5 +1,6 @@
 const { Sequelize, Op, where } = require('sequelize');
 const sequelize = require('../models/database');
+const denuncia = require('../models/denuncia');
 const { denuncia, comentario, utilizador, post, tipo_denuncia, conteudos_partilhado, topico, area, categoria } = require('../models/init-models')(sequelize);
 
 
@@ -139,6 +140,24 @@ async function getDenunciasAll() {
     }
 }
 
+async function getComentarioPostDenunciado(idDenuncia) {
+    try {
+        const d = await denuncia.findByPk(idDenuncia);
+        if(!d) return;
+        let conteudoDenunciado;
+        if(d.id_post) {
+            conteudoDenunciado = await post.findByPk(d.id_post);
+        } else {
+            conteudoDenunciado = await comentario.findByPk(d.id_comentario);
+        }
+        return conteudoDenunciado;
+    } catch (error) {
+        console.error('Erro ao encontrar comentario ou post denunciado');
+        throw error;
+    }
+}
+
 module.exports = {
-    getDenunciasAll
+    getDenunciasAll,
+    getComentarioPostDenunciado
 };

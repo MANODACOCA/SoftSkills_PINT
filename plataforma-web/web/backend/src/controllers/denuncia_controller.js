@@ -88,4 +88,14 @@ controllers.countDenuncias = async (req, res) => {
   }
 }
 
+controllers.getConteudoDenunciado = async (req, res) => {
+  try {
+    const {idDenuncia} = req.params;
+    const data = denunciasService.getComentarioPostDenunciado(idDenuncia);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json('Erro ao encontrar denuncias');
+  }
+}
+
 module.exports = controllers;

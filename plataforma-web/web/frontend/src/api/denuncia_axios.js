@@ -63,3 +63,13 @@ export const denuncias_contagem = async () => {
         throw error;
     }
 }
+
+export const denuncia_comentario_post = async (idDenuncia) => {
+    try {
+        const response = await axios.get(`${API_URL}/denuncia/comentario-post/${idDenuncia}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao encontrar comentario ou post');
+        throw error;
+    }
+}
