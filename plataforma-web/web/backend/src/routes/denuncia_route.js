@@ -22,6 +22,6 @@ router.post('/create',controller.create);
 router.put('/update/:id',controller.update);
 router.delete('/delete/:id',controller.delete);
 router.get('/count', controller.countDenuncias);
-router.get('/denuncia/comentario-post/:idDenuncia', controller.getConteudoDenunciado);
+router.get('/denuncia/comentario-post/:id', controller.getConteudoDenunciado);
 
 module.exports = router;
