@@ -103,20 +103,6 @@ const SidebarFormador = ({ toggleSidebar, collapsed }) => {
                     </NavLink> */}
                 </div>
                 <div>
-                    <NavLink to="/definicoes" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
-                        {!effectiveCollapsed && 
-                            <div className='d-flex align-items-center'>
-                                <i className="bi bi-gear fs-4 px-2"></i>
-                                Definições
-                            </div>
-                        }
-                        {effectiveCollapsed && 
-                            <div className='d-flex flex-column align-items-center m-0'>
-                                <i className="bi bi-gear fs-4 px-2"></i>
-                                <small className='text-truncate d-inline-block text-ellipsis'>Definições</small>
-                            </div>
-                        }
-                    </NavLink>
                     <NavLink to="/login" onClick={() => localStorage.removeItem('token')} 
                             className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
                         {!effectiveCollapsed && 
