@@ -102,7 +102,7 @@ controllers.getConteudoDenunciado = async (req, res) => {
             include: [
               {
                 model: utilizador,
-                as: 'id_utilizador_utilizador',
+                as: 'posts',
                 attributes: [
                   [sequelize.col('id_utilizador'), 'id_util'],
                   [sequelize.col('nome_utilizador'), 'nome_util'],
@@ -119,7 +119,7 @@ controllers.getConteudoDenunciado = async (req, res) => {
           include: [
             {
               model: utilizador,
-                as: 'id_utilizador_utilizador',
+                as: 'comentarios',
                 attributes: [
                   [sequelize.col('id_utilizador'), 'id_util'],
                   [sequelize.col('nome_utilizador'), 'nome_util'],

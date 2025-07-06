@@ -57,7 +57,7 @@ const QueixasTables = () => {
             {isPost
             ? <div className='mx-2 my-1 border rounded p-2'>
                 <div className="d-flex gap-4">
-                    <img className="border rounded-5" src={postComent.imagem} alt="img Util" width={60} height={60}/>
+                    <img className="border rounded-5" src="" alt="img Util" width={60} height={60}/>
                     <div className="d-flex flex-column justify-content-center">
                         <h5 className="mb-1">nome completo</h5>
                         <small>email</small>
