@@ -140,9 +140,9 @@ async function getDenunciasAll() {
     }
 }
 
-async function getComentarioPostDenunciado(idDenuncia) {
+async function getComentarioPostDenunciado(id_denuncia) {
     try {
-        const d = await denuncia.findByPk(idDenuncia);
+        const d = await denuncia.findByPk(id_denuncia);
         if(!d) return;
         let conteudoDenunciado;
         if(d.id_post) {
