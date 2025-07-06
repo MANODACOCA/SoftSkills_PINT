@@ -13,9 +13,9 @@ export const list_entrega_trabalhos = async () => {
   }
 }
 
-export const get_entrega_trabalhos  = async (id) => {
+export const get_entrega_trabalhos  = async (id_trabalho, id_formando) => {
     try{
-        const response = await axios.get(`${API_URL}/get/${id}`);
+        const response = await axios.get(`${API_URL}/get/${id_trabalho}/${id_formando}`);
         return response.data;
     }catch(error){
         console.error('Erro ao buscar entrega trabalhos!');
@@ -33,9 +33,9 @@ export const create_entrega_trabalhos = async (data) => {
     }
 };
 
-export const update_entrega_trabalhos = async (id, data) => {
+export const update_entrega_trabalhos = async (data) => {
     try{
-        const response = await axios.put(`${API_URL}/update/${id}`, data);
+        const response = await axios.put(`${API_URL}/update`, data);
         return response.data;
     }catch(error){
         console.error('Erro ao atualizar entrega trabalhos!');
@@ -43,9 +43,9 @@ export const update_entrega_trabalhos = async (id, data) => {
     }
 };
 
-export const delete_entrega_trabalhos = async (id) => {
+export const delete_entrega_trabalhos = async (id_trabalho, id_formando) => {
     try{
-        const response = await axios.delete(`${API_URL}/delete/${id}`);
+        const response = await axios.delete(`${API_URL}/delete/${id_trabalho}/${id_formando}`);
         return response.data;
     }catch(error){
         console.error('Erro ao excluir entrega trabalhos!');

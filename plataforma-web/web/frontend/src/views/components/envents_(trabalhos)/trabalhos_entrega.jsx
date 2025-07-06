@@ -11,10 +11,14 @@ import {
     FaFile,
     FaDownload,
     FaUpload,
+    FaRegTrashAlt,
 } from 'react-icons/fa';
 import { BsFiletypeTxt } from "react-icons/bs";
 import { MdDateRange } from "react-icons/md";
+import { useUser } from '../../../utils/useUser';
 import { parseDateWithoutTimezone } from '../shared_functions/FunctionsUtils';
+import { get_entrega_trabalhos, create_entrega_trabalhos, update_entrega_trabalhos, delete_entrega_trabalhos } from '../../../api/entrega_trabalhos_axios';
+import Swal from 'sweetalert2'
 
 
 const iconMapById = {
@@ -39,15 +43,100 @@ const WorkSubmit = ({ trabalho }) => {
     }
     //seccao que trata das horas do trabalhos e verificacoes
 
+
+    //para icons
     const getIconById = (id) => {
         return iconMapById[id] || <FaFile className="text-secondary" />;
     };
-    console.log(trabalho);
+    //para icons
+
+
+    const { user } = useUser();
     const [submittedFile, setSubmittedFile] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const fileInputRef = useRef(null);
 
-    const handleSubmit = () => {
+
+    const verifySubmitWork = async () => {//vai verificar se sumteu algum ficheiro
+        try {
+            const res = await get_entrega_trabalhos(trabalho.id_trabalho, user.id_utilizador);
+            if (res.jaEntregou) {
+                submittedFile(res.data);
+                setIsSubmitted(true);
+            }
+        } catch (error) {
+            console.error('Erro ao verificar entrega de trabalho:', error);
+        }
+    };
+
+    const handleSubmit = async () => {//vai servir para submeter trabalhos
+        if (!submittedFile) {
+            setError('Por favor, envie pelo menos um arquivo antes de submeter.');
+            Swal.fire({
+                title: "Por favor, envie pelo menos um arquivo antes de submeter.",
+                icon: "error",
+                draggable: true,
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return;
+        }
+        const formData = new FormData();
+        formData.append('id_trabalho_et', trabalho.id_trabalho);
+        formData.append('id_formando_et', user.id_utilizador);
+        formData.append('ficheiro', submittedFile);
+
+        try {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                title: "Tens a certeza que queres submeter o trabalho?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            }).then(async (result) => {
+
+                if (result.isConfirmed) {
+                    const res = await create_entrega_trabalhos(formData);
+                    setIsSubmitted(true);
+                    Swal.fire({
+                        title: "Erro ao submeter trabalho. Verifique o ficheiro ou tente novamente mais tarde.",
+                        icon: "success",
+                        draggable: true,
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                }
+            });
+
+        } catch (error) {
+            console.error('Erro ao submeter entrega de trabalho:', error);
+            Swal.fire({
+                title: "Erro ao submeter trabalho. Verifique o ficheiro ou tente novamente mais tarde.",
+                icon: "error",
+                draggable: true,
+                showConfirmButton: false,
+                timer: 3000
+            });
+        }
+    };
+
+    const handleEdit = () => {
+        if (!submittedFile) {
+            alert('Por favor, envie pelo menos um arquivo antes de submeter.');
+            return;
+        }
+        setIsSubmitted(true);
+    };
+
+    const handleDelete = () => {
         if (!submittedFile) {
             alert('Por favor, envie pelo menos um arquivo antes de submeter.');
             return;
@@ -149,7 +238,7 @@ const WorkSubmit = ({ trabalho }) => {
                                     fileInputRef.current.value = '';
                                 }
                             }}
-                        >x
+                        ><FaRegTrashAlt />
                         </Button>
                     </div>
                 )}

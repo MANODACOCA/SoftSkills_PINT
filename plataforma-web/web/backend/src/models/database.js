@@ -13,7 +13,11 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 });
 
 sequelize.authenticate()
-    .then(()=> console.log('Conexão com base de dados realizada com sucesso!'))
-    .catch(error=> console.log('Erro ao conectar com base de dados:', error));
+  .then(async () => {
+    console.log('Conexão com base de dados realizada com sucesso!');
+    await sequelize.query("SET TIME ZONE 'Europe/Lisbon';");
+    console.log('Timezone definido para Europe/Lisbon');
+  })
+  .catch(error => console.log('Erro ao conectar com base de dados:', error));
 
 module.exports = sequelize;
