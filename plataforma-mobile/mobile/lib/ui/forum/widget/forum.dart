@@ -29,7 +29,6 @@ class _ForumState extends State<Forum> {
       setState(() {
         loading = false;
       });
-      // Podes mostrar um erro aqui se quiseres
     }
   }
 
@@ -64,7 +63,15 @@ class _ForumState extends State<Forum> {
                       final forum = foruns[index];
                       return GestureDetector(
                         onTap: () {
-                          context.push('/forumPage', extra: forum['id_topico_topico']);
+                          context.push(
+                            '/forumPage',
+                            extra: {
+                              'forumID':
+                                  forum['id_conteudos_partilhado'].toString(),
+                              'name':
+                                  forum['id_topico_topico']?['nome_topico'],
+                            },
+                          );
                         },
                         child: CardForum(
                           title:
