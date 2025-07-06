@@ -102,7 +102,7 @@ controllers.getConteudoDenunciado = async (req, res) => {
             include: [
               {
                 model: utilizador,
-                as: 'posts',
+                as: 'id_utilizador_utilizador',
                 attributes: [
                   [sequelize.col('id_utilizador'), 'id_util'],
                   [sequelize.col('nome_utilizador'), 'nome_util'],
@@ -119,7 +119,7 @@ controllers.getConteudoDenunciado = async (req, res) => {
           include: [
             {
               model: utilizador,
-                as: 'comentarios',
+                as: 'id_utilizador_utilizador',
                 attributes: [
                   [sequelize.col('id_utilizador'), 'id_util'],
                   [sequelize.col('nome_utilizador'), 'nome_util'],
@@ -133,7 +133,7 @@ controllers.getConteudoDenunciado = async (req, res) => {
     }
     res.status(200).json(conteudoDenunciado);
   } catch (error) {
-    res.status(500).json('Erro ao encontrar denuncias', error);
+    res.status(500).json({message: 'Erro ao encontrar denuncias', error: error});
   }
 }
 
