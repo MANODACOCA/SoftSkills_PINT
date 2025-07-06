@@ -25,7 +25,7 @@ controllers.get = async (req, res) => {
     if (data) {
       res.status(200).json({ jaEntregou, data });
     } else {
-      res.status(200).json(jaEntregou);
+      res.status(200).json({jaEntregou:jaEntregou});
     }
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao procurar entrega de trabalhos!', desc: err.message });
