@@ -93,7 +93,6 @@ controllers.getConteudoDenunciado = async (req, res) => {
   try {
     const {id} = req.params;
     const d = await model.findByPk(id);
-    res.json(d);
     if(!d) return;
     let conteudoDenunciado;
     if(d.id_post) {
