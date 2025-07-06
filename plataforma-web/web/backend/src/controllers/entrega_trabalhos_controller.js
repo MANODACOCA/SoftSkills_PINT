@@ -21,11 +21,11 @@ controllers.get = async (req, res) => {
       }
     });
 
+    const jaEntregou = !!data;
     if (data) {
-      const jaEntregou = !!data;
-      res.status(200).json(data);
+      res.status(200).json({ jaEntregou, data });
     } else {
-      res.status(200).json(data);
+      res.status(200).json(jaEntregou);
     }
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao procurar entrega de trabalhos!', desc: err.message });
@@ -38,7 +38,7 @@ controllers.create = async (req, res) => {
 
       const { id_trabalho_et, id_formando_et, caminho_et } = req.body;
 
-      if (!id_trabalho_et || !id_formando_et ) {
+      if (!id_trabalho_et || !id_formando_et) {
         return res.status(400).json({
           erro: 'Campos obrigatórios em falta',
           desc: 'id_trabalho_et e caminho_et são obrigatórios'
@@ -85,10 +85,52 @@ controllers.create = async (req, res) => {
 controllers.update = async (req, res) => {
   try {
     if (req.body) {
-      const { id } = req.params;
-      const updated = await model.update(req.body, { where: { id: id } });
+
+      const { id_trabalho_et, id_formando_et, caminho_et } = req.body;
+
+      if (!id_trabalho_et || !id_formando_et) {
+        return res.status(400).json({
+          erro: 'Campos obrigatórios em falta',
+          desc: 'id_trabalho_et e caminho_et são obrigatórios'
+        });
+      }
+
+      const ficheiroRelativo = req.file
+        ? req.file.path.replace(/^.*[\\/]uploads[\\/]/, '')
+        : null;
+
+      const ficheiroURL = ficheiroRelativo
+        ? `${req.protocol}://${req.get('host')}/uploads/${ficheiroRelativo}`
+        : null;
+
+      if (!ficheiroURL && !caminho_et) {
+        return res.status(400).json({
+          erro: 'Falta ficheiro ou URL',
+          desc: 'Envie um ficheiro (campo "ficheiro") ou o campo "conteudo" com o link externo'
+        });
+      }
+
+      const payload = {
+        caminho_et: ficheiroURL || caminho_et
+      };
+
+      const updated = await model.update(payload,
+        {
+          where:
+          {
+            id_formando_et: id_formando_et,
+            id_trabalho_et: id_trabalho_et
+          }
+        });
+
       if (updated) {
-        const modelUpdated = await model.findByPk(id);
+        const modelUpdated = await model.findByPk({
+          where:
+          {
+            id_formando_et: id_formando_et,
+            id_trabalho_et: id_trabalho_et
+          }
+        });  
         res.status(200).json(modelUpdated);
       } else {
         res.status(404).json({ erro: 'Entrega de trabalhos nao foi atualizado/a!' });
@@ -97,14 +139,23 @@ controllers.update = async (req, res) => {
       res.status(400).json({ erro: 'Erro ao atualizar o/a entrega de trabalhos!', desc: 'Corpo do pedido esta vazio.' });
     }
   } catch (err) {
+    if (err.code === 'LIMIT_FILE_SIZE'){
+      return res.status
+    }
     res.status(500).json({ erro: 'Erro ao atualizar o/a entrega de trabalhos!', desc: err.message });
   }
 };
 
 controllers.delete = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deleted = await model.destroy({ where: { id: id } });
+    const { id_trabalho, id_formando } = req.params;
+    const deleted = await model.destroy({
+      where:
+      {
+        id_trabalho_et: id_trabalho,
+        id_formando_et: id_formando
+      }
+    });
     if (deleted) {
       res.status(200).json({ msg: 'Entrega de trabalhos apagado/a com sucesso!' });
     } else {
