@@ -31,26 +31,13 @@ const ForumTable = () => {
         }
     }
 
-    const renderActions = (item) => {
-        return(
-            <div className="d-flex">
-                <button className="btn btn-outline-primary me-2" onClick={() => HandleEdit(item.id_conteudos_partilhado)}>
-                    <i className="bi bi-pencil"></i>
-                </button>
-                <button className="btn btn-outline-danger" onClick={() => HandleDelete(item.id_conteudos_partilhado)}>
-                    <i className="bi bi-trash"></i>
-                </button>
-            </div>
-        );
-    }
-
     useEffect(() => {
         FetchForum();
     },[])
 
     return(
         <div>
-            <Table columns={columnsForum} data={forum} actions={renderActions} />
+            <Table columns={columnsForum} data={forum} />
         </div>
     );
 }
