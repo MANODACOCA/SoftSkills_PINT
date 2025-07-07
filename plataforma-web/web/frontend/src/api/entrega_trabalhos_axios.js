@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://softskills-api.onrender.com/entrega_trabalhos';
+const API_URL = 'https://softskills-api.onrender.com/entrega-trabalhos';
 
 
 export const list_entrega_trabalhos = async () => {
