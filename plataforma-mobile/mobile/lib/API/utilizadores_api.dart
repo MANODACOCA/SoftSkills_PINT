@@ -4,21 +4,43 @@ import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
+import 'package:mobile/data/database/cache_database.dart';
+import 'package:mobile/utils/verifica_internet.dart';
 
 class UtilizadoresApi {
   static const String urlAPI = 'https://softskills-api.onrender.com/utilizador';
 
   Future<Map<String, dynamic>> getUtilizador(int id) async {
-    try {
-      final response = await http.get(Uri.parse('$urlAPI/get/$id'));
-      if (response.statusCode == 200) {
-        print('Utilizador encontrado: ${response.body}');
-        return jsonDecode(response.body);
+    final cacheKey = 'utilizador_$id';
+
+    final hasConnection = await temInternet();
+
+    if (hasConnection) {
+      try {
+        final response = await http.get(Uri.parse('$urlAPI/get/$id'));
+        if (response.statusCode == 200) {
+          print('Utilizador encontrado: ${response.body}');
+          final utilizador = jsonDecode(response.body);
+          await ApiCache.guardarDados(cacheKey, utilizador);
+          return utilizador;
+        }
+        throw Exception('Erro ao buscar Utilizador!');
+      } catch (error) {
+        print('Erro ao buscar Utilizador: $error');
+        throw error;
       }
-      throw Exception('Erro ao buscar Utilizador!');
-    } catch (error) {
-      print('Erro ao buscar Utilizador: $error');
-      throw error;
+    }
+    
+    try{
+      final cached = await ApiCache.lerDados(cacheKey);
+      if(cached != null) {
+        return Map<String, dynamic>.from(cached);
+      } else {
+        throw Exception('Sem internet e sem dados guardados localmente');
+      }
+    } catch (cacheError) {
+      print('Erro ao ler cache: $cacheError');
+      throw Exception('Sem internet e não foi possivel aceder à chache');
     }
   }
 

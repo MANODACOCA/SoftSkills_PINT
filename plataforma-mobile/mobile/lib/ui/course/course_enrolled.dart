@@ -49,7 +49,8 @@ class _CourseEnrolledState extends State<CourseEnrolled> {
       ),
       body: SingleChildScrollView(
         child: (cursos.isEmpty) 
-          ? Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()),) 
+          ? Padding(padding: EdgeInsets.only(top: 40), 
+            child: Center(child: CircularProgressIndicator()),) 
           : Column(
           children: [
             CourseEnrolledScroll(cursos: cursos)
