@@ -115,7 +115,7 @@ class ForumAPI {
     }
   }
 
-  //PARTES DOS POSTS DO FORUNS
+  //PARTE DOS POSTS DO FORUNS
 
   static Future<Map<String, dynamic>> getPostForum(String idForum) async {
     try {
