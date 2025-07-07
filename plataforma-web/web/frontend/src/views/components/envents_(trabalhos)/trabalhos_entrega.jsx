@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, Button } from 'react-bootstrap';
+import SpinnerBorder from '../spinner-border/spinner-border'
 import {
     FaCheckCircle,
     FaFileAlt,
@@ -12,6 +13,7 @@ import {
     FaDownload,
     FaUpload,
     FaRegTrashAlt,
+    FaExternalLinkAlt,
 } from 'react-icons/fa';
 import { BsFiletypeTxt } from "react-icons/bs";
 import { MdDateRange } from "react-icons/md";
@@ -54,10 +56,13 @@ const WorkSubmit = ({ trabalho }) => {
 
 
     const { user } = useUser();
+    const [nameFile, setNameFile] = useState(null);
     const [submittedFile, setSubmittedFile] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [loading, setLoading] = useState(true);
     const fileInputRef = useRef(null);
 
+    console.log(isSubmitted);
     //vai verificar se sumteu algum ficheiro
     const verifySubmitWork = async () => {
         try {
@@ -65,9 +70,15 @@ const WorkSubmit = ({ trabalho }) => {
             if (res.jaEntregou) {
                 setSubmittedFile(res.data.caminho_et);
                 setIsSubmitted(true);
+
+                const fileNameFromPath = res.data.caminho_et.split('/').pop();
+                setNameFile(fileNameFromPath);
+
             }
         } catch (error) {
             console.error('Erro ao verificar entrega de trabalho:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -118,6 +129,7 @@ const WorkSubmit = ({ trabalho }) => {
                 if (result.isConfirmed) {
                     await create_entrega_trabalhos(formData);
                     setIsSubmitted(true);
+                    verifySubmitWork();
                     swalWithBootstrapButtons.fire({
                         title: "Trabalho submetido com sucesso!",
                         icon: "success",
@@ -138,18 +150,59 @@ const WorkSubmit = ({ trabalho }) => {
     //vai servir para submeter trabalhosc
 
     //vai servir para eliminar trabalhos
-    const handleDelete = async () => {
+    const handleDelete = () => {
         try {
-            const res = await get_entrega_trabalhos(trabalho.id_trabalho, user?.id_utilizador);
-            if (res.jaEntregou) {
-                submittedFile(res.data);
-                setIsSubmitted(true);
-            }
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+            swalWithBootstrapButtons.fire({
+                title: "Tens a certeza de que queres eliminar a tua submissão?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Sim, eliminar!",
+                cancelButtonText: "Não, cancelar.",
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger',
+                },
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    if (isSubmitted) {
+                        await delete_entrega_trabalhos(trabalho.id_trabalho, user?.id_utilizador);
+                    }
+                    setIsSubmitted(false);
+                    setSubmittedFile(null);
+                    if (fileInputRef.current) {
+                        fileInputRef.current.value = '';
+                    }
+                    swalWithBootstrapButtons.fire({
+                        title: "Eliminado!",
+                        text: "A tua submissao foi eliminada.",
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+                }
+            });
         } catch (error) {
-            console.error('Erro ao verificar entrega de trabalho:', error);
+            swalWithBootstrapButtons.fire({
+                title: "Erro ao eliminar entrega de trabalho.",
+                icon: "error",
+                showConfirmButton: false,
+                timer: 2000
+            });
         }
     };
     //vai servir para eliminar trabalhos
+
+
+    if (loading) {
+        return <SpinnerBorder />;
+    }
 
     return (
         <Card className="shadow-sm">
@@ -196,13 +249,14 @@ const WorkSubmit = ({ trabalho }) => {
                 </section>
 
                 {/* Entrega */}
-                {!submittedFile ? (
+                {!submittedFile && !isSubmitted && DataAtual < DataEntrega ? (
                     <section className="mb-4">
                         <div className="d-flex align-items-center justify-content-between mb-3">
                             <h4 className="fw-semibold mb-0">Entregue o trabalho aqui:</h4>
 
                         </div>
                         <div
+                            onClick={() => fileInputRef.current.click()}
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => {
                                 e.preventDefault();
@@ -231,25 +285,47 @@ const WorkSubmit = ({ trabalho }) => {
                 ) : (
                     <div className="mb-3 p-3 bg-light rounded d-flex justify-content-between align-items-center">
                         <div>
-                            <small className="text-muted">Ficheiro selecionado:</small>
-                            <div className="fw-medium">{submittedFile.name}</div>
-                            <small className="text-muted">{(submittedFile.size / 1024 / 1024).toFixed(2)} MB</small>
+                            {!isSubmitted && DataAtual < DataEntrega && (
+                                <>
+                                    <small className="text-muted">Ficheiro selecionado:</small>
+                                    <div className="fw-medium">{submittedFile?.name}</div>
+                                    <small className="text-muted">{(submittedFile?.size / 1024 / 1024).toFixed(2)} MB</small>
+                                </>
+                            )}
+                            {isSubmitted && (
+                                <>
+                                    <small className="text-muted">Ficheiro selecionado:</small>
+                                    <div className="fw-medium">{nameFile}</div>
+                                </>
+                            )}
+                            {!isSubmitted && DataAtual > DataEntrega && (
+                                <>
+                                    <small className="text-danger">O prazo de entrega já expirou.</small>
+                                </>
+                            )}
                         </div>
-                        {DataAtual <= DataEntrega && (
-                            <Button
-                                variant="outline-danger"
-                                size="sm"
-                                onClick={() => {
-                                    setSubmittedFile(null);
-                                    if (fileInputRef.current) {
-                                        fileInputRef.current.value = '';
-                                    }
-                                }}
-                            ><FaRegTrashAlt />
-                            </Button>
-                        )}
+                        <div className='d-flex justify-content-center align-items-center gap-3'>
+                            {isSubmitted && (
+                                <Button
+                                    variant="outline-secondary"
+                                    size="sm"
+                                    onClick={() => window.open(submittedFile)}
+                                ><FaExternalLinkAlt />
+                                </Button>
+                            )}
+                            {DataAtual <= DataEntrega && (
+                                <Button
+                                    variant="outline-danger"
+                                    size="sm"
+                                    onClick={() => handleDelete()}
+                                ><FaRegTrashAlt />
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 )}
+
+
 
                 {/* Botão Submissão */}
                 {DataAtual <= DataEntrega && !isSubmitted && (
