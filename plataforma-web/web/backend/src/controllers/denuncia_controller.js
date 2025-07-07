@@ -1,9 +1,11 @@
 //const model = require('../models/denuncia');;
 
+const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).denuncia;
 const controllers = {};
+const { comentario, post, utilizador} = require('../models/init-models')(sequelize);
 
 const denunciasService = require('../services/denuncias.service');
 
@@ -87,5 +89,53 @@ controllers.countDenuncias = async (req, res) => {
     res.status(500).json('Erro ao contar denuncias');
   }
 }
+
+controllers.getConteudoDenunciado = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const d = await model.findByPk(id);
+    if(!d) return;
+    let conteudoDenunciado;
+    if(d.id_post) {
+        conteudoDenunciado = await post.findOne({
+          where: {id_post : d.id_post},
+            include: [
+              {
+                model: utilizador,
+                as: 'id_utilizador_utilizador',
+                attributes: [
+                  [sequelize.col('id_utilizador'), 'id_util'],
+                  [sequelize.col('nome_utilizador'), 'nome_util'],
+                  [sequelize.col('img_perfil'), 'img_util'],
+                  'email',
+                ]
+              }
+            ]
+        },
+      );
+    } else {
+        conteudoDenunciado = await comentario.findOne({
+          where: {id_comentario : d.id_comentario},
+          include: [
+            {
+              model: utilizador,
+                as: 'id_utilizador_utilizador',
+                attributes: [
+                  [sequelize.col('id_utilizador'), 'id_util'],
+                  [sequelize.col('nome_utilizador'), 'nome_util'],
+                  [sequelize.col('img_perfil'), 'img_util'],
+                  'email',
+              ]
+            }
+          ],
+        },
+      );
+    }
+    res.status(200).json(conteudoDenunciado);
+  } catch (error) {
+    res.status(500).json({message: 'Erro ao encontrar denuncias', error: error});
+  }
+}
+
 
 module.exports = controllers;

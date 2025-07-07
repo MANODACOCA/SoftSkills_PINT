@@ -132,7 +132,6 @@ const CategoriaAreaTopicoTable = () => {
                     const data = await create_topico({id_area, nome_topico, descricao_top});
                     const id_topico = data.id_topico;
                     const data_criacao_cp = new Date();
-                    console.log(data_criacao_cp);
                     await create_conteudos_partilhado({id_topico, data_criacao_cp})
                     fetchCatAreaTop();
                     Swal.fire({
@@ -309,7 +308,6 @@ const CategoriaAreaTopicoTable = () => {
     }
 
     const handleEditArea = async (areas) => {
-        console.log(areas.nome_area);
         const result = await Swal.fire({
             title: 'Tem a certeza que deseja editar a área?',
             icon: 'warning',
@@ -393,7 +391,6 @@ const CategoriaAreaTopicoTable = () => {
     }
 
     const handleCategoria = async (categoriaAtual) => {
-        console.log(categoriaAtual.nome_cat);
         const result = await Swal.fire({
             title: 'Tem a certeza que deseja o nome desta Categoria?',
             icon: 'warning',

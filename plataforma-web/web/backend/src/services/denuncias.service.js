@@ -140,5 +140,5 @@ async function getDenunciasAll() {
 }
 
 module.exports = {
-    getDenunciasAll
+    getDenunciasAll,
 };

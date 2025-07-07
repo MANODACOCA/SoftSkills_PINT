@@ -36,5 +36,4 @@ router.delete('/delete/:id', controller.delete);
 router.put('/addLike/:id', controller.putLike);
 router.put('/deleteLike/:id', controller.deleteLike);
 
-
 module.exports = router;

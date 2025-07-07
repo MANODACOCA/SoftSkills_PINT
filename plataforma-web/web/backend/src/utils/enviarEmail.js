@@ -67,6 +67,7 @@ async function enviarEmailVerificaCode(destinatario, codigo) {
 }
 
 async function enviarEmailConfirmacaoInscricao(nome_formando, destinatario, nome_curso, data_inicio) {
+  const dataInicio = data_inicio.split('T');
   return transporter.sendMail({
     from: '"SoftSkills" <softskills.service@gmail.com>',
     to: destinatario,
@@ -79,7 +80,7 @@ async function enviarEmailConfirmacaoInscricao(nome_formando, destinatario, nome
       
       <div style="margin: 30px 0; text-align: center;">
         <span style="font-size: 18px; font-weight: bold; background-color: #e6f7ff; color: #00A9E0; padding: 12px 20px; border-radius: 8px; display: inline-block;">
-          📅 Início do curso: ${data_inicio}
+          📅 Início do curso: ${dataInicio}
         </span>
       </div>
 
