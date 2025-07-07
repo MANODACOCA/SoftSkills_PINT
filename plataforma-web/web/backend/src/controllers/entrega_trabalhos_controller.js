@@ -4,8 +4,8 @@ const controllers = {};
 const fs = require('fs').promises;
 const path = require('path');
 const model = initModels(sequelize).entrega_trabalhos;
-const utilizador = require("../models/utilizador");
-const formandos = require("../models/formandos");
+const utilizador = initModels(sequelize).utilizador;
+const formandos = initModels(sequelize).formandos;
 
 
 controllers.list = async (req, res) => {
