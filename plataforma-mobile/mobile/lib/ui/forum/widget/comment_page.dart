@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 import 'dart:io';
-import '../../../API/comments_forum.dart';
-import 'package:flutter/material.dart';
+//import '../../../API/comments_forum.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
 import 'package:file_picker/file_picker.dart';
