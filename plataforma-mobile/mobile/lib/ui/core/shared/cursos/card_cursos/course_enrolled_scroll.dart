@@ -36,7 +36,7 @@ class _CourseEnrolledScrollState extends State<CourseEnrolledScroll> {
               return Container(
                 height: 130,
                 width: 200,
-                margin: EdgeInsets.only(left: index == 0 ? 5.0 : 0.0, right: 5.0, ),
+                margin: EdgeInsets.symmetric(horizontal: 5),
                 child: CardCourseEnrolled(curso: curso)
               );
             },

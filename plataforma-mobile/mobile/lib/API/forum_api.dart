@@ -1,32 +1,45 @@
 // ignore_for_file: constant_identifier_names
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:mobile/utils/verifica_internet.dart';
+import 'package:mobile/data/database/cache_database.dart';
 
 class ForumAPI {
-  static const String API_URL =
-      'https://softskills-api.onrender.com/conteudos_partilhado';
-  static const String API_URL_POST =
-      'https://softskills-api.onrender.com/posts';
+  static const String API_URL = 'https://softskills-api.onrender.com/conteudos_partilhado';
+  static const String API_URL_POST = 'https://softskills-api.onrender.com/posts';
 
-  static Future<List<dynamic>> listConteudosPartilhado({
-    String ordenar = "Mais Recentes",
-    String search = "",
-  }) async {
-    try {
-      var url = '$API_URL/list?ordenar=$ordenar';
-      if (search.isNotEmpty) {
-        url += '&search=${Uri.encodeComponent(search)}';
-      }
-      final response = await http.get(Uri.parse(url));
-      if (response.statusCode == 200) {
-        print('Response: ${response.body}');
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Erro ao procurar fóruns!');
-      }
-    } catch (e) {
-      print('Erro ao procurar fóruns! $e');
-      rethrow;
+  static Future<List<dynamic>> listConteudosPartilhado({String ordenar = "Mais Recentes", String search = "",}) async {
+    final cacheKey = 'forum_list';
+    final hasConnection = await temInternet();
+
+    if(hasConnection) {
+      try {
+        var url = '$API_URL/list?ordenar=$ordenar';
+        if (search.isNotEmpty) {
+          url += '&search=${Uri.encodeComponent(search)}';
+        }
+        final response = await http.get(Uri.parse(url));
+        if (response.statusCode == 200) {
+          print('Response: ${response.body}');
+          final lista = jsonDecode(response.body);
+          await ApiCache.guardarDados(cacheKey, lista);
+          return lista;
+        }
+          throw Exception('Erro ao procurar fóruns!');
+        } catch (apiError) {
+          print('Erro ao procurar fóruns! $apiError');
+        }
+    }
+    try{
+      final cached = await ApiCache.lerDados(cacheKey);
+        if(cached != null) {
+          return List<dynamic>.from(cached);
+        } else {
+          throw Exception('Sem internet e sem dados guardados localmente');
+        }
+      } catch (cacheError) {
+        print('Erro ao ler cache: $cacheError');
+        throw Exception('Sem internet e não foi possivel acede à cache');
     }
   }
 

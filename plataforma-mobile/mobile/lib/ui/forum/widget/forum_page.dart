@@ -1,9 +1,8 @@
 // ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, prefer_typing_uninitialized_variables, unused_field
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile/API/forum.dart';
+import 'package:mobile/API/forum_api.dart';
 
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
 import '../../../API/utilizadores_api.dart';

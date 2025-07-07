@@ -2,7 +2,7 @@
 // ignore: unused_import
 import '../../../routing/forum_routes.dart';
 import 'package:go_router/go_router.dart';
-import '../../../API/forum.dart';
+import '../../../API/forum_api.dart';
 import '../../core/shared/export.dart';
 
 
