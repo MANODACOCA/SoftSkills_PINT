@@ -2,16 +2,14 @@
 //import 'package:mobile/data/services/basedados.dart';
 // ignore_for_file: use_build_context_synchronously, await_only_futures
 
-import 'package:mobile/data/model/user.dart';
+import 'package:mobile/provider/user.dart';
 import 'package:mobile/provider/auth_provider.dart';
+import 'package:mobile/services/auth_service.dart';
 import 'package:provider/provider.dart';
-
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../API/utilizadores_api.dart';
-//import 'package:crypto/crypto.dart';
-//import '../../profile/widget/activate_twofa.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -54,6 +52,13 @@ class _LoginPage extends State<LoginPage> {
   }
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -64,7 +69,7 @@ class _LoginPage extends State<LoginPage> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -72,14 +77,13 @@ class _LoginPage extends State<LoginPage> {
                   Image.asset('assets/logo-softinsa.png'),
                   const SizedBox(height: 90.0),
                   SizedBox(
-                    width: screenWidth - 40,
                     height: 46,
                     child: TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Color.fromRGBO(211, 211, 211, 100),
                           ),
                         ),
@@ -89,11 +93,10 @@ class _LoginPage extends State<LoginPage> {
                   ),
                   const SizedBox(height: 25),
                   SizedBox(
-                    width: screenWidth - 40,
                     height: 46,
                     child: TextField(
                       controller: _passwordController,
-                      obscureText: isPasswordVisible ? false : true,
+                      obscureText: !isPasswordVisible,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
                           icon: passwordIcon,
@@ -101,12 +104,12 @@ class _LoginPage extends State<LoginPage> {
                             setState(() {
                               isPasswordVisible = !isPasswordVisible;
                               if (isPasswordVisible) {
-                                passwordIcon = Icon(
+                                passwordIcon = const Icon(
                                   Icons.visibility,
                                   color: AppColors.primary,
                                 );
                               } else {
-                                passwordIcon = Icon(
+                                passwordIcon = const Icon(
                                   Icons.visibility_off,
                                   color: AppColors.primary,
                                 );
@@ -116,7 +119,7 @@ class _LoginPage extends State<LoginPage> {
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Color.fromRGBO(211, 211, 211, 100),
                           ),
                         ),
@@ -132,7 +135,7 @@ class _LoginPage extends State<LoginPage> {
                         onTap: () {
                           context.go("/forgetpassword");
                         },
-                        child: Text(
+                        child: const Text(
                           'Esqueceste-te da password?',
                           textAlign: TextAlign.right,
                           style: TextStyle(
@@ -149,7 +152,6 @@ class _LoginPage extends State<LoginPage> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Row(
-                        /*Alinha todos os elementos dentro da mesma*/
                         children: [
                           Switch(
                             activeColor: AppColors.primary,
@@ -157,14 +159,12 @@ class _LoginPage extends State<LoginPage> {
                             onChanged: (value) async {
                               setState(() {
                                 isSwitched = value;
-                                // ignore: avoid_print
-                                print('Switch is $isSwitched');
                               });
                               await _saveRememberMe(value);
                             },
                           ),
                           const SizedBox(width: 10),
-                          Text(
+                          const Text(
                             'Manter sessão iniciada',
                             style: TextStyle(color: AppColors.primary),
                           ),
@@ -176,24 +176,8 @@ class _LoginPage extends State<LoginPage> {
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        /*SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/facebook.png"),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Image.asset("assets/google.png"),
-                          ),
-                        ),*/
+                      children: const [
+                        // Social login buttons (comentados)
                       ],
                     ),
                   ),
@@ -202,18 +186,16 @@ class _LoginPage extends State<LoginPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      fixedSize: Size(screenWidth - 40, 46),
+                      minimumSize: const Size.fromHeight(46),
                     ),
                     onPressed: () async {
                       if (_emailController.text.isEmpty ||
                           _passwordController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Por favor, preencha todos os campos.',
-                            ),
+                          const SnackBar(
+                            content: Text('Por favor, preencha todos os campos.'),
                           ),
                         );
                         return;
@@ -223,41 +205,36 @@ class _LoginPage extends State<LoginPage> {
                           _emailController.text,
                           _passwordController.text,
                         );
-                        print('response: $response');
                         if (response['success'] == true) {
                           if (response['twoFa'] == false || response['twoFa'] == null) {
                             final token = response['token'];
-
                             final prefs = await SharedPreferences.getInstance();
                             await prefs.setString('token', token);
-                            
                             var userId = await api.getUserIdFromToken(token);
                             if (userId == null) {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Erro ao obter ID do utilizador.',
-                                  ),
+                                const SnackBar(
+                                  content: Text('Erro ao obter ID do utilizador.'),
                                 ),
                               );
                               return;
                             } else {
                               final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
                               final user = User(id: userId);
-
-                              authProvider.setUser(user);
+                              if (!mounted) return;
+                              print('TOKEN LOGIN: $token');
+                              authProvider.setUser(user, token: token);
+                              await authService.login(token, isSwitched); // Atualiza estado global
                               context.go('/homepage');
                             }
-                          //} else {
-                            //context.go("/twofa");
-                          //}
-                        }
+                          }
                         }
                       } catch (error) {
+                        // Use string interpolation para compor a mensagem
+                        String mensagem = 'Erro: $error';
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Erro ao efetuar login: $error'),
+                            content: Text(mensagem),
                           ),
                         );
                       }
@@ -267,20 +244,20 @@ class _LoginPage extends State<LoginPage> {
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
-                      fixedSize: Size(screenWidth - 40, 46),
+                      minimumSize: const Size.fromHeight(46),
                     ),
                     onPressed: () {
                       context.go("/registo");
                     },
                     child: const Text(
-                      'Registo',
+                      'Criar conta',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),

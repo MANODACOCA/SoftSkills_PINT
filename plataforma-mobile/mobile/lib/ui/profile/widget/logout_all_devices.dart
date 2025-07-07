@@ -1,5 +1,4 @@
 import 'package:mobile/ui/core/shared/export.dart';
-import '../../core/shared/base_comp/navigationbar_component.dart';
 
 
 class LogOut extends StatefulWidget {

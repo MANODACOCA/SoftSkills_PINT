@@ -4,8 +4,7 @@ import '../../../routing/forum_routes.dart';
 import 'package:go_router/go_router.dart';
 import '../../../API/forum.dart';
 import '../../core/shared/export.dart';
-import '../../core/shared/base_comp/navigationbar_component.dart';
-import '../../core/shared/base_comp/search_bar.dart';
+
 
 class Forum extends StatefulWidget {
   const Forum({super.key});

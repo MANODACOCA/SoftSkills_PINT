@@ -12,7 +12,7 @@ class LikedCourses extends StatefulWidget {
 class _LikedCoursesState extends State<LikedCourses> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -25,10 +25,17 @@ class _LikedCoursesState extends State<LikedCourses> {
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(children: [Text('Lista de cursos favoritos')]),
+      body: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Column(children: [Text('Lista de cursos favoritos')]),
+            ),
+          ),
+        ],
       ),
+      bottomNavigationBar: Footer(),
     );
   }
 }

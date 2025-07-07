@@ -1,7 +1,5 @@
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/cursos/card_cursos/course_page_scroll.dart';
-import '../core/shared/base_comp/navigationbar_component.dart';
-import '../core/shared/base_comp/search_bar.dart';
 import '../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
@@ -36,7 +34,7 @@ class _Courses extends State<Courses> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: SearchBarCustom(),
         centerTitle: true,
@@ -78,8 +76,6 @@ class _Courses extends State<Courses> {
           ),
         ],
       ),
-      
-      
       bottomNavigationBar: Footer(),
     );
   }

@@ -17,7 +17,7 @@ class _AulaSyncPageState extends State<AulaSyncPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBarArrow(
         onBack: () => context.pop(),
         title: widget.aulas['nome_aula'],

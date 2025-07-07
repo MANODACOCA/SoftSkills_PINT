@@ -15,20 +15,21 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _checkRememberMe();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkRememberMe();
+    });
   }
 
   Future<void> _checkRememberMe() async {
     final prefs = await SharedPreferences.getInstance();
-    final rememberMe = prefs.getBool('remember_me') ?? false;
-
-    Timer(const Duration(seconds: 3), () {
-      if (rememberMe && mounted) {
-        context.go('/homepage');
-      } else {
-        context.go('/login');
-      }
-    });
+    final rememberMe = prefs.getBool('rememberMe') ?? false;
+    await Future.delayed(const Duration(seconds: 3));
+    if (!mounted) return;
+    if (rememberMe) {
+      context.go('/homepage');
+    } else {
+      context.go('/login');
+    }
   }
 
   @override

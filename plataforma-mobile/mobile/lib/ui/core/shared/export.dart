@@ -4,3 +4,8 @@ export '../themes/colors.dart';
 export '../themes/text_styles.dart';
 export 'package:ionicons/ionicons.dart';
 export '../../../routing/route.dart';
+export 'package:connectivity_plus/connectivity_plus.dart';
+export 'base_comp/app_scaffold.dart';
+export 'base_comp/search_bar.dart';
+export 'base_comp/navigationbar_component.dart';
+export 'base_comp/offline_banner.dart';
