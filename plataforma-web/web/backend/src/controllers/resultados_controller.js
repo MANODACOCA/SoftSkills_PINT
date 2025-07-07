@@ -20,7 +20,7 @@ controllers.list = async (req,res)=>{
 controllers.get = async (req,res)=>{
   try{
     const {id} = req.params;
-    const data = await resultadosServices.getResultadosFormandos(id);
+    const data = await resultadosServices.getResultadosFormandosInscritos(id);
     //const data = await model.findByPk(id);
       res.status(200).json(data);
   }catch (err){
