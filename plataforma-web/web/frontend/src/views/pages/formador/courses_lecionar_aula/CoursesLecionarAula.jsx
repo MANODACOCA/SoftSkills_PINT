@@ -874,7 +874,7 @@ const CursoLecionarAula = () => {
 
     //#endregion
 
-
+    console.log(notasEditadas);
     //#region Resultados
     const handleEditarGuardarResultados = async () => {
         if (modoEditNotas) {
@@ -890,9 +890,9 @@ const CursoLecionarAula = () => {
                 );
                 await fetchResultados(cursos.id_curso);
                 setNotasEditadas({});
-                Swal.fire({ icon: 'success', title: 'Notas guardadas!' });
+                Swal.fire({ icon: 'success', title: 'Notas guardadas!', timer:3000, showConfirmButton:false });
             } catch (err) {
-                Swal.fire({ icon: 'error', title: 'Erro ao guardar', text: err.message });
+                Swal.fire({ icon: 'error', title: 'Erro ao guardar', text: err.message, timer:3000, showConfirmButton:false  });
                 return;
             }
         }
