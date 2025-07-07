@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 import 'dart:io';
-
+import '../../../API/comments_forum.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/shared/base_comp/navigationbar_component.dart';
@@ -86,6 +86,11 @@ class _CommentPageState extends State<CommentPage> {
   bool addcomment = false;
   TextEditingController commentController = TextEditingController();
   TextEditingController fileController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,9 +186,9 @@ class _CommentPageState extends State<CommentPage> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: AssetImage(
+                      backgroundImage: NetworkImage(
                         widget.photo,
-                      ), // Placeholder for user avatar
+                      ),
                     ),
                     title: Text('User ${index + 1}'),
                     subtitle: Text('This is a comment text.'),

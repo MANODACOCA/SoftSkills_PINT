@@ -27,6 +27,7 @@ class ComentarioAPI {
         Uri.parse('$API_URL_COMENTARIOS/get/comentarios?id_post=$idPost'),
       );
       if (response.statusCode == 200) {
+        print('Response: ${response.body}');
         return jsonDecode(response.body);
       } else {
         throw Exception('Erro ao buscar Comentários do post!');
