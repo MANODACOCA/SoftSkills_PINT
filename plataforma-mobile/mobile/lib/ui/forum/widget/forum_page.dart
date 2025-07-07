@@ -1,14 +1,13 @@
 // ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, prefer_typing_uninitialized_variables, unused_field
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
-import '../../../API/comments_forum.dart';
-import 'package:flutter/material.dart';
+//import '../../../API/comments_forum.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/forum.dart';
-import 'package:mobile/ui/core/shared/base_comp/navigationbar_component.dart';
-import 'package:mobile/ui/core/themes/colors.dart';
+
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
 import '../../../API/utilizadores_api.dart';
+import '../../core/shared/export.dart';
 
 // ignore: must_be_immutable
 class ForumPage extends StatefulWidget {
@@ -67,36 +66,34 @@ class _ForumPageState extends State<ForumPage> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => context.pop(),
-          ),
-          backgroundColor: AppColors.primary,
-          title: Text(widget.name, style: TextStyle(color: Colors.white)),
-          centerTitle: true,
-          actions: [
-            IconButton(
-              icon: Icon(Icons.add_box_outlined, color: paint, size: 30),
-              onPressed: () {
-                setState(() {
-                  addPost = !addPost;
-                  paint = addPost ? AppColors.secondary : Colors.white;
-                });
-              },
-            ),
-          ],
+    return AppScaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => context.pop(),
         ),
-        body:
-            isLoading
-                ? Center(child: CircularProgressIndicator())
-                : Scaffold(
-                  body: SingleChildScrollView(
+        backgroundColor: AppColors.primary,
+        title: Text(widget.name, style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add_box_outlined, color: paint, size: 30),
+            onPressed: () {
+              setState(() {
+                addPost = !addPost;
+                paint = addPost ? AppColors.secondary : Colors.white;
+              });
+            },
+          ),
+        ],
+      ),
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                // O conteúdo rolável fica dentro do Expanded
+                Expanded(
+                  child: SingleChildScrollView(
                     child: GestureDetector(
                       child: Padding(
                         padding: EdgeInsets.all(20),
@@ -108,100 +105,12 @@ class _ForumPageState extends State<ForumPage> {
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   border: Border.all(
-                                    color: Colors.grey.shade300,
-                                    width: 1.5,
+                                    color: AppColors.primary,
+                                    width: 2,
                                   ),
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey,
-                                      blurRadius: 6,
-                                      offset: Offset(0, 3),
-                                    ),
-                                  ],
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      'Adicionar novo post',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                    SizedBox(height: 12),
-                                    TextField(
-                                      controller: textControllerTitlePost,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Título do Post',
-                                      ),
-                                    ),
-                                    SizedBox(height: 12),
-                                    TextField(
-                                      maxLines: 5,
-                                      controller: textControllerPost,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(),
-                                        labelText: 'Descrição do Post',
-                                      ),
-                                    ),
-                                    SizedBox(height: 12),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextButton.icon(
-                                          icon: Icon(
-                                            Icons.attach_file_sharp,
-                                            color: AppColors.primary,
-                                          ),
-                                          label: Text(
-                                            "Anexar Arquivo",
-                                            style: TextStyle(
-                                              color: AppColors.primary,
-                                            ),
-                                          ),
-                                          onPressed: () {
-                                            pickFile();
-                                          },
-                                        ),
-                                        ElevatedButton.icon(
-                                          icon: Icon(
-                                            Icons.send,
-                                            color: Colors.white,
-                                          ),
-                                          label: Text(
-                                            "Publicar",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: AppColors.primary,
-                                          ),
-                                          onPressed: () {
-                                            final title =
-                                                textControllerTitlePost.text;
-                                            final description =
-                                                textControllerPost.text;
-
-                                            if (title.isNotEmpty &&
-                                                description.isNotEmpty) {
-                                              setState(() {
-                                                textControllerTitlePost.clear();
-                                                textControllerPost.clear();
-                                                addPost = false;
-                                              });
-                                            }
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
+                                child: buildAddPostForm(),
                               ),
                             SizedBox(height: 20),
                             if (forumPost != null && forumPost['posts'] != null)
@@ -237,8 +146,94 @@ class _ForumPageState extends State<ForumPage> {
                     ),
                   ),
                 ),
-        bottomNavigationBar: Footer(),
-      ),
+              ],
+            ),
+      bottomNavigationBar: Footer(),
+    );
+  }
+
+  Widget buildAddPostForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          'Adicionar novo post',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        SizedBox(height: 12),
+        TextField(
+          controller: textControllerTitlePost,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Título do Post',
+          ),
+        ),
+        SizedBox(height: 12),
+        TextField(
+          maxLines: 5,
+          controller: textControllerPost,
+          decoration: InputDecoration(
+            border: OutlineInputBorder(),
+            labelText: 'Descrição do Post',
+          ),
+        ),
+        SizedBox(height: 12),
+        Row(
+          mainAxisAlignment:
+              MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton.icon(
+              icon: Icon(
+                Icons.attach_file_sharp,
+                color: AppColors.primary,
+              ),
+              label: Text(
+                "Anexar Arquivo",
+                style: TextStyle(
+                  color: AppColors.primary,
+                ),
+              ),
+              onPressed: () {
+                pickFile();
+              },
+            ),
+            ElevatedButton.icon(
+              icon: Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
+              label: Text(
+                "Publicar",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+              ),
+              onPressed: () {
+                final title =
+                    textControllerTitlePost.text;
+                final description =
+                    textControllerPost.text;
+
+                if (title.isNotEmpty &&
+                    description.isNotEmpty) {
+                  setState(() {
+                    textControllerTitlePost.clear();
+                    textControllerPost.clear();
+                    addPost = false;
+                  });
+                }
+              },
+            ),
+          ],
+        ),
+      ],
     );
   }
 

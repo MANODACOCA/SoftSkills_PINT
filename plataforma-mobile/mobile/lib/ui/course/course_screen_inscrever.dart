@@ -7,7 +7,6 @@ import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import 'package:mobile/ui/core/shared/cursos/cursos_comp/tabbar_cursos_inscrever.dart';
 import 'package:provider/provider.dart';
 import '../core/shared/export.dart';
-import '../core/shared/base_comp/navigationbar_component.dart';
 
 
 class Inscrever extends StatefulWidget {

@@ -1,6 +1,5 @@
 import 'package:go_router/go_router.dart';
 import '../../core/shared/export.dart';
-import '../../core/shared/base_comp/navigationbar_component.dart';
 
 class UnratedCourses extends StatefulWidget {
   const UnratedCourses({super.key});

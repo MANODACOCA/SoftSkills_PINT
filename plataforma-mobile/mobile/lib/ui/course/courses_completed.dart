@@ -3,7 +3,6 @@ import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import 'package:mobile/ui/core/shared/cursos/card_cursos/course_enrolled_scroll.dart';
 import 'package:provider/provider.dart';
-import '../core/shared/base_comp/navigationbar_component.dart';
 import '../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 

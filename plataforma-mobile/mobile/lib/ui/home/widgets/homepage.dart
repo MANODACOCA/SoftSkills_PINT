@@ -1,8 +1,6 @@
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/carousel.dart';
 import 'package:mobile/ui/core/shared/cursos/card_cursos/card_scroll.dart';
-import '../../core/shared/base_comp/navigationbar_component.dart';
-import '../../core/shared/base_comp/search_bar.dart';
 import '../../core/shared/export.dart';
 
 class HomePage extends StatefulWidget {
@@ -41,28 +39,38 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         title: SearchBarCustom(),
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),
-      body: SingleChildScrollView(
-        child: (cursosNovos.isEmpty && cursosParaSi.isEmpty && cursosPopulares.isEmpty) 
-          ? Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()),) 
-          : Column(
-          children: [
-            SizedBox(height: 10),
-            Carousel(),
-            SizedBox(height: 15),
-            CardsScroll(tema: 'Para si', cursos: cursosParaSi),
-            SizedBox(height: 10),
-            CardsScroll(tema: 'Cursos Mais Populares', cursos: cursosPopulares),
-            SizedBox(height: 10),
-            CardsScroll(tema: 'Novidades', cursos: cursosNovos),
-            SizedBox(height: 15),
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  (cursosNovos.isEmpty && cursosParaSi.isEmpty && cursosPopulares.isEmpty)
+                    ? Padding(padding: EdgeInsets.only(top: 40), child: Center(child: CircularProgressIndicator()),)
+                    : Column(
+                        children: [
+                          SizedBox(height: 10),
+                          Carousel(),
+                          SizedBox(height: 15),
+                          CardsScroll(tema: 'Para si', cursos: cursosParaSi),
+                          SizedBox(height: 10),
+                          CardsScroll(tema: 'Cursos Mais Populares', cursos: cursosPopulares),
+                          SizedBox(height: 10),
+                          CardsScroll(tema: 'Novidades', cursos: cursosNovos),
+                          SizedBox(height: 15),
+                        ],
+                      ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: Footer(),
     );

@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import '../../core/shared/export.dart';
 //import 'package:gender_picker/source/enums.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/shared/base_comp/navigationbar_component.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -104,107 +103,134 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
 
   @override
   Widget build(BuildContext context) {
-    String? selectedGender;
-    double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    final screenWidth = MediaQuery.of(context).size.width;
+    return AppScaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.white,
-          onPressed: () {
-            context.go('/profile');
-          },
-        ),
-        title: Text("Perfil", style: TextStyle(color: Colors.white)),
+        title: Text('Alterar Dados Pessoais', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),
-      body: GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            (utilizador['img_perfil'] != null &&
-                                    utilizador['img_perfil']
-                                        .toString()
-                                        .isNotEmpty)
-                                ? 'https://softskills-api.onrender.com/${utilizador['img_perfil']}'
-                                : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'] ?? 'User')}&background=random&bold=true',
-                          ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child:
-                          (utilizador['img_perfil'] == null ||
-                                  utilizador['img_perfil'].toString().isEmpty)
-                              ? null
-                              : ClipOval(
-                                child: Image.network(
-                                  'https://softskills-api.onrender.com/${utilizador['img_perfil']}',
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    final fallbackImg =
-                                        'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
-                                    return Image.network(
-                                      fallbackImg,
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    );
-                                  },
-                                ),
-                              ),
-                    ),
-                    SizedBox(height: 10),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      onPressed: () {
-                        choosePhoto();
-                      },
-                      child: Text(
-                        'Alterar foto',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                      indent: 10,
-                      endIndent: 10,
-                    ),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
                     SizedBox(
+                      width: double.infinity,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
+                          Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: NetworkImage(
+                                  (utilizador['img_perfil'] != null &&
+                                          utilizador['img_perfil']
+                                              .toString()
+                                              .isNotEmpty)
+                                      ? 'https://softskills-api.onrender.com/${utilizador['img_perfil']}'
+                                      : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'] ?? 'User')}&background=random&bold=true',
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child:
+                                (utilizador['img_perfil'] == null ||
+                                        utilizador['img_perfil'].toString().isEmpty)
+                                    ? null
+                                    : ClipOval(
+                                      child: Image.network(
+                                        'https://softskills-api.onrender.com/${utilizador['img_perfil']}',
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          final fallbackImg =
+                                              'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
+                                          return Image.network(
+                                            fallbackImg,
+                                            width: 100,
+                                            height: 100,
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                          ),
                           SizedBox(height: 10),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            onPressed: () {
+                              choosePhoto();
+                            },
+                            child: Text(
+                              'Alterar foto',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                          Divider(
+                            color: Colors.grey,
+                            thickness: 1,
+                            indent: 10,
+                            endIndent: 10,
+                          ),
+                          SizedBox(
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(height: 10),
+                                SizedBox(
+                                  width: 450,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Nome',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                SizedBox(
+                                  width: 400,
+                                  height: 38,
+                                  child: TextField(
+                                    controller: _nomeController,
+                                    decoration: InputDecoration(
+                                      labelText: 'Nome do user',
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                        borderSide: BorderSide(color: Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 12),
                           SizedBox(
                             width: 450,
                             child: Row(
                               children: <Widget>[
                                 Text(
-                                  'Nome',
+                                  'Telemóvel',
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -219,9 +245,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                             width: 400,
                             height: 38,
                             child: TextField(
-                              controller: _nomeController,
+                              controller: _telemovelController,
                               decoration: InputDecoration(
-                                labelText: 'Nome do user',
+                                labelText: '+351',
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
                                   borderSide: BorderSide(color: Colors.black),
@@ -229,273 +255,242 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    SizedBox(
-                      width: 450,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Telemóvel',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    SizedBox(
-                      width: 400,
-                      height: 38,
-                      child: TextField(
-                        controller: _telemovelController,
-                        decoration: InputDecoration(
-                          labelText: '+351',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    SizedBox(
-                      width: 450,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Data de Nascimento',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    SizedBox(
-                      width: 400,
-                      height: 38,
-                      child: TextField(
-                        controller: _dataNascController,
-                        decoration: InputDecoration(
-                          labelText: 'dd/mm/aaaa',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    SizedBox(
-                      width: 450,
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            'Morada',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    SizedBox(
-                      width: 400,
-                      height: 38,
-                      child: TextField(
-                        controller: _moradaController,
-                        decoration: InputDecoration(
-                          labelText: 'Rua, nº, andar, código postal',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.black),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    SizedBox(
-                      width: screenWidth, //Entire screen width
-                      child: Column(
-                        children: <Widget>[
-                          Center(
+                          SizedBox(height: 12),
+                          SizedBox(
+                            width: 450,
                             child: Row(
                               children: <Widget>[
-                                SizedBox(width: 20),
-                                SizedBox(
-                                  width: 125,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Text(
-                                        'País',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      SizedBox(height: 5),
-                                      SizedBox(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.black,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              4,
-                                            ),
-                                          ),
-                                          child: TextButton(
-                                            onPressed: () {
-                                              showCountryPicker(
-                                                context: context,
-                                                showPhoneCode: false,
-                                                onSelect: (Country country) {
-                                                  setState(() {
-                                                    _selectedPais = country.displayNameNoCountryCode;
-                                                  });
-                                                  // ignore: avoid_print
-                                                  print(
-                                                    'Selected country: ${country.flagEmoji} ${country.displayName}',
-                                                  );
-                                                },
-                                              );
-                                            },
-                                            child: Text(
-                                              _selectedPais ?? 'Selecionar país',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                Text(
+                                  'Data de Nascimento',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
+                                  textAlign: TextAlign.left,
                                 ),
-                                SizedBox(width: 10),
-                                /*Gender part*/
-                                SizedBox(
-                                  width: 150,
-                                  child: Column(
-                                    children: <Widget>[
-                                      Text(
-                                        'Género',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      SizedBox(height: 5),
-                                      TextButton(
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return ListView(
-                                                children: <Widget>[
-                                                  ListTile(
-                                                    leading: Icon(Icons.male),
-                                                    title: Text('Masculino'),
-                                                    onTap: () {
-                                                      setState(() {
-                                                        _selectedGenero = 'Masculino';
-                                                      });
-                                                      context.pop();
-                                                    },
-                                                  ),
-                                                  ListTile(
-                                                    leading: Icon(Icons.female),
-                                                    title: Text('Feminino'),
-                                                    onTap: () {
-                                                      setState(() {
-                                                        _selectedGenero = 'Feminino';
-                                                      });
-                                                      context.pop();
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                          // ignore: avoid_print
-                                          print(
-                                            'Selected Gender: $selectedGender',
-                                          );
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.black,
-                                              width: 1,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              4,
-                                            ),
-                                          ),
-                                          padding: EdgeInsets.symmetric(
-                                            vertical: 15,
-                                            horizontal: 4,
-                                          ),
-                                          child: Text(
-                                            _selectedGenero ?? 'Selecionar género',
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 20),
                               ],
                             ),
                           ),
-                          SizedBox(height: 25),
+                          SizedBox(height: 5),
                           SizedBox(
-                            width: 268,
-                            height: 43,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.primary,
-                                shape: RoundedRectangleBorder(
+                            width: 400,
+                            height: 38,
+                            child: TextField(
+                              controller: _dataNascController,
+                              decoration: InputDecoration(
+                                labelText: 'dd/mm/aaaa',
+                                border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(color: Colors.black),
                                 ),
-                              ),
-                              onPressed: () {
-                                confirm();
-                              },
-                              child: Text(
-                                'Confirmar Alterações',
-                                style: TextStyle(color: Colors.white),
                               ),
                             ),
                           ),
-                          SizedBox(height: 20),
+                          SizedBox(height: 12),
+                          SizedBox(
+                            width: 450,
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  'Morada',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          SizedBox(
+                            width: 400,
+                            height: 38,
+                            child: TextField(
+                              controller: _moradaController,
+                              decoration: InputDecoration(
+                                labelText: 'Rua, nº, andar, código postal',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: BorderSide(color: Colors.black),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 12),
+                          SizedBox(
+                            width: screenWidth, //Entire screen width
+                            child: Column(
+                              children: <Widget>[
+                                Center(
+                                  child: Row(
+                                    children: <Widget>[
+                                      SizedBox(width: 20),
+                                      SizedBox(
+                                        width: 125,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text(
+                                              'País',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.left,
+                                            ),
+                                            SizedBox(height: 5),
+                                            SizedBox(
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(
+                                                    4,
+                                                  ),
+                                                ),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    showCountryPicker(
+                                                      context: context,
+                                                      showPhoneCode: false,
+                                                      onSelect: (Country country) {
+                                                        setState(() {
+                                                          _selectedPais = country.displayNameNoCountryCode;
+                                                        });
+                                                        // ignore: avoid_print
+                                                        print(
+                                                          'Selected country: ${country.flagEmoji} ${country.displayName}',
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Text(
+                                                    _selectedPais ?? 'Selecionar país',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      /*Gender part*/
+                                      SizedBox(
+                                        width: 150,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Text(
+                                              'Género',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              textAlign: TextAlign.left,
+                                            ),
+                                            SizedBox(height: 5),
+                                            TextButton(
+                                              onPressed: () {
+                                                showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (BuildContext context) {
+                                                    return ListView(
+                                                      children: <Widget>[
+                                                        ListTile(
+                                                          leading: Icon(Icons.male),
+                                                          title: Text('Masculino'),
+                                                          onTap: () {
+                                                            setState(() {
+                                                              _selectedGenero = 'Masculino';
+                                                            });
+                                                            context.pop();
+                                                          },
+                                                        ),
+                                                        ListTile(
+                                                          leading: Icon(Icons.female),
+                                                          title: Text('Feminino'),
+                                                          onTap: () {
+                                                            setState(() {
+                                                              _selectedGenero = 'Feminino';
+                                                            });
+                                                            context.pop();
+                                                          },
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                                // ignore: avoid_print
+                                                print(
+                                                  'Selected Gender: $_selectedGenero',
+                                                );
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 1,
+                                                  ),
+                                                  borderRadius: BorderRadius.circular(
+                                                    4,
+                                                  ),
+                                                ),
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 15,
+                                                  horizontal: 4,
+                                                ),
+                                                child: Text(
+                                                  _selectedGenero ?? 'Selecionar género',
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(width: 20),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 25),
+                                SizedBox(
+                                  width: 268,
+                                  height: 43,
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                    ),
+                                    onPressed: () {
+                                      confirm();
+                                    },
+                                    child: Text(
+                                      'Confirmar Alterações',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
       bottomNavigationBar: Footer(),
     );

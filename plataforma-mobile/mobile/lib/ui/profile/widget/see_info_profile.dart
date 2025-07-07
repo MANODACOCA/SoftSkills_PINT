@@ -1,7 +1,6 @@
 import '../../core/shared/export.dart';
 //import 'package:gender_picker/source/enums.dart';
 import 'package:go_router/go_router.dart';
-import '../../core/shared/base_comp/navigationbar_component.dart';
 //import 'package:country_picker/country_picker.dart';
 
 class SeeInfoProfile extends StatefulWidget {
