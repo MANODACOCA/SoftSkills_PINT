@@ -14,6 +14,7 @@ async function getResultadosFormandosInscritos(cursoId) {
                         {
                             model: resultados,
                             as: 'resultados',
+                            attributes: ['resul'],
                         },
                         {
                             model: utilizador,
