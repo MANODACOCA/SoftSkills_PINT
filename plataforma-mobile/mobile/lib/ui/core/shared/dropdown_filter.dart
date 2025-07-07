@@ -42,11 +42,6 @@ class DropdownFilter extends StatefulWidget {
 
 class _DropdownFilterState extends State<DropdownFilter> {
   final List<String> tipologia = ['Sincrono', 'Assincrono'];
-  final List<String> relevancia = [
-    'Maior aderência',
-    'Mais recentes',
-    'Recomendados',
-  ];
   final List<String> items = [
     'Android',
     'iOS',
@@ -104,14 +99,6 @@ class _DropdownFilterState extends State<DropdownFilter> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Ordenar por:', style: TextStyle(fontWeight: FontWeight.w600)),
-          SizedBox(height: 15),
-          DropdownComponent(
-            type: 'Relevância',
-            items: relevancia,
-            onChanged: (value) => setState(() => selectedRelevancia = value),
-          ),
-          SizedBox(height: 15),
           Text('Filtrar por:', style: TextStyle(fontWeight: FontWeight.w600)),
           SizedBox(height: 15),
           DropdownComponent(
@@ -147,8 +134,6 @@ class _DropdownFilterState extends State<DropdownFilter> {
               fixedSize: Size(screenWidth - 40, 46),
             ),
             onPressed: () {
-              // ignore: avoid_print
-              print('Relevância: $selectedRelevancia');
               // ignore: avoid_print
               print('Tipologia: $selectedTipologia');
               // ignore: avoid_print

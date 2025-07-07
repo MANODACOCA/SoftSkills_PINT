@@ -41,7 +41,7 @@ class CursosApi {
     }
   }
 
- Future<Map<String, dynamic>> getCurso(int id) async {
+  Future<Map<String, dynamic>> getCurso(int id) async {
     final cacheKey = 'cursos_$id';
 
     final hasConnection = await temInternet();
@@ -103,6 +103,65 @@ class CursosApi {
 
         final response = await http.get(
           Uri.parse('$urlAPI/list'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          print('Cursos encontrados: ${response.body}');
+          final List<dynamic> data = jsonDecode(response.body);
+          final cursos = data.cast<Map<String, dynamic>>();
+          await ApiCache.guardarDados(cacheKey, cursos);
+          return cursos;
+        }
+        
+        throw Exception('Erro ao encontrar curso!');
+      } catch (error) {
+        print('Erro ao encontrar cursos: $error');
+        throw error;
+      }
+    }
+    
+    try{
+      final cached = await ApiCache.lerDados(cacheKey);
+      if(cached != null) {
+        return List<Map<String, dynamic>>.from(cached);
+      } else {
+        throw Exception('Sem internet e sem dados guardados localmente');
+      }
+    } catch (cacheError) {
+      print('Erro ao ler cache: $cacheError');
+      throw Exception('Sem internet e não foi possivel aceder à chache');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> listCursoDisponiveisInsc({String tipo = "todos", int? idCurso, String search = "", List<int> idTopico = const []}) async {
+    const cacheKey = 'list_cursos_disponives';
+
+    final hasConnection = await temInternet();
+
+    if (hasConnection) {
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('token');
+      
+        if (token == null) {
+          throw Exception('Sessão expirada: token inexistente');
+        }
+
+        final queryParams = {
+          'tipo': tipo,
+          if(idCurso != null) 'id_curso' : idCurso.toString(),
+          if (search.isNotEmpty) 'search': search,
+          if (idTopico.isNotEmpty) 'idstopicos': idTopico.join(','),
+        };
+
+        final uri = Uri.parse('$urlAPI/cursos-disponiveis-inscricao').replace(queryParameters: queryParams);
+
+        final response = await http.get(
+          uri,
           headers: {
             'Authorization': 'Bearer $token',
             'Content-Type': 'application/json',
