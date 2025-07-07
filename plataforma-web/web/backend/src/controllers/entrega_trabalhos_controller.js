@@ -7,8 +7,17 @@ const path = require('path');
 
 
 controllers.list = async (req, res) => {
-  const data = await model.findAll();
-  res.status(200).json(data);
+  try {
+    const { id_trabalho } = req.params;
+    const data = await model.findAll({
+      where:{
+        id_trabalho_et: id_trabalho,
+      }
+    });
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ erro: 'Erro ao procurar entregas dos trabalhos!', desc: err.message });
+  }
 };
 
 controllers.get = async (req, res) => {
@@ -25,7 +34,7 @@ controllers.get = async (req, res) => {
     if (data) {
       res.status(200).json({ jaEntregou, data });
     } else {
-      res.status(200).json({jaEntregou:jaEntregou});
+      res.status(200).json({ jaEntregou: jaEntregou });
     }
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao procurar entrega de trabalhos!', desc: err.message });

@@ -17,7 +17,7 @@ router.get('/delete',(req, res) => {
   res.json({erro: 'Sem id.'});
 });
 
-router.get('/list',controller.list);
+router.get('/list/:id_trabalho',controller.list);
 router.get('/get/:id_trabalho/:id_formando',controller.get);
 router.post('/create', uploadEntregaTrabalhos.single('ficheiro'), controller.create);
 router.put('/update', uploadEntregaTrabalhos.single('ficheiro'),controller.update);

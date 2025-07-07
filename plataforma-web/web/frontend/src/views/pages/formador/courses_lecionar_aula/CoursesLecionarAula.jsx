@@ -8,7 +8,7 @@ import { getColumnsNotasFinais } from '../../../components/table/ColumnsAvaliaca
 import { get_cursos } from '../../../../api/cursos_axios';
 import { create_material_apoio, delete_material_apoio, get_material_apoio, get_material_apoio_curso, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { list_tipo_formato } from '../../../../api/tipo_formato_axios';
-import { get_resultados, update_resultados } from '../../../../api/resultados_axios';
+import { create_resultados, get_resultados, update_resultados } from '../../../../api/resultados_axios';
 import Swal from 'sweetalert2';
 import { create_aulas, delete_aulas, getAulas_Curso, update_aulas } from '../../../../api/aulas_axios';
 import { list_formadores } from '../../../../api/formadores_axios';
@@ -151,6 +151,51 @@ const CursoLecionarAula = () => {
         );
     }
 
+    //mostrar trabalhos entregues
+        const renderTrabalhos = (item, isExpanded, expandedContent = false) => {
+        if (expandedContent) {
+            return (
+                <div className="m-0 bg-light border rounded">
+                    <h6 className='p-2'>Trabalhos Entregues</h6>
+                    <div className='mx-2 my-1 border rounded'>
+                        {item.conteudos?.length > 0 ?
+                            (item.conteudos.map((conteudo, index) => (
+                                <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
+                                    <div className='d-flex align-items-center justify-content-between'>
+                                        <div>
+                                            <span className='me-2'>{getIconById(conteudo.id_formato)}</span>
+                                            {conteudo.nome_conteudo}
+                                        </div>
+                                        <div>
+                                            <a href={conteudo.conteudo} className="btn btn-outline-success me-2" target="_blank">
+                                                <i className='bi bi-box-arrow-up-right'></i></a>
+                                            <button className="btn btn-outline-danger" onClick={() => handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
+                                                <i className="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                            ) : (
+                                <div className='p-2'>
+                                    Nenhum trabalho disponível no momento
+                                </div>
+                            )
+                        }
+                    </div>
+                </div>
+            );
+        }
+        return (
+            <div>
+                <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
+            </div>
+        );
+
+    }
+    //mostrar trabalhos entregues
+
+    
     const HandleEditCreateAula = async (id, aulaData) => {
         const result = await Swal.fire({
             title: id == null ? 'Tem a certeza que deseja adicionar aula?' : 'Tem a certeza que deseja trocar aula?',
@@ -880,25 +925,50 @@ const CursoLecionarAula = () => {
         if (modoEditNotas) {
             try {
                 await Promise.all(
-                    Object.entries(notasEditadas).map(([id, nota]) => {
+                    Object.entries(notasEditadas).map(async ([id_resultado, nota]) => {
                         const val = Number(nota);
                         if (isNaN(val) || val < 0 || val > 20) {
                             throw new Error(`Nota ${nota} inválida`);
                         }
-                        return update_resultados(id, { resul: val });
+
+                        const resultadoExistente = resultados.find(
+                            item => item.id_formando_formando.resultados?.[0]?.id_resul?.toString() === id_resultado
+                        );
+
+                        if (resultadoExistente) {
+                            return update_resultados(id_resultado, { resul: val });
+                        } else {
+                            const inscricao = resultados.find(
+                                item => item.id_inscricao?.toString() === id_resultado
+                            );
+
+                            if (!inscricao) {
+                                throw new Error(`Não foi possível encontrar inscrição com id ${id_resultado}`);
+                            }
+
+                            const id_formando = inscricao.id_formando_formando.id_formando;
+
+                            return create_resultados({
+                                id_formando: id_formando,
+                                id_curso_sincrono: id,
+                                resul: val
+                            });
+                        }
                     })
                 );
+
                 await fetchResultados(cursos.id_curso);
                 setNotasEditadas({});
-                Swal.fire({ icon: 'success', title: 'Notas guardadas!', timer:3000, showConfirmButton:false });
+                Swal.fire({ icon: 'success', title: 'Notas guardadas!', timer: 3000, showConfirmButton: false });
+
             } catch (err) {
-                Swal.fire({ icon: 'error', title: 'Erro ao guardar', text: err.message, timer:3000, showConfirmButton:false  });
+                Swal.fire({ icon: 'error', title: 'Erro ao guardar', text: err.message, timer: 3000, showConfirmButton: false });
                 return;
             }
         }
+
         setModoEditNotas(!modoEditNotas);
     };
-
     //#endregion
 
 
@@ -1341,7 +1411,7 @@ const CursoLecionarAula = () => {
                 <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
                     <div className="mt-4">
                         {/* Trabalhos */}
-                        <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{ callback: handleCreateTrabalho, label: 'Trabalhos' }} />
+                        <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{ callback: handleCreateTrabalho, label: 'Trabalhos' }} conteudos={renderTrabalhos} />
                     </div>
                 </Tab>
 
