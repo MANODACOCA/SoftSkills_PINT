@@ -874,7 +874,7 @@ const CursoLecionarAula = () => {
 
     //#endregion
 
-
+    console.log(notasEditadas);
     //#region Resultados
     const handleEditarGuardarResultados = async () => {
         if (modoEditNotas) {
@@ -890,9 +890,9 @@ const CursoLecionarAula = () => {
                 );
                 await fetchResultados(cursos.id_curso);
                 setNotasEditadas({});
-                Swal.fire({ icon: 'success', title: 'Notas guardadas!' });
+                Swal.fire({ icon: 'success', title: 'Notas guardadas!', timer:3000, showConfirmButton:false });
             } catch (err) {
-                Swal.fire({ icon: 'error', title: 'Erro ao guardar', text: err.message });
+                Swal.fire({ icon: 'error', title: 'Erro ao guardar', text: err.message, timer:3000, showConfirmButton:false  });
                 return;
             }
         }
@@ -1305,7 +1305,7 @@ const CursoLecionarAula = () => {
             <div className='w-100'>
                 {cursos && (
                     <img
-                        src={cursos.nome_curso || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`}
+                        src={cursos.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`}
                         onError={(e) => {
                             e.target.onerror = null;
                             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`;

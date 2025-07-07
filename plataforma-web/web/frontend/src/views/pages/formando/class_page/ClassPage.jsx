@@ -6,8 +6,9 @@ import VideoPlayer from '../../../components/video_player/VideoPlayer';
 import CourseModule from '../../../components/course_module/CourseModule';
 import TrabalhosList from '../../../components/envents_(trabalhos)/trabalhos_list';
 import TrabalhosEntrega from '../../../components/envents_(trabalhos)/trabalhos_entrega';
-import { Spinner, Tabs, Tab, Card } from 'react-bootstrap';
+import { Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../../api/aulas_axios';
+import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import {
     FaFileAlt,
     FaFilePowerpoint,
@@ -130,9 +131,7 @@ const ClassPage = () => {
     return (
         <>
             {carregar ? (
-                <div className="text-center py-5">
-                    <Spinner animation="border" />
-                </div>
+                <SpinnerBorder />
             ) : (
                 <div className="container-fluid pt-4">
 
@@ -153,7 +152,7 @@ const ClassPage = () => {
                     <div className="col-12">
                         {carregar ? (
                             <div className="text-center py-5">
-                                <Spinner animation="border" />
+                                <SpinnerBorder/>
                             </div>
                         ) : (
                             <>
