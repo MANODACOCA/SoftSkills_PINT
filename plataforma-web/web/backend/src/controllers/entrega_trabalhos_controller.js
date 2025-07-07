@@ -32,7 +32,7 @@ controllers.list = async (req, res) => {
     });
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ erro: 'Erro ao procurar entregas dos trabalhos!', desc: err.message });
+    res.status(500).json({ erro: 'Erro ao procurar entregas dos trabalhos!', desc: error.message });
   }
 };
 
