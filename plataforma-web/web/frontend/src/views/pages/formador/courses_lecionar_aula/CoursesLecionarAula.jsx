@@ -18,7 +18,8 @@ import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
 import { FaVideo, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWord } from 'react-icons/fa';
-import { create_trabalhos, delete_trabalhos, get_trabalhos, update_trabalhos, list_trabalhos, get_trabalhos_curso } from '../../../../api/trabalhos_axios';
+import { create_trabalhos, delete_trabalhos, update_trabalhos, get_trabalhos_curso } from '../../../../api/trabalhos_axios';
+import { list_entrega_trabalhos } from '../../../../api/entrega_trabalhos_axios';
 import { columnsTrabalhos } from '../../../components/table/ColumnsTrabalho';
 
 const CursoLecionarAula = () => {
@@ -151,51 +152,6 @@ const CursoLecionarAula = () => {
         );
     }
 
-    //mostrar trabalhos entregues
-        const renderTrabalhos = (item, isExpanded, expandedContent = false) => {
-        if (expandedContent) {
-            return (
-                <div className="m-0 bg-light border rounded">
-                    <h6 className='p-2'>Trabalhos Entregues</h6>
-                    <div className='mx-2 my-1 border rounded'>
-                        {item.conteudos?.length > 0 ?
-                            (item.conteudos.map((conteudo, index) => (
-                                <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
-                                    <div className='d-flex align-items-center justify-content-between'>
-                                        <div>
-                                            <span className='me-2'>{getIconById(conteudo.id_formato)}</span>
-                                            {conteudo.nome_conteudo}
-                                        </div>
-                                        <div>
-                                            <a href={conteudo.conteudo} className="btn btn-outline-success me-2" target="_blank">
-                                                <i className='bi bi-box-arrow-up-right'></i></a>
-                                            <button className="btn btn-outline-danger" onClick={() => handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
-                                                <i className="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                            ) : (
-                                <div className='p-2'>
-                                    Nenhum trabalho disponível no momento
-                                </div>
-                            )
-                        }
-                    </div>
-                </div>
-            );
-        }
-        return (
-            <div>
-                <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
-            </div>
-        );
-
-    }
-    //mostrar trabalhos entregues
-
-    
     const HandleEditCreateAula = async (id, aulaData) => {
         const result = await Swal.fire({
             title: id == null ? 'Tem a certeza que deseja adicionar aula?' : 'Tem a certeza que deseja trocar aula?',
@@ -969,6 +925,69 @@ const CursoLecionarAula = () => {
 
         setModoEditNotas(!modoEditNotas);
     };
+
+
+
+    //mostrar trabalhos entregues
+    const [entregaTrabalhos, setEntregaTrabalhos] = useState({});
+
+    const fetchEntregaTrabalhos = async (id_trabalho) => {
+        try {
+            const data = await list_entrega_trabalhos(id_trabalho);
+            setEntregaTrabalhos((prev) => ({
+                ...prev,
+                [id_trabalho]: data
+            }));
+        } catch (error) {
+            console.error("Erro ao buscar trabalhos entregues:", err)
+        }
+    }
+
+    const renderTrabalhos = (item, isExpanded, expandedContent = false) => {
+        const entregas = entregaTrabalhos[item.id_trabalho];
+
+        if (expandedContent && entregas === undefined) {
+            fetchEntregaTrabalhos(item.id_trabalho);
+            return <div className="p-2">Carregando entregas...</div>;
+        }
+
+        if (expandedContent) {
+            return (
+                <div className="m-0 bg-light border rounded">
+                    <h6 className='p-2'>Trabalhos Entregues</h6>
+                    <div className='mx-2 my-1 border rounded'>
+                        {entregas?.length > 0 ? (
+                            entregas.map((entrega, index) => (
+                                <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
+                                    <div className='d-flex align-items-center justify-content-between'>
+                                        <div>
+                                            <div><strong>ID Aluno:</strong> {entrega.id_formando_et}</div>
+                                        </div>
+                                        <div>
+                                            <div><strong>Nome do Aluno:</strong> {entrega.id_formando_et_formando.id_formando_utilizador?.nome_util}</div>
+                                        </div>
+                        
+                                        <div>
+                                             <strong>Trabalho:</strong>
+                                            <a href={entrega.caminho_et} target="_blank" className="btn btn-outline-success ms-3 me-2">
+                                                <i className="bi bi-box-arrow-up-right"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="p-2">Nenhum trabalho entregue no momento</div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        return <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>;
+    };
+
+    //mostrar trabalhos entregues
     //#endregion
 
 
