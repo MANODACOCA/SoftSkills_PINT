@@ -134,7 +134,7 @@ const QueixasTables = () => {
         }
     }
 
-    const DetalheQueixa = ({item}) => {
+    const DetalheQueixa = ({item, onDelete}) => {
         const [postComent, setPostComent] = useState(null);
         const isPost = item.id_comentario == null;
 
@@ -159,13 +159,33 @@ const QueixasTables = () => {
             <div className='mx-2 my-1 border rounded p-2'>
                 <div className="d-flex justify-content-between align-items-center">
                     <div className="d-flex gap-4 mb-2">
-                        <img className="border rounded-5" src={postComent?.id_utilizador_utilizador?.img_util} alt="img Util" width={60} height={60}/>
+                        <img 
+                            className="border rounded-5" 
+                            src={postComent?.id_utilizador_utilizador?.img_util || `https://ui-avatars.com/api/?name=${encodeURIComponent(postComent?.id_utilizador_utilizador?.nome_util)}&background=random&bold=true`}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(postComent?.id_utilizador_utilizador?.nome_util)}&background=random&bold=true`;
+                            }}
+                            alt="img Util" 
+                            width={60} height={60}
+                        />
                         <div className="d-flex flex-column justify-content-center">
                             <h5 className="mb-1">{postComent?.id_utilizador_utilizador?.nome_util}</h5>
                             <small>{postComent?.id_utilizador_utilizador?.email}</small>
                         </div>
                     </div>
-                    <button className="btn btn-outline-danger h-50" onClick={async () => {isPost ? await handleDeletePost(postComent?.id_post) : await handleDeleteComentario(postComent?.id_comentario)} }>
+                    <button 
+                        className="btn btn-outline-danger h-50" 
+                        onClick={async () => {
+                            if (isPost) {
+                            await handleDeletePost(postComent?.id_post);
+                            } else {
+                            await handleDeleteComentario(postComent?.id_comentario);
+                            }
+
+                            if (onDelete) onDelete(); 
+                        }}
+                    >
                         <i className="bi bi-trash"></i>
                         &nbsp;Excluir {isPost ? 'Post' : 'Comentário'}
                     </button>
@@ -198,7 +218,7 @@ const QueixasTables = () => {
 
     const renderQueixa = (item, isExpanded, expandedContent = false ) => {     
         if (expandedContent) {
-            return <DetalheQueixa item={item} />;
+            return <DetalheQueixa item={item} onDelete={FetchQueixas}/>;
         }
             
         return(
