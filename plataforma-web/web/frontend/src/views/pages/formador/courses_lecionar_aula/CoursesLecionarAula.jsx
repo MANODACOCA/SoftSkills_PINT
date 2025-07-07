@@ -1305,7 +1305,7 @@ const CursoLecionarAula = () => {
             <div className='w-100'>
                 {cursos && (
                     <img
-                        src={cursos.nome_curso || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`}
+                        src={cursos.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`}
                         onError={(e) => {
                             e.target.onerror = null;
                             e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.nome_curso)}&background=random&bold=true`;
