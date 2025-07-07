@@ -23,7 +23,7 @@ class _Courses extends State<Courses> {
 
   Future<void> fetchCursos () async {
     try{
-      final response = await _api.listCursos();
+      final response = await _api.listCursoDisponiveisInsc();
       setState(() {
         cursos = response;
       });
