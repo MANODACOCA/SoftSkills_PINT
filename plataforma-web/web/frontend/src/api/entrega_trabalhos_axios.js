@@ -3,9 +3,9 @@ import axios from 'axios';
 const API_URL = 'https://softskills-api.onrender.com/entrega-trabalhos';
 
 
-export const list_entrega_trabalhos = async () => {
+export const list_entrega_trabalhos = async (id_trabalho) => {
   try{
-    const response = await axios.get(`${API_URL}/list`);
+    const response = await axios.get(`${API_URL}/list/${id_trabalho}`);
     return response.data;
   }catch (error){
     console.error('Erro ao ir buscar lista de entrega trabalhos!');

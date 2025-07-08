@@ -1,22 +1,38 @@
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const model = initModels(sequelize).entrega_trabalhos;
 const controllers = {};
 const fs = require('fs').promises;
 const path = require('path');
+const model = initModels(sequelize).entrega_trabalhos;
+const utilizador = initModels(sequelize).utilizador;
+const formandos = initModels(sequelize).formandos;
 
 
 controllers.list = async (req, res) => {
   try {
     const { id_trabalho } = req.params;
     const data = await model.findAll({
-      where:{
-        id_trabalho_et: id_trabalho,
-      }
+      where: { id_trabalho_et: id_trabalho },
+      include: [
+        {
+          model: formandos,
+          as: 'id_formando_et_formando',
+          include: [
+            {
+              model: utilizador,
+              as: 'id_formando_utilizador',
+              attributes: [
+                [sequelize.col('id_utilizador'), 'id_util'],
+                [sequelize.col('nome_utilizador'), 'nome_util'],
+              ]
+            }
+          ]
+        }
+      ]
     });
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ erro: 'Erro ao procurar entregas dos trabalhos!', desc: err.message });
+    res.status(500).json({ erro: 'Erro ao procurar entregas dos trabalhos!', desc: error.message });
   }
 };
 
