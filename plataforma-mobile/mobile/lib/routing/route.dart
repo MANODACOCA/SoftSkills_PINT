@@ -15,9 +15,15 @@ final rotas = GoRouter(
     final initialized = authService.isInitialized;
     final goingLogin = state.uri.path == '/login';
     final goingSplash = state.uri.path == '/';
+    final goingRegisto = state.uri.path == '/registo';
+    final goingFirstLogin = state.uri.path == '/firstlogin';
+    final goingForgetPassword = state.uri.path == '/forgetpassword';
+    final goingConfirmacao = state.uri.path == '/confirmacao';
+    final goingChangeForgotPass = state.uri.path == '/changeforgotpass';
 
     if (!initialized) return null; // Não redireciona enquanto não inicializar!
-    if (!loggedIn && !goingLogin) return '/login';
+    // Permitir acesso a /login, /registo, /firstlogin, /forgetpassword, /confirmacao e /changeforgotpass sem login
+    if (!loggedIn && !goingLogin && !goingRegisto && !goingFirstLogin && !goingForgetPassword && !goingConfirmacao && !goingChangeForgotPass) return '/login';
     if (loggedIn && goingLogin) return '/';
     return null;
   },

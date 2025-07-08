@@ -105,8 +105,22 @@ class _Register extends State<Register> {
                               _emailController.text,
                             );
                             if (success['success'] == true) {
-                              context.go(
-                                '/login',
+                              await showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Sucesso'),
+                                  content: const Text('Conta criada com sucesso!'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('OK'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              context.go('/firstlogin',
                                 extra: {'email': _emailController.text},
                               );
                             } else {

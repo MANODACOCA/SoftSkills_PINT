@@ -1,5 +1,10 @@
 import 'package:go_router/go_router.dart';
+import 'package:mobile/ui/login/widget/change_forgot_pass.dart';
+import 'package:mobile/ui/login/widget/confirm_to_change_pass.dart';
+import 'package:mobile/ui/login/widget/forgetpassword.dart';
 import 'package:mobile/ui/login/widget/loginpage.dart';
+import 'package:mobile/ui/login/widget/primeirologin.dart';
+import 'package:mobile/ui/login/widget/registar.dart';
 
 final List<GoRoute> loginRoutes = [
   GoRoute(
@@ -7,31 +12,31 @@ final List<GoRoute> loginRoutes = [
       path: '/login',
       builder: (context, state) => LoginPage(),
     ),
-    // GoRoute(
-    //   name: 'firstlogin',
-    //   path: '/firstlogin',
-    //   builder: (context, state) => LoginPage(),
-    // ),
-    // GoRoute(
-    //   name: 'forgetpassword',
-    //   path: '/forgetpassword',
-    //   builder: (context, state) => ForgetPassword(),
-    // ),
-    // GoRoute(
-    //   name: 'confirmacao',
-    //   path: '/confirmacao',
-    //   builder: (context, state) => ConfirmAccountScreen(),
-    // ),
+    GoRoute(
+      name: 'firstlogin',
+      path: '/firstlogin',
+      builder: (context, state) => FirstLogin(),
+    ),
+    GoRoute(
+      name: 'forgetpassword',
+      path: '/forgetpassword',
+      builder: (context, state) => ForgetPassword(),
+    ),
+    GoRoute(
+      name: 'confirmacao',
+      path: '/confirmacao',
+      builder: (context, state) => ConfirmAccountScreen(),
+    ),
     // GoRoute(
     //   name: 'alterarpassword',
     //   path: '/alterarpassword',
     //   builder: (context, state) => ChangePassword(),
     // ),
-    // GoRoute(
-    //   name: 'registo',
-    //   path: '/registo',
-    //   builder: (context, state) => Register(),
-    // ),
+    GoRoute(
+      name: 'registo',
+      path: '/registo',
+      builder: (context, state) => Register(),
+    ),
     // GoRoute(
     //   name: 'twofa',
     //   path: '/twofa',
@@ -65,9 +70,9 @@ final List<GoRoute> loginRoutes = [
     //   path: '/createPassword',
     //   builder: (context, state) => CreatePassword(email: state.extra as String),
     // ),
-    // GoRoute(
-    //   name: 'changeforgotpass',
-    //   path: '/changeforgotpass',
-    //   builder: (context, state) => ChangePasswordForget(),
-    // ),
+    GoRoute(
+      name: 'changeforgotpass',
+      path: '/changeforgotpass',
+      builder: (context, state) => ChangePasswordForget(),
+    ),
 ];
