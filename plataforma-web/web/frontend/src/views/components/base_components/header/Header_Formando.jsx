@@ -67,13 +67,13 @@ const HeaderFormador = ({ toggleSidebar, collapsed }) => {
 
     return (
         <header className='w-100 p-3 d-flex justify-content-between align-items-center gap-4 border-bottom'>
-            {/* <div className="d-flex gap-4">
+            <div className="d-flex gap-4">
                 <button className="btn btn-outline-secondary mx-2 hide" onClick={toggleSidebar}>
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
                 </button>
                 <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
- */}
+
             <input
                 className="input-group d-none d-md-flex form-control form-control-md"
                 type="search"
