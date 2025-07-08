@@ -67,6 +67,7 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
         );
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Erro ao validar código!')),
       );

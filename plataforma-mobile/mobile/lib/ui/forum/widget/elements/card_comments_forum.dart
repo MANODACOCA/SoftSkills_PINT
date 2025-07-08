@@ -1,6 +1,4 @@
 // ignore_for_file: avoid_print, unnecessary_string_interpolations, unnecessary_null_comparison, curly_braces_in_flow_control_structures
-import 'dart:math';
-
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:like_button/like_button.dart';
