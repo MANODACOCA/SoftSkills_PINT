@@ -75,6 +75,7 @@ class _CardConteudoState extends State<CardConteudo> {
 
   @override
   Widget build(BuildContext context) {
+    double widthScreen = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () async {
         _abrirLink(widget.conteudos['conteudo']);
@@ -84,17 +85,18 @@ class _CardConteudoState extends State<CardConteudo> {
         shadowColor: Colors.black,
         color: AppColors.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [               
@@ -105,16 +107,14 @@ class _CardConteudoState extends State<CardConteudo> {
                         children: [
                           _getIconsFormato(widget.conteudos['id_formato_tipo_formato']?['formato']),
                           SizedBox(width: 20,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.conteudos['nome_conteudo'],
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ), 
-                            ],
+                          SizedBox(
+                            width: widthScreen - 110,
+                            child: Text(
+                              widget.conteudos['nome_conteudo'],
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),

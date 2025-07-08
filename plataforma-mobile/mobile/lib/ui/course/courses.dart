@@ -23,9 +23,17 @@ class _Courses extends State<Courses> {
     fetchCursos();
   }
 
-  Future<void> fetchCursos ({ String tipologia = "todos", String search = "", List<int> idTopico = const [] }) async {
+  String _tipologia = "todos";
+  List<int> _idTopico = [];
+  String _search = "";
+
+  Future<void> fetchCursos ({ String? tipologia, String? search, List<int>? idTopico}) async {
+    _tipologia = tipologia ?? _tipologia;
+    _idTopico = idTopico ?? _idTopico;
+    _search = search ?? _search;
+
     try{
-      final response = await _api.listCursoDisponiveisInsc(tipo: tipologia, search: search, idTopico: idTopico);
+      final response = await _api.listCursoDisponiveisInsc(tipo: _tipologia, search: _search, idTopico: _idTopico);
       setState(() {
         cursos = response;
       });
@@ -47,12 +55,6 @@ class _Courses extends State<Courses> {
               String? area,
               String? topico,
             }) {
-              print('Filtros aplicados:');
-              print('Tipologia: $tipologia');
-              print('Categoria: $categoria');
-              print('Área: $area');
-              print('Tópico ID: $topico');
-
               fetchCursos(
                 tipologia: tipologia ?? "todos",
                 idTopico: topico != null ? [int.parse(topico)] : [],
@@ -60,6 +62,7 @@ class _Courses extends State<Courses> {
             });
           },
           onSearchChanged: (value) {
+            fetchCursos(search: value);
           },
         ),
         centerTitle: true,

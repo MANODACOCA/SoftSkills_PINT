@@ -75,6 +75,7 @@ class _CardMaterialState extends State<CardMaterial> {
 
   @override
   Widget build(BuildContext context) {
+    double widthScreen = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () async {
         _abrirLink(widget.materiais['conteudo']);
@@ -105,16 +106,14 @@ class _CardMaterialState extends State<CardMaterial> {
                         children: [
                           _getIconsFormato(widget.materiais['id_formato_tipo_formato']?['formato']),
                           SizedBox(width: 20,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.materiais['nome_material'],
-                                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ), 
-                            ],
+                          SizedBox(
+                            width: widthScreen - 140,
+                            child: Text(
+                              widget.materiais['nome_material'],
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
                         ],
                       ),

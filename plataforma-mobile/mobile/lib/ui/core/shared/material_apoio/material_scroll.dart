@@ -23,11 +23,11 @@ class _MaterialScrollState extends State<MaterialScroll> {
   Widget build(BuildContext context) {
     if (widget.material.isEmpty) {
       return Container(
-        padding: const EdgeInsets.all(12),
+        padding: EdgeInsets.all(12),
         width: double.infinity,
         child: Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             child: Text(
               'Este curso ainda não tem nenhum material de apoio...',
               textAlign: TextAlign.center,
