@@ -1,4 +1,6 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unnecessary_string_interpolations, unnecessary_null_comparison, curly_braces_in_flow_control_structures
+import 'dart:math';
+
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:like_button/like_button.dart';
@@ -8,6 +10,7 @@ import 'package:mobile/ui/core/shared/export.dart';
 class Post extends StatefulWidget {
   const Post({
     super.key,
+    required this.postID,
     required this.forumName,
     required this.forumComments,
     required this.forumLike,
@@ -16,6 +19,7 @@ class Post extends StatefulWidget {
     required this.selectComment,
   });
 
+  final String postID;
   final String forumName;
   final int forumComments;
   final int forumLike;
@@ -31,10 +35,12 @@ class _PostState extends State<Post> {
   late int likes;
   final TextEditingController _copiar = TextEditingController();
   String _denunciar = '';
+  late final String id;
 
   @override
   void initState() {
     super.initState();
+    print('Post ID: ${widget.postID}');
     likes = widget.forumLike;
   }
 
@@ -70,7 +76,6 @@ class _PostState extends State<Post> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               subtitle: Text(
-                // ignore: unnecessary_string_interpolations
                 '${DateTime.now().toLocal().toString().substring(0, 10)}', //Change to database date
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
@@ -158,10 +163,12 @@ class _PostState extends State<Post> {
                                 ? AppColors.secondary
                                 : Colors.grey,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        //await verSeNULL();
                         context.push(
                           '/commentPage',
                           extra: {
+                            'postId': widget.postID,
                             'postName': widget.forumName,
                             'description': widget.description,
                             'likes': likes,
@@ -261,5 +268,20 @@ class _PostState extends State<Post> {
         );
       },
     );
+  }
+
+  verSeNULL() {
+    if (widget.postID == null) print('postID é null');
+    else print(widget.postID);
+    if (widget.forumName == null) print('forumName é null');
+    else print(widget.forumName);
+    if (widget.description == null) print('description é null');
+    else print(widget.description);
+    if (likes == null) print('likes é null');
+    else print('likes: $likes');
+    if (widget.forumComments == null) print('forumComments é null');
+    else print('forumComments: ${widget.forumComments}');
+    if (widget.photo == null) print('photo é null');
+    else print('photo: ${widget.photo}');
   }
 }

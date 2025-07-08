@@ -2,13 +2,16 @@
 import 'dart:io';
 //import '../../../API/comments_forum.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/API/comments_forum_api.dart';
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:mobile/ui/forum/widget/elements/comment_box.dart';
 import '../../core/shared/export.dart';
 
 class CommentPage extends StatefulWidget {
   const CommentPage({
     super.key,
+    required this.postId,
     required this.postName,
     required this.description,
     required this.likes,
@@ -16,6 +19,7 @@ class CommentPage extends StatefulWidget {
     required this.photo,
   });
 
+  final String postId;
   final String postName;
   final String description;
   final int likes;
@@ -43,7 +47,6 @@ class _CommentPageState extends State<CommentPage> {
                   .map((path) => File(path!))
                   .toList();
 
-          // Update TextField to show selected files
           String fileNames = files
               .map((file) => '[${file.path.split('\\').last}]')
               .join(' ');
@@ -82,12 +85,23 @@ class _CommentPageState extends State<CommentPage> {
   List<File> files = [];
   Color cor = Colors.white;
   bool addcomment = false;
+  bool isLoading = true;
   TextEditingController commentController = TextEditingController();
   TextEditingController fileController = TextEditingController();
+  late Future<List<dynamic>> comentarios;
+
+  Future<void> carregarTudo() async {
+    comentarios = ComentarioAPI.getComentariosByPost(widget.postId);
+    await comentarios; // Espera os comentários carregarem
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    carregarTudo();
   }
 
   @override
@@ -119,90 +133,119 @@ class _CommentPageState extends State<CommentPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Post(
-              forumName: widget.postName,
-              forumComments: widget.comments,
-              forumLike: widget.likes,
-              description: widget.description,
-              photo: widget.photo,
-              selectComment: true,
-            ),
-            if (addcomment)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+      body:
+          isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextField(
-                      controller: commentController,
-                      decoration: InputDecoration(
-                        prefixIcon: IconButton(
-                          icon: Icon(
-                            Icons.attach_file_outlined,
-                            color: AppColors.secondary,
-                          ),
-                          onPressed: () async {
-                            await pickFile();
-                          },
-                        ),
-                        hintText: 'Adicionar comentário...',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.send, color: AppColors.secondary),
-                          onPressed: () {
-                            setState(() {
-                              addcomment = false;
-                              cor = Colors.white;
-                              //Send all info to database
-                            });
-                            print('Comment writed ${commentController.text}');
-                          },
+                  children: <Widget>[
+                    Post(
+                      postID: widget.postId,
+                      forumName: widget.postName,
+                      forumComments: widget.comments,
+                      forumLike: widget.likes,
+                      description: widget.description,
+                      photo: widget.photo,
+                      selectComment: true,
+                    ),
+                    if (addcomment)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TextField(
+                              controller: commentController,
+                              decoration: InputDecoration(
+                                prefixIcon: IconButton(
+                                  icon: Icon(
+                                    Icons.attach_file_outlined,
+                                    color: AppColors.secondary,
+                                  ),
+                                  onPressed: () async {
+                                    await pickFile();
+                                  },
+                                ),
+                                hintText: 'Adicionar comentário...',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    Icons.send,
+                                    color: AppColors.secondary,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      addcomment = false;
+                                      cor = Colors.white;
+                                    });
+                                    print(
+                                      'Comment writed ${commentController.text}',
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
+                            if (files.isNotEmpty) buildAttachmentChips(),
+                          ],
                         ),
                       ),
+                    Divider(
+                      color: Colors.grey,
+                      thickness: 1,
+                      indent: 10,
+                      endIndent: 10,
                     ),
-                    if (files.isNotEmpty) buildAttachmentChips(),
+                    Expanded(
+                      child: FutureBuilder<List<dynamic>>(
+                        future: comentarios,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Center(child: CircularProgressIndicator());
+                          }
+                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                            return Center(child: Text('Sem comentários.'));
+                          }
+                          final comentariosList = snapshot.data!;
+                          return ListView.builder(
+                            itemCount: comentariosList.length,
+                            itemBuilder: (context, index) {
+                              final comentario = comentariosList[index];
+                              final user =
+                                  comentario['id_utilizador_utilizador'];
+                              final imgPerfil = user['img_perfil'];
+                              return ListTile(
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                title: CommentBox(
+                                  avatarUrl:
+                                      imgPerfil != null && imgPerfil.isNotEmpty
+                                          ? imgPerfil
+                                          : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(user['nome_utilizador'] ?? '')}&background=random&bold=true',
+                                  nome: user['nome_utilizador'] ?? 'Utilizador',
+                                  email: user['email'] ?? '',
+                                  tempo: comentario['data_comentario'] ?? '',
+                                  likes: comentario['num_gostos'] ?? 0,
+                                  // forumName: user['nome_utilizador'] ?? 'Utilizador',
+                                  // forumComments: comentario['num_comentarios'] ?? 0,
+                                  // forumLike: comentario['num_gostos'] ?? 0,
+                                  description:
+                                      comentario['texto_comentario'] ?? '',
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
-            Divider(
-              color: Colors.grey,
-              thickness: 1,
-              indent: 10,
-              endIndent: 10,
-            ),
-            SizedBox(
-              height: 300,
-              child: ListView.builder(
-                itemCount: 10, // Replace with actual number of comments
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        widget.photo,
-                      ),
-                    ),
-                    title: Text('User ${index + 1}'),
-                    subtitle: Text('This is a comment text.'),
-                    trailing: IconButton(
-                      icon: Icon(Icons.thumb_up_alt_outlined),
-                      onPressed: () {
-                        // Handle like action
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
       bottomNavigationBar: Footer(),
     );
   }

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../API/forum_api.dart';
 import '../../core/shared/export.dart';
 
-
 class Forum extends StatefulWidget {
   const Forum({super.key});
 
@@ -52,6 +51,8 @@ class _ForumState extends State<Forum> {
         body:
             loading
                 ? Center(child: CircularProgressIndicator())
+                : foruns.isEmpty
+                ? Center(child: Text('Nenhum fórum encontrado.'))
                 : SingleChildScrollView(
                   padding: EdgeInsets.all(20),
                   child: ListView.builder(
@@ -67,8 +68,7 @@ class _ForumState extends State<Forum> {
                             extra: {
                               'forumID':
                                   forum['id_conteudos_partilhado'].toString(),
-                              'name':
-                                  forum['id_topico_topico']?['nome_topico'],
+                              'name': forum['id_topico_topico']?['nome_topico'],
                             },
                           );
                         },
