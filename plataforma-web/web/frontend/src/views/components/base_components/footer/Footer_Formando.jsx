@@ -41,13 +41,13 @@ const FooterFormando = () => {
 {/*                                      <Link>Notificações</Link> */}
                                 </div>
                             </div>
-                            <div className="col-6 col-md-4 mb-3">
+                         {/*    <div className="col-6 col-md-4 mb-3">
                                 <h6 className="text-uppercase fw-bold">SUPORTE</h6>
                                 <div className="d-flex flex-column">
                                     <a href="#"><span>Centro de Suporte</span></a>
                                     <a href="#"><span>Política de Privacidade</span></a>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="col-6 col-md-4 mx-auto text-center">
                                 <h6 className="text-uppercase fw-bold">DOWNLOAD DA NOSSA APP</h6>
                                 <div className="d-flex flex-column gap-3">
