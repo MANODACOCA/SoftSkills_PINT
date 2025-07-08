@@ -18,7 +18,6 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
   @override
   void initState() {
     super.initState();
-    // O id do utilizador autenticado é obtido do AuthProvider
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final authUserId = Provider.of<AuthProvider>(context, listen: false).user?.id;
       setState(() {
@@ -65,8 +64,6 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                       padding: const EdgeInsets.only(left: 0, right: 0),
                       child: Column(
                         children: [
-                         // Padding(
-                           // padding: const EdgeInsets.only(left: 10, right: 0),
                              Column(
                               children: [
                                 ListTile(
@@ -82,47 +79,8 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                                     context.push('/changeinfopass', extra: userId);
                                   },
                                 ),
-                                //SizedBox(height: 15),
-                                // Row(
-                                //   children: [
-                                //     Icon(Icons.device_unknown),
-                                //     SizedBox(width: 10),
-                                //     Text('Autenticação de dois fatores'),
-                                //     Spacer(),
-                                //     IconButton(
-                                //       onPressed: () {
-                                //         context.push('/activateTwofa', extra: widget.idUser);
-                                //       },
-                                //       icon: Icon(
-                                //         Icons.arrow_forward_ios,
-                                //         size: 15,
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
-                                // SizedBox(height: 15),
-                                // Row(
-                                //   children: [
-                                //     Icon(Icons.logout),
-                                //     SizedBox(width: 10),
-                                //     Text('Encerrar sessão noutro dispositivo'),
-                                //     Spacer(),
-                                //     IconButton(
-                                //       onPressed: () {
-                                //         //context.push('');
-                                //          // ignore: avoid_print
-                                //         print('Ir para todos os devices que têm ligação',);
-                                //       },
-                                //       icon: Icon(
-                                //         Icons.arrow_forward_ios,
-                                //         size: 15,
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
                               ],
                             ),
-                         // ),
                         ],
                       ),
                     ),
