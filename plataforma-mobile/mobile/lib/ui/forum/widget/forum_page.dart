@@ -86,67 +86,83 @@ class _ForumPageState extends State<ForumPage> {
           ),
         ],
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                // O conteúdo rolável fica dentro do Expanded
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: GestureDetector(
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Column(
-                          children: <Widget>[
-                            if (addPost)
-                              Container(
-                                padding: EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  border: Border.all(
-                                    color: AppColors.primary,
-                                    width: 2,
+      body:
+          isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: GestureDetector(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            children: <Widget>[
+                              if (addPost)
+                                Container(
+                                  padding: EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    border: Border.all(
+                                      color: AppColors.primary,
+                                      width: 2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  borderRadius: BorderRadius.circular(10),
+                                  child: buildAddPostForm(),
                                 ),
-                                child: buildAddPostForm(),
-                              ),
-                            SizedBox(height: 20),
-                            if (forumPost != null && forumPost['posts'] != null)
-                              ...List.generate(forumPost['posts'].length, (
-                                index,
-                              ) {
-                                final post = forumPost['posts'][index];
-                                final user = post['id_utilizador_utilizador'];
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16.0),
-                                  child: Post(
-                                    forumName:
-                                        user['nome_utilizador'] ??
-                                        'Desconhecido',
-                                    forumComments:
-                                        post['contador_comentarios'] ?? 0,
-                                    forumLike: post['contador_likes_post'] ?? 0,
-                                    description: post['texto_post'] ?? '',
-                                    photo:
-                                        (user['img_perfil'] != null &&
+                              SizedBox(height: 20),
+                              if (forumPost != null &&
+                                  forumPost['posts'] != null)
+                                ...List.generate(forumPost['posts'].length, (
+                                  index,
+                                ) {
+                                  final post = forumPost['posts'][index];
+                                  final user = post['id_utilizador_utilizador'];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(
+                                      bottom: 16.0,
+                                    ),
+                                    child: Post(
+                                      postID: post['id_post']?.toString() ?? '',
+                                      forumName:
+                                          user['nome_utilizador'] ??
+                                          'Desconhecido',
+                                      forumComments:
+                                          post['contador_comentarios'] ?? 0,
+                                      forumLike:
+                                          post['contador_likes_post'] ?? 0,
+                                      description: post['texto_post'] ?? '',
+                                      photo:
+                                          (() {
+                                            final img =
                                                 user['img_perfil']
-                                                    .toString()
-                                                    .isNotEmpty)
-                                            ? 'https://softskills-api.onrender.com/${user['img_perfil']}'
-                                            : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(user['nome_utilizador'])}&background=random&bold=true',
-                                    selectComment: false,
-                                  ),
-                                );
-                              }),
-                          ],
+                                                    ?.toString() ??
+                                                '';
+                                            if (img.isEmpty || img == 'null') {
+                                              return 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(user['nome_utilizador'] ?? '')}&background=random&bold=true';
+                                            }
+                                            if (img.startsWith('http')) {
+                                              return img;
+                                            }
+                                            final cleaned =
+                                                img.startsWith('.')
+                                                    ? img.substring(1)
+                                                    : img;
+                                            return 'https://softskills-api.onrender.com/$cleaned';
+                                          })(),
+                                      selectComment: false,
+                                    ),
+                                  );
+                                }),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
       bottomNavigationBar: Footer(),
     );
   }
@@ -182,46 +198,29 @@ class _ForumPageState extends State<ForumPage> {
         ),
         SizedBox(height: 12),
         Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton.icon(
-              icon: Icon(
-                Icons.attach_file_sharp,
-                color: AppColors.primary,
-              ),
+              icon: Icon(Icons.attach_file_sharp, color: AppColors.primary),
               label: Text(
                 "Anexar Arquivo",
-                style: TextStyle(
-                  color: AppColors.primary,
-                ),
+                style: TextStyle(color: AppColors.primary),
               ),
               onPressed: () {
                 pickFile();
               },
             ),
             ElevatedButton.icon(
-              icon: Icon(
-                Icons.send,
-                color: Colors.white,
-              ),
-              label: Text(
-                "Publicar",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+              icon: Icon(Icons.send, color: Colors.white),
+              label: Text("Publicar", style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
               ),
               onPressed: () {
-                final title =
-                    textControllerTitlePost.text;
-                final description =
-                    textControllerPost.text;
+                final title = textControllerTitlePost.text;
+                final description = textControllerPost.text;
 
-                if (title.isNotEmpty &&
-                    description.isNotEmpty) {
+                if (title.isNotEmpty && description.isNotEmpty) {
                   setState(() {
                     textControllerTitlePost.clear();
                     textControllerPost.clear();

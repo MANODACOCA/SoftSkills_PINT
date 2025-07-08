@@ -1,8 +1,8 @@
 import '../../core/shared/export.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:math';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import '../../../API/utilizadores_api.dart';
 
 class ConfirmAccountScreen extends StatefulWidget {
   const ConfirmAccountScreen({super.key});
@@ -13,27 +13,63 @@ class ConfirmAccountScreen extends StatefulWidget {
 
 class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
   final codeController = TextEditingController();
-  int code = 0;
+  final UtilizadoresApi api = UtilizadoresApi();
+  String? email;
 
   @override
-  void initState() {
-    super.initState();
-    randoCode();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final extra = GoRouterState.of(context).extra;
+    if (extra is Map && extra['email'] != null) {
+      email = extra['email'] as String;
+    }
   }
 
-  void randoCode() {
-    code = Random().nextInt(90000) + 10000;
-    // ignore: avoid_print
-    print('O código é : $code');
-  }
-
-  void validar() {
-    if (codeController.text == code.toString()) {
-      context.go("/changeforgotpass");
-    } else {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Código incorreto!')));
+  Future<void> validar() async {
+    if (email == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Email não encontrado!')),
+      );
+      return;
+    }
+    final codigo = codeController.text.trim();
+    if (codigo.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Insira o código recebido.')),
+      );
+      return;
+    }
+    try {
+      final result = await api.verificarCodigo(email!, codigo);
+      if (!mounted) return;
+      if (result['success'] == true) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Sucesso'),
+            content: const Text('Código verificado com sucesso!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+        if(mounted){
+          context.go("/changeforgotpass", extra: {'email': email});
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['message'] ?? 'Código incorreto!')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Erro ao validar código!')),
+      );
     }
   }
 
