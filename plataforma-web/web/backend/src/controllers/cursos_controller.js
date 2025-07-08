@@ -16,7 +16,6 @@ controllers.list = async (req, res) => {
 controllers.get = async (req, res) => {
   try {
     const { id } = req.params;
-    //const data = await model.findByPk(id);
     const data = await cursosService.getCursoWithAllInfoOneCourse(id);
     if (data) {
       res.status(200).json(data);
