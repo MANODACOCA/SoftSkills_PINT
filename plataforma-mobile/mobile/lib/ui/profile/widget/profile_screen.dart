@@ -153,7 +153,7 @@ class _ProfileState extends State<Profile> {
                             trailing: const Icon(Icons.arrow_forward_ios, size: 15),
                             dense: true,
                             onTap: () {
-                              //context.go('/seeinfoprofile');
+                              context.go('/seeinfoprofile');
                             },
                           ),
                         ],

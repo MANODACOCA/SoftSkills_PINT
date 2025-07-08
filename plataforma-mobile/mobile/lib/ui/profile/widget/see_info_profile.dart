@@ -1,7 +1,7 @@
 import '../../core/shared/export.dart';
-//import 'package:gender_picker/source/enums.dart';
 import 'package:go_router/go_router.dart';
-//import 'package:country_picker/country_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:mobile/provider/auth_provider.dart';
 
 class SeeInfoProfile extends StatefulWidget {
   const SeeInfoProfile({super.key, this.idUser});
@@ -13,18 +13,31 @@ class SeeInfoProfile extends StatefulWidget {
 }
 
 class _SeeInfoProfileState extends State<SeeInfoProfile> {
+  String? userId;
+
+  @override
+  void initState() {
+    super.initState();
+    // O id do utilizador autenticado é obtido do AuthProvider
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authUserId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      setState(() {
+        userId = authUserId ?? widget.idUser;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    //double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            context.go('/profile', extra: widget.idUser);
+            context.go('/profile', extra: userId);
           },
         ),
-        title: Text(
+        title: const Text(
           "Informações de login",
           style: TextStyle(color: Colors.white),
         ),
@@ -36,12 +49,12 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
           child: Column(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.only(left:18),
                 child: Column(
                   children: [
                     SizedBox(
                       width: double.infinity,
-                      child: Text(
+                      child: const Text(
                         'Segurança',
                         style: TextStyle(color: Colors.grey, fontSize: 20),
                         textAlign: TextAlign.left,
@@ -49,71 +62,67 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
                     ),
                     SizedBox(height: 8),
                     Padding(
-                      padding: EdgeInsets.only(left: 0, right: 0),
+                      padding: const EdgeInsets.only(left: 0, right: 0),
                       child: Column(
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10, right: 0),
-                            child: Column(
+                         // Padding(
+                           // padding: const EdgeInsets.only(left: 10, right: 0),
+                             Column(
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.lock),
-                                    SizedBox(width: 10),
-                                    Text('Alterar Password'),
-                                    Spacer(),
-                                    IconButton(
-                                      onPressed: () {
-                                        context.push('/changeinfopass', extra: widget.idUser);
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ],
+                                ListTile(
+                                  contentPadding: const EdgeInsets.only(left: 18, right: 18),
+                                  leading: const Icon(
+                                    Icons.lock,
+                                    color: Color.fromARGB(255, 88, 85, 85),
+                                  ),
+                                  title: const Text('Alterar Password'),
+                                  trailing: const Icon(Icons.arrow_forward_ios, size: 15, color: Color.fromARGB(255, 88, 85, 85)),
+                                  dense: true,
+                                  onTap: () {
+                                    context.push('/changeinfopass', extra: userId);
+                                  },
                                 ),
-                                SizedBox(height: 15),
-                                Row(
-                                  children: [
-                                    Icon(Icons.device_unknown),
-                                    SizedBox(width: 10),
-                                    Text('Autenticação de dois fatores'),
-                                    Spacer(),
-                                    IconButton(
-                                      onPressed: () {
-                                        context.push('/activateTwofa', extra: widget.idUser);
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 15),
-                                Row(
-                                  children: [
-                                    Icon(Icons.logout),
-                                    SizedBox(width: 10),
-                                    Text('Encerrar sessão noutro dispositivo'),
-                                    Spacer(),
-                                    IconButton(
-                                      onPressed: () {
-                                        //context.push('');
-                                         // ignore: avoid_print
-                                        print('Ir para todos os devices que têm ligação',);
-                                      },
-                                      icon: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 15,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                //SizedBox(height: 15),
+                                // Row(
+                                //   children: [
+                                //     Icon(Icons.device_unknown),
+                                //     SizedBox(width: 10),
+                                //     Text('Autenticação de dois fatores'),
+                                //     Spacer(),
+                                //     IconButton(
+                                //       onPressed: () {
+                                //         context.push('/activateTwofa', extra: widget.idUser);
+                                //       },
+                                //       icon: Icon(
+                                //         Icons.arrow_forward_ios,
+                                //         size: 15,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // SizedBox(height: 15),
+                                // Row(
+                                //   children: [
+                                //     Icon(Icons.logout),
+                                //     SizedBox(width: 10),
+                                //     Text('Encerrar sessão noutro dispositivo'),
+                                //     Spacer(),
+                                //     IconButton(
+                                //       onPressed: () {
+                                //         //context.push('');
+                                //          // ignore: avoid_print
+                                //         print('Ir para todos os devices que têm ligação',);
+                                //       },
+                                //       icon: Icon(
+                                //         Icons.arrow_forward_ios,
+                                //         size: 15,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
                               ],
                             ),
-                          ),
+                         // ),
                         ],
                       ),
                     ),

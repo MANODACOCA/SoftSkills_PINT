@@ -1,7 +1,9 @@
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/cursos/card_cursos/course_page_scroll.dart';
+import 'package:mobile/ui/core/shared/dropdown_filter_cursos.dart';
 import '../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
+
 
 
 class Courses extends StatefulWidget {
@@ -21,9 +23,9 @@ class _Courses extends State<Courses> {
     fetchCursos();
   }
 
-  Future<void> fetchCursos () async {
+  Future<void> fetchCursos ({ String tipologia = "todos", String search = "", List<int> idTopico = const [] }) async {
     try{
-      final response = await _api.listCursoDisponiveisInsc();
+      final response = await _api.listCursoDisponiveisInsc(tipo: tipologia, search: search, idTopico: idTopico);
       setState(() {
         cursos = response;
       });
@@ -36,7 +38,30 @@ class _Courses extends State<Courses> {
   Widget build(BuildContext context) {
     return AppScaffold(
       appBar: AppBar(
-        title: SearchBarCustom(),
+        title: SearchBarCustom(
+          hintText: 'Pesquisar cursos',
+          onFilterTap: () {
+            DropdownFilter.show(context, ({
+              String? tipologia,
+              String? categoria,
+              String? area,
+              String? topico,
+            }) {
+              print('Filtros aplicados:');
+              print('Tipologia: $tipologia');
+              print('Categoria: $categoria');
+              print('Área: $area');
+              print('Tópico ID: $topico');
+
+              fetchCursos(
+                tipologia: tipologia ?? "todos",
+                idTopico: topico != null ? [int.parse(topico)] : [],
+              );
+            });
+          },
+          onSearchChanged: (value) {
+          },
+        ),
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),

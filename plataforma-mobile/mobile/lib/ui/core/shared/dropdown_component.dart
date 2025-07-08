@@ -1,19 +1,19 @@
 import 'export.dart';
 
 class DropdownComponent extends StatefulWidget {
-  const DropdownComponent({super.key, required this.type, required this.items, required this.onChanged});
+  const DropdownComponent({super.key, required this.type, required this.items, required this.onChanged, this.value});
 
   final String type;
   final List<String> items;
   final ValueChanged<String?> onChanged;
-
+  final String? value;
 
   @override
   State<DropdownComponent> createState() => _DropdownComponentState();
 }
 
 class _DropdownComponentState extends State<DropdownComponent> {
-  String? _chosenValue;
+  //String? _chosenValue;
 
   @override
   Widget build(BuildContext context){
@@ -31,10 +31,10 @@ class _DropdownComponentState extends State<DropdownComponent> {
         ),
         child: DropdownButtonHideUnderline(
           child:  DropdownButton<String>(
+            value: widget.value,
             isExpanded: true,
             menuWidth: screenWidth - 40,
             focusColor:Colors.white,
-            value: _chosenValue,
             style: TextStyle(color: Colors.white),
             iconEnabledColor:Colors.black,
             items: widget.items.map<DropdownMenuItem<String>>((String value) {
@@ -51,9 +51,6 @@ class _DropdownComponentState extends State<DropdownComponent> {
                   fontWeight: FontWeight.w500),
             ),
             onChanged: (String? value) {
-              setState(() {
-                _chosenValue = value;
-              });
               widget.onChanged(value);
             },
           ), 

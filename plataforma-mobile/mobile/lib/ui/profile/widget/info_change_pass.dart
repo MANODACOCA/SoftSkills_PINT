@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
 
+import 'package:mobile/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 import '../../../API/utilizadores_api.dart';
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
@@ -15,24 +18,18 @@ class ChangeInfoPassword extends StatefulWidget {
 
 class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
   final UtilizadoresApi api = UtilizadoresApi();
-  bool isPasswordVisible = false;
-  final newpass = TextEditingController();
-  final pass = TextEditingController();
-  Icon passwordIcon = const Icon(
+  bool isPasswordVisible1 = false;
+  bool isPasswordVisible2 = false;
+  final newPasswordController = TextEditingController();
+  final repeatPasswordController = TextEditingController();
+  Icon passwordIcon1 = const Icon(
     Icons.visibility_off,
     color: AppColors.primary,
   );
-/* VER QUAL FUNCAO FAZ A VERIFCACAO SE ELA É IGUAL À ANTERIOR */
-
-  Future<void> analisar() async {
-    if (newpass.text == pass.text) {
-      await confirm();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('As passwords não coincidem!')),
-      );
-    }
-  }
+  Icon passwordIcon2 = const Icon(
+    Icons.visibility_off,
+    color: AppColors.primary,
+  );
 
   var response;
   String email = '';
@@ -40,7 +37,13 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
   @override
   void initState() {
     super.initState();
-    fetchUser();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (userId != null) {
+        print('Id utilizador: $userId');
+        fetchUser();
+      }
+    });
   }
 
   Future<void> fetchUser() async {
@@ -50,12 +53,81 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
     });
   }
 
+  Future<void> analisar() async {
+    if (newPasswordController.text.isEmpty || repeatPasswordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, preencha ambos os campos de password.')),
+      );
+      return;
+    }
+    if (newPasswordController.text != repeatPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('As passwords não coincidem!')),
+      );
+      return;
+    }
+    try {
+      await api.alterarPassword(email, newPasswordController.text);
+      await confirm();
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao alterar a password: $error')),
+      );
+    }
+  }
+
+  Future<void> confirm() async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Aviso'),
+          content: const Text('Quer guardar as alterações?'),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text('Sim', style: TextStyle(color: Colors.white)),
+              onPressed: () async {
+                context.pop(); // fecha o dialog
+                await Future.delayed(const Duration(milliseconds: 100)); 
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: const [
+                        Icon(Icons.check_circle, color: Colors.green),
+                        SizedBox(width: 10),
+                        Text('Alterações guardadas!'),
+                      ],
+                    ),
+                    duration: const Duration(milliseconds: 1500),
+                  ),
+                );
+               
+                context.go('/seeinfoprofile', extra: widget.idUser); 
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Não', style: TextStyle(color: Colors.white)),
+              onPressed: () {
+                context.pop(); // Close the dialog
+                // ignore: avoid_print
+                print('Alterações não foram guardadas!');
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text(
-          'Criar Nova Password',
+          'Alterar Password',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: AppColors.primary,
@@ -74,52 +146,45 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Por favor, crie uma nova password. Certifique que esta é diferente da anterior.',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontStyle: FontStyle.italic,
-                      color: Color.fromRGBO(128, 127, 127, 1),
-                    ),
-                  ),
+                  // const Text(
+                  //   'Por favor, crie uma nova password. Certifique que esta é diferente da anterior.',
+                  //   style: TextStyle(
+                  //     fontSize: 16,
+                  //     fontStyle: FontStyle.italic,
+                  //     color: Color.fromRGBO(128, 127, 127, 1),
+                  //   ),
+                  // ),
                   const SizedBox(height: 50),
                   SizedBox(
                     width: 374,
                     height: 46,
                     child: TextField(
-                      controller: pass,
-                      obscureText: isPasswordVisible ? false : true,
+                      controller: newPasswordController,
+                      obscureText: !isPasswordVisible1,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
-                          icon: passwordIcon,
+                          icon: passwordIcon1,
                           onPressed: () {
                             setState(() {
-                              isPasswordVisible = !isPasswordVisible;
-                              if (isPasswordVisible) {
-                                passwordIcon = Icon(
-                                  Icons.visibility,
-                                  color: AppColors.primary,
-                                );
-                              } else {
-                                passwordIcon = Icon(
-                                  Icons.visibility_off,
-                                  color: AppColors.primary,
-                                );
-                              }
+                              isPasswordVisible1 = !isPasswordVisible1;
+                              passwordIcon1 = Icon(
+                                isPasswordVisible1 ? Icons.visibility : Icons.visibility_off,
+                                color: AppColors.primary,
+                              );
                             });
                           },
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Color.fromRGBO(211, 211, 211, 100),
                           ),
                         ),
-                        labelText: 'Password',
+                        labelText: 'Nova Password',
                       ),
                     ),
                   ),
@@ -128,35 +193,28 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
                     width: 374,
                     height: 46,
                     child: TextField(
-                      controller: newpass,
-                      obscureText: isPasswordVisible ? false : true,
+                      controller: repeatPasswordController,
+                      obscureText: !isPasswordVisible2,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
-                          icon: passwordIcon,
+                          icon: passwordIcon2,
                           onPressed: () {
                             setState(() {
-                              isPasswordVisible = !isPasswordVisible;
-                              if (isPasswordVisible) {
-                                passwordIcon = Icon(
-                                  Icons.visibility,
-                                  color: AppColors.primary,
-                                );
-                              } else {
-                                passwordIcon = Icon(
-                                  Icons.visibility_off,
-                                  color: AppColors.primary,
-                                );
-                              }
+                              isPasswordVisible2 = !isPasswordVisible2;
+                              passwordIcon2 = Icon(
+                                isPasswordVisible2 ? Icons.visibility : Icons.visibility_off,
+                                color: AppColors.primary,
+                              );
                             });
                           },
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(20),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Color.fromRGBO(211, 211, 211, 100),
                           ),
                         ),
-                        labelText: 'Repita Passowrd',
+                        labelText: 'Repita Password',
                       ),
                     ),
                   ),
@@ -169,15 +227,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
                       ),
                       fixedSize: const Size(310, 46),
                     ),
-                    onPressed: () {
-                      api.alterarPassword(email, newpass.text).then((value) {
-                        analisar();
-                      }).catchError((error) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Erro ao alterar a password: $error')),
-                        );
-                      });
-                    },
+                    onPressed: analisar,
                     child: const Text(
                       'Confirmar',
                       style: TextStyle(color: Colors.white),
@@ -190,38 +240,6 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
         ),
       ),
       bottomNavigationBar: Footer(),
-    );
-  }
-
-  confirm() {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Aviso'),
-          content: Text('Quer guardar as alterações?'),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('Sim', style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                context.go('/seeinfoprofile', extra: widget.idUser);
-                 // ignore: avoid_print
-                print('Alterações guardadas!');
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('Não', style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                context.pop(); // Close the dialog
-                 // ignore: avoid_print
-                print('Alterações não foram guardadas!');
-              },
-            ),
-          ],
-        );
-      },
     );
   }
 }
