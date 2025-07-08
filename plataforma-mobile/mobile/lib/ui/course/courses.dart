@@ -4,8 +4,6 @@ import 'package:mobile/ui/core/shared/dropdown_filter_cursos.dart';
 import '../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 
-
-
 class Courses extends StatefulWidget {
   const Courses({super.key});
 
