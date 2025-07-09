@@ -10,10 +10,11 @@ import 'package:provider/provider.dart';
 import '../export.dart';
 
 class BoxSubmitTrab extends StatefulWidget {
-  const BoxSubmitTrab({super.key, required this.idCurso, required this.idTrabalho});
+  const BoxSubmitTrab({super.key, required this.idCurso, required this.idTrabalho, required this.expirado});
 
   final int idCurso;
   final int idTrabalho;
+  final bool expirado;
 
   @override
   State<BoxSubmitTrab> createState() => _BoxSubmitTrabState();
@@ -160,8 +161,17 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
     }
     return Column(
       children: [
-        if (setEntregue == false) ...[
+        if (setEntregue == false && widget.expirado == false) ...[
           if (file == null) ... [
+            Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+              'Entregue aqui o trabalho:',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(height: 10,),
             GestureDetector(
               onTap: selectFile,
               child: Container(
@@ -274,15 +284,29 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
                   )
                 ),
                 SizedBox(width: 8),
-                GestureDetector(
-                  onTap: () {
-                    _handleDelete();
-                  },
-                  child: Icon(Icons.delete),
-                ),
+                Icon(Icons.file_download_outlined),
               ],
             ),
           ),
+          SizedBox(height: 10,),
+          if(widget.expirado == false && setEntregue == true) ...[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  fixedSize: Size(screenWidth - 10, 46),
+                ),
+                onPressed: () => {
+                  _handleDelete()
+                },
+                child: Text('Cancelar Entrega', style: TextStyle(color: Colors.white),),
+              ),
+            ),
+          ]
         ],        
       ],
     );
