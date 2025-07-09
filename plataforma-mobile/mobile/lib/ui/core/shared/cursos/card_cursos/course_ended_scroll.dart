@@ -34,7 +34,7 @@ class _CourseEndedScrollState extends State<CourseEndedScroll> {
             itemBuilder: (context, index) {
               final curso = widget.cursos[index];
               return Container(
-                height: 130,
+                height: 155,
                 width: 200,
                 margin: EdgeInsets.symmetric(horizontal: 5),
                 child: CardCourseEnded(curso: curso)

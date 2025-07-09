@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:mobile/utils/uteis.dart';
 
 import '../../export.dart';
 
@@ -9,10 +10,14 @@ class CardCourseEnded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dataInicio = DateTime.parse(curso['data_inicio_curso']);
+    final dataFim = DateTime.parse(curso['data_fim_curso']);
+    final dataForm = formatDateRange(dataInicio, dataFim);
+
     return GestureDetector(
       onTap: () {
-          context.push('/cursos-completed', extra: curso['id_curso']);
-       },
+        context.push('/cursos-completed', extra: curso['id_curso']);
+      },
       child: Card(
         elevation: 4,
         shadowColor: Colors.black,
@@ -28,20 +33,21 @@ class CardCourseEnded extends StatelessWidget {
               child: Image.network(
                 curso['imagem'],
                 width: 100,
-                height: 130,
+                height: 155,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
-                  final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['nome_curso'])}&background=random&bold=true';
+                  final fallbackImg =
+                      'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['nome_curso'])}&background=random&bold=true';
                   return Image.network(
                     width: 100,
-                    height: 130,
+                    height: 170,
                     fallbackImg,
                     fit: BoxFit.cover,
                   );
                 },
-              )
+              ),
             ),
-             Expanded(
+            Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 child: Column(
@@ -53,21 +59,39 @@ class CardCourseEnded extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        curso['id_curso_curso']?['sincrono'] != null ? 'Síncrono' : 'Assíncrono',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    SizedBox(height: 4),
+                    Text(dataForm),
+                    SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          child: Text(
+                            curso['tipo'] == 'sincrono' ? 'Síncrono' : 'Assíncrono',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                          Text(
+                            'Concluído',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                      ],
                     ),
                   ],
                 ),
-              )
-             ),
+              ),
+            ),
           ],
         ),
       ),

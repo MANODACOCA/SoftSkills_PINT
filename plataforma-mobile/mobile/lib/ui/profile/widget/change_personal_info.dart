@@ -61,9 +61,10 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   Future<void> _enviar(ImageSource source) async {
     try{
       final res = await _api.alterarImgPerfil(userIdd, source);
-      //await fetchUtilizador(int.parse(userIdd));
+      
       setState(() {
         utilizador['img_perfil'] = res['img_perfil'];
+        fetchUtilizador(int.parse(userIdd));
       });
     } catch(e) {
       ScaffoldMessenger.of(context).showSnackBar(
