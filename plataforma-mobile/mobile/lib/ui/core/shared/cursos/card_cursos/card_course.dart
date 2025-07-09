@@ -116,16 +116,18 @@ class _CardCourseState extends State<CardCourse> {
                           style: const TextStyle(color: Colors.white),
                         ),
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            '${widget.currentMembers}/${widget.maxMembers}',
-                            style: AppTextStyles.body,
-                          ),
-                          const Icon(Ionicons.people, size: 20),
-                          const SizedBox(width: 2),
-                        ],
-                      ),
+                      if(widget.typeCourse == 'Síncrono') ...[
+                        Row(
+                          children: [
+                            Text(
+                              '${widget.currentMembers}/${widget.maxMembers}',
+                              style: AppTextStyles.body,
+                            ),
+                            const Icon(Ionicons.people, size: 20),
+                            const SizedBox(width: 2),
+                          ],
+                        ),  
+                      ],
                     ],
                   ),
                   const SizedBox(height: 8),
