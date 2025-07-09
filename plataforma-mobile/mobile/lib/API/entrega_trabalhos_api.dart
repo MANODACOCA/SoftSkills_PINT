@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
-import 'package:mobile/data/database/cache_database.dart';
+import 'package:mobile/data/cache_database.dart';
 import 'package:mobile/utils/verifica_internet.dart';
 
 class EntregaTrabalhosApi {
