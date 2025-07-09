@@ -37,14 +37,7 @@ const FeaturedCourseCard = ({
           navigate(`/my/cursos/terminados/curso/${course.id_curso}?tab=aulas`);
         }
       } else {
-        navigate(`/cursos/${course.id_curso}`);
-        Swal.fire({
-          title: "O curso ainda não se encontra a ocorrer!",
-          text: "Este curso ainda não começou. Assim que for iniciado, você poderá acessá-lo normalmente por aqui.",
-          icon: "info",
-          showConfirmButton: false,
-          timer: 3500
-        });// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
+        navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
       }
     }
   };

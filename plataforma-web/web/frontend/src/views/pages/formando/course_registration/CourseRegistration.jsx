@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import EnrollmentCard from '../../../components/card_registration/CardRegistration';
 import CourseModule from '../../../components/course_module/CourseModule';
 import ScrollableSection from '../../../components/scrollable_section/ScrollableSection';
 import { formatDayMonthYear } from '../../../components/shared_functions/FunctionsUtils';
-import { FaVideo, FaUsers, FaCalendarAlt } from 'react-icons/fa';
+import { FaVideo, FaUsers, FaCalendarAlt, FaInfoCircle } from 'react-icons/fa';
 import { getCursosDisponiveisParaInscricao } from '../../../../api/cursos_axios';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border'
 import './CourseRegistration.css';
@@ -17,6 +18,11 @@ const CourseRegistration = () => {
   const [isSticky, setIsSticky] = useState(false);
   const sentinelRef = React.useRef(null);
   const [loading, setLoading] = useState(true);
+  const [inscrito, setInscrito] = useState(false);
+
+  const handleInscrito = (valor) => {
+    setInscrito(valor);
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -103,6 +109,9 @@ const CourseRegistration = () => {
 
   return (
     <div className="px-3">
+      {inscrito && (
+        <div className="alert alert-info text-center"><FaInfoCircle /> Este curso ainda não começou. Assim que for iniciado, você poderá acessá-lo <Link to="/my/cursos/inscritos">aqui</Link>!</div>
+      )}
       {/* Header com fundo azul de largura completa */}
       <div className="row bg-custom-light rounded-4">
         <div className="col-md-8">
@@ -195,6 +204,7 @@ const CourseRegistration = () => {
               course={course}
               onEnroll={() => handleEnroll(course.id_curso)}
               onContadorUpdate={atualizarContadorFormandos}
+              verSeInscrito = {handleInscrito}
             />
           </div>
 

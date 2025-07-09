@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 import './CardRegistration.css';
 
 
-const EnrollmentCard = ({ course, onContadorUpdate }) => {
+const EnrollmentCard = ({ course, onContadorUpdate, verSeInscrito }) => {
 
   const navigate = useNavigate();
 
@@ -60,9 +60,11 @@ const EnrollmentCard = ({ course, onContadorUpdate }) => {
     try {
       await get_inscricoes(id_utilizador, id_curso);
       setInscrito(true);
+      verSeInscrito(true);
     } catch (error) {
-      if(error.response && error.response.status === 404){
+      if (error.response && error.response.status === 404) {
         setInscrito(false);
+        verSeInscrito(false);
       } else {
         console.error("Erro ao buscar inscrição:", error);
       }
