@@ -244,7 +244,7 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
               child:Text('Ficheiro demasiado grande', style: TextStyle(color: Colors.red), ),
             ),
           ],
-          //botao  
+          //botao 
           if (file !=null)
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),

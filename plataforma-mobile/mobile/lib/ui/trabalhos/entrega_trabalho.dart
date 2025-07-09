@@ -3,7 +3,6 @@ import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import 'package:mobile/ui/core/shared/base_comp/text_expand.dart';
 import 'package:mobile/ui/core/shared/trabalhos/box_submit_trab.dart';
 import 'package:mobile/ui/core/shared/trabalhos/card_enunciado.dart';
-import 'package:mobile/utils/uteis.dart';
 import '../core/shared/export.dart';
 
 class EntregaTrabalho extends StatefulWidget {
@@ -70,7 +69,7 @@ class _EntregaTrabalhoState extends State<EntregaTrabalho> {
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text('${formatDateRangeSingle(widget.trabalho['data_entrega_tr'])} | '),
+                child: Text(''),
               ),
               SizedBox(height: 20,),
               if (dataEntrega != null && dataEntrega.isAfter(agora)) ...[
