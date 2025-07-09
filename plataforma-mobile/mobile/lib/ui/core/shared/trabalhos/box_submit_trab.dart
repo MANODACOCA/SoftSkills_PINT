@@ -111,7 +111,11 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
         SnackBar(content: Text('Trabalho enviado com sucesso!')),
       );
     } catch (e) {
-      print('Erro ao criar entrega de trabalho: $e');
+      if (!mounted) return;
+      final scaffoldMessenger = ScaffoldMessenger.of(context); 
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Erro ao submeter trabalho!')),
+      );
     }
   } 
 
@@ -137,7 +141,11 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
         SnackBar(content: Text('Entrega cancelada com sucesso!')),
       );
     } catch (e) {
-      print('Erro ao eliminar entrega de trabalho: $e');
+      if (!mounted) return;
+      final scaffoldMessenger = ScaffoldMessenger.of(context); 
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Erro ao cancelar entrega!')),
+      );
     }
   }
 
