@@ -20,6 +20,11 @@ import BaseLayout from './views/pages/base/layout/BaseLayout.jsx';
 import NotificationPage from './views/pages/formando/notifications/notificationsPage';
 import EditProfile from './views/pages/profile/profile';
 import InfoProfile from './views/pages/profile/infoprofile';
+import PerguntasFrequentes from './views/pages/profile/perguntas_frequentes';
+import PoliticaPrivacidade from './views/pages/profile/politica_privacidade';
+
+
+
 //forum
 import Forum from './views/pages/forum/conteudos_partilhados/conteudos_partilhados.jsx';
 import ForumPosts from './views/pages/forum/posts/post';
@@ -90,6 +95,8 @@ function App() {
           <Route path="/forum/:id" element={<ForumPosts />} />
           <Route path='/perfil/info' element={<InfoProfile />} />
           <Route path="/perfil/editar" element={<EditProfile />} />
+          <Route path="/perguntas-frequentes" element={<PerguntasFrequentes />} />
+          <Route path="/politica-privacidade" element={<PoliticaPrivacidade />} />
         </Route>
         {/* for all */}
 

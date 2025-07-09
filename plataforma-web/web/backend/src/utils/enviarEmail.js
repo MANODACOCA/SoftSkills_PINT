@@ -22,14 +22,16 @@ async function sendEmail(destinatario, passwordTemporaria) {
     
     <div style="margin: 25px 0;">
       <p style="font-size: 15px; color: #333;">Abaixo está a sua <strong>password temporária</strong>:</p>
-      <p style="font-size: 20px; font-weight: bold; background-color: #e6f7ff; color: #00A9E0; padding: 12px 20px; border-radius: 8px; display: inline-block; letter-spacing: 1px;">${passwordTemporaria}</p>
+      <div style="text-align: center;">
+          <p style="font-size: 20px; font-weight: bold; background-color: #e6f7ff; color: #00A9E0; padding: 12px 20px; border-radius: 8px; display: inline-block; letter-spacing: 1px;">${passwordTemporaria}</p>
+      </div>
     </div>
 
     <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
 
     <p style="font-size: 15px; color: #333;">Para ativar a sua conta, clique no botão abaixo:</p>
     <div style="text-align: center; margin: 30px 0;">
-      <a href="http://localhost:5173/login?email=${destinatario}&password_util=${passwordTemporaria}" target="_blank" style="background-color: #3b5b84; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Ativar Conta</a>
+      <a href="https://softskills-three.vercel.app/login?email=${destinatario}&password_util=${passwordTemporaria}" target="_blank" style="background-color: #3b5b84; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Ativar Conta</a>
     </div>
 
     <p style="font-size: 14px; color: #888;">Se não foi você quem solicitou esta conta, por favor ignore este e-mail.</p>
@@ -59,7 +61,7 @@ async function enviarEmailVerificaCode(destinatario, codigo) {
           <p style="font-size: 14px; color: #666666; text-align: center;">Este código é válido por <strong>1 minuto</strong>.</p>
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
           <p style="font-size: 12px; color: #999999; text-align: center;">Se você não solicitou este código, pode ignorar este e-mail.</p>
-          <p style="font-size: 12px; color: #999999; text-align: center;">Equipe SoftSkills 💙</p>
+          <p style="font-size: 12px; color: #999999; text-align: center;">Equipa SoftSkills 💙</p>
         </div>
       </div>
     `
@@ -85,14 +87,14 @@ async function enviarEmailConfirmacaoInscricao(nome_formando, destinatario, nome
       </div>
 
       <div style="text-align: center; margin: 30px 0;">
-        <a href="https://softskills.pt" target="_blank" style="background-color: #3b5b84; color: #ffffff; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 8px; display: inline-block;">
+        <a href="https://softskills-three.vercel.app/home" target="_blank" style="background-color: #3b5b84; color: #ffffff; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 8px; display: inline-block;">
           Ir para a SoftSkills
         </a>
       </div>
 
       <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
       <p style="font-size: 12px; color: #999999; text-align: center;">Se você não realizou esta inscrição, pode ignorar este e-mail.</p>
-      <p style="font-size: 12px; color: #999999; text-align: center;">Equipe SoftSkills 💙</p>
+      <p style="font-size: 12px; color: #999999; text-align: center;">Equipa SoftSkills 💙</p>
     </div>
   </div>
     `
