@@ -1,7 +1,6 @@
-
 class User {
   User({required this.id});
-  
+
   final String id;
 
   factory User.fromJson(Map<String, dynamic> json) {

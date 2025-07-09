@@ -156,12 +156,74 @@ class CardForum extends StatelessWidget {
         ),
         contentPadding: EdgeInsets.all(10),
         title: Text(title),
-        subtitle: Text(
-          description,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
+        subtitle: Builder(
+          builder: (context) {
+            return _ExpandableText(description);
+          },
         ),
       ),
+    );
+  }
+}
+
+class _ExpandableText extends StatefulWidget {
+  final String text;
+  const _ExpandableText(this.text);
+
+  @override
+  State<_ExpandableText> createState() => _ExpandableTextState();
+}
+
+class _ExpandableTextState extends State<_ExpandableText> {
+  bool _expanded = false;
+  bool _exceedsMaxLines = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Verifica se o texto excede 2 linhas
+    final span = TextSpan(
+      text: widget.text,
+      style: Theme.of(context).textTheme.bodyMedium,
+    );
+    final tp = TextPainter(
+      text: span,
+      maxLines: 2,
+      textDirection: TextDirection.ltr,
+    )..layout(maxWidth: MediaQuery.of(context).size.width - 100);
+    _exceedsMaxLines = tp.didExceedMaxLines;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        AnimatedSize(
+          duration: Duration(milliseconds: 200),
+          child: Text(
+            widget.text,
+            maxLines: _expanded ? null : 2,
+            overflow: _expanded ? TextOverflow.visible : TextOverflow.ellipsis,
+          ),
+        ),
+        if (_exceedsMaxLines)
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                _expanded = !_expanded;
+              });
+            },
+            child: Text(
+              _expanded ? 'Ver menos' : 'Ver mais',
+              style: TextStyle(
+                color: AppColors.primary,
+                fontWeight: FontWeight.bold,
+                fontSize: 13,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
