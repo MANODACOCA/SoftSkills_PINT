@@ -269,7 +269,7 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('nomeTrabaho'),
+                      Text(nomeTrabaho.toString()),
                     ],
                   )
                 ),
