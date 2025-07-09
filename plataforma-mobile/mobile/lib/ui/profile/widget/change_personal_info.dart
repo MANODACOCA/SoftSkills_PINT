@@ -27,6 +27,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   final TextEditingController _dataNascController = TextEditingController();
   String? _selectedPais;
   String? _selectedGenero;
+  bool isLoadingFoto = false;
 
   @override
   void initState() {
@@ -52,6 +53,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         _dataNascController.text = esteUtilizador['data_nasc'] ?? '';
         _selectedPais = esteUtilizador['pais']?.toString();
         _selectedGenero = (esteUtilizador['genero'] == 1) ? 'Masculino' : 'Feminino';
+        isLoadingFoto = false;
       });
     } catch (e) {
       print('Erro ao buscar o curso: , $e');
@@ -64,8 +66,10 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
       
       setState(() {
         utilizador['img_perfil'] = res['img_perfil'];
+        isLoadingFoto = true;
         fetchUtilizador(int.parse(userIdd));
       });
+
     } catch(e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Falha ao enviar imagem')),
@@ -130,6 +134,11 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
+                          isLoadingFoto ?     
+                            Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Center(child: CircularProgressIndicator()),
+                              ) :
                           Container(
                             width: 100,
                             height: 100,
