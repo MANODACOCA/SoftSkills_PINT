@@ -59,6 +59,7 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
     } catch (e) {
       setState(() {
         isLoadingTrabalhos = false;
+        setEntregue = false;
       });
       print('Ainda nao houve entrega para este curso');
     }
@@ -110,7 +111,11 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
         SnackBar(content: Text('Trabalho enviado com sucesso!')),
       );
     } catch (e) {
-      print('Erro ao criar entrega de trabalho: $e');
+      if (!mounted) return;
+      final scaffoldMessenger = ScaffoldMessenger.of(context); 
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Erro ao submeter trabalho!')),
+      );
     }
   } 
 
@@ -121,15 +126,38 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
     }
   }
 
+  void _handleDelete() async {
+    try{
+      await _entregaTrabalhosApi.deleteEntregaTrabalho(idTrabalho: widget.idTrabalho, idFormando: idUser!);
+      setState(() {
+        isLoadingTrabalhos = true;
+      });
+      await fetchTrabalhoEntregue();
+      if (!mounted) return;
+      
+      final scaffoldMessenger = ScaffoldMessenger.of(context);   
+      
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Entrega cancelada com sucesso!')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      final scaffoldMessenger = ScaffoldMessenger.of(context); 
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Erro ao cancelar entrega!')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     if (isLoadingTrabalhos) {
-    return const Padding(
-      padding: EdgeInsets.all(8),
-      child: Center(child: CircularProgressIndicator()),
-    );
-  }
+      return Padding(
+        padding: EdgeInsets.all(8),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Column(
       children: [
         if (setEntregue == false) ...[
@@ -224,7 +252,7 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
               child: Text('Entregar', style: TextStyle(color: Colors.white),),
             ),
           ),
-        ] else ...[
+        ] else if (setEntregue == true) ...[
           Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
@@ -241,15 +269,14 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('nomeTrabaho'),
+                      Text(nomeTrabaho.toString()),
                     ],
                   )
                 ),
                 SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
-                    removeFile();
-
+                    _handleDelete();
                   },
                   child: Icon(Icons.delete),
                 ),
