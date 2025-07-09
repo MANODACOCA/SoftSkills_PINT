@@ -22,6 +22,22 @@ class _AulasScrollState extends State<AulasScroll> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.aulas.isEmpty) {
+      return Container(
+        padding: EdgeInsets.all(12),
+        width: double.infinity,
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(
+              'Este curso ainda não tem nenhuma aula...',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+        ),
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
