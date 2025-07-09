@@ -92,7 +92,7 @@ class _CommentPageState extends State<CommentPage> {
 
   Future<void> carregarTudo() async {
     comentarios = ComentarioAPI.getComentariosByPost(widget.postId);
-    await comentarios; // Espera os comentários carregarem
+    await comentarios;
     setState(() {
       isLoading = false;
     });
@@ -158,7 +158,7 @@ class _CommentPageState extends State<CommentPage> {
                           children: [
                             TextField(
                               controller: commentController,
-                              decoration: InputDecoration(
+                              decoration: InputDecoration(  
                                 prefixIcon: IconButton(
                                   icon: Icon(
                                     Icons.attach_file_outlined,

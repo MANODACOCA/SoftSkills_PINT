@@ -144,4 +144,141 @@ class ForumAPI {
       rethrow;
     }
   }
+
+  static Future<List<dynamic>> listPost() async {
+    try {
+      final response = await http.get(Uri.parse('https://softskills-api.onrender.com/posts/list'));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Erro ao ir buscar lista de Post!');
+      }
+    } catch (e) {
+      print('Erro ao ir buscar lista de Post! $e');
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> getPost(String id, {String ordenar = "Mais Recentes"}) async {
+    try {
+      final url = 'https://softskills-api.onrender.com/posts/get/posts?id_conteudos_partilhado=$id&ordenar=$ordenar';
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Erro ao buscar Post!');
+      }
+    } catch (e) {
+      print('Erro ao buscar Post! $e');
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> createPost(Map<String, dynamic> formData, {Map<String, String>? headers}) async {
+    try {
+      final response = await http.post(
+        Uri.parse('https://softskills-api.onrender.com/posts/create'),
+        headers: headers ?? {'Content-Type': 'application/json'},
+        body: jsonEncode(formData),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Erro ao criar Post!');
+      }
+    } catch (e) {
+      print('Erro ao criar Post! $e');
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> updatePost(String id, Map<String, dynamic> data) async {
+    try {
+      final response = await http.put(
+        Uri.parse('https://softskills-api.onrender.com/posts/update/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(data),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Erro ao atualizar Post!');
+      }
+    } catch (e) {
+      print('Erro ao atualizar Post! $e');
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> deletePost(String id) async {
+    try {
+      final response = await http.delete(Uri.parse('https://softskills-api.onrender.com/posts/delete/$id'));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Erro ao excluir Post!');
+      }
+    } catch (e) {
+      print('Erro ao excluir Post! $e');
+      rethrow;
+    }
+  }
+
+  //PARTE DOS LIKES DO FORUNS
+
+  static Future<dynamic> putLike(String idPost, String idUtilizador) async {
+    try {
+      await http.put(Uri.parse('https://softskills-api.onrender.com/posts/addLike/$idPost'));
+      final response = await http.post(
+        Uri.parse('https://softskills-api.onrender.com/likes-post/create'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'id_post': idPost, 'id_utilizador': idUtilizador}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Erro ao adicionar like no Post!');
+      }
+    } catch (e) {
+      print('Erro ao adicionar like no Post! $e');
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> deleteLike(String idPost, String idUtilizador) async {
+    try {
+      await http.put(Uri.parse('https://softskills-api.onrender.com/posts/deleteLike/$idPost'));
+      final response = await http.delete(
+        Uri.parse('https://softskills-api.onrender.com/likes-post/delete'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'id_post': idPost, 'id_utilizador': idUtilizador}),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Erro ao eliminar like no Post!');
+      }
+    } catch (e) {
+      print('Erro ao eliminar like no Post! $e');
+      rethrow;
+    }
+  }
+
+  static Future<dynamic> jaDeuLike(String idPost, String idUtilizador) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://softskills-api.onrender.com/likes-post/get/$idPost/$idUtilizador'),
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 404) {
+        return false;
+      } else {
+        throw Exception('Erro inesperado ao verificar se deu like no Post!');
+      }
+    } catch (e) {
+      print('Erro inesperado ao verificar se deu like no Post! $e');
+      rethrow;
+    }
+  }
 }

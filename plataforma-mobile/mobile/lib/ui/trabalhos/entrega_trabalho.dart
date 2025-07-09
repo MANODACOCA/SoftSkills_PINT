@@ -53,7 +53,7 @@ class _EntregaTrabalhoState extends State<EntregaTrabalho> {
                         ),
                     ),
                     SizedBox(height: 15,),
-                    BoxSubmitTrab(idCurso: widget.trabalho['id_curso_tr'],),
+                    BoxSubmitTrab(idCurso: widget.trabalho['id_curso_tr'],idTrabalho: widget.trabalho['id_trabalho'],),
                 ],
             ),
         );

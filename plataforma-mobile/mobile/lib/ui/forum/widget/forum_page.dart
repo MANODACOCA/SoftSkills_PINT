@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/forum_api.dart';
+import 'package:mobile/provider/auth_provider.dart';
 
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
+import 'package:provider/provider.dart';
 import '../../../API/utilizadores_api.dart';
 import '../../core/shared/export.dart';
 
@@ -23,6 +25,7 @@ class _ForumPageState extends State<ForumPage> {
   List<File> files = [];
   Color paint = Colors.white;
   bool addPost = false;
+  late final String? userId;
   bool isLoading = true;
 
   final TextEditingController textControllerPost = TextEditingController();
@@ -31,7 +34,8 @@ class _ForumPageState extends State<ForumPage> {
 
   late var forumInfo;
   late List users = [];
-  late var forumPost;
+  late Map<String, dynamic>? forumPost;
+  late List<dynamic> posts = [];
   late String forumID = widget.forumID;
 
   Future<void> carregarDados() async {
@@ -39,12 +43,16 @@ class _ForumPageState extends State<ForumPage> {
       forumInfo = await ForumAPI.getConteudosPartilhado(widget.forumID);
       forumPost = await ForumAPI.getPostForum(widget.forumID);
       users = [];
-      if (forumPost != null && forumPost['posts'] != null) {
-        for (var post in forumPost['posts']) {
+
+      if (forumPost != null && forumPost!['posts'] != null) {
+        posts = List.from(forumPost!['posts']); // Guardar localmente
+        for (var post in posts) {
           final userId = post['id_utilizador_utilizador']['id_utilizador'];
           var userData = await UtilizadoresApi().getUtilizador(userId);
           users.add(userData);
         }
+      } else {
+        posts = [];
       }
       setState(() {
         isLoading = false;
@@ -60,7 +68,14 @@ class _ForumPageState extends State<ForumPage> {
   @override
   void initState() {
     super.initState();
+    userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
     carregarDados();
+  }
+
+  void removerPostLocalmente(String postId) {
+    setState(() {
+      posts.removeWhere((post) => post['id_post'].toString() == postId);
+    });
   }
 
   @override
@@ -112,12 +127,9 @@ class _ForumPageState extends State<ForumPage> {
                                   child: buildAddPostForm(),
                                 ),
                               SizedBox(height: 20),
-                              if (forumPost != null &&
-                                  forumPost['posts'] != null)
-                                ...List.generate(forumPost['posts'].length, (
-                                  index,
-                                ) {
-                                  final post = forumPost['posts'][index];
+                              if (posts.isNotEmpty)
+                                ...List.generate(posts.length, (index) {
+                                  final post = posts[index];
                                   final user = post['id_utilizador_utilizador'];
                                   return Padding(
                                     padding: const EdgeInsets.only(
@@ -216,16 +228,32 @@ class _ForumPageState extends State<ForumPage> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
               ),
-              onPressed: () {
+              onPressed: () async {
                 final title = textControllerTitlePost.text;
                 final description = textControllerPost.text;
 
                 if (title.isNotEmpty && description.isNotEmpty) {
-                  setState(() {
-                    textControllerTitlePost.clear();
-                    textControllerPost.clear();
-                    addPost = false;
-                  });
+                  try {
+                    final postData = {
+                      "id_utilizador": userId,
+                      "id_conteudos_partilhado": widget.forumID,
+                      "id_formato": 1,
+                      "texto_post": description,
+                    };
+
+                    await ForumAPI.createPost(postData);
+
+                    setState(() {
+                      textControllerTitlePost.clear();
+                      textControllerPost.clear();
+                      addPost = false;
+                      paint = Colors.white;
+                    });
+
+                    await carregarDados();
+                  } catch (e) {
+                    print('Erro ao criar post: $e');
+                  }
                 }
               },
             ),
