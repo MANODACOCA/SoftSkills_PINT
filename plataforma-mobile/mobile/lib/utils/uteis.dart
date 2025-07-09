@@ -33,7 +33,6 @@ String tempoParaFimCurso(DateTime dataFim, {DateTime? agora}) {
   return buffer.toString();
 }
 
-//final entregaFmt = formatIsoDateHourMin(curso['data_entrega_et']);
 String dataHoraFormat(String isoString) {
   final dt = DateTime.parse(isoString).toLocal();
   final datePart = DateFormat('d MMM yyyy', 'pt_PT').format(dt);
