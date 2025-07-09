@@ -19,7 +19,7 @@ class CardCourseEnded extends StatelessWidget {
         context.push('/cursos-completed', extra: curso['id_curso']);
       },
       child: Card(
-        elevation: 4,
+        elevation: 2,
         shadowColor: Colors.black,
         color: AppColors.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
