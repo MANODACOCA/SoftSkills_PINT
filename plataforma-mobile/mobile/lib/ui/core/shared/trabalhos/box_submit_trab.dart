@@ -121,6 +121,25 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
     }
   }
 
+  void _handleDelete() async {
+    try{
+      await _entregaTrabalhosApi.deleteEntregaTrabalho(idTrabalho: widget.idTrabalho, idFormando: idUser!);
+      setState(() {
+        isLoadingTrabalhos = true;
+      });
+      await fetchTrabalhoEntregue();
+      if (!mounted) return;
+      
+      final scaffoldMessenger = ScaffoldMessenger.of(context);   
+      
+      scaffoldMessenger.showSnackBar(
+        SnackBar(content: Text('Entrega cancelada com sucesso!')),
+      );
+    } catch (e) {
+      print('Erro ao eliminar entrega de trabalho: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -248,8 +267,7 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
                 SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
-                    removeFile();
-
+                    _handleDelete();
                   },
                   child: Icon(Icons.delete),
                 ),

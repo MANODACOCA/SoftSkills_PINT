@@ -57,7 +57,6 @@ class EntregaTrabalhosApi {
     }
   }
 
-
   Future<Map<String, dynamic>> criarEntregaTrabalho({
     required int idTrabalho,
     required int idFormando,
@@ -98,4 +97,31 @@ class EntregaTrabalhosApi {
       throw error;
     }
   }
+
+  Future<void> deleteEntregaTrabalho({
+    required int idTrabalho,
+    required int idFormando,
+  }) async {
+    try {
+      final uri = Uri.parse('$urlAPI/delete/$idTrabalho/$idFormando');
+
+      final response = await http.delete(
+        uri,
+        headers: {
+          'Accept': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Entrega de trabalho apagada com sucesso');
+      } else {
+        print('Erro ao apagar entrega: ${response.statusCode} - ${response.body}');
+        throw Exception('Erro ao apagar entrega de trabalho');
+      }
+    } catch (e) {
+      print('Erro ao apagar entrega de trabalho: $e');
+      rethrow;
+    }
+  }
+
 }
