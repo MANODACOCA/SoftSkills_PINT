@@ -263,7 +263,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
 
     let cursoWhere = {
       data_fim_curso: {
-        [Op.gte]: literal('DATE(NOW())')
+        [Op.gte]: literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
       }
     };
 
@@ -340,7 +340,7 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
 
     let cursoWhere = {
       data_fim_curso: {
-        [Op.lt]: literal('DATE(NOW())')
+        [Op.lt]: literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
       }
     };
 
