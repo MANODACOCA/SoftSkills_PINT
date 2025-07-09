@@ -2,7 +2,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mobile/utils/verifica_internet.dart';
-import 'package:mobile/data/database/cache_database.dart';
+import 'package:mobile/data/cache_database.dart';
 
 class ForumAPI {
   static const String API_URL = 'https://softskills-api.onrender.com/conteudos_partilhado';

@@ -62,7 +62,7 @@ class _CardTrabalhosState extends State<CardTrabalhos> {
                                 color: AppColors.primary,
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              child: Text(formatDateRangeSingle(widget.trabalho['data_entrega_tr']), style: const TextStyle(color: Colors.white)),
+                              child: Text(dataHoraFormat(widget.trabalho['data_entrega_tr']), style: const TextStyle(color: Colors.white)),
                             ),
                           ],
                         ),

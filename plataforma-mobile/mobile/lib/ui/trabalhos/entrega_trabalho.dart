@@ -70,7 +70,7 @@ class _EntregaTrabalhoState extends State<EntregaTrabalho> {
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text('${formatDateRangeSingle(widget.trabalho['data_entrega_tr'])} | '),
+                child: Text(dataHoraFormat(widget.trabalho['data_entrega_tr'])),
               ),
               SizedBox(height: 20,),
               if (dataEntrega != null && dataEntrega.isAfter(agora)) ...[

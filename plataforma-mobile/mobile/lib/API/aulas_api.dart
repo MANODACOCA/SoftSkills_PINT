@@ -1,7 +1,7 @@
 // ignore_for_file: use_rethrow_when_possible, depend_on_referenced_packages
 
 import 'package:http/http.dart' as http;
-import 'package:mobile/data/database/cache_database.dart';
+import 'package:mobile/data/cache_database.dart';
 import 'dart:convert';
 
 import 'package:mobile/utils/verifica_internet.dart';

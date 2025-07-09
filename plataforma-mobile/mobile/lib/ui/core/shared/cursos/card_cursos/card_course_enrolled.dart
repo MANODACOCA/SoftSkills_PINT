@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:mobile/utils/uteis.dart';
 
 import '../../export.dart';
 
@@ -9,6 +10,11 @@ class CardCourseEnrolled extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dataInicio = DateTime.parse(curso['id_curso_curso']?['data_inicio_curso']);
+    final dataFim = DateTime.parse(curso['id_curso_curso']?['data_fim_curso']);
+    print(dataFim);
+    final dataForm = formatDateRange(dataInicio, dataFim);
+
     return GestureDetector(
       onTap: () {
           context.push('/cursos-inscritos', extra: curso['id_curso']);
@@ -28,7 +34,7 @@ class CardCourseEnrolled extends StatelessWidget {
               child: Image.network(
                 curso['id_curso_curso']?['imagem'],
                 width: 100,
-                height: 130,
+                height: 155,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['id_curso_curso']?['nome_curso'])}&background=random&bold=true';
@@ -54,16 +60,25 @@ class CardCourseEnrolled extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 8),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        curso['id_curso_curso']?['sincrono'] != null ? 'Síncrono' : 'Assíncrono',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                    Text(dataForm),
+                    SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            curso['id_curso_curso']?['sincrono'] != null ? 'Síncrono' : 'Assíncrono',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        Text(tempoParaFimCurso(dataFim),
+                          style: TextStyle(color: tempoParaFimCurso(dataFim) == 'Em curso...' ? Colors.green : Colors.red[400])),
+                      ],
                     ),
                   ],
                 ),
