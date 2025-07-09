@@ -19,7 +19,7 @@ class UtilizadoresApi {
       try {
         final response = await http.get(Uri.parse('$urlAPI/get/$id'));
         if (response.statusCode == 200) {
-          print('Utilizador encontrado: ${response.body}');
+          print('=============Utilizador encontrado: ${response.body}');
           final utilizador = jsonDecode(response.body);
           await ApiCache.guardarDados(cacheKey, utilizador);
           return utilizador;
