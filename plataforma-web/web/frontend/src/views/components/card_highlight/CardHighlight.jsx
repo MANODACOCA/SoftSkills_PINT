@@ -4,6 +4,7 @@ import { formatDayMonthYear, parseDateWithoutTimezone } from '../../components/s
 import { FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
 import { verificar_acesso_curso } from '../../../api/cursos_axios';
+import Swal from 'sweetalert2';
 import './CardHighlight.css';
 
 const FeaturedCourseCard = ({
@@ -36,11 +37,18 @@ const FeaturedCourseCard = ({
           navigate(`/my/cursos/terminados/curso/${course.id_curso}?tab=aulas`);
         }
       } else {
-        navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
+        navigate(`/cursos/${course.id_curso}`);
+        Swal.fire({
+          title: "O curso ainda não se encontra a ocorrer!",
+          text: "Este curso ainda não começou. Assim que for iniciado, você poderá acessá-lo normalmente por aqui.",
+          icon: "info",
+          showConfirmButton: false,
+          timer: 3500
+        });// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
       }
     }
   };
-  
+
   const [img, setImg] = useState(course.imagem);
 
   const nameFormador = course.nome_formador || "Formador";

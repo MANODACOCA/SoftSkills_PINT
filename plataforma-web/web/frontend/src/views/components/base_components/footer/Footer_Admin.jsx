@@ -19,7 +19,7 @@ const FooterAdmin = () => {
                 <div className="row justify-content-between mb-4">
                     <div className="col-md-3 mb-3 text-center text-md-start">
                         <a
-                            href="https://softskills.com"
+                            href="https://softskills-three.vercel.app/admin/home"
                             className="d-inline-flex align-items-center text-decoration-none"
                         >
                             <img
@@ -36,18 +36,16 @@ const FooterAdmin = () => {
                             <div className="col-6 col-md-4 mb-3">
                                 <h6 className="text-uppercase fw-bold">LINKS RÁPIDOS</h6>
                                 <div className="d-flex flex-column">
-                                    <Link to="/cursos">Cursos</Link>
                                     <Link to="/forum">Fórum</Link>
-                                    {/*                                      <Link>Notificações</Link> */}
                                 </div>
                             </div>
-{/*                             <div className="col-6 col-md-4 mb-3">
+                            <div className="col-6 col-md-4 mb-3">
                                 <h6 className="text-uppercase fw-bold">SUPORTE</h6>
                                 <div className="d-flex flex-column">
-                                    <a href="#"><span>Centro de Suporte</span></a>
-                                    <a href="#"><span>Política de Privacidade</span></a>
+                                    <Link to="/perguntas-frequentes"><span>Perguntas Frequentes</span></Link>
+                                    <Link to="/politica-privacidade"><span>Política de Privacidade</span></Link>
                                 </div>
-                            </div> */}
+                            </div>
                         </div>
                     </div>
                 </div>
