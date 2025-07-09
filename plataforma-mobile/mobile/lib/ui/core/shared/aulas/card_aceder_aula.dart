@@ -38,7 +38,7 @@ class _CardAcederAulaState extends State<CardAcederAula> {
         _abrirLink(widget.aula['caminho_url']);
       },
       child: Card(
-        elevation: 4,
+        elevation: 2,
         shadowColor: Colors.black,
         color: AppColors.background,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
