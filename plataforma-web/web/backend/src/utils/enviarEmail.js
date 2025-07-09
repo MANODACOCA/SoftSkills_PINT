@@ -61,7 +61,7 @@ async function enviarEmailVerificaCode(destinatario, codigo) {
           <p style="font-size: 14px; color: #666666; text-align: center;">Este código é válido por <strong>1 minuto</strong>.</p>
           <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
           <p style="font-size: 12px; color: #999999; text-align: center;">Se você não solicitou este código, pode ignorar este e-mail.</p>
-          <p style="font-size: 12px; color: #999999; text-align: center;">Equipe SoftSkills 💙</p>
+          <p style="font-size: 12px; color: #999999; text-align: center;">Equipa SoftSkills 💙</p>
         </div>
       </div>
     `
@@ -94,7 +94,7 @@ async function enviarEmailConfirmacaoInscricao(nome_formando, destinatario, nome
 
       <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;" />
       <p style="font-size: 12px; color: #999999; text-align: center;">Se você não realizou esta inscrição, pode ignorar este e-mail.</p>
-      <p style="font-size: 12px; color: #999999; text-align: center;">Equipe SoftSkills 💙</p>
+      <p style="font-size: 12px; color: #999999; text-align: center;">Equipa SoftSkills 💙</p>
     </div>
   </div>
     `
