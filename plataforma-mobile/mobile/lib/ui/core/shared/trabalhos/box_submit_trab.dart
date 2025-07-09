@@ -145,11 +145,11 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     if (isLoadingTrabalhos) {
-    return const Padding(
-      padding: EdgeInsets.all(8),
-      child: Center(child: CircularProgressIndicator()),
-    );
-  }
+      return Padding(
+        padding: EdgeInsets.all(8),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Column(
       children: [
         if (setEntregue == false) ...[
