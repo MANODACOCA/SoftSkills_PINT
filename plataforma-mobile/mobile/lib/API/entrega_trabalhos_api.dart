@@ -98,15 +98,10 @@ class EntregaTrabalhosApi {
     }
   }
 
-  Future<void> deleteEntregaTrabalho({
-    required int idTrabalho,
-    required int idFormando,
-  }) async {
+  Future<void> deleteEntregaTrabalho({ required int idTrabalho, required int idFormando}) async {
     try {
-      final uri = Uri.parse('$urlAPI/delete/$idTrabalho/$idFormando');
-
       final response = await http.delete(
-        uri,
+        Uri.parse('$urlAPI/delete/$idTrabalho/$idFormando'),
         headers: {
           'Accept': 'application/json',
         },

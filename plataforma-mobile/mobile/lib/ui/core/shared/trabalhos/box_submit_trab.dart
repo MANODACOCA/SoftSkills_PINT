@@ -59,6 +59,7 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
     } catch (e) {
       setState(() {
         isLoadingTrabalhos = false;
+        setEntregue = false;
       });
       print('Ainda nao houve entrega para este curso');
     }
@@ -243,7 +244,7 @@ class _BoxSubmitTrabState extends State<BoxSubmitTrab> {
               child: Text('Entregar', style: TextStyle(color: Colors.white),),
             ),
           ),
-        ] else ...[
+        ] else if (setEntregue == true) ...[
           Container(
             margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
