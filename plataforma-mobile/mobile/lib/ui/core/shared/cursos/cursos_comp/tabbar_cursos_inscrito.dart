@@ -1,9 +1,10 @@
 import 'package:mobile/API/aulas_api.dart';
 import 'package:mobile/API/materialapoio_api.dart';
+import 'package:mobile/API/trabalhos_api.dart';
 import 'package:mobile/ui/core/shared/aulas/aulas_scroll.dart';
 import 'package:mobile/ui/core/shared/material_apoio/material_scroll.dart';
-//import 'package:mobile/ui/core/shared/aulas/card_aulas.dart';
-import 'package:mobile/ui/core/shared/text_expand.dart';
+import 'package:mobile/ui/core/shared/base_comp/text_expand.dart';
+import 'package:mobile/ui/core/shared/trabalhos/trabalhos_scroll.dart';
 
 import '../../export.dart';
 
@@ -18,15 +19,18 @@ class TabbarCoursesInscrito extends StatefulWidget {
 
 class _TabbarCoursesInscritoState extends State<TabbarCoursesInscrito> {
   List<Map<String, dynamic>> aulas = [];
-  List<Map<String,dynamic>> materialapoio = [];
+  List<Map<String, dynamic>> materialapoio = [];
+  List<Map<String, dynamic>> trabalhos = [];
   final AulasApi _apiaulas = AulasApi();
   final MaterialApoioApi _apimaterial = MaterialApoioApi();
+  final TrabalhosApi _apitrabalhos = TrabalhosApi();
 
   @override
   void initState() {
     super.initState();
     fetchAulas(widget.curso['id_curso']);
     fetchMateriais(widget.curso['id_curso']);
+    fetchTrabalhos(widget.curso['id_curso']);
   }
 
   Future<void> fetchAulas (int idCurso) async {
@@ -47,7 +51,19 @@ class _TabbarCoursesInscritoState extends State<TabbarCoursesInscrito> {
         materialapoio = esteMaterial;
       });
     } catch (e) {
-      print('Erro ao encontrar materiais de apoio');
+      print('Erro ao encontrar materiais de apoio, $e');
+    }
+  }
+
+  Future<void> fetchTrabalhos (int idCurso) async {
+    try {
+      final esteTrabalho = await _apitrabalhos.getTrabalhosCurso(idCurso);
+      setState(() {
+        trabalhos = esteTrabalho;
+      });
+      print(trabalhos);
+    } catch (e) {
+      print('Erro ao encontrar trabalhos, $e');
     }
   }
 
@@ -114,10 +130,7 @@ class _TabbarCoursesInscritoState extends State<TabbarCoursesInscrito> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 5,),
-                        Text("Eventos", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 10,),
-                        Text('Por fazer...')
+                        TrabalhosScroll(trabalhos: trabalhos),
                       ],
                     ) 
                   ),

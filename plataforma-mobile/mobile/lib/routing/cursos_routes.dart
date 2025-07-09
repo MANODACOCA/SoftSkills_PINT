@@ -4,7 +4,7 @@ import 'package:mobile/ui/aulas/aula_sync_page.dart';
 import 'package:mobile/ui/course/course_screen_inscrever.dart';
 import 'package:mobile/ui/course/courses.dart';
 //import 'package:mobile/ui/course/course_assync/widget/course_assync_inscrito.dart';
-import 'package:mobile/ui/course/course_inscrito.dart';
+import 'package:mobile/ui/course/course_screen_inscrito.dart';
 /* import 'package:mobile/ui/profile/widget/courser_joined.dart';
 import 'package:mobile/ui/profile/widget/ended_courses.dart';
 //import 'package:mobile/ui/profile/widget/liked_coursed.dart';
@@ -12,6 +12,7 @@ import 'package:mobile/ui/profile/widget/rated_courses.dart';
 import 'package:mobile/ui/profile/widget/unrated.dart'; */
 import 'package:mobile/ui/course/course_enrolled.dart';
 import 'package:mobile/ui/course/courses_completed.dart';
+import 'package:mobile/ui/trabalhos/entrega_trabalho.dart';
 
 final List<GoRoute> cursosRoutes = [
   GoRoute(
@@ -53,11 +54,11 @@ final List<GoRoute> cursosRoutes = [
     path: '/aulas-sync',
     builder: (context, state) => AulaSyncPage(aulas: state.extra as Map<String,dynamic>),
   ),
-  /* GoRoute(
-    name: 'endedcourses',
-    path: '/endedcourses',
-    builder: (context, state) => EndedCourses(),
-  ), */
+  GoRoute(
+    name: 'inserir-trabalho',
+    path: '/inserir-trabalho',
+    builder: (context, state) => EntregaTrabalho(trabalho: state.extra as Map<String, dynamic>,),
+  ),
   /* GoRoute(
     name: 'ratedcourses',
     path: '/ratedcourses',
@@ -67,11 +68,6 @@ final List<GoRoute> cursosRoutes = [
     name: 'unratedcourses',
     path: '/unratedcourses',
     builder: (context, state) => UnratedCourses(),
-  ), */
-  /* GoRoute(
-    name: 'coursejoined',
-    path: '/coursejoined',
-    builder: (context, state) => CourserJoined(),
   ), */
   /* GoRoute(
     name: 'likedcourses',

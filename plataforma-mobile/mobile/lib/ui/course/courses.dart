@@ -1,6 +1,6 @@
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/cursos/card_cursos/course_page_scroll.dart';
-import 'package:mobile/ui/core/shared/dropdown_filter_cursos.dart';
+import 'package:mobile/ui/core/shared/base_comp/dropdown_filter_cursos.dart';
 import '../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 

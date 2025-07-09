@@ -40,8 +40,8 @@ class _HomePage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      appBar: AppBar(
-        title: SearchBarCustom(),
+      appBar:  AppBar(
+        title: Text("Início", style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),

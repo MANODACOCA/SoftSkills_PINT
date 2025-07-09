@@ -1,4 +1,4 @@
-import 'export.dart';
+import '../export.dart';
 
 class DropdownComponent extends StatefulWidget {
   const DropdownComponent({super.key, required this.type, required this.items, required this.onChanged, this.value});

@@ -1,4 +1,4 @@
-import 'export.dart';
+import '../export.dart';
 
 class TextExpand extends StatefulWidget {
   const TextExpand({super.key, required this.text, this.maxLines = 3});

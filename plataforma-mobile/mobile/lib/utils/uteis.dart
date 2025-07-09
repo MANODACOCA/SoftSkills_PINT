@@ -4,3 +4,9 @@ String formatDateRange(DateTime start, DateTime end) {
   final formatter = DateFormat('d MMM yyyy', 'pt_PT');
   return '${formatter.format(start)} - ${formatter.format(end)}';
 }
+
+String formatDateRangeSingle(String data) {
+  final formatter = DateFormat('d MMM yyyy', 'pt_PT');
+  final parsedDate = DateTime.parse(data);
+  return formatter.format(parsedDate);
+}

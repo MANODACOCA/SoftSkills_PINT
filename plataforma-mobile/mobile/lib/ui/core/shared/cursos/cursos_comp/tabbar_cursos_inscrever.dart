@@ -1,4 +1,4 @@
-import 'package:mobile/ui/core/shared/text_expand.dart';
+import 'package:mobile/ui/core/shared/base_comp/text_expand.dart';
 
 import '../../export.dart';
 import '../../../../../utils/uteis.dart';
