@@ -1,5 +1,6 @@
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
+import '../../../API/utilizadores_api.dart';
 
 class ChangePasswordForget extends StatefulWidget {
   const ChangePasswordForget({super.key});
@@ -16,12 +17,54 @@ class _ChangePassword extends State<ChangePasswordForget> {
     Icons.visibility_off,
     color: AppColors.primary,
   );
+  final UtilizadoresApi api = UtilizadoresApi();
+  String? email;
 
-  /*Ir buscar na base de dados a password anterior e compará-la com a nova password*/
+  
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final extra = GoRouterState.of(context).extra;
+    if (extra is Map && extra['email'] != null) {
+      email = extra['email'] as String;
+    }
+  }
 
   Future<void> analisar() async {
     if (newpass.text == pass.text) {
-      await confirm();
+      if (email == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Email não encontrado!')),
+        );
+        return;
+      }
+      final result = await api.alterarPassword(email!, pass.text);
+      if (!mounted) return;
+      if (result['success'] == true) {
+        await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Sucesso'),
+            content: const Text('Password alterada com sucesso!'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+        if (mounted) {
+          context.go('/login');
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao alterar password: \\${result['message']}')),
+        );
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('As passwords não coincidem!')),
@@ -178,7 +221,7 @@ class _ChangePassword extends State<ChangePasswordForget> {
               child: Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
                 context.go('/login');
-                // ignore: avoid_print
+               
                 print('Alterações guardadas!');
               },
             ),
@@ -186,8 +229,8 @@ class _ChangePassword extends State<ChangePasswordForget> {
               style: TextButton.styleFrom(backgroundColor: Colors.red),
               child: Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.pop(); // Close the dialog
-                // ignore: avoid_print
+                context.pop(); 
+                
                 print('Alterações não foram guardadas!');
               },
             ),

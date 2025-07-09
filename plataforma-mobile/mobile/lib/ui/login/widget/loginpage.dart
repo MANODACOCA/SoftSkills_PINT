@@ -177,7 +177,7 @@ class _LoginPage extends State<LoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        // Social login buttons (comentados)
+                        
                       ],
                     ),
                   ),
@@ -224,13 +224,13 @@ class _LoginPage extends State<LoginPage> {
                               if (!mounted) return;
                               print('TOKEN LOGIN: $token');
                               authProvider.setUser(user, token: token);
-                              await authService.login(token, isSwitched); // Atualiza estado global
+                              await authService.login(token, isSwitched); 
                               context.go('/homepage');
                             }
                           }
                         }
                       } catch (error) {
-                        // Use string interpolation para compor a mensagem
+                       
                         String mensagem = 'Erro: $error';
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

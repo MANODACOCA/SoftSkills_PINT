@@ -287,8 +287,8 @@ class _ProfileState extends State<Profile> {
               onPressed: () async {
                 await authService.logout();
                 Provider.of<AuthProvider>(context, listen: false).logout();
-                if (mounted) dialogContext.go('/login');
-                // ignore: avoid_print
+                if (mounted) context.go('/login');
+            
                 print('LogOut!');
               },
             ),
@@ -296,8 +296,8 @@ class _ProfileState extends State<Profile> {
               style: TextButton.styleFrom(backgroundColor: AppColors.primary),
               child: Text('Cancelar', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                if (mounted) dialogContext.pop(); // Close the dialog
-                // ignore: avoid_print
+                if (mounted) Navigator.of(context).pop(); 
+                
                 print('Não foi dado logOut!');
               },
             ),

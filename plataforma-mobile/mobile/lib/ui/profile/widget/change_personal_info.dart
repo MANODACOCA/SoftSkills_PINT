@@ -1,15 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
-//import 'dart:io';
-//import 'package:http/http.dart' as http;
 import 'package:mobile/API/utilizadores_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 import '../../core/shared/export.dart';
-//import 'package:gender_picker/source/enums.dart';
 import 'package:go_router/go_router.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import '../../core/shared/popup_check_generico/custom_dialogs.dart';
 
 class ChangePersonalInfo extends StatefulWidget {
   const ChangePersonalInfo({super.key});
@@ -104,6 +103,11 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+    final double fieldWidth = 400;
+    final double fieldHeight = 40;
+    final double buttonWidth = 268;
+    final double buttonHeight = 40;
+    final double borderRadius = 20;
     return AppScaffold(
       appBar: AppBar(
         title: Text('Alterar Dados Pessoais', style: TextStyle(color: Colors.white)),
@@ -192,7 +196,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               children: <Widget>[
                                 SizedBox(height: 10),
                                 SizedBox(
-                                  width: 450,
+                                  width: fieldWidth,
                                   child: Row(
                                     children: <Widget>[
                                       Text(
@@ -208,14 +212,14 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                 ),
                                 SizedBox(height: 5),
                                 SizedBox(
-                                  width: 400,
-                                  height: 38,
+                                  width: fieldWidth,
+                                  height: fieldHeight,
                                   child: TextField(
                                     controller: _nomeController,
                                     decoration: InputDecoration(
                                       labelText: 'Nome do user',
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                        borderRadius: BorderRadius.circular(borderRadius),
                                         borderSide: BorderSide(color: Colors.black),
                                       ),
                                     ),
@@ -226,7 +230,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                           ),
                           SizedBox(height: 12),
                           SizedBox(
-                            width: 450,
+                            width: fieldWidth,
                             child: Row(
                               children: <Widget>[
                                 Text(
@@ -242,14 +246,14 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                           ),
                           SizedBox(height: 5),
                           SizedBox(
-                            width: 400,
-                            height: 38,
+                            width: fieldWidth,
+                            height: fieldHeight,
                             child: TextField(
                               controller: _telemovelController,
                               decoration: InputDecoration(
                                 labelText: '+351',
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(borderRadius),
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
                               ),
@@ -257,7 +261,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                           ),
                           SizedBox(height: 12),
                           SizedBox(
-                            width: 450,
+                            width: fieldWidth,
                             child: Row(
                               children: <Widget>[
                                 Text(
@@ -273,14 +277,14 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                           ),
                           SizedBox(height: 5),
                           SizedBox(
-                            width: 400,
-                            height: 38,
+                            width: fieldWidth,
+                            height: fieldHeight,
                             child: TextField(
                               controller: _dataNascController,
                               decoration: InputDecoration(
                                 labelText: 'dd/mm/aaaa',
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(borderRadius),
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
                               ),
@@ -288,7 +292,7 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                           ),
                           SizedBox(height: 12),
                           SizedBox(
-                            width: 450,
+                            width: fieldWidth,
                             child: Row(
                               children: <Widget>[
                                 Text(
@@ -304,184 +308,177 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                           ),
                           SizedBox(height: 5),
                           SizedBox(
-                            width: 400,
-                            height: 38,
+                            width: fieldWidth,
+                            height: fieldHeight,
                             child: TextField(
                               controller: _moradaController,
                               decoration: InputDecoration(
                                 labelText: 'Rua, nº, andar, código postal',
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(borderRadius),
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
                               ),
                             ),
                           ),
                           SizedBox(height: 12),
+                          // País
                           SizedBox(
-                            width: screenWidth, //Entire screen width
+                            width: fieldWidth,
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Center(
-                                  child: Row(
-                                    children: <Widget>[
-                                      SizedBox(width: 20),
-                                      SizedBox(
-                                        width: 125,
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text(
-                                              'País',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            SizedBox(height: 5),
-                                            SizedBox(
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: Colors.black,
-                                                    width: 1,
-                                                  ),
-                                                  borderRadius: BorderRadius.circular(
-                                                    4,
-                                                  ),
-                                                ),
-                                                child: TextButton(
-                                                  onPressed: () {
-                                                    showCountryPicker(
-                                                      context: context,
-                                                      showPhoneCode: false,
-                                                      onSelect: (Country country) {
-                                                        setState(() {
-                                                          _selectedPais = country.displayNameNoCountryCode;
-                                                        });
-                                                        // ignore: avoid_print
-                                                        print(
-                                                          'Selected country: ${country.flagEmoji} ${country.displayName}',
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                  child: Text(
-                                                    _selectedPais ?? 'Selecionar país',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: 10),
-                                      /*Gender part*/
-                                      SizedBox(
-                                        width: 150,
-                                        child: Column(
-                                          children: <Widget>[
-                                            Text(
-                                              'Género',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            SizedBox(height: 5),
-                                            TextButton(
-                                              onPressed: () {
-                                                showModalBottomSheet(
-                                                  context: context,
-                                                  builder: (BuildContext context) {
-                                                    return ListView(
-                                                      children: <Widget>[
-                                                        ListTile(
-                                                          leading: Icon(Icons.male),
-                                                          title: Text('Masculino'),
-                                                          onTap: () {
-                                                            setState(() {
-                                                              _selectedGenero = 'Masculino';
-                                                            });
-                                                            context.pop();
-                                                          },
-                                                        ),
-                                                        ListTile(
-                                                          leading: Icon(Icons.female),
-                                                          title: Text('Feminino'),
-                                                          onTap: () {
-                                                            setState(() {
-                                                              _selectedGenero = 'Feminino';
-                                                            });
-                                                            context.pop();
-                                                          },
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                                // ignore: avoid_print
-                                                print(
-                                                  'Selected Gender: $_selectedGenero',
-                                                );
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: Colors.black,
-                                                    width: 1,
-                                                  ),
-                                                  borderRadius: BorderRadius.circular(
-                                                    4,
-                                                  ),
-                                                ),
-                                                padding: EdgeInsets.symmetric(
-                                                  vertical: 15,
-                                                  horizontal: 4,
-                                                ),
-                                                child: Text(
-                                                  _selectedGenero ?? 'Selecionar género',
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: 20),
-                                    ],
+                                Text(
+                                  'País',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
+                                  textAlign: TextAlign.left,
                                 ),
-                                SizedBox(height: 25),
+                                SizedBox(height: 5),
                                 SizedBox(
-                                  width: 268,
-                                  height: 43,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.primary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20),
+                                  height: fieldHeight,
+                                  child: DropdownSearch<String>(
+                                    items: CountryService().getAll().map((c) => c.displayNameNoCountryCode).toList(),
+                                    selectedItem: _selectedPais,
+                                    dropdownDecoratorProps: DropDownDecoratorProps(
+                                      dropdownSearchDecoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(borderRadius),
+                                          borderSide: BorderSide(color: Colors.black),
+                                        ),
                                       ),
                                     ),
-                                    onPressed: () {
-                                      confirm();
-                                    },
-                                    child: Text(
-                                      'Confirmar Alterações',
-                                      style: TextStyle(color: Colors.white),
+                                    popupProps: PopupProps.menu(
+                                      showSearchBox: true,
+                                      fit: FlexFit.loose,
+                                      constraints: BoxConstraints(
+                                        minWidth: fieldWidth,
+                                        maxWidth: fieldWidth,
+                                      ),
+                                      menuProps: MenuProps(
+                                        borderRadius: BorderRadius.circular(borderRadius),
+                                      ),
+                                      searchFieldProps: TextFieldProps(
+                                        decoration: InputDecoration(
+                                          hintText: 'Pesquisar país',
+                                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // aumenta altura visual
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(borderRadius),
+                                          ),
+                                        ),
+                                        style: TextStyle(fontSize: 16),
+                                      ),
                                     ),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _selectedPais = value;
+                                      });
+                                    },
+                                    dropdownButtonProps: DropdownButtonProps(
+                                      icon: Icon(Icons.arrow_drop_down),
+                                    ),
+                                    dropdownBuilder: (context, selectedItem) {
+                                      return Container(
+                                        height: fieldHeight,
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(borderRadius),
+                                        ),
+                                        child: Text(selectedItem ?? 'Selecionar país'),
+                                      );
+                                    },
                                   ),
                                 ),
-                                SizedBox(height: 20),
                               ],
                             ),
                           ),
+                          SizedBox(height: 12),
+                          // Género
+                          SizedBox(
+                            width: fieldWidth,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Género',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                ),
+                                SizedBox(height: 5),
+                                SizedBox(
+                                  height: fieldHeight,
+                                  child: DropdownSearch<String>(
+                                    items: ['Masculino', 'Feminino'],
+                                    selectedItem: _selectedGenero,
+                                    dropdownDecoratorProps: DropDownDecoratorProps(
+                                      dropdownSearchDecoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(borderRadius),
+                                          borderSide: BorderSide(color: Colors.black),
+                                        ),
+                                      ),
+                                    ),
+                                    popupProps: PopupProps.menu(
+                                      fit: FlexFit.loose,
+                                      constraints: BoxConstraints(
+                                        minWidth: fieldWidth,
+                                        maxWidth: fieldWidth,
+                                      ),
+                                      menuProps: MenuProps(
+                                        borderRadius: BorderRadius.circular(borderRadius),
+                                      ),
+                                    ),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        _selectedGenero = value;
+                                      });
+                                    },
+                                    dropdownButtonProps: DropdownButtonProps(
+                                      icon: Icon(Icons.arrow_drop_down),
+                                    ),
+                                    dropdownBuilder: (context, selectedItem) {
+                                      return Container(
+                                        height: fieldHeight,
+                                        alignment: Alignment.centerLeft,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(borderRadius),
+                                        ),
+                                        child: Text(selectedItem ?? 'Selecionar género'),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 25),
+                          SizedBox(
+                            width: fieldWidth,
+                            height: buttonHeight,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primary,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(borderRadius),
+                                ),
+                              ),
+                              onPressed: () {
+                                confirm();
+                              },
+                              child: Text(
+                                'Confirmar Alterações',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
                         ],
                       ),
                     ),
@@ -496,94 +493,46 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
     );
   }
 
-  confirm() {
-    return showDialog(  
+  Future<void> confirm() async {
+    final confirmed = await showConfirmDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Aviso'),
-          content: Text('Quer guardar as alterações?'),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('Sim', style: TextStyle(color: Colors.white)),
-                onPressed: () async {
-                  try {
-                    final body = {
-                      'nome_utilizador': _nomeController.text,
-                      'telemovel': int.tryParse(_telemovelController.text),
-                      'morada': _moradaController.text,
-                    };
-
-                    if (_dataNascController.text.isNotEmpty) {
-                      try {
-                        final nasc = DateFormat('dd/MM/yyyy')
-                            .parseStrict(_dataNascController.text);
-                        body['data_nasc'] = DateFormat('yyyy-MM-dd').format(nasc);
-                      } catch (_) {
-                        //
-                      }
-                    }
-                    if (_selectedGenero != null) {
-                      body['genero'] = _selectedGenero == 'Masculino' ? 1 : 2;
-                    }
-                    if (_selectedPais != null) {
-                      body['pais'] = _selectedPais; 
-                    }
-
-                  body.removeWhere((k, v) => v == null || (v is String && v.isEmpty));
-
-                  await _api.updateUtilizador(userIdd, body);
-              
-                  await showDialog(
-                    context: context, barrierDismissible: false,
-                    builder: (diagolCtx) {
-                      Future.delayed(Duration(seconds: 1), () {
-                        Navigator.of(diagolCtx).pop();
-                      });
-                     return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      contentPadding: const EdgeInsets.all(24),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Icon(Icons.check_circle,
-                            color:Colors.green, size: 72),
-                          SizedBox(height: 16),
-                          Text(
-                            'Dados atualizados com sucesso!',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                );
-                  context.go('/profile');
-                } catch (e) {
-                  Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Erro ao atualizar dados'),
-                    backgroundColor: Colors.red,),
-                  );
-                }
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('Não', style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                context.pop(); 
-              },
-            ),
-          ],
-        );
-      },
+      title: 'Aviso',
+      content: 'Quer guardar as alterações?',
+      confirmText: 'Sim',
+      cancelText: 'Não',
     );
+    if (confirmed == true) {
+      try {
+        final body = {
+          'nome_utilizador': _nomeController.text,
+          'telemovel': int.tryParse(_telemovelController.text),
+          'morada': _moradaController.text,
+        };
+        if (_dataNascController.text.isNotEmpty) {
+          try {
+            final nasc = DateFormat('dd/MM/yyyy')
+                .parseStrict(_dataNascController.text);
+            body['data_nasc'] = DateFormat('yyyy-MM-dd').format(nasc);
+          } catch (_) {}
+        }
+        if (_selectedGenero != null) {
+          body['genero'] = _selectedGenero == 'Masculino' ? 1 : 2;
+        }
+        if (_selectedPais != null) {
+          body['pais'] = _selectedPais;
+        }
+        body.removeWhere((k, v) => v == null || (v is String && v.isEmpty));
+        await _api.updateUtilizador(userIdd, body);
+        await showSuccessDialog(
+          context: context,
+          message: 'Dados atualizados com sucesso!',
+        );
+        context.go('/profile');
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Erro ao atualizar dados'), backgroundColor: Colors.red),
+        );
+      }
+    }
   }
 }

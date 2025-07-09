@@ -88,7 +88,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
               style: TextButton.styleFrom(backgroundColor: Colors.green),
               child: const Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () async {
-                context.pop(); // fecha o dialog
+                context.pop(); 
                 await Future.delayed(const Duration(milliseconds: 100)); 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -110,9 +110,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
               style: TextButton.styleFrom(backgroundColor: Colors.red),
               child: const Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.pop(); // Close the dialog
-                // ignore: avoid_print
-                print('Alterações não foram guardadas!');
+                context.pop();
               },
             ),
           ],
@@ -150,14 +148,6 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // const Text(
-                  //   'Por favor, crie uma nova password. Certifique que esta é diferente da anterior.',
-                  //   style: TextStyle(
-                  //     fontSize: 16,
-                  //     fontStyle: FontStyle.italic,
-                  //     color: Color.fromRGBO(128, 127, 127, 1),
-                  //   ),
-                  // ),
                   const SizedBox(height: 50),
                   SizedBox(
                     width: 374,

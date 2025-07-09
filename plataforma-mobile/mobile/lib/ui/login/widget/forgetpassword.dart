@@ -94,7 +94,22 @@ class _ForgetPassword extends State<ForgetPassword> {
                       try {
                         final resposta = await _api.esqueceuPassword(email);
                         print(resposta);
-                        context.go("/confirmacao");
+                        await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Sucesso'),
+                            content: const Text('Email enviado com sucesso!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        );
+                        context.go("/confirmacao", extra: {'email': email});
                       } catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text('Erro ao enviar email.')),

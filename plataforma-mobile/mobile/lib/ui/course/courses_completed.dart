@@ -45,7 +45,7 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
     return Scaffold(
       appBar: AppBarArrow(
         onBack: () => context.pop(),
-        title: 'Cursos Completed'
+        title: 'Cursos terminados'
       ),
       body: SingleChildScrollView(
         child: (cursos.isEmpty) 

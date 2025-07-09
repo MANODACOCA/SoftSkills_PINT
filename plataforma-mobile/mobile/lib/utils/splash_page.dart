@@ -32,6 +32,7 @@ class _SplashPageState extends State<SplashPage> {
           final payloadMap = json.decode(payload);
           final userId = payloadMap['id'];
           if (userId != null) {
+            if (!mounted) return;
             final authProvider = Provider.of<AuthProvider>(context, listen: false);
             // Tenta buscar dados completos da API
             try {

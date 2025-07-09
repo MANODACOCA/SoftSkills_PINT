@@ -10,7 +10,7 @@ import {
     BsTwitter,
     BsLinkedin,
     BsDownload,
-} from 'react-icons/bs';//icons
+} from 'react-icons/bs';
 
 const FooterAdmin = () => {
     return (
