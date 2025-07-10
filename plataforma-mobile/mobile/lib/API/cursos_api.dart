@@ -495,4 +495,58 @@ class CursosApi {
       throw Exception('Sem internet e não foi possivel aceder à chache');
     }
   }
+
+  Future <Map<String, dynamic>> cursoSlide() async {
+    final cacheKey = 'cursos_slide';
+
+    final hasConnection = await temInternet();
+
+    if(hasConnection){
+      try{
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('token');
+
+        if (token == null) {
+          throw Exception('Sessão expirada: token inexistente');
+        }
+
+        final response = await http.get(
+          Uri.parse('$urlAPI/curso-destaque/topcurso'),
+          headers: {
+            'Authorization': 'Bearer $token',
+            'Content-Type': 'application/json',
+          },
+        );
+
+        if (response.statusCode == 200) {
+          print('Curso para o Slide encontrado: ${response.body}');
+          final Map<String, dynamic> data = jsonDecode(response.body);
+          //final cursos = data.cast<Map<String, dynamic>>();
+          await ApiCache.guardarDados(cacheKey, data);
+          return data;
+        }
+
+        throw Exception('Erro ao encontrar cursos para si!');
+      } catch (error) {
+        print('Erro ao encontrar cursos para si: $error');
+        throw error;
+      }
+    }
+
+    try{
+      final cached = await ApiCache.lerDados(cacheKey);
+      if(cached != null) {
+        return Map<String, dynamic>.from(cached);
+      } else {
+        throw Exception('Sem internet e sem dados guardados localmente');
+      }
+    } catch(cacheError) {
+      print('Erro ao ler cache: $cacheError');
+      throw Exception('Sem internet e não foi possivel aceder à chave');
+    }
+  }
+
 }
+
+
+
