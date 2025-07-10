@@ -57,11 +57,11 @@ controllers.update = async (req,res)=>{
       desc: 'Campo "nome" é obrigatorio'})
     }
 
-    const existente = await model.findOne({ nome_topico: nome_topico.trim() });
+    /* const existente = await model.findOne({ nome_topico: nome_topico.trim() });
     
     if (existente) {
       return res.status(409).json({ erro: 'Já existe um topico com esse nome.' });
-    }
+    } */
 
     await model.update({ where: { id_topico: id } }, { nome_topico: nome_topico.trim(), ...resto } );
 
