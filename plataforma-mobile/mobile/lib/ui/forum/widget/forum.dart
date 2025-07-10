@@ -16,9 +16,21 @@ class _ForumState extends State<Forum> {
   List<dynamic> foruns = [];
   bool loading = true;
 
-  Future<void> carregarForuns() async {
+  @override
+  void initState() {
+    super.initState();
+    carregarForuns();
+  }
+
+  String _search = "";
+  String _ordem = "Mais Recentes";
+
+  Future<void> carregarForuns({String? ordem, String? search}) async {
+    _search = search ?? _search;
+    _ordem = ordem ?? _ordem;
+
     try {
-      final resultado = await ForumAPI.listConteudosPartilhado();
+      final resultado = await ForumAPI.listConteudosPartilhado(ordenar: _ordem, search: _search);
       setState(() {
         foruns = resultado;
         loading = false;
@@ -30,11 +42,7 @@ class _ForumState extends State<Forum> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    carregarForuns();
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +50,18 @@ class _ForumState extends State<Forum> {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-      child: Scaffold(
+      child: AppScaffold(
         appBar: AppBar(
           backgroundColor: AppColors.primary,
-          title: SearchBarCustom(),
+          title: SearchBarCustom(
+            hintText: 'Pesquisar fórum',
+            onFilterTap: () {
+              
+            },
+            onSearchChanged: (value) {
+              carregarForuns(search: value);
+            },
+          ),
           centerTitle: true,
         ),
         body:
