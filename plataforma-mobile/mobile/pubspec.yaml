@@ -65,6 +65,7 @@ dependencies:
   connectivity_plus: ^6.1.4
   offline_banner: ^1.0.4
   dropdown_search: ^5.0.3
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:
