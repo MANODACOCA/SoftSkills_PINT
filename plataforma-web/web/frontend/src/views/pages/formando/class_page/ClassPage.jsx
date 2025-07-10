@@ -33,7 +33,6 @@ const ClassPage = () => {
     const [carregar, setCarregar] = useState(true);
     const [erro, setErro] = useState(null);
 
-    console.log(curso);
     const { cursoId } = useParams();
     const { user } = useUser();
 
@@ -268,7 +267,7 @@ const ClassPage = () => {
                                         )}
                                     </Tab>
 
-                                    {curso.issincrono && (
+                                    {curso?.issincrono && (
                                         <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>}>
                                             <div className="mt-4">
                                                 {trabalhoIdSelecionado ? (

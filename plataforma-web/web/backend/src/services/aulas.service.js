@@ -40,6 +40,9 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
             ],
         });
 
+        if (!dadosCurso) {
+            throw new Error('Curso não encontrado');
+        }
 
         const todasAulas = await aulas.findAll({
             where: { id_curso: cursoId },
@@ -59,10 +62,6 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
             order: [['data_aula', 'ASC']]
         });
 
-        if (todasAulas.length === 0) {
-            throw new Error('Nenhum aula encontrada para este curso');
-        }
-
         const materialApoio = await material_apoio.findAll({
             where: { id_curso: cursoId },
             include: [
@@ -76,8 +75,8 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
 
         return {
             dadosCurso,
-            todasAulas,
-            materialApoio
+            todasAulas:  todasAulas || [],
+            materialApoio: materialApoio || []
         };
     } catch (error) {
         console.error('Erro ao buscar detalhes da aula:', error);

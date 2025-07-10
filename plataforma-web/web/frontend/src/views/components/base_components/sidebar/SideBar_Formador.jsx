@@ -21,13 +21,13 @@ const SidebarFormador = ({ toggleSidebar, collapsed }) => {
             <div className='d-flex justify-content-between flex-column vh-100 w-100'>
                 <div>
                     <NavLink to="/formador/home" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
-                        {!effectiveCollapsed && 
+                        {!effectiveCollapsed &&
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-house-door fs-4 px-2"></i>
                                 Home
                             </div>
                         }
-                        {effectiveCollapsed && 
+                        {effectiveCollapsed &&
                             <div className='d-flex flex-column align-items-center m-0'>
                                 <i className="bi bi-house-door fs-4 px-2"></i>
                                 <small className='text-truncate d-inline-block text-ellipsis'>Home</small>
@@ -36,82 +36,45 @@ const SidebarFormador = ({ toggleSidebar, collapsed }) => {
                     </NavLink>
                     <hr />
                     <NavLink to="/formador/cursos" className={`nav-link d-flex align-items-center px-2 ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
-                        {!effectiveCollapsed && 
+                        {!effectiveCollapsed &&
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-mortarboard fs-4 px-2"></i>
-                                <span className='w-100'>Cursos</span> 
+                                <span className='w-100'>Cursos</span>
                             </div>
                         }
-                        {effectiveCollapsed && 
+                        {effectiveCollapsed &&
                             <div className='d-flex flex-column align-items-center m-0'>
                                 <i className="bi bi-mortarboard fs-4 px-2"></i>
                                 <small className='text-truncate d-inline-block text-ellipsis'>Cursos</small>
                             </div>
                         }
                     </NavLink>
-                 {/*   <NavLink to="/formador/cursos-lecionados" className={`nav-link d-flex align-items-center px-2 ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
-                        {!effectiveCollapsed && 
-                            <div className='d-flex align-items-center'>
-                                <i className="bi bi-laptop fs-4 px-2"></i>
-                                Cursos Lecionados
-                            </div>
-                        }
-                        {effectiveCollapsed && 
-                            <div className='d-flex flex-column align-items-center m-0'>
-                                <i className="bi bi-laptop fs-4 px-2"></i>
-                                <small className='text-truncate d-inline-block text-ellipsis'>Cursos Lecionados</small>
-                            </div>
-                        }
-                    </NavLink> */}
-                   {/*  <NavLink to="/cursos/favoritos" className="nav-link d-flex align-items-center px-2 ">
-                        <i className="bi bi-heart fs-4 px-2"></i>
-                        {!collapsed && 'Cursos Favoritos'}
-                    </NavLink> */}
-                   {/* <NavLink to="my/cursos/terminados" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
-                        {!effectiveCollapsed && 
-                            <div className='d-flex align-items-center'>
-                                <i className="bi bi-patch-check fs-4 px-2"></i>
-                                Cursos Terminados
-                            </div>
-                        }
-                        {effectiveCollapsed && 
-                            <div className='d-flex flex-column align-items-center m-0'>
-                                <i className="bi bi-patch-check fs-4 px-2"></i>
-                                <small className='text-truncate d-inline-block text-ellipsis'>Cursos Terminados</small>
-                            </div>
-                        }
-                    </NavLink> */}
                     <hr />
                     <NavLink to="/forum" className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
-                        {!effectiveCollapsed && 
+                        {!effectiveCollapsed &&
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-chat-dots fs-4 px-2"></i>
-                                Fórum
+                                Fóruns
                             </div>
                         }
-                        {effectiveCollapsed && 
+                        {effectiveCollapsed &&
                             <div className='d-flex flex-column align-items-center m-0'>
                                 <i className="bi bi-chat-dots fs-4 px-2"></i>
-                                <small className='text-truncate d-inline-block text-ellipsis'>Fórum</small>
+                                <small className='text-truncate d-inline-block text-ellipsis'>Fóruns</small>
                             </div>
                         }
                     </NavLink>
-                    {/* <hr />
-                    <NavLink to="/notificacoes" className="nav-link d-flex align-items-center px-2 ">
-                        <i className="bi bi-bell fs-4 px-2"></i>
-                        {!collapsed && 'Notificações'}
-                    </NavLink> */}
                 </div>
                 <div>
-                    <NavLink to="/login" onClick={() => localStorage.removeItem('token')} 
-                            className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
-                        {!effectiveCollapsed && 
+                    <NavLink to="/login" onClick={() => localStorage.removeItem('token')}
+                        className={`nav-link d-flex align-items-center px-2  ${effectiveCollapsed ? 'justify-content-center' : 'my-2'}`}>
+                        {!effectiveCollapsed &&
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-box-arrow-right fs-4 px-2 text-danger"></i>
                                 <span className='text-danger'>Logout</span>
                             </div>
                         }
-                        {effectiveCollapsed && 
+                        {effectiveCollapsed &&
                             <div className='d-flex flex-column align-items-center justify-content-center m-0'>
                                 <i className="bi bi-box-arrow-right fs-4 px-2 text-danger"></i>
                                 <small className='text-truncate d-inline-block text-ellipsis text-danger'>Logout</small>
