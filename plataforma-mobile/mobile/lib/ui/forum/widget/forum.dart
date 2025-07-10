@@ -60,7 +60,9 @@ class _ForumState extends State<Forum> {
             onFilterTap: () {
               DropdownFilterForum.show(context, ({String? ordem}) {
                 carregarForuns(ordem: ordem);
-              });
+              },
+              "Forum",
+              );
             },
             onSearchChanged: (value) {
               carregarForuns(search: value);
