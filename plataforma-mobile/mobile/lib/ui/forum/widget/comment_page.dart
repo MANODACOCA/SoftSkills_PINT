@@ -1,11 +1,13 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, use_build_context_synchronously
 import 'dart:io';
 //import '../../../API/comments_forum.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/comments_forum_api.dart';
+import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/forum/widget/elements/card_comments_forum.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:mobile/ui/forum/widget/elements/comment_box.dart';
+import 'package:provider/provider.dart';
 import '../../core/shared/export.dart';
 
 class CommentPage extends StatefulWidget {
@@ -89,10 +91,13 @@ class _CommentPageState extends State<CommentPage> {
   TextEditingController commentController = TextEditingController();
   TextEditingController fileController = TextEditingController();
   late Future<List<dynamic>> comentarios;
+  late String idUser;
 
   Future<void> carregarTudo() async {
     comentarios = ComentarioAPI.getComentariosByPost(widget.postId);
     await comentarios;
+    idUser = Provider.of<AuthProvider>(context, listen: false).user?.id ?? '';
+    print('Carregou os comentários para o post $comentarios}');
     setState(() {
       isLoading = false;
     });
@@ -148,6 +153,10 @@ class _CommentPageState extends State<CommentPage> {
                       forumLike: widget.likes,
                       description: widget.description,
                       photo: widget.photo,
+                      datePost: DateTime.now().toLocal().toString().substring(
+                        0,
+                        10,
+                      ),
                       selectComment: true,
                     ),
                     if (addcomment)
@@ -158,7 +167,7 @@ class _CommentPageState extends State<CommentPage> {
                           children: [
                             TextField(
                               controller: commentController,
-                              decoration: InputDecoration(  
+                              decoration: InputDecoration(
                                 prefixIcon: IconButton(
                                   icon: Icon(
                                     Icons.attach_file_outlined,
@@ -177,14 +186,35 @@ class _CommentPageState extends State<CommentPage> {
                                     Icons.send,
                                     color: AppColors.secondary,
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      addcomment = false;
-                                      cor = Colors.white;
-                                    });
-                                    print(
-                                      'Comment writed ${commentController.text}',
-                                    );
+                                  onPressed: () async {
+                                    final textoComentario =
+                                        commentController.text.trim();
+
+                                    if (textoComentario.isNotEmpty) {
+                                      try {
+                                        final formData = {
+                                          "id_utilizador": idUser,
+                                          "id_post": widget.postId,
+                                          "id_formato": 1,
+                                          "texto_comentario": textoComentario,
+                                        };
+
+                                        await ComentarioAPI.createComentario(
+                                          formData,
+                                        );
+
+                                        setState(() {
+                                          commentController.clear();
+                                          addcomment = false;
+                                          cor = Colors.white;
+                                          isLoading = true;
+                                        });
+
+                                        await carregarTudo(); // Atualiza os comentários
+                                      } catch (e) {
+                                        print('Erro ao criar comentário: $e');
+                                      }
+                                    }
                                   },
                                 ),
                               ),
@@ -223,6 +253,7 @@ class _CommentPageState extends State<CommentPage> {
                                   vertical: 8.0,
                                 ),
                                 title: CommentBox(
+                                  id: comentario['id_comentario'],
                                   avatarUrl:
                                       imgPerfil != null && imgPerfil.isNotEmpty
                                           ? imgPerfil
@@ -236,6 +267,13 @@ class _CommentPageState extends State<CommentPage> {
                                   // forumLike: comentario['num_gostos'] ?? 0,
                                   description:
                                       comentario['texto_comentario'] ?? '',
+                                  onDelete: (id) {
+                                    setState(() {
+                                      comentariosList.removeWhere(
+                                        (c) => c['id_comentario'] == id,
+                                      );
+                                    });
+                                  },
                                 ),
                               );
                             },

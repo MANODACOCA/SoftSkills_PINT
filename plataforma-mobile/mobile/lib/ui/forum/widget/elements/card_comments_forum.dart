@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../../../../API/utilizadores_api.dart';
 
 // ignore: must_be_immutable
+
 class Post extends StatefulWidget {
   const Post({
     super.key,
@@ -18,18 +19,20 @@ class Post extends StatefulWidget {
     required this.forumLike,
     required this.description,
     required this.photo,
+    required this.datePost,
     required this.selectComment,
     this.onDelete,
   });
 
+  final void Function(String postId)? onDelete;
   final String postID;
   final String forumName;
   final int forumComments;
   final int forumLike;
+  final String datePost;
   final String description;
   final String photo;
   final bool selectComment;
-  final void Function(String postId)? onDelete;
 
   @override
   State<Post> createState() => _PostState();
@@ -48,7 +51,6 @@ class _PostState extends State<Post> {
   @override
   void initState() {
     super.initState();
-    print('Post ID: ${widget.postID}');
     likes = widget.forumLike;
     userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
     userIdINT = int.parse(userId!);
@@ -58,7 +60,6 @@ class _PostState extends State<Post> {
   @override
   void dispose() {
     _copiar.dispose();
-    //Guardar na database o novo valor de likes
     super.dispose();
   }
 
@@ -90,13 +91,13 @@ class _PostState extends State<Post> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   subtitle: Text(
-                    '${DateTime.now().toLocal().toString().substring(0, 10)}', //Change to database date
+                    widget.datePost,
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   trailing: Transform.translate(
-                    offset: Offset(-16, 0), // Ajusta horizontalmente
+                    offset: Offset(-16, 0),
                     child: PopupMenuButton<String>(
-                      offset: Offset(-20, 0.5), // Ajusta verticalmente
+                      offset: Offset(-20, 0.5),
                       position: PopupMenuPosition.under,
                       icon: Icon(Icons.more_vert, color: Colors.grey),
                       onSelected: (value) {
@@ -105,6 +106,37 @@ class _PostState extends State<Post> {
                           Clipboard.setData(ClipboardData(text: _copiar.text));
                         } else if (value == 'denunciar') {
                           denunciar();
+                        } else if (value == 'eliminar') {
+                          Future.delayed(Duration.zero, () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: Text('Confirmar eliminação'),
+                                content: Text('Tens a certeza que queres eliminar este post?'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(false),
+                                    child: Text('Cancelar'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).pop(true),
+                                    child: Text('Eliminar', style: TextStyle(color: Colors.red)),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              await ForumAPI.deletePost(widget.postID);
+                              if (widget.onDelete != null) {
+                                widget.onDelete!(widget.postID);
+                              }
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Post eliminado com sucesso!'),
+                                ),
+                              );
+                            }
+                          });
                         }
                       },
                       itemBuilder: (BuildContext context) {
@@ -132,8 +164,7 @@ class _PostState extends State<Post> {
                         ];
                         if (snapshot.connectionState == ConnectionState.done &&
                             snapshot.hasData &&
-                            widget.forumName ==
-                                snapshot.data!['nome_utilizador']) {
+                            widget.forumName == snapshot.data!['nome_utilizador']) {
                           items.add(
                             PopupMenuItem(
                               value: 'eliminar',
@@ -141,61 +172,9 @@ class _PostState extends State<Post> {
                                 children: [
                                   Icon(Icons.delete, color: Colors.red),
                                   SizedBox(width: 8),
-                                  TextButton(
-                                    onPressed: () async {
-                                      final confirm = await showDialog<bool>(
-                                        context: context,
-                                        builder:
-                                            (context) => AlertDialog(
-                                              title: Text(
-                                                'Confirmar eliminação',
-                                              ),
-                                              content: Text(
-                                                'Tens a certeza que queres eliminar este post?',
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed:
-                                                      () => Navigator.of(
-                                                        context,
-                                                      ).pop(false),
-                                                  child: Text('Cancelar'),
-                                                ),
-                                                TextButton(
-                                                  onPressed:
-                                                      () => Navigator.of(
-                                                        context,
-                                                      ).pop(true),
-                                                  child: Text(
-                                                    'Eliminar',
-                                                    style: TextStyle(
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                      );
-                                      if (confirm == true) {
-                                        await ForumAPI.deletePost(
-                                          widget.postID,
-                                        );
-                                        widget.onDelete?.call(widget.postID);
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Post eliminado com sucesso!',
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: Text(
-                                      'Eliminar',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
+                                  Text(
+                                    'Eliminar',
+                                    style: TextStyle(color: Colors.red),
                                   ),
                                 ],
                               ),
@@ -214,7 +193,6 @@ class _PostState extends State<Post> {
             padding: EdgeInsets.symmetric(horizontal: 30),
             child: LayoutBuilder(
               builder: (context, constraints) {
-                // Medir se precisa de "ver mais"
                 final span = TextSpan(
                   text: widget.description,
                   style: TextStyle(fontSize: 13, color: Colors.grey[700]),
@@ -235,10 +213,7 @@ class _PostState extends State<Post> {
                       child: Text(
                         widget.description,
                         maxLines: _expanded ? null : 2,
-                        overflow:
-                            _expanded
-                                ? TextOverflow.visible
-                                : TextOverflow.ellipsis,
+                        overflow: _expanded ? TextOverflow.visible : TextOverflow.ellipsis,
                         style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                       ),
                     ),
@@ -294,13 +269,9 @@ class _PostState extends State<Post> {
                       isSelected: widget.selectComment,
                       icon: Icon(
                         Icons.comment,
-                        color:
-                            widget.selectComment
-                                ? AppColors.secondary
-                                : Colors.grey,
+                        color: widget.selectComment ? AppColors.secondary : Colors.grey,
                       ),
                       onPressed: () async {
-                        //await verSeNULL();
                         context.push(
                           '/commentPage',
                           extra: {
@@ -391,7 +362,6 @@ class _PostState extends State<Post> {
                   ),
                   onPressed: () {
                     print('Denunciar: $_denunciar');
-                    // Envia para a base de dados uma denúncia com o motivo selecionado
                   },
                   child: Text(
                     'Denunciar',

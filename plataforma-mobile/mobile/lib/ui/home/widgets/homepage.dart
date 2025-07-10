@@ -56,7 +56,7 @@ class _HomePage extends State<HomePage> {
                     : Column(
                         children: [
                           SizedBox(height: 10),
-                          Carousel(),
+                          MyCarousel(),
                           SizedBox(height: 15),
                           CardsScroll(tema: 'Para si', cursos: cursosParaSi),
                           SizedBox(height: 10),

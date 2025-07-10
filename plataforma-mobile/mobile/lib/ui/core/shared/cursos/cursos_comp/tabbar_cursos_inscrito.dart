@@ -5,6 +5,7 @@ import 'package:mobile/ui/core/shared/aulas/aulas_scroll.dart';
 import 'package:mobile/ui/core/shared/material_apoio/material_scroll.dart';
 import 'package:mobile/ui/core/shared/base_comp/text_expand.dart';
 import 'package:mobile/ui/core/shared/trabalhos/trabalhos_scroll.dart';
+import 'package:mobile/utils/verifica_internet.dart';
 
 import '../../export.dart';
 
@@ -164,21 +165,35 @@ class _TabbarCoursesInscritoState extends State<TabbarCoursesInscrito> {
                               child: SizedBox(
                                 height: 60,
                                 width: 60,
-                                child: Image.network(
-                                  (imgPerfil != null && imgPerfil.toString().isNotEmpty)
-                                    ? 'https://softskills-api.onrender.com/$imgPerfil' 
-                                    : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(nomeFormador)}&background=random&bold=true',
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(nomeFormador)}&background=random&bold=true';
-                                    return Image.network(
-                                      fallbackImg,
-                                      height: 135,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    );
+                                child:  FutureBuilder<bool>(
+                                  future: temInternet(),
+                                  builder: (context, snapshot) {
+                                    final online = snapshot.data ?? true;
+                                    final imageUrl = 'https://ui-avatars.com/api/?name= ${Uri.encodeComponent(nomeFormador)}&background=random&bold=true';
+                                    if (online) {
+                                      return Image.network(
+                                        'https://softskills-api.onrender.com/$imgPerfil',
+                                        height: 60,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Image.network(
+                                            imageUrl,
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      return Image.asset(
+                                        'assets/user.png',
+                                        width: 60,
+                                        height: 60,
+                                        fit: BoxFit.cover,
+                                      );
+                                    }
                                   },
-                                ) 
+                                ),
                               ),
                             ),
                             SizedBox(width: 15,),

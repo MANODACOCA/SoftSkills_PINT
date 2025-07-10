@@ -65,6 +65,7 @@ dependencies:
   connectivity_plus: ^6.1.4
   offline_banner: ^1.0.4
   dropdown_search: ^5.0.3
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:
@@ -95,9 +96,13 @@ flutter:
     - assets/facebook.png
     - assets/forget.png
     - assets/welcome.png
-    - assets/course-flutter.png
+    - assets/course.png
     - assets/logo.png
     - assets/facebook-logo.png
+    - assets/carousel/courses.png
+    - assets/carousel/forum_resized.png
+    - assets/user.png
+    - assets/course-horizontal.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
