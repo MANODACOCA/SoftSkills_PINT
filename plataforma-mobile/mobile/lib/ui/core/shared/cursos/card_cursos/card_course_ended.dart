@@ -1,4 +1,3 @@
-import 'package:go_router/go_router.dart';
 import 'package:mobile/utils/uteis.dart';
 import 'package:mobile/utils/verifica_internet.dart';
 
@@ -16,9 +15,7 @@ class CardCourseEnded extends StatelessWidget {
     final dataForm = formatDateRange(dataInicio, dataFim);
 
     return GestureDetector(
-      onTap: () {
-        context.push('/cursos-completed', extra: curso['id_curso']);
-      },
+      onTap: () { },
       child: Card(
         elevation: 2,
         shadowColor: Colors.black,

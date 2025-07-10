@@ -4,6 +4,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/API/cursos_api.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class MyCarousel extends StatefulWidget {
   const MyCarousel({super.key});
@@ -15,6 +17,7 @@ class MyCarousel extends StatefulWidget {
 class _MyCarouselState extends State<MyCarousel> {
   final CursosApi _api = CursosApi();
   Map<String, dynamic> slidecurso = {};
+  bool inscrito = false;
 
   @override
   void initState() {
@@ -28,8 +31,26 @@ class _MyCarouselState extends State<MyCarousel> {
       setState(() {
         slidecurso = cursoSlide;
       });
+      if(mounted){
+      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (userId != null) {
+        print('ID do utilizador: $userId');
+        verificaInscrito(int.parse(userId), slidecurso['id_curso']);
+      }
+      }
     } catch (error) {
       print('Erro ao encontrar curso slide: $error');
+    }
+  }
+
+  Future<void> verificaInscrito (int userId, int cursoId) async {
+    try {
+      final estaInscrito = await _api.verificarInscricao(userId, cursoId);
+      setState(() {
+        inscrito = estaInscrito;
+      });
+    } catch (e) {
+      print('Erro ao verificar inscrição: $e');
     }
   }
 
@@ -52,7 +73,8 @@ class _MyCarouselState extends State<MyCarousel> {
         'title': slidecurso['nome_curso'],
         'description': '🧠 Conhece o curso mais procurado na SoftSkills.',
         'image': slidecurso['imagem'] ?? '',
-        'route': '/cursos/${slidecurso['id_curso']}',
+        'route': inscrito ? '/cursos-inscritos' : '/inscrever',
+        'extra': slidecurso['id_curso'],
       },
     ];
 
@@ -127,7 +149,11 @@ class _MyCarouselState extends State<MyCarousel> {
                       const SizedBox(height: 16),
                       ElevatedButton.icon(
                         onPressed: () {
-                          context.go(slide['route']);
+                          if (slide.containsKey('extra')) {
+                            context.go(slide['route'], extra: slide['extra']);
+                          } else {
+                            context.go(slide['route']);
+                          }
                         },
                         icon: const Icon(Icons.info_outline),
                         label: const Text('Mais Informações'),
