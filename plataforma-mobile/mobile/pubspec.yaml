@@ -96,11 +96,13 @@ flutter:
     - assets/facebook.png
     - assets/forget.png
     - assets/welcome.png
-    - assets/course-flutter.png
+    - assets/course.png
     - assets/logo.png
     - assets/facebook-logo.png
     - assets/carousel/courses.png
     - assets/carousel/forum_resized.png
+    - assets/user.png
+    - assets/course-horizontal.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

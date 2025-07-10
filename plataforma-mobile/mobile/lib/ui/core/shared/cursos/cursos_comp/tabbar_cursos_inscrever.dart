@@ -1,4 +1,5 @@
 import 'package:mobile/ui/core/shared/base_comp/text_expand.dart';
+import 'package:mobile/utils/verifica_internet.dart';
 
 import '../../export.dart';
 import '../../../../../utils/uteis.dart';
@@ -74,6 +75,7 @@ class TabbarCoursesInscrever extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
@@ -81,21 +83,36 @@ class TabbarCoursesInscrever extends StatelessWidget {
                               child: SizedBox(
                                 height: 60,
                                 width: 60,
-                                child: Image.network(
-                                  ((curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi']).toString().isNotEmpty)
-                                    ? 'https://softskills-api.onrender.com/${curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi']}' 
-                                    : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true',
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true';
-                                    return Image.network(
-                                      fallbackImg,
-                                      height: 135,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    );
+                                child:  FutureBuilder<bool>(
+                                  future: temInternet(),
+                                  builder: (context, snapshot) {
+                                    final online = snapshot.data ?? true;
+                                    final img = curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['img_perfi'];
+                                    final imageUrl = 'https://ui-avatars.com/api/?name= ${Uri.encodeComponent(curso['sincrono']?['id_formador_formadore']?['id_formador_utilizador']?['nome_util'])}&background=random&bold=true';
+                                    if (online) {
+                                      return Image.network(
+                                        'https://softskills-api.onrender.com/$img',
+                                        height: 60,
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Image.network(
+                                            imageUrl,
+                                            width: 60,
+                                            height: 60,
+                                            fit: BoxFit.cover,
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      return Image.asset(
+                                        'assets/user.png',
+                                        width: 60,
+                                        height: 60,
+                                        fit: BoxFit.cover,
+                                      );
+                                    }
                                   },
-                                )   
+                                ),
                               ),
                             ),
                             SizedBox(width: 15,),
@@ -109,7 +126,7 @@ class TabbarCoursesInscrever extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 5,),
-                        TextExpand(text: curso['sincrono']?['id_formador_formadore']?['descricao_formador']),
+                        TextExpand(text: curso['sincrono']?['id_formador_formadore']?['descricao_formador']),                        
                       ],
                     ),
                   ),

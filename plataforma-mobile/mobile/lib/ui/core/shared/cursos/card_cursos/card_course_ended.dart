@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:mobile/utils/uteis.dart';
+import 'package:mobile/utils/verifica_internet.dart';
 
 import '../../export.dart';
 
@@ -30,20 +31,34 @@ class CardCourseEnded extends StatelessWidget {
                 topLeft: Radius.circular(12),
                 bottomLeft: Radius.circular(12),
               ),
-              child: Image.network(
-                curso['imagem'],
-                width: 100,
-                height: 155,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  final fallbackImg =
-                      'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['nome_curso'])}&background=random&bold=true';
-                  return Image.network(
-                    width: 100,
-                    height: 170,
-                    fallbackImg,
-                    fit: BoxFit.cover,
-                  );
+              child: FutureBuilder<bool>(
+                future: temInternet(),
+                builder: (context, snapshot) {
+                  final online = snapshot.data ?? true;
+                  final imageUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['nome_curso'])}&background=random&bold=true';
+                  if (online) {
+                    return Image.network(
+                      curso['imagem'],
+                      width: 100,
+                      height: 155,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          imageUrl,
+                          width: 100,
+                          height: 155,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    );
+                  } else {
+                    return Image.asset(
+                      'assets/course.png',
+                      width: 100,
+                      height: 155,
+                      fit: BoxFit.cover,
+                    );
+                  }
                 },
               ),
             ),
