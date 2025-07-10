@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
+import 'package:mobile/utils/verifica_internet.dart';
 import 'package:provider/provider.dart';
 import '../../../../../utils/uteis.dart';
 import '../../export.dart';
@@ -81,21 +82,36 @@ class _CardCourseState extends State<CardCourse> {
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
               ),
-              child: Image.network(
-                widget.img,
-                height: 135,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(widget.title)}&background=random&bold=true';
-                  return Image.network(
-                    fallbackImg,
-                    height: 135,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  );
+              child: FutureBuilder<bool>(
+                future: temInternet(),
+                builder: (context, snapshot) {
+                  final online = snapshot.data ?? true;
+                  final imageUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(widget.title)}&background=random&bold=true';
+                  if (online) {
+                    return Image.network(
+                      widget.img,
+                      width: double.infinity,
+                      height: 135,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network(
+                          imageUrl,
+                          width: double.infinity,
+                          height: 135,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    );
+                  } else {
+                    return Image.asset(
+                      'assets/course.png',
+                      width: double.infinity,
+                      height: 135,
+                      fit: BoxFit.cover,
+                    );
+                  }
                 },
-              )
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
