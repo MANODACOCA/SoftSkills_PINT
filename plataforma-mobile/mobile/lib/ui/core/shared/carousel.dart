@@ -55,16 +55,18 @@ class _MyCarouselState extends State<MyCarousel> {
       },
     ];
 
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 250,
-        viewportFraction: 1,
-        autoPlay: true,
+      return CarouselSlider(
+        options: CarouselOptions(
+          height: 250,
+          viewportFraction: 1,
+          autoPlay: true,
       ),
       items: slides.map((slide) {
         return Builder(
           builder: (context) {
-            return Stack(
+            return Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Stack(
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -140,6 +142,7 @@ class _MyCarouselState extends State<MyCarousel> {
                   ),
                 ),
               ],
+            ),
             );
           },
         );
