@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import EnrollmentCard from '../../../components/card_registration/CardRegistration';
 import CourseModule from '../../../components/course_module/CourseModule';
 import ScrollableSection from '../../../components/scrollable_section/ScrollableSection';
-import { formatDayMonthYear } from '../../../components/shared_functions/FunctionsUtils';
+import { formatDayMonthYear, parseDateWithoutTimezone } from '../../../components/shared_functions/FunctionsUtils';
 import { FaVideo, FaUsers, FaCalendarAlt, FaInfoCircle } from 'react-icons/fa';
 import { getCursosDisponiveisParaInscricao } from '../../../../api/cursos_axios';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border'
@@ -19,6 +19,8 @@ const CourseRegistration = () => {
   const sentinelRef = React.useRef(null);
   const [loading, setLoading] = useState(true);
   const [inscrito, setInscrito] = useState(false);
+  const nowDate = new Date();
+  const [dataFimInsc, setDataFimInsc] = useState(null);
 
   const handleInscrito = (valor) => {
     setInscrito(valor);
@@ -88,6 +90,12 @@ const CourseRegistration = () => {
     }
   }, [id, course?.contador_formandos]);
 
+  useEffect(() => {
+    if (course) {
+    setDataFimInsc(parseDateWithoutTimezone(course?.data_fim_inscricao));
+    }
+  }, [course]);
+
 
   const handleEnroll = async (courseId) => {
     try {
@@ -110,14 +118,14 @@ const CourseRegistration = () => {
       <div className="text-center pt-5">
         <h3>Curso não encontrado</h3>
         <p>O curso que está a tentar aceder já não se encontra disponível ao já não têm acesso a ele.</p>
-         <Link to="/cursos" className='btn btn-primary'>Voltar para cursos</Link>
+        <Link to="/cursos" className='btn btn-primary'>Voltar para cursos</Link>
       </div>
     )
   }
 
   return (
     <div className="px-3">
-      {inscrito && (
+      {inscrito && nowDate <= dataFimInsc && (
         <div className="alert alert-info text-center"><FaInfoCircle /> Este curso ainda não começou. Assim que for iniciado, você poderá acessá-lo <Link to="/my/cursos/inscritos">aqui</Link>!</div>
       )}
       {/* Header com fundo azul de largura completa */}
