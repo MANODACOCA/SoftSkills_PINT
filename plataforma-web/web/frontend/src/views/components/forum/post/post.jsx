@@ -27,6 +27,7 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
 
     const API_URL = 'https://softskills-api.onrender.com/';
     const { user, setUser } = useUser();
+    const usuario = localStorage.getItem("activeRole");
 
     /*COMENTS*/
     const [showComments, setShowComments] = useState(false);
@@ -108,8 +109,13 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
     /*LIKES*/
     const [liked, setLiked] = useState(jaCurtiu || false);
     const [likes, setLikes] = useState(inicialLikes);
+    const [isLikeOcorrer, setIsLikeOcorrer] = useState(false);
 
     const handleLike = async () => {
+        if (isLikeOcorrer) return;
+
+        setIsLikeOcorrer(true);
+
         try {
             if (liked) {
                 await delete_like(idPost, user.id_utilizador);
@@ -126,6 +132,8 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
         } catch (err) {
             console.error("Erro ao atualizar like:", err);
             Swal.fire("Erro", "Não foi possível atualizar o like. Tente novamente.", "error");
+        } finally {
+            setIsLikeOcorrer(false);
         }
     };
 
@@ -222,7 +230,7 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            {idAutor !== user?.id_utilizador && (
+                            {idAutor !== user?.id_utilizador && usuario !== 'admin' && (
                                 <>
                                     <Dropdown.Item className='text-danger' onClick={() => setShowReportModal(true)}>
                                         <BsExclamationTriangleFill className='me-4' />Denuciar
@@ -263,7 +271,7 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
                                     </Modal>
                                 </>
                             )}
-                            {idAutor === user?.id_utilizador && (
+                            {(idAutor === user?.id_utilizador || usuario === 'admin') && (
                                 <Dropdown.Item className='text-danger' onClick={handleDelete}>
                                     <BsFillTrash3Fill className='me-4' />Eliminar
                                 </Dropdown.Item>
@@ -297,6 +305,7 @@ const PostCard = ({ idPost, idAutor, autor, email, tempo, texto, likes: inicialL
                         size="sm"
                         className={`btn d-flex align-items-center text-white ${liked ? 'btn-primary' : 'btn-outline-secondary'}`}
                         onClick={handleLike}
+                        disabled={isLikeOcorrer}
                     >
                         {liked ? (
                             <AiFillLike className="me-1" style={{ fontSize: '20px' }} />
