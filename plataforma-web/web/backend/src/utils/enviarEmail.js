@@ -14,33 +14,39 @@ async function sendEmail(destinatario, passwordTemporaria) {
     to: destinatario,
     subject: 'A sua conta na SoftSkills foi criada com sucesso',
     html: `
-<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 30px;">
-  <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);">
+<div
+  style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 30px; text-align: center;">
+  <div
+    style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);">
     <h2 style="color: #3085d6; text-align: center; margin-bottom: 20px;">🎉 Bem-vindo à SoftSkills!</h2>
     <p style="font-size: 16px; color: #333;">Olá,</p>
-    <p style="font-size: 16px; color: #333;">A sua conta foi <strong>criada com sucesso</strong> e já está quase pronta para uso.</p>
-    
+    <p style="font-size: 16px; color: #333;">A sua conta foi <strong>criada com sucesso</strong> e já está quase pronta
+      para uso.</p>
+
     <div style="margin: 25px 0;">
       <p style="font-size: 15px; color: #333;">Abaixo está a sua <strong>password temporária</strong>:</p>
-      <div style="text-align: center;">
-          <p style="font-size: 20px; font-weight: bold; background-color: #e6f7ff; color: #00A9E0; padding: 12px 20px; border-radius: 8px; display: inline-block; letter-spacing: 1px;">${passwordTemporaria}</p>
-      </div>
+      <p
+        style="font-size: 20px; font-weight: bold; background-color: #e6f7ff; color: #00A9E0; padding: 12px 20px; border-radius: 8px; display: inline-block; letter-spacing: 1px;">
+        ${passwordTemporaria}</p>
     </div>
 
     <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;" />
 
     <p style="font-size: 15px; color: #333;">Para ativar a sua conta, clique no botão abaixo:</p>
-    <div style="text-align: center; margin: 30px 0;">
-      <a href="https://softskills-three.vercel.app/login?email=${destinatario}&password_util=${passwordTemporaria}" target="_blank" style="background-color: #3b5b84; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Ativar Conta</a>
+    <div style="margin: 30px 0;">
+      <a href="https://softskills-three.vercel.app/login?email=${destinatario}&password_util=${passwordTemporaria}"
+        target="_blank"
+        style="background-color: #3b5b84; color: #ffffff; padding: 14px 28px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 16px;">Ativar
+        Conta</a>
     </div>
 
-    <p style="font-size: 14px; color: #888;">Se não foi você quem solicitou esta conta, por favor ignore este e-mail.</p>
-    
+    <p style="font-size: 14px; color: #888;">Se não foi você quem solicitou esta conta, por favor ignore este e-mail.
+    </p>
+
     <br />
     <p style="font-size: 14px; color: #888;">Com os melhores cumprimentos,<br><strong>Equipa SoftSkills 💙</strong></p>
   </div>
 </div>
-
 `
   });
 }
