@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Spinner } from 'react-bootstrap';
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 
 import ForumHeader from "../../../components/forum/header/headerForum";
 import PostCard from "../../../components/forum/post/post";
@@ -75,8 +75,16 @@ const ForumPosts = () => {
     </div>
   );
 
+  if (!forum) return (
+    <div className="text-center pt-5">
+      <h3>Forúm não encontrado</h3>
+      <p>O forúm que está a tentar aceder já não se encontra disponível ao já não têm acesso a ele.</p>
+      <Link to="/forum" className='btn btn-primary'>Voltar para forúns</Link>
+    </div>
+  );
+
   if (error) return <div className="mt-4 alert alert-danger">{error}</div>;
-  console.table("DAWDA", posts);
+
   return (
     <div>
       <ForumHeader

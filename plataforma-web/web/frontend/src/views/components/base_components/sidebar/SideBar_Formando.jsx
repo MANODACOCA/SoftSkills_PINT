@@ -86,13 +86,13 @@ const SidebarFormando = ({ toggleSidebar, collapsed }) => {
                         {!effectiveCollapsed && 
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-chat-dots fs-4 px-2"></i>
-                                Fórum
+                                Fóruns
                             </div>
                         }
                         {effectiveCollapsed && 
                             <div className='d-flex flex-column align-items-center m-0'>
                                 <i className="bi bi-chat-dots fs-4 px-2"></i>
-                                <small className='text-truncate d-inline-block text-ellipsis'>Fórum</small>
+                                <small className='text-truncate d-inline-block text-ellipsis'>Fóruns</small>
                             </div>
                         }
                     </NavLink>
