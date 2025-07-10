@@ -142,6 +142,7 @@ class _CardCourseState extends State<CardCourse> {
                     padding: const EdgeInsets.only(bottom:5.0),
                     child:Text(
                       formatDateRange(widget.startDate, widget.endDate),
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.body.copyWith(color: Colors.grey[600]),
                     ),
                   )
