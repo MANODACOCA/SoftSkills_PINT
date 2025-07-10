@@ -63,7 +63,7 @@ controllers.update = async (req,res)=>{
       return res.status(409).json({ erro: 'Já existe um topico com esse nome.' });
     } */
 
-    await model.update({ where: { id_topico: id } }, { nome_topico: nome_topico.trim(), ...resto } );
+    await model.update({nome_topico: nome_topico.trim(), ...resto }, { where: { id_topico: id } });
 
     const modelUpdated = await model.findByPk(id);
     res.status(200).json(modelUpdated);
