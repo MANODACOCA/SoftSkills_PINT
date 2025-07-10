@@ -104,7 +104,7 @@ class _CardCourseState extends State<CardCourse> {
                     );
                   } else {
                     return Image.asset(
-                      'assets/course.png',
+                      'assets/course-horizontal.png',
                       width: double.infinity,
                       height: 135,
                       fit: BoxFit.cover,

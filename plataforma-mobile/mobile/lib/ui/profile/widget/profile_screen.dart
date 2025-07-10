@@ -1,4 +1,6 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
+import 'package:mobile/utils/verifica_internet.dart';
+
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,21 +76,36 @@ class _ProfileState extends State<Profile> {
                                   border: Border.all(color: Colors.grey.shade300, width: 2),
                                 ),
                                 child: ClipOval(
-                                  child: Image.network(
-                                    (utilizador['img_perfil'] != null && utilizador['img_perfil'].toString().isNotEmpty)
-                                      ? 'https://softskills-api.onrender.com/${utilizador['img_perfil']}' 
-                                      : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true',
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
-                                      return Image.network(
-                                        fallbackImg,
-                                        height: 135,
-                                        width: double.infinity,
-                                        fit: BoxFit.cover,
-                                      );
+                                  child:  FutureBuilder<bool>(
+                                    future: temInternet(),
+                                    builder: (context, snapshot) {
+                                      final online = snapshot.data ?? true;
+                                      final img = utilizador['img_perfil'];
+                                      final imageUrl = 'https://ui-avatars.com/api/?name=0${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
+                                      if (online) {
+                                        return Image.network(
+                                          'https://softskills-api.onrender.com/$img',
+                                          height: 60,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return Image.network(
+                                              imageUrl,
+                                              width: 60,
+                                              height: 60,
+                                              fit: BoxFit.cover,
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        return Image.asset(
+                                          'assets/user.png',
+                                          width: 60,
+                                          height: 60,
+                                          fit: BoxFit.cover,
+                                        );
+                                      }
                                     },
-                                  ) 
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 10),
