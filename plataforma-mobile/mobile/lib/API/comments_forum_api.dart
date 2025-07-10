@@ -4,8 +4,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ComentarioAPI {
-  static const String API_URL_COMENTARIOS = 'https://softskills-api.onrender.com/comentario';
-  static const String API_URL_LIKES = 'https://softskills-api.onrender.com/likes-comentario';
+  static const String API_URL_COMENTARIOS =
+      'https://softskills-api.onrender.com/comentario';
+  static const String API_URL_LIKES =
+      'https://softskills-api.onrender.com/likes-comentario';
 
   static Future<List<dynamic>> listComentario() async {
     try {
@@ -46,6 +48,7 @@ class ComentarioAPI {
         body: jsonEncode(formData),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Comentario criado com sucesso: ${response.body}');
         return jsonDecode(response.body);
       } else {
         throw Exception('Erro ao criar Comentário!');
@@ -56,7 +59,10 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> updateComentario(String id, Map<String, dynamic> data) async {
+  static Future<dynamic> updateComentario(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await http.put(
         Uri.parse('$API_URL_COMENTARIOS/update/$id'),
@@ -90,7 +96,10 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> likeComentario(String idComentario, String idUtilizador) async {
+  static Future<dynamic> likeComentario(
+    String idComentario,
+    String idUtilizador,
+  ) async {
     try {
       await http.put(Uri.parse('$API_URL_COMENTARIOS/addLike/$idComentario'));
       final response = await http.post(
@@ -112,9 +121,14 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> unlikeComentario(String idComentario, String idUtilizador) async {
+  static Future<dynamic> unlikeComentario(
+    String idComentario,
+    String idUtilizador,
+  ) async {
     try {
-      await http.put(Uri.parse('$API_URL_COMENTARIOS/deleteLike/$idComentario'));
+      await http.put(
+        Uri.parse('$API_URL_COMENTARIOS/deleteLike/$idComentario'),
+      );
       final response = await http.delete(
         Uri.parse('$API_URL_LIKES/delete'),
         headers: {'Content-Type': 'application/json'},
@@ -134,7 +148,10 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> jaDeuLike(String idComentario, String idUtilizador) async {
+  static Future<dynamic> jaDeuLike(
+    String idComentario,
+    String idUtilizador,
+  ) async {
     try {
       final response = await http.get(
         Uri.parse('$API_URL_LIKES/get/$idComentario/$idUtilizador'),
@@ -144,7 +161,9 @@ class ComentarioAPI {
       } else if (response.statusCode == 404) {
         return false;
       } else {
-        throw Exception('Erro inesperado ao verificar se deu like no Comentario!');
+        throw Exception(
+          'Erro inesperado ao verificar se deu like no Comentario!',
+        );
       }
     } catch (e) {
       print('Erro inesperado ao verificar se deu like no Comentario! $e');

@@ -42,10 +42,11 @@ class _ForumPageState extends State<ForumPage> {
     try {
       forumInfo = await ForumAPI.getConteudosPartilhado(widget.forumID);
       forumPost = await ForumAPI.getPostForum(widget.forumID);
+      print('Post Info: $forumPost');
       users = [];
 
       if (forumPost != null && forumPost!['posts'] != null) {
-        posts = List.from(forumPost!['posts']); // Guardar localmente
+        posts = List.from(forumPost!['posts']);
         for (var post in posts) {
           final userId = post['id_utilizador_utilizador']['id_utilizador'];
           var userData = await UtilizadoresApi().getUtilizador(userId);
@@ -164,6 +165,22 @@ class _ForumPageState extends State<ForumPage> {
                                             return 'https://softskills-api.onrender.com/$cleaned';
                                           })(),
                                       selectComment: false,
+                                      datePost:
+                                          post['data_criacao_post'] != null
+                                              ? post['data_criacao_post']
+                                                  .toString()
+                                                  .split('T')
+                                                  .first
+                                              : '',
+                                      onDelete: (postId) {
+                                        setState(() {
+                                          posts.removeWhere(
+                                            (p) =>
+                                                p['id_post'].toString() ==
+                                                postId,
+                                          );
+                                        });
+                                      },
                                     ),
                                   );
                                 }),

@@ -1,22 +1,31 @@
+// ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:mobile/API/comments_forum_api.dart';
+import 'package:mobile/API/utilizadores_api.dart';
+import 'package:mobile/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class CommentBox extends StatefulWidget {
   const CommentBox({
     super.key,
+    required this.id,
     required this.avatarUrl,
     required this.nome,
     required this.email,
     required this.tempo,
     required this.description,
     required this.likes,
+    this.onDelete,
   });
 
+  final int id;
   final String avatarUrl;
   final String nome;
   final String email;
   final String tempo;
   final String description;
   final int likes;
+  final void Function(int id)? onDelete; //Callback para apagar comentário
 
   @override
   State<CommentBox> createState() => _CommentBoxState();
@@ -24,6 +33,19 @@ class CommentBox extends StatefulWidget {
 
 class _CommentBoxState extends State<CommentBox> {
   bool expanded = false;
+  late String idUser = '';
+  late Future<Map<String, dynamic>> userINFO;
+  late String nameUser;
+
+  @override
+  void initState() {
+    super.initState();
+    idUser = Provider.of<AuthProvider>(context, listen: false).user?.id ?? '';
+    userINFO = UtilizadoresApi().getUtilizador(int.parse(idUser));
+    userINFO.then((value) {
+      nameUser = value['nome_utilizador'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,26 +124,93 @@ class _CommentBoxState extends State<CommentBox> {
                 ),
                 PopupMenuButton<String>(
                   icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-                  onSelected: (value) {
-                    if (value == 'denunciar') {
+                  onSelected: (value) async {
+                    if (value == 'apagar') {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder:
+                            (context) => AlertDialog(
+                              title: Text('Confirmar eliminação'),
+                              content: Text(
+                                'Tens a certeza que queres apagar este comentário?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(false),
+                                  child: Text('Cancelar'),
+                                ),
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(context).pop(true),
+                                  child: Text(
+                                    'Apagar',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
+                            ),
+                      );
+                      if (confirm == true) {
+                        try {
+                          final String idUserString = widget.id.toString();
+                          await ComentarioAPI.deleteComentario(idUserString);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Comentário apagado com sucesso!'),
+                            ),
+                          );
+                          if (widget.onDelete != null) {
+                            widget.onDelete!(
+                              widget.id,
+                            );
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Erro ao apagar comentário!'),
+                            ),
+                          );
+                        }
+                      }
+                    } else if (value == 'denunciar') {
                       // Handle report action
                     }
                   },
                   itemBuilder:
                       (context) => [
-                        PopupMenuItem(
-                          value: 'denunciar',
-                          child: Row(
-                            children: [
-                              Icon(Icons.warning, color: Colors.red, size: 18),
-                              SizedBox(width: 8),
-                              Text(
-                                'Denunciar',
-                                style: TextStyle(color: Colors.red),
-                              ),
-                            ],
+                        if (nameUser == widget.nome)
+                          PopupMenuItem(
+                            value: 'apagar',
+                            child: Row(
+                              children: [
+                                Icon(Icons.delete, color: Colors.red, size: 18),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Apagar',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          PopupMenuItem(
+                            value: 'denunciar',
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.warning,
+                                  color: Colors.red,
+                                  size: 18,
+                                ),
+                                SizedBox(width: 8),
+                                Text(
+                                  'Denunciar',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
                       ],
                 ),
               ],
