@@ -14,13 +14,19 @@ import { delete_comentario, like_comentario, unlike_comentario, jaDeuLike } from
 function Comentario({ avatar, name, email, time, text, conteudo, likes: inicialLikes, idComentario, idAutorComentario, onDeleted }) {
   const API_URL = 'https://softskills-api.onrender.com/';
   const { user } = useUser();
+  const usuario = localStorage.getItem("activeRole");
 
 
   /*LIKES*/
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(inicialLikes);
+  const [isLikeOcorrer, setIsLikeOcorrer] = useState(false);
 
   const handleLike = async () => {
+    if (isLikeOcorrer) return;
+
+    setIsLikeOcorrer(true);
+
     try {
       if (liked) {
         await unlike_comentario(idComentario, user.id_utilizador);
@@ -33,6 +39,8 @@ function Comentario({ avatar, name, email, time, text, conteudo, likes: inicialL
     } catch (error) {
       console.error("Erro ao atualizar like:", error);
       Swal.fire("Erro", "Não foi possível atualizar o like. Tente novamente.", "error");
+    } finally {
+      setIsLikeOcorrer(false);
     }
   }
 
@@ -192,12 +200,12 @@ function Comentario({ avatar, name, email, time, text, conteudo, likes: inicialL
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                {idAutorComentario !== user?.id_utilizador && (
+                {idAutorComentario !== user?.id_utilizador && usuario != 'admin' && (
                   <Dropdown.Item className="text-danger" onClick={onShowReportModal}>
                     <BsExclamationTriangleFill className="me-2" /> Denunciar
                   </Dropdown.Item>
                 )}
-                {idAutorComentario === user?.id_utilizador && (
+                {(idAutorComentario === user?.id_utilizador || usuario === 'admin') && (
                   <Dropdown.Item className="text-danger" onClick={handleDeleteComment}>
                     <BsFillTrash3Fill className="me-2" /> Eliminar
                   </Dropdown.Item>
@@ -210,6 +218,7 @@ function Comentario({ avatar, name, email, time, text, conteudo, likes: inicialL
             size="sm"
             className={`btn d-flex align-items-center text-white ${liked ? 'btn-primary' : 'btn-outline-secondary'}`}
             onClick={handleLike}
+            disabled={isLikeOcorrer}
           >
             {liked ? (
               <AiFillLike className="me-1" style={{ fontSize: '20px' }} />
