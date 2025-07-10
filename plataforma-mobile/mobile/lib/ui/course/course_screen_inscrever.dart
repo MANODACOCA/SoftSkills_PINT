@@ -25,6 +25,7 @@ class _InscreverState extends State<Inscrever> {
   final InscricaoApi _apiinsc = InscricaoApi();
   final UtilizadoresApi _apiuser = UtilizadoresApi();
   int? id;
+  bool jaInscrito = false;
 
   @override
   void initState() {
@@ -85,9 +86,18 @@ class _InscreverState extends State<Inscrever> {
   }
 
   Future<void> _handleInscricao() async {
+    if (jaInscrito) return;
+    setState(() {
+      jaInscrito = true;
+    });
+
     bool inscreveu = await inscrever();
 
     if (!mounted) return;
+
+    setState(() {
+      jaInscrito = false;
+    });
 
     final scaffoldMessenger = ScaffoldMessenger.of(context);
    
@@ -176,12 +186,14 @@ class _InscreverState extends State<Inscrever> {
                   ),
                   fixedSize: Size(screenWidth - 10, 46),
                 ),
-                onPressed: (user.isEmpty || curso.isEmpty) 
+                onPressed: (user.isEmpty || curso.isEmpty || jaInscrito) 
                 ? null
                 : () async {
                  _handleInscricao();
                 }, 
-                child: Text('Inscrever', style: TextStyle(color: Colors.white),)
+                child: jaInscrito 
+                ? CircularProgressIndicator(color: Colors.white) 
+                : Text('Inscrever', style: TextStyle(color: Colors.white),)
               ),
             ),
           ],
