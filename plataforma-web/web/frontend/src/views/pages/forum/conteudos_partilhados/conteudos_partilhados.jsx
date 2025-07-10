@@ -64,7 +64,7 @@ const Foruns = () => {
             />
             <div className="card-body d-flex flex-column justify-content-between p-3">
               <div>
-                <h6 className="card-title mb-1">{topico.nome_topico || 'Tópico desconhecido'}</h6>
+                <h6 className="mb-3">{topico.nome_topico || 'Tópico desconhecido'}</h6>
                 <p className="card-text small text-truncate" title={topico.descricao_top}>
                   {topico.descricao_top || 'Sem descrição'}
                 </p>

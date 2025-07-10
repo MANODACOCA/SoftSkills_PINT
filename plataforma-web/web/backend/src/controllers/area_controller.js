@@ -57,13 +57,13 @@ controllers.update = async (req,res)=>{
       desc: 'Campo "nome" é obrigatorio'})
     }
 
-    const existente = await model.findOne({ nome_area: nome_area.trim() });
+    /* const existente = await model.findOne({ nome_area: nome_area.trim() });
     
     if (existente) {
       return res.status(409).json({ erro: 'Já existe uma area com esse nome.' });
-    }
+    } */
     
-    await model.update({ where: { id_area: id } }, { nome_area: nome_area.trim(), ...resto } );
+    await model.update({ nome_area: nome_area.trim(), ...resto }, { where: { id_area: id } } );
 
     const modelUpdated = await model.findByPk(id);
     res.status(200).json(modelUpdated);   

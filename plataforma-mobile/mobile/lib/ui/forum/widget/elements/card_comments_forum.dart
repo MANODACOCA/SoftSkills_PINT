@@ -5,6 +5,7 @@ import 'package:like_button/like_button.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/core/shared/export.dart';
+import 'package:mobile/utils/uteis.dart';
 import 'package:provider/provider.dart';
 import '../../../../API/utilizadores_api.dart';
 
@@ -42,7 +43,7 @@ class _PostState extends State<Post> {
   late int likes;
   final TextEditingController _copiar = TextEditingController();
   String _denunciar = '';
-  bool _expanded = false;
+  //bool _expanded = false;
   String? userId;
   late int userIdINT;
   late Future<Map<String, dynamic>> user;
@@ -74,169 +75,150 @@ class _PostState extends State<Post> {
         ),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: Column(
         children: <Widget>[
           SizedBox(height: 5),
           SizedBox(
             child: FutureBuilder<Map<String, dynamic>>(
               future: user,
               builder: (context, snapshot) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(widget.photo),
-                    radius: 30,
-                  ),
-                  title: Text(
-                    widget.forumName,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  subtitle: Text(
-                    widget.datePost,
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                  trailing: Transform.translate(
-                    offset: Offset(-16, 0),
-                    child: PopupMenuButton<String>(
-                      offset: Offset(-20, 0.5),
-                      position: PopupMenuPosition.under,
-                      icon: Icon(Icons.more_vert, color: Colors.grey),
-                      onSelected: (value) {
-                        if (value == 'copiar') {
-                          _copiar.text = widget.description;
-                          Clipboard.setData(ClipboardData(text: _copiar.text));
-                        } else if (value == 'denunciar') {
-                          denunciar();
-                        } else if (value == 'eliminar') {
-                          Future.delayed(Duration.zero, () async {
-                            final confirm = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: Text('Confirmar eliminação'),
-                                content: Text('Tens a certeza que queres eliminar este post?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(false),
-                                    child: Text('Cancelar'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(true),
-                                    child: Text('Eliminar', style: TextStyle(color: Colors.red)),
-                                  ),
-                                ],
-                              ),
-                            );
-                            if (confirm == true) {
-                              await ForumAPI.deletePost(widget.postID);
-                              if (widget.onDelete != null) {
-                                widget.onDelete!(widget.postID);
-                              }
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Post eliminado com sucesso!'),
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(widget.photo),
+                            radius: 30,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.forumName,
+                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  tempoDecorrido(widget.datePost),
+                                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Transform.translate(
+                      offset: const Offset(5, 0),
+                      child: PopupMenuButton<String>(
+                        offset: const Offset(-20, 0.5),
+                        position: PopupMenuPosition.under,
+                        icon: const Icon(Icons.more_vert, color: Colors.grey),
+                        onSelected: (value) {
+                          if (value == 'copiar') {
+                            _copiar.text = widget.description;
+                            Clipboard.setData(ClipboardData(text: _copiar.text));
+                          } else if (value == 'denunciar') {
+                            denunciar();
+                          } else if (value == 'eliminar') {
+                            Future.delayed(Duration.zero, () async {
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Confirmar eliminação'),
+                                  content: const Text('Tens a certeza que queres eliminar este post?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(false),
+                                      child: const Text('Cancelar'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(true),
+                                      child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+                                    ),
+                                  ],
                                 ),
                               );
-                            }
-                          });
-                        }
-                      },
-                      itemBuilder: (BuildContext context) {
-                        List<PopupMenuEntry<String>> items = [
-                          PopupMenuItem(
-                            value: 'copiar',
-                            child: Row(
-                              children: [
-                                Icon(Icons.copy, color: Colors.grey),
-                                SizedBox(width: 8),
-                                Text('Copy'),
-                              ],
-                            ),
-                          ),
-                          PopupMenuItem(
-                            value: 'denunciar',
-                            child: Row(
-                              children: [
-                                Icon(Icons.flag, color: Colors.grey),
-                                SizedBox(width: 8),
-                                Text('Report'),
-                              ],
-                            ),
-                          ),
-                        ];
-                        if (snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData &&
-                            widget.forumName == snapshot.data!['nome_utilizador']) {
-                          items.add(
-                            PopupMenuItem(
-                              value: 'eliminar',
+                              if (confirm == true) {
+                                await ForumAPI.deletePost(widget.postID);
+                                if (widget.onDelete != null) {
+                                  widget.onDelete!(widget.postID);
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Post eliminado com sucesso!'),
+                                  ),
+                                );
+                              }
+                            });
+                          }
+                        },
+                        itemBuilder: (BuildContext context) {
+                          List<PopupMenuEntry<String>> items = [
+                            const PopupMenuItem(
+                              value: 'copiar',
                               child: Row(
                                 children: [
-                                  Icon(Icons.delete, color: Colors.red),
+                                  Icon(Icons.copy, color: Colors.grey),
                                   SizedBox(width: 8),
-                                  Text(
-                                    'Eliminar',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
+                                  Text('Copy'),
                                 ],
                               ),
                             ),
-                          );
-                        }
-                        return items;
-                      },
+                            const PopupMenuItem(
+                              value: 'denunciar',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.flag, color: Colors.grey),
+                                  SizedBox(width: 8),
+                                  Text('Report'),
+                                ],
+                              ),
+                            ),
+                          ];
+                          if (snapshot.connectionState == ConnectionState.done &&
+                              snapshot.hasData &&
+                              widget.forumName == snapshot.data!['nome_utilizador']) {
+                            items.add(
+                              const PopupMenuItem(
+                                value: 'eliminar',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete, color: Colors.red),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Eliminar',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          return items;
+                        },
+                      ),
                     ),
-                  ),
+                  ],
                 );
               },
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final span = TextSpan(
-                  text: widget.description,
-                  style: TextStyle(fontSize: 13, color: Colors.grey[700]),
-                );
-                final tp = TextPainter(
-                  text: span,
-                  maxLines: 2,
-                  textDirection: TextDirection.ltr,
-                )..layout(maxWidth: constraints.maxWidth);
-
-                final exceedsMaxLines = tp.didExceedMaxLines;
-
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AnimatedSize(
-                      duration: Duration(milliseconds: 200),
-                      child: Text(
-                        widget.description,
-                        maxLines: _expanded ? null : 2,
-                        overflow: _expanded ? TextOverflow.visible : TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 13, color: Colors.grey[700]),
-                      ),
-                    ),
-                    if (exceedsMaxLines)
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _expanded = !_expanded;
-                          });
-                        },
-                        child: Text(
-                          _expanded ? 'Ver menos' : 'Ver mais',
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                  ],
-                );
-              },
-            ),
+            padding: EdgeInsets.all(5),
+            child: SizedBox(
+              width: double.infinity,
+              child: Text(widget.description, textAlign: TextAlign.justify,),
+            ), 
           ),
           SizedBox(
             child: Row(
@@ -293,6 +275,8 @@ class _PostState extends State<Post> {
           ),
         ],
       ),
+      )
+      
     );
   }
 

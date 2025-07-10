@@ -169,10 +169,7 @@ class _ForumPageState extends State<ForumPage> {
                                       selectComment: false,
                                       datePost:
                                           post['data_criacao_post'] != null
-                                              ? post['data_criacao_post']
-                                                  .toString()
-                                                  .split('T')
-                                                  .first
+                                              ? post['data_criacao_post'].toString()
                                               : '',
                                       onDelete: (postId) {
                                         setState(() {
