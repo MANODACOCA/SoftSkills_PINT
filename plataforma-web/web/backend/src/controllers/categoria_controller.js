@@ -67,7 +67,7 @@ controllers.update = async (req,res)=>{
       return res.status(409).json({ erro: 'Já existe uma categoria com esse nome.' });
     } */
     
-    await model.update({ where: { id_categoria: id } }, { nome_cat: nome_cat.trim(), ...resto } );
+    await model.update({ nome_cat: nome_cat.trim(), ...resto }, { where: { id_categoria: id } });
 
     const modelUpdated = await model.findByPk(id);
     res.status(200).json(modelUpdated);

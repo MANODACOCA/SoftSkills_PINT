@@ -63,7 +63,7 @@ controllers.update = async (req,res)=>{
       return res.status(409).json({ erro: 'Já existe uma area com esse nome.' });
     } */
     
-    await model.update({ where: { id_area: id } }, { nome_area: nome_area.trim(), ...resto } );
+    await model.update({ nome_area: nome_area.trim(), ...resto }, { where: { id_area: id } } );
 
     const modelUpdated = await model.findByPk(id);
     res.status(200).json(modelUpdated);   
