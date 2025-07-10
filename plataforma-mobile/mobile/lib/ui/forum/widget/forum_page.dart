@@ -37,11 +37,13 @@ class _ForumPageState extends State<ForumPage> {
   late Map<String, dynamic>? forumPost;
   late List<dynamic> posts = [];
   late String forumID = widget.forumID;
+  String _ordem = "Mais Recentes";
 
-  Future<void> carregarDados() async {
+  Future<void> carregarDados([String? ordem]) async {
+    _ordem = ordem ?? _ordem;  
     try {
       forumInfo = await ForumAPI.getConteudosPartilhado(widget.forumID);
-      forumPost = await ForumAPI.getPostForum(widget.forumID);
+      forumPost = await ForumAPI.getPost(widget.forumID, ordenar: _ordem);
       print('Post Info: $forumPost');
       users = [];
 
