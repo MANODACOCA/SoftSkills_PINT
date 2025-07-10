@@ -101,11 +101,19 @@ const CourseRegistration = () => {
     }
   };
 
-  if (!course || loading) {
+  if (loading) {
     return <SpinnerBorder />;
   }
 
-  if (!course) return <div className="">Curso não encontrado</div>;
+  if (!course) {
+    return (
+      <div className="text-center pt-5">
+        <h3>Curso não encontrado</h3>
+        <p>O curso que está a tentar aceder já não se encontra disponível ao já nao têm acesso a ele.</p>
+         <Link to="/cursos" className='btn btn-primary'>Voltar para todos cursos</Link>
+      </div>
+    )
+  }
 
   return (
     <div className="px-3">
@@ -204,7 +212,7 @@ const CourseRegistration = () => {
               course={course}
               onEnroll={() => handleEnroll(course.id_curso)}
               onContadorUpdate={atualizarContadorFormandos}
-              verSeInscrito = {handleInscrito}
+              verSeInscrito={handleInscrito}
             />
           </div>
 
