@@ -1,5 +1,5 @@
 import './ClassPage.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import ClassHeader from '../../../components/class_header/ClassHeader';
 import VideoPlayer from '../../../components/video_player/VideoPlayer';
@@ -8,6 +8,8 @@ import TrabalhosList from '../../../components/envents_(trabalhos)/trabalhos_lis
 import TrabalhosEntrega from '../../../components/envents_(trabalhos)/trabalhos_entrega';
 import { Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../../api/aulas_axios';
+import { verificar_acesso_curso } from '../../../../api/cursos_axios';
+import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import {
     FaFileAlt,
@@ -31,7 +33,11 @@ const ClassPage = () => {
     const [carregar, setCarregar] = useState(true);
     const [erro, setErro] = useState(null);
 
+    console.log(curso);
     const { cursoId } = useParams();
+    const { user } = useUser();
+
+    const [verificacao, setVerificacao] = useState(false);//verifica se o formando tem acesso ao curso
 
     const [searchParams, setSearchParams] = useSearchParams();
     const activeTab = searchParams.get('tab');
@@ -43,14 +49,17 @@ const ClassPage = () => {
         try {
             setCarregar(true);
 
-            const dados = await getAulasAndMateriaApoioForCurso(cursoId);
-            console.log(dados);
-            setCurso(dados.dadosCurso || []);
-            setAulas(dados.todasAulas || []);
-            setMaterialApoio(dados.materialApoio || []);
-            setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
-            setTrabalhos(dados.dadosCurso.trabalhos || []);
+            const acesso = await verificar_acesso_curso(user?.id_utilizador, cursoId);//verifica se o formando tem acesso ao curso
+            setVerificacao(acesso.inscrito);
 
+            if (acesso.inscrito) {
+                const dados = await getAulasAndMateriaApoioForCurso(cursoId);
+                setCurso(dados.dadosCurso || []);
+                setAulas(dados.todasAulas || []);
+                setMaterialApoio(dados.materialApoio || []);
+                setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
+                setTrabalhos(dados.dadosCurso.trabalhos || []);
+            }
         } catch (error) {
             console.error("Erro ao carregar aula, conteudos e material de apoio:", error);
             setErro("Ocorreu um erro ao carregar a aula. Tente novamente mais tarde.");
@@ -117,10 +126,10 @@ const ClassPage = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        if (cursoId) {
+        if (cursoId && user?.id_utilizador) {
             carregarAulasEMaterialApoio();
         }
-    }, [cursoId]);
+    }, [cursoId, user]);
 
     useEffect(() => {
         if (aulaAtual) {
@@ -132,7 +141,7 @@ const ClassPage = () => {
         <>
             {carregar ? (
                 <SpinnerBorder />
-            ) : (
+            ) : verificacao ? (
                 <div className="container-fluid pt-4">
 
                     <div className="row">
@@ -152,7 +161,7 @@ const ClassPage = () => {
                     <div className="col-12">
                         {carregar ? (
                             <div className="text-center py-5">
-                                <SpinnerBorder/>
+                                <SpinnerBorder />
                             </div>
                         ) : (
                             <>
@@ -315,19 +324,15 @@ const ClassPage = () => {
                                                                     <h4 className='mb-0'>
                                                                         {curso.sincrono.id_formador_formadore.id_formador_utilizador?.nome_util || "Formador não especificado"}
                                                                     </h4>
-                                                                    <div>
-                                                                        {curso.sincrono.id_formador_formadore.id_formador_utilizador.pais &&
-                                                                            <small className='alert alert-success mb-0 py-1 px-2'>
-                                                                                <i className='bi bi-geo-alt me-2'></i>
-                                                                                {curso.sincrono.id_formador_formadore.id_formador_utilizador.pais}
-                                                                            </small>
-                                                                        }
-                                                                    </div>
-
                                                                 </div>
-                                                                <small className="text-muted">
-                                                                    {curso.sincrono.id_formador_formadore.id_formador_utilizador.email || ""}
+                                                                <small className="text-muted me-3">
+                                                                    Email: {curso.sincrono.id_formador_formadore.id_formador_utilizador?.email || ""}
                                                                 </small>
+                                                                {curso.sincrono.id_formador_formadore.id_formador_utilizador?.tel_util && (
+                                                                    <small className="text-muted">
+                                                                        Telemóvel: {curso.sincrono.id_formador_formadore.id_formador_utilizador?.tel_util || ""}
+                                                                    </small>
+                                                                )}
                                                                 <p className='mt-3'>
                                                                     {curso.sincrono.id_formador_formadore.descricao_formador || "Sem descrição disponível para este formador."}
                                                                 </p>
@@ -345,6 +350,11 @@ const ClassPage = () => {
                         )}
                     </div>
                 </div >
+            ) : (
+                <div className="text-center pt-5">
+                    <h3>Você não tem acesso a este curso.</h3>
+                    <p>Verifique se está inscrito ou entre em contato com o administrador.</p>
+                </div>
             )}
         </>
     );

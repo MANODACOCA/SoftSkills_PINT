@@ -26,38 +26,23 @@ const NotificationPage = () => {
     };
 
     const HandleDelete = async (id) => {
-        const result = await Swal.fire({
-            title: "Tem certeza que deseja apagar a notificação?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sim",
-            cancelButtonColor: "Cancelar",
-            customClass: {
-                confirmButton: 'btn btn-success me-2',
-                cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false,
-        });
-
-        if (result.isConfirmed) {
-            try {
-                await delete_notificacoes_curso(id);
-                fetchAllNotifications();
-                Swal.fire({
-                    icon: "success",
-                    title: "Notificação apagada com sucesso!",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            } catch (error) {
-                Swal.fire({
-                    icon: "error",
-                    title: "Erro",
-                    text: "Não foi possível apagar notificação",
-                    timer: 2000,
-                    showConfirmButton: false,
-                });
-            }
+        try {
+            await delete_notificacoes_curso(id);
+            fetchAllNotifications();
+            Swal.fire({
+                icon: "success",
+                title: "Notificação apagada com sucesso!",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Erro",
+                text: "Não foi possível apagar notificação",
+                timer: 1500,
+                showConfirmButton: false,
+            });
         }
     }
 

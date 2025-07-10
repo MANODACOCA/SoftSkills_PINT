@@ -3,6 +3,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/API/cursos_api.dart';
+import 'package:go_router/go_router.dart';
 
 class MyCarousel extends StatefulWidget {
   const MyCarousel({super.key});
@@ -126,7 +127,7 @@ class _MyCarouselState extends State<MyCarousel> {
                       const SizedBox(height: 16),
                       ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.pushNamed(context, slide['route']);
+                          context.go(slide['route']);
                         },
                         icon: const Icon(Icons.info_outline),
                         label: const Text('Mais Informações'),
