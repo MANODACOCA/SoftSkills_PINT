@@ -1,7 +1,6 @@
 // ignore_for_file: avoid_print
 // ignore: unused_import
 import 'package:mobile/ui/core/shared/base_comp/dropdown_filter_forum.dart';
-
 import '../../../routing/forum_routes.dart';
 import 'package:go_router/go_router.dart';
 import '../../../API/forum_api.dart';
@@ -60,7 +59,9 @@ class _ForumState extends State<Forum> {
             onFilterTap: () {
               DropdownFilterForum.show(context, ({String? ordem}) {
                 carregarForuns(ordem: ordem);
-              });
+              },
+              "Forum",
+              );
             },
             onSearchChanged: (value) {
               carregarForuns(search: value);

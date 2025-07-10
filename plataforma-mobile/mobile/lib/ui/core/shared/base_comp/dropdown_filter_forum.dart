@@ -2,10 +2,10 @@ import '../export.dart';
 import 'dropdown_component.dart';
 
 class DropdownFilterForum extends StatefulWidget {
-  const DropdownFilterForum({super.key , required this.onApply});
+  const DropdownFilterForum({super.key , required this.onApply, required this.parametro});
   final void Function({String? ordem}) onApply;
-
-  static void show(BuildContext context, void Function({String? ordem}) onApply) {
+  final String parametro;
+  static void show(BuildContext context, void Function({String? ordem}) onApply, String parametro) {
     showGeneralDialog(
       context: context,
       barrierLabel: 'Fechar',
@@ -24,7 +24,7 @@ class DropdownFilterForum extends StatefulWidget {
               child: SafeArea(
                 child: Material(
                   color: Colors.transparent,
-                  child: DropdownFilterForum(onApply: onApply,),
+                  child: DropdownFilterForum(onApply: onApply, parametro: parametro),
                 ),
               ),
             ),
@@ -42,10 +42,22 @@ class DropdownFilterForum extends StatefulWidget {
 }
 
 class _DropdownFilterForumState extends State<DropdownFilterForum> {
-  final List<String> ordem = ['Mais Recentes', 'Mais Antigos'];
-  //final ForumAPI _forumApi = ForumAPI();
+  List<String> ordemLista = [];
   String? selectedOrdem;
 
+  @override
+  void initState() {
+    super.initState();
+    _forumPost(widget.parametro);
+  }
+
+  void _forumPost(String param) {
+    if(param == 'Forum') {
+      ordemLista = ['Mais Recentes', 'Mais Antigos'];
+    } else{
+      ordemLista = ['Mais Recentes', 'Mais Antigos', 'Mais Populares'];
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +84,7 @@ class _DropdownFilterForumState extends State<DropdownFilterForum> {
           DropdownComponent(
             key: ValueKey('ordem-$selectedOrdem'),
             type: 'Ordenar por',
-            items: ordem,
+            items: ordemLista,
             value: selectedOrdem,
             onChanged: (value) => setState(() => selectedOrdem = value),
           ),

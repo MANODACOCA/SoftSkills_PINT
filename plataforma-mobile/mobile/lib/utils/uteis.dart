@@ -39,3 +39,29 @@ String dataHoraFormat(String isoString) {
   final hourPart = DateFormat('HH:mm', 'pt_PT').format(dt);
   return '$datePart | $hourPart';
 }
+
+String tempoDecorrido(String data) {
+  final agora = DateTime.now().toUtc(); 
+  final dataConvertida = DateTime.tryParse(data)?.toUtc();
+  if (dataConvertida == null) return 'data inválida';
+
+  final diferenca = agora.difference(dataConvertida);
+
+  final dias = diferenca.inDays;
+  final horas = diferenca.inHours % 24;
+  final minutos = diferenca.inMinutes % 60;
+
+  String resultado = '';
+
+  if (dias > 0) {
+    resultado += 'há $dias dia${dias == 1 ? '' : 's'}';
+  } else if (horas > 0) {
+    resultado += 'há $horas hora${horas == 1 ? '' : 's'}';
+  } else if (minutos > 0) {
+    resultado += 'há $minutos minuto${minutos == 1 ? '' : 's'}';
+  } else {
+    resultado = 'agora mesmo';
+  }
+
+  return resultado;
+}
