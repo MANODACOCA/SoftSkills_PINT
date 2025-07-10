@@ -5,6 +5,9 @@ final List<GoRoute> homeRoutes = [
   GoRoute(
     name: 'homepage',
     path: '/homepage',
-    builder: (context, state) => HomePage(),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: HomePage(),
+    ),
+    //builder: (context, state) => HomePage(),
   ),
 ];

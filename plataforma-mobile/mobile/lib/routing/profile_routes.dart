@@ -11,19 +11,26 @@ import 'package:mobile/ui/profile/widget/support.dart';
 final List<GoRoute> profileRoutes = [
   GoRoute(
     path: '/profile',
-    builder: (context, state) {
-    return Profile();
-    },
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: Profile(),
+    ),
+    //builder: (context, state) { return Profile(); },
   ),
     GoRoute(
     name: 'alterarInformacoes',
     path: '/alterarInformacoes',
-    builder: (context, state) => ChangePersonalInfo(),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: ChangePersonalInfo(),
+    ),
+    //builder: (context, state) => ChangePersonalInfo(),
   ),
   GoRoute(
     name: 'seeinfoprofile',
     path: '/seeinfoprofile',
-    builder: (context, state) => SeeInfoProfile(),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: SeeInfoProfile(),
+    ),
+    //builder: (context, state) => SeeInfoProfile(),
   ),
 /*  GoRoute(
     name: 'logoutAllDevices',
@@ -33,17 +40,26 @@ final List<GoRoute> profileRoutes = [
   GoRoute(
     name: 'changeinfopass',
     path: '/changeinfopass',
-    builder: (context, state) => ChangeInfoPassword(idUser: state.extra as String),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: ChangeInfoPassword(idUser: state.extra as String),
+    ),
+    //builder: (context, state) => ChangeInfoPassword(idUser: state.extra as String),
   ),
   GoRoute(
     name: 'privacypolitics',
     path: '/privacypolitics',
-    builder: (context, state) => PrivacyPolitics(),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: PrivacyPolitics(),
+    ),
+    //builder: (context, state) => PrivacyPolitics(),
   ),
   GoRoute(
     name: 'support',
     path: '/support',
-    builder: (context, state) => Support(),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: Support(),
+    ),
+    //builder: (context, state) => Support(),
   ),
   /* GoRoute(
     name: 'notificacoes',

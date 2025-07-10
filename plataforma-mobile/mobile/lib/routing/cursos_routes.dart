@@ -18,46 +18,68 @@ final List<GoRoute> cursosRoutes = [
   GoRoute(
     name: 'cursos',
     path: '/cursos',
-    builder: (context, state) => Courses(),
+    pageBuilder: (context, state) => NoTransitionPage(
+        child: Courses(),
+      ),
+    //builder: (context, state) => Courses(),
   ),
   GoRoute(
     name: 'cursos-inscritos',
     path: '/cursos-inscritos',
-    builder: (context, state) => CourseInscrito(idCurso: state.extra as int),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: CourseInscrito(idCurso: state.extra as int),
+    ),
+    //builder: (context, state) => CourseInscrito(idCurso: state.extra as int),
   ),
   GoRoute(
     name: 'cursos-completed',
     path: '/cursos-completed',
-    builder: (context, state) => CoursesCompleted(),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: CoursesCompleted(),
+    ),
+    //builder: (context, state) => CoursesCompleted(),
   ),
   GoRoute(
     name: 'list-cursos-inscrito',
     path: '/list-cursos-inscrito',
-    builder: (context, state) => CourseEnrolled(),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: CourseEnrolled(),
+    ),
+    //builder: (context, state) => CourseEnrolled(),
   ),
   GoRoute(
     name: 'Inscrever',
     path: '/inscrever',
-    builder: (context, state) {
-      return Inscrever(idCurso: state.extra as int);
-    },
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: Inscrever(idCurso: state.extra as int),
+    ),
+    //builder: (context, state) { return Inscrever(idCurso: state.extra as int); },
   ),
 
   //aulas
   GoRoute(
     name: 'aulas-async',
     path: '/aulas-async',
-    builder: (context, state) => AulaAsyncPage(aulas: state.extra as Map<String,dynamic>),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: AulaAsyncPage(aulas: state.extra as Map<String,dynamic>),
+    ),
+    //builder: (context, state) => AulaAsyncPage(aulas: state.extra as Map<String,dynamic>),
   ),
   GoRoute(
     name: 'aulas-sync',
     path: '/aulas-sync',
-    builder: (context, state) => AulaSyncPage(aulas: state.extra as Map<String,dynamic>),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: AulaSyncPage(aulas: state.extra as Map<String,dynamic>),
+    ),
+    //builder: (context, state) => AulaSyncPage(aulas: state.extra as Map<String,dynamic>),
   ),
   GoRoute(
     name: 'inserir-trabalho',
     path: '/inserir-trabalho',
-    builder: (context, state) => EntregaTrabalho(trabalho: state.extra as Map<String, dynamic>,),
+    pageBuilder: (context, state) => NoTransitionPage(
+      child: EntregaTrabalho(trabalho: state.extra as Map<String, dynamic>,),
+    ),
+    //builder: (context, state) => EntregaTrabalho(trabalho: state.extra as Map<String, dynamic>,),
   ),
   /* GoRoute(
     name: 'ratedcourses',
