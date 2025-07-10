@@ -4,6 +4,7 @@ import { getCategoriaAreaTopico } from "../../../../api/topico_axios";
 import { create_cursos } from "../../../../api/cursos_axios";
 import ISO6391 from 'iso-639-1';
 import Select from 'react-select';
+import { useUser } from '../../../../utils/useUser';
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
@@ -21,12 +22,13 @@ const CreateCourse = () => {
         id_formador: null,
         numero_vagas: null,
     });
+    const { user } = useUser();
 
-    const todayStr = new Date().toLocaleDateString("en-CA", {timeZone: "Europe/Lisbon"});
+    const todayStr = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" });
 
     const [cursos, setCursos] = useState({
         nome_curso: "",
-        id_gestor_administrador: 9,
+        id_gestor_administrador: user?.id_utilizador,
         id_topico: "",
         descricao_curso: "",
         data_inicio_inscricao: "",
@@ -65,7 +67,7 @@ const CreateCourse = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { 
+        const {
             data_inicio_inscricao,
             data_fim_inscricao,
             data_inicio_curso,
@@ -78,7 +80,7 @@ const CreateCourse = () => {
         const dCursoIni = new Date(`${data_inicio_curso}T00:00:00`);
         const dCursoFim = new Date(`${data_fim_curso}T00:00:00`);
 
-        if([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
+        if ([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -87,7 +89,7 @@ const CreateCourse = () => {
             return;
         }
 
-        if(dInscIni > dInscFim) {
+        if (dInscIni > dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -96,7 +98,7 @@ const CreateCourse = () => {
             return;
         }
 
-        if(dCursoIni > dCursoFim) {
+        if (dCursoIni > dCursoFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -105,7 +107,7 @@ const CreateCourse = () => {
             return;
         }
 
-        if(dCursoIni < dInscFim) {
+        if (dCursoIni < dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -128,22 +130,22 @@ const CreateCourse = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed){
+        if (result.isConfirmed) {
             try {
                 console.log({ cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
-                await create_cursos({cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
+                await create_cursos({ cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
                 Swal.fire({
                     title: 'Sucesso',
                     text: `Criado com sucesso`,
                     icon: 'success',
                     timer: 1500,
                     showConfirmButton: false
-                }); 
+                });
                 navigate('/admin/cursos');
             } catch (error) {
                 Swal.fire({
-                    title: 'Erro', 
-                    text: 'Erro ao cancelar operação', 
+                    title: 'Erro',
+                    text: 'Erro ao cancelar operação',
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {
@@ -151,7 +153,7 @@ const CreateCourse = () => {
                     },
                 });
                 console.log('Erro ao adicionar curso!');
-            }  
+            }
         }
     }
 
@@ -170,8 +172,8 @@ const CreateCourse = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed){
-            try{
+        if (result.isConfirmed) {
+            try {
                 navigate('/admin/cursos');
                 Swal.fire({
                     title: 'Sucesso',
@@ -179,11 +181,11 @@ const CreateCourse = () => {
                     icon: 'success',
                     timer: 1500,
                     showConfirmButton: false
-                }); 
-            } catch(error){
+                });
+            } catch (error) {
                 Swal.fire({
-                    title: 'Erro', 
-                    text: 'Erro ao cancelar operação', 
+                    title: 'Erro',
+                    text: 'Erro ao cancelar operação',
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {
@@ -218,10 +220,10 @@ const CreateCourse = () => {
                 confirmButtonText: 'Pré-visualizar',
                 cancelButtonText: 'Cancelar',
                 inputValidator: (value) => {
-                    if(!value) return 'Tem de inserir um URL valido!';
+                    if (!value) return 'Tem de inserir um URL valido!';
                     if (!/^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/.test(value))
-                    return 'Insira um link de imagem válido (.jpg, .png, etc)';
-                return null;
+                        return 'Insira um link de imagem válido (.jpg, .png, etc)';
+                    return null;
                 }
                 // customClass: {
                 //     confirmButton: 'btn btn-primary me-2',
@@ -240,14 +242,14 @@ const CreateCourse = () => {
                 });
 
                 if (preview.isConfirmed) {
-                setCursos(prev => ({ ...prev, imagem: url }));
-                Swal.fire({
-                    text: "Imagem definida com sucesso!",
-                    icon: "success",
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            }
+                    setCursos(prev => ({ ...prev, imagem: url }));
+                    Swal.fire({
+                        text: "Imagem definida com sucesso!",
+                        icon: "success",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
             }
         } catch (error) {
             Swal.fire({
@@ -259,9 +261,11 @@ const CreateCourse = () => {
 
 
     useEffect(() => {
-        fetchFormadores();
-        fetchCategoriaAreaTopico();
-    }, [])
+        if (user) {
+            fetchFormadores();
+            fetchCategoriaAreaTopico();
+        }
+    }, [user])
 
     return (
         <div className='form-group'>
@@ -271,33 +275,33 @@ const CreateCourse = () => {
                         <div className='mx-5'>
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Nome do Curso</label>
-                                <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." onChange={(e) => setCursos(prev => ({...prev, nome_curso: e.target.value}))} required />
+                                <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required />
                             </div>
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Descrição do Curso</label>
-                                <textarea name="descricao_curso" className='form-control' rows="4" placeholder="Descrição do curso..." onChange={(e) => setCursos(prev => ({...prev, descricao_curso: e.target.value}))} required />
+                                <textarea name="descricao_curso" className='form-control' rows="4" placeholder="Descrição do curso..." onChange={(e) => setCursos(prev => ({ ...prev, descricao_curso: e.target.value }))} required />
                             </div>
 
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início da Inscrição</label>
-                                    <input type="date" name="data_insc_ini" className='form-control' min={todayStr} onChange={(e) => setCursos(prev => ({...prev, data_inicio_inscricao: e.target.value}))} required />
+                                    <input type="date" name="data_insc_ini" className='form-control' min={todayStr} onChange={(e) => setCursos(prev => ({ ...prev, data_inicio_inscricao: e.target.value }))} required />
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim da Inscrição</label>
-                                    <input type="date" name="data_insc_fim" className='form-control' min={cursos.data_inicio_inscricao || todayStr} onChange={(e) => setCursos(prev => ({...prev, data_fim_inscricao: e.target.value}))} required />
+                                    <input type="date" name="data_insc_fim" className='form-control' min={cursos.data_inicio_inscricao || todayStr} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_inscricao: e.target.value }))} required />
                                 </div>
                             </div>
 
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início do Curso</label>
-                                    <input type="date" name="data_curso_ini" className='form-control' min={cursos.data_fim_inscricao || todayStr} onChange={(e) => setCursos(prev => ({...prev, data_inicio_curso: e.target.value}))} required />
+                                    <input type="date" name="data_curso_ini" className='form-control' min={cursos.data_fim_inscricao || todayStr} onChange={(e) => setCursos(prev => ({ ...prev, data_inicio_curso: e.target.value }))} required />
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim do Curso</label>
-                                    <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} onChange={(e) => setCursos(prev => ({...prev, data_fim_curso: e.target.value}))} required />
+                                    <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_curso: e.target.value }))} required />
                                 </div>
                             </div>
 
@@ -315,12 +319,12 @@ const CreateCourse = () => {
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Horas do Curso</label>
-                                <input type="number" step="0.5" min="0.5" name="horas_curso" className='form-control' placeholder="Horas do curso..." onChange={(e) => setCursos(prev => ({...prev, horas_curso: parseInt(e.target.value)}))} required />
+                                <input type="number" step="0.5" min="0.5" name="horas_curso" className='form-control' placeholder="Horas do curso..." onChange={(e) => setCursos(prev => ({ ...prev, horas_curso: parseInt(e.target.value) }))} required />
                             </div>
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold' >Tipologia</label>
-                                <select className='form-select' value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean }));}}>
+                                <select className='form-select' value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean })); }}>
                                     <option value="">-- Escolher Tipologia --</option>
                                     <option value="true">Síncrono</option>
                                     <option value="false">Assíncrono</option>
@@ -329,11 +333,11 @@ const CreateCourse = () => {
 
                             {cursos.isassincrono == false && (
                                 <div className='mt-2'>
-                                <label className='mt-2 fw-bold'>Formador</label>
-                                    <select name="id_formador" className='form-select' value={formadorSelecionado} onChange={(e) => {setFormadorSelecionado(parseInt(e.target.value)); setSincrono(prev => ({...prev, id_formador: parseInt(e.target.value)}))}}>
+                                    <label className='mt-2 fw-bold'>Formador</label>
+                                    <select name="id_formador" className='form-select' value={formadorSelecionado} onChange={(e) => { setFormadorSelecionado(parseInt(e.target.value)); setSincrono(prev => ({ ...prev, id_formador: parseInt(e.target.value) })) }}>
                                         <option value="">-- Selecionar Formador --</option>
                                         {formadores.map((f) => {
-                                            return(
+                                            return (
                                                 <option key={f.id_formador} value={f.id_formador}>{f.id_formador_utilizador.nome_utilizador}</option>
                                             );
                                         })}
@@ -341,9 +345,9 @@ const CreateCourse = () => {
                                     <label className='mt-2 fw-bold'>Descrição Formador</label>
                                     <textarea name="descricao_formador" value={formadores.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly />
                                     <label className='mt-2 fw-bold'>Número Vagas</label>
-                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({...prev, numero_vagas: parseInt(e.target.value)}))}/>
+                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} />
                                 </div>
-                            )}        
+                            )}
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Categoria</label>
