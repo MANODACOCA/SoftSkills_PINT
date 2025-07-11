@@ -1,18 +1,18 @@
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/aulas/aula_async_page.dart';
-import 'package:mobile/ui/aulas/aula_sync_page.dart';
-import 'package:mobile/ui/course/course_screen_inscrever.dart';
-import 'package:mobile/ui/course/courses.dart';
+import 'package:mobile/ui/pages/aulas/aula_async_page.dart';
+import 'package:mobile/ui/pages/aulas/aula_sync_page.dart';
+import 'package:mobile/ui/pages/course/course_screen_inscrever.dart';
+import 'package:mobile/ui/pages/course/courses.dart';
 //import 'package:mobile/ui/course/course_assync/widget/course_assync_inscrito.dart';
-import 'package:mobile/ui/course/course_screen_inscrito.dart';
+import 'package:mobile/ui/pages/course/course_screen_inscrito.dart';
 /* import 'package:mobile/ui/profile/widget/courser_joined.dart';
 import 'package:mobile/ui/profile/widget/ended_courses.dart';
 //import 'package:mobile/ui/profile/widget/liked_coursed.dart';
 import 'package:mobile/ui/profile/widget/rated_courses.dart';
 import 'package:mobile/ui/profile/widget/unrated.dart'; */
-import 'package:mobile/ui/course/course_enrolled.dart';
-import 'package:mobile/ui/course/courses_completed.dart';
-import 'package:mobile/ui/trabalhos/entrega_trabalho.dart';
+import 'package:mobile/ui/pages/course/course_enrolled.dart';
+import 'package:mobile/ui/pages/course/courses_completed.dart';
+import 'package:mobile/ui/pages/trabalhos/entrega_trabalho.dart';
 
 final List<GoRoute> cursosRoutes = [
   GoRoute(

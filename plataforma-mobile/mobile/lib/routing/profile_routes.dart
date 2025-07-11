@@ -1,12 +1,12 @@
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/profile/widget/change_personal_info.dart';
+import 'package:mobile/ui/pages/profile/widget/change_personal_info.dart';
 //import 'package:mobile/ui/profile/widget/gerir_notification.dart';
-import 'package:mobile/ui/profile/widget/info_change_pass.dart';
+import 'package:mobile/ui/pages/profile/widget/info_change_pass.dart';
 //import 'package:mobile/ui/profile/widget/logout_all_devices.dart';
-import 'package:mobile/ui/profile/widget/privacy_politics.dart';
-import 'package:mobile/ui/profile/widget/profile_screen.dart';
-import 'package:mobile/ui/profile/widget/see_info_profile.dart';
-import 'package:mobile/ui/profile/widget/support.dart';
+import 'package:mobile/ui/pages/profile/widget/privacy_politics.dart';
+import 'package:mobile/ui/pages/profile/widget/profile_screen.dart';
+import 'package:mobile/ui/pages/profile/widget/see_info_profile.dart';
+import 'package:mobile/ui/pages/profile/widget/support.dart';
 
 final List<GoRoute> profileRoutes = [
   GoRoute(

@@ -1,5 +1,5 @@
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/home/widgets/homepage.dart';
+import 'package:mobile/ui/pages/home/widgets/homepage.dart';
 
 final List<GoRoute> homeRoutes = [
   GoRoute(

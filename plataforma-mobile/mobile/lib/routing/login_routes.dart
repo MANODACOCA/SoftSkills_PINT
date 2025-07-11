@@ -1,10 +1,10 @@
 import 'package:go_router/go_router.dart';
-import 'package:mobile/ui/login/widget/change_forgot_pass.dart';
-import 'package:mobile/ui/login/widget/confirm_to_change_pass.dart';
-import 'package:mobile/ui/login/widget/forgetpassword.dart';
-import 'package:mobile/ui/login/widget/loginpage.dart';
-import 'package:mobile/ui/login/widget/primeirologin.dart';
-import 'package:mobile/ui/login/widget/registar.dart';
+import 'package:mobile/ui/pages/login/widget/change_forgot_pass.dart';
+import 'package:mobile/ui/pages/login/widget/confirm_to_change_pass.dart';
+import 'package:mobile/ui/pages/login/widget/forgetpassword.dart';
+import 'package:mobile/ui/pages/login/widget/loginpage.dart';
+import 'package:mobile/ui/pages/login/widget/primeirologin.dart';
+import 'package:mobile/ui/pages/login/widget/registar.dart';
 
 final List<GoRoute> loginRoutes = [
   GoRoute(
