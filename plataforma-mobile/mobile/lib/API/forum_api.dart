@@ -7,6 +7,8 @@ import 'package:mobile/data/cache_database.dart';
 class ForumAPI {
   static const String API_URL = 'https://softskills-api.onrender.com/conteudos_partilhado';
   static const String API_URL_POST = 'https://softskills-api.onrender.com/posts';
+  static const String API_URL_TIPO_DENUNCIA = 'https://softskills-api.onrender.com/tipo_denuncia';
+  static const String API_URL_DENUNCIA = 'https://softskills-api.onrender.com/denuncia';
 
   static Future<List<dynamic>> listConteudosPartilhado({String ordenar = "Mais Recentes", String search = "",}) async {
     final cacheKey = 'forum_list';
@@ -279,6 +281,67 @@ class ForumAPI {
     } catch (e) {
       print('Erro inesperado ao verificar se deu like no Post! $e');
       rethrow;
+    }
+  }
+
+  Future<Map<String,dynamic>> listDenuncias() async {
+    try {
+      /* final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+    
+      if (token == null) {
+        throw Exception('Sessão expirada: token inexistente');
+      } */
+      
+      final response = await http.get(
+        Uri.parse('$API_URL_TIPO_DENUNCIA/list'),
+        /* headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        }, */
+      );
+      if (response.statusCode == 200) {
+        print('Curso encontrado: ${response.body}');
+        final denuncias = jsonDecode(response.body);
+        return denuncias;
+      }
+
+      throw Exception('Erro ao encontrar tipo denuncia!');
+    } catch (error) {
+      print('Erro ao encontrar cursos: $error');
+      throw Exception(error);
+    }
+  }
+
+  Future<Map<String, dynamic>> criarDenuncia(Map<String,dynamic> denuncia) async {
+    try {
+      /* final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token');
+    
+      if (token == null) {
+        throw Exception('Sessão expirada: token inexistente');
+      } */
+
+      final response = await http.post(
+        Uri.parse('$API_URL_DENUNCIA/create'),
+        body: jsonEncode(denuncia),
+        headers: {
+          /* 'Authorization': 'Bearer $token', */
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 201) {
+        print('Denucia encontradas: ${response.body}');
+        final data = jsonDecode(response.body);
+        return data;
+      }
+
+      print('Erro no criaçao: ${response.statusCode} - ${response.body}');
+      throw Exception('Erro ao criar Denucia!');
+    } catch (error) {
+      print('Erro ao criar Denucia: $error');
+      throw Exception(error);
     }
   }
 }

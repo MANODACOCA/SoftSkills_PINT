@@ -496,7 +496,7 @@ class CursosApi {
     }
   }
 
-  Future <Map<String, dynamic>> cursoSlide() async {
+  Future<Map<String, dynamic>> cursoSlide() async {
     final cacheKey = 'cursos_slide';
 
     final hasConnection = await temInternet();

@@ -42,9 +42,7 @@ class _ForumState extends State<Forum> {
       });
     }
   }
-
   
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
