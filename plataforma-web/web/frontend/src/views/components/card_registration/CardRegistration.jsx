@@ -24,7 +24,7 @@ const EnrollmentCard = ({ course, onContadorUpdate, verSeInscrito }) => {
   useEffect(() => {
     let hora = Math.floor(duration);
     let minuto = Math.floor((duration - hora) * 60);
-    const formato = hora !== 0 && minuto !== 0 ? `${hora}h ${minuto}min` : hora !== 0 ? `${hora}h` : minuto !== 0 ? `${minuto}h` : 'Tempo inválido';
+    const formato = hora !== 0 && minuto !== 0 ? `${hora}h ${minuto}min` : hora !== 0 ? `${hora}h` : minuto !== 0 ? `${minuto}min` : 'Tempo inválido';
     setHorasCursoFormato(formato);
   }, [duration]);
 
