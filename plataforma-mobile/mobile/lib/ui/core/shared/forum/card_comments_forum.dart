@@ -7,7 +7,7 @@ import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/core/shared/export.dart';
 import 'package:mobile/utils/uteis.dart';
 import 'package:provider/provider.dart';
-import '../../../../../API/utilizadores_api.dart';
+import '../../../../API/utilizadores_api.dart';
 
 // ignore: must_be_immutable
 

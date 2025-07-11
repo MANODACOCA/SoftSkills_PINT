@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 
-import 'package:mobile/ui/pages/forum/widget/elements/card_comments_forum.dart';
+import 'package:mobile/ui/core/shared/forum/card_comments_forum.dart';
 import 'package:provider/provider.dart';
 import '../../../../API/utilizadores_api.dart';
 import '../../../core/shared/export.dart';

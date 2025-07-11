@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/comments_forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
-import 'package:mobile/ui/pages/forum/widget/elements/card_comments_forum.dart';
+import 'package:mobile/ui/core/shared/forum/card_comments_forum.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:mobile/ui/pages/forum/widget/elements/comment_box.dart';
+import 'package:mobile/ui/core/shared/forum/comment_box.dart';
 import 'package:provider/provider.dart';
 import '../../../core/shared/export.dart';
 
