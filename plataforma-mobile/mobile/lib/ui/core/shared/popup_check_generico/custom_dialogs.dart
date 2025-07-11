@@ -56,14 +56,14 @@ Future<bool?> showConfirmDialog({
       content: Text(content),
       actions: [
         TextButton(
-          style: TextButton.styleFrom(backgroundColor: confirmColor),
-          child: Text(confirmText, style: const TextStyle(color: Colors.white)),
-          onPressed: () => Navigator.of(context).pop(true),
-        ),
-        TextButton(
           style: TextButton.styleFrom(backgroundColor: cancelColor),
           child: Text(cancelText, style: const TextStyle(color: Colors.white)),
           onPressed: () => Navigator.of(context).pop(false),
+        ),
+        TextButton(
+          style: TextButton.styleFrom(backgroundColor: confirmColor),
+          child: Text(confirmText, style: const TextStyle(color: Colors.white)),
+          onPressed: () => Navigator.of(context).pop(true),
         ),
       ],
     ),
