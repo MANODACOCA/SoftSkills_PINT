@@ -174,7 +174,7 @@ class _InscreverState extends State<Inscrever> {
                           }
                         },
                       ),
-                    ),
+                    ), 
                   ), 
                     SizedBox(height: 5,),
                     Align(
