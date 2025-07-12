@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 const FundoComponent = () => {
+    const [showModal, setShowModal] = useState(false);
+    const openModal = () => setShowModal(true);
+    const closeModal = () => setShowModal(false);
+
+
     return (
         <section
             className="py-5 text-white position-relative overflow-hidden"
@@ -128,7 +134,8 @@ const FundoComponent = () => {
                             </div>
 
                             <div className="d-flex gap-4 justify-content-center flex-wrap">
-                                <button
+                                <Link
+                                    to="/home"
                                     className="btn btn-light btn-lg px-5 py-4 rounded-pill shadow-lg fw-bold"
                                     style={{
                                         transform: 'translateY(0)',
@@ -146,7 +153,7 @@ const FundoComponent = () => {
                                     }}
                                 >
                                     🚀 Começar Agora
-                                </button>
+                                </Link>
 
                                 <button
                                     className="btn btn-outline-light btn-lg px-5 py-4 rounded-pill fw-bold"
@@ -168,6 +175,7 @@ const FundoComponent = () => {
                                         e.target.style.backgroundColor = 'rgba(255,255,255,0.1)';
                                         e.target.style.borderColor = 'rgba(255,255,255,0.4)';
                                     }}
+                                    onClick={openModal}
                                 >
                                     📹 Ver Demonstração
                                 </button>
@@ -176,6 +184,52 @@ const FundoComponent = () => {
                     </div>
                 </div>
             </div>
+
+            {/* MODAL */}
+            {showModal && (
+                <div
+                    className="modal d-block"
+                    style={{
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        zIndex: 1050,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                    onClick={closeModal}
+                >
+                    <div
+                        className="modal-dialog"
+                        style={{ maxWidth: '1350px', width: '100%' }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="modal-content bg-dark rounded-4 overflow-hidden">
+                            <div className="modal-header border-0 p-3">
+                                <button
+                                    type="button"
+                                    className="btn-close btn-close-white ms-auto"
+                                    onClick={closeModal}
+                                    aria-label="Close"
+                                ></button>
+                            </div>
+                            <div className="modal-body p-0">
+                                <div className="ratio ratio-16x9">
+                                    <iframe
+                                        src={`https://www.youtube.com/embed/dQw4w9WgXcQ`}
+                                        title="YouTube video"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     )
 }

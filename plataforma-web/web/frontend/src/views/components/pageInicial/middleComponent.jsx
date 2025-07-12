@@ -11,7 +11,7 @@ const MiddleComponent = () => {
     const [nCourses, setNCourses] = useState(null);
     const [nForuns, setNForuns] = useState(null);
 
-
+    
     useEffect(() => {
         const buscarValores = async () => {
             setNUsers(await utilizadores_contagem());
@@ -25,7 +25,7 @@ const MiddleComponent = () => {
         if (!nUsers || !nCourses || !nForuns) return;
 
         const targets = { users: nUsers, courses: nCourses, companies: nForuns };
-        const duration = 2000;
+        const duration = 1000;
         const steps = 50;
         let step = 0;
 
@@ -79,7 +79,7 @@ const MiddleComponent = () => {
                                     e.target.style.transform = 'translateY(-15px) scale(1.02)';
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.target.style.transform = 'translateY(0) scale(1)';
+                                    e.target.style.transform = 'translateY(0)';
                                 }}
                             >
                                 {/* Background Pattern */}
@@ -130,7 +130,7 @@ const MiddleComponent = () => {
                                     e.target.style.transform = 'translateY(-15px) scale(1.02)';
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.target.style.transform = 'translateY(0) scale(1)';
+                                    e.target.style.transform = 'translateY(0)';
                                 }}
                             >
                                 {/* Background Pattern */}
@@ -181,7 +181,7 @@ const MiddleComponent = () => {
                                     e.target.style.transform = 'translateY(-15px) scale(1.02)';
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.target.style.transform = 'translateY(0) scale(1)';
+                                    e.target.style.transform = 'translateY(0)';
                                 }}
                             >
                                 <div className="position-relative">
@@ -195,7 +195,7 @@ const MiddleComponent = () => {
                                             fontSize: '2rem'
                                         }}
                                     >
-                                        🏢
+                                        🗫
                                     </div>
                                     <h3
                                         className="display-3 fw-bold mb-2"
@@ -209,10 +209,10 @@ const MiddleComponent = () => {
                                         {animatedStats.companies}+
                                     </h3>
                                     <p className="fs-5 fw-semibold mb-2" style={{ color: '#3b5b84' }}>
-                                        Empresas Parceiras
+                                        Forúns Livres
                                     </p>
                                     <small className="text-muted">
-                                        Organizações que confiam em nós
+                                        Para partilha de conhecimento
                                     </small>
                                 </div>
                             </div>
@@ -230,10 +230,10 @@ const MiddleComponent = () => {
 
                     <div className="row g-4">
                         {[
-                            { icon: '📋', title: '1. Registo', text: 'Crie sua conta em minutos' },
-                            { icon: '⚙️', title: '2. Configuração', text: 'Personalize para suas necessidades' },
-                            { icon: '👥', title: '3. Integração', text: 'Conecte sua equipa' },
-                            { icon: '🚀', title: '4. Lançamento', text: 'Comece a formar imediatamente' }
+                            { icon: '📝', title: '1. Registo', text: 'Crie a sua conta de forma simples e rápida.' },
+                            { icon: '📚', title: '2. Escolha um curso', text: 'Explore e encontre o curso ideal para o seus interesses.' },
+                            { icon: '✍️', title: '3. Inscreva-se', text: 'Inscreva-se facilmente e comece a aprender.' },
+                            { icon: '🎓', title: '4. Obtenha o certificado', text: 'No final do curso, recebe o seu certificado.' }
                         ].map((step, index) => (
                             <div className="col-md-3" key={index}>
                                 <div className="text-center p-3 h-100">

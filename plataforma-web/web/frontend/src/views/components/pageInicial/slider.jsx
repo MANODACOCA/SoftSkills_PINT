@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import homepage from '../../../assets/images/InicialPage/homePage.png'
 import cursos from '../../../assets/images/InicialPage/cursos.png'
 import foruns from '../../../assets/images/InicialPage/foruns.png'
@@ -9,7 +10,25 @@ const Slider = () => {
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
 
+
     const [currentSlide, setCurrentSlide] = useState(0);
+    const tempos = [0, 30, 90];//tempos defenidos
+    const [videoStartTime, setVideoStartTime] = useState(0);
+
+    const rotas = ["/home", "/cursos", "/forum"];//rotas defenidos
+    const [rotaSlide, setRotaSlide] = useState("");
+
+
+    useEffect(() => {
+        setRotaSlide(rotas[currentSlide]);
+    }, [currentSlide]);
+
+    useEffect(() => {
+        if (showModal) {
+            setVideoStartTime(tempos[currentSlide]);
+        }
+
+    }, [showModal]);
 
 
     const heroSlides = [
@@ -137,7 +156,8 @@ const Slider = () => {
                                     Ver Demonstração
                                 </button>
 
-                                <button
+                                <Link
+                                    to={rotaSlide}
                                     className="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold"
                                     style={{
                                         transform: 'translateY(0)',
@@ -157,7 +177,7 @@ const Slider = () => {
                                     }}
                                 >
                                     🔎 Explorar
-                                </button>
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -193,6 +213,7 @@ const Slider = () => {
                                 {/* Play Button Overlay */}
                                 <div
                                     className="position-absolute top-50 start-50 translate-middle"
+                                    onClick={openModal}
                                     style={{
                                         background: '#00a8e025',
                                         borderRadius: '50%',
@@ -225,58 +246,59 @@ const Slider = () => {
                             key={index}
                             className={`btn rounded-pill ${index === currentSlide ? 'btn-light' : 'btn-outline-light'}`}
                             style={{ width: '12px', height: '12px', padding: 0 }}
-                            onClick={() => setCurrentSlide(index)}
                         ></button>
                     ))}
                 </div>
             </div>
 
             {/* MODAL */}
-            {showModal && (
-                <div
-                    className="modal d-block"
-                    style={{
-                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100vw',
-                        height: '100vh',
-                        zIndex: 1050,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }}
-                    onClick={closeModal}
-                >
+            {
+                showModal && (
                     <div
-                        className="modal-dialog"
-                        style={{ maxWidth: '800px', width: '90%' }}
-                        onClick={(e) => e.stopPropagation()}
+                        className="modal d-block"
+                        style={{
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            position: 'fixed',
+                            top: 0,
+                            left: 0,
+                            width: '100vw',
+                            height: '100vh',
+                            zIndex: 1050,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                        onClick={closeModal}
                     >
-                        <div className="modal-content bg-dark rounded-4 overflow-hidden">
-                            <div className="modal-header border-0 p-2">
-                                <button
-                                    type="button"
-                                    className="btn-close btn-close-white ms-auto"
-                                    onClick={closeModal}
-                                    aria-label="Close"
-                                ></button>
-                            </div>
-                            <div className="modal-body p-0">
-                                <div className="ratio ratio-16x9">
-                                    <iframe
-                                        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                                        title="YouTube video"
-                                        allowFullScreen
-                                    ></iframe>
+                        <div
+                            className="modal-dialog"
+                            style={{ maxWidth: '1350px', width: '100%' }}
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="modal-content bg-dark rounded-4 overflow-hidden">
+                                <div className="modal-header border-0 p-3">
+                                    <button
+                                        type="button"
+                                        className="btn-close btn-close-white ms-auto"
+                                        onClick={closeModal}
+                                        aria-label="Close"
+                                    ></button>
+                                </div>
+                                <div className="modal-body p-0">
+                                    <div className="ratio ratio-16x9">
+                                        <iframe
+                                            src={`https://www.youtube.com/embed/dQw4w9WgXcQ?start=${videoStartTime}`}
+                                            title="YouTube video"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
-        </section>
+                )
+            }
+        </section >
     )
 }
 

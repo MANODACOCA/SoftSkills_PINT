@@ -73,7 +73,7 @@ const ForgotPassword = () => {
 
     return (
         <div className="login-form-container">
-            <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
+            <Link to="/"><img src={softskills} alt="SoftSkills Logo" className="login-logo" /></Link>
             <h2 className="login-title text-start">Esqueceu-se da sua palavra-passe?</h2>
             <p className="login-subtitle text-start">Digite aqui o seu email para receber um código para verificação de entidade</p>
             <form onSubmit={(e) => {

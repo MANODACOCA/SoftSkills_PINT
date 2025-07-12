@@ -85,7 +85,7 @@ const CreateAccount = () => {
 
     return (
         <div className="login-form-container">
-            <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
+            <Link to="/"><img src={softskills} alt="SoftSkills Logo" className="login-logo" /></Link>
             <h2 className="login-title text-start">Criar nova conta</h2>
             <p className="login-subtitle text-start">Preencha os 2 campos obrigatórios abaixo. Vai receber um e-mail com os seus dados de login.</p>
             <form onSubmit={(e) => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import '../login/Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 
@@ -49,7 +49,7 @@ const NewPassword = () => {
 
     return (
         <div className="login-form-container">
-            <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
+            <Link to="/"><img src={softskills} alt="SoftSkills Logo" className="login-logo" /></Link>
             <h2 className="login-title text-start">Nova password</h2>
             <p className="login-subtitle text-start">Defina uma nova password para sua conta para que possa fazer login e aceder a todos os recursos.</p>
             <form onSubmit={(e) => {

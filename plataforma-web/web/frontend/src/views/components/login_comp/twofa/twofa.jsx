@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import '../login/Login.css';
 import './twofa.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
@@ -54,7 +54,7 @@ const TwoFA = () => {
         try {
             await verificarCodigo(email, codigo);
             localStorage.setItem('token', response_login.token);
-            if(redirectTo==='/home') await refreshUser();
+            if (redirectTo === '/home') await refreshUser();
             console.log('TwoFA feita com sucesso.');
             navigate(redirectTo, {
                 state: {
@@ -88,7 +88,7 @@ const TwoFA = () => {
 
     return (
         <div className="login-form-container">
-            <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
+            <Link to="/"><img src={softskills} alt="SoftSkills Logo" className="login-logo" /></Link>
             <h2 className="login-title text-start">Vericação de identidade</h2>
             <p className="login-subtitle text-start">Digite o código de 5 dígitos que você recebeu por e-mail para prosseguir.</p>
             <form onSubmit={(e) => {
