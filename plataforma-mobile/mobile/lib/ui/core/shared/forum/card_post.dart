@@ -286,8 +286,21 @@ class _CardPostState extends State<CardPost> {
                 ),
                 SizedBox(width: 10),
                 GestureDetector(
+                  // onTap: () async {
+                  //   if (widget.currentPage == 'post') {
+                  //     widget.post['contador_likes_post'] = countLikes;
+                  //     final updatedPost = await context.push('/commentPage', extra: widget.post);
+                  //     if (updatedPost != null && mounted) {
+                  //       setState(() {
+                  //         countLikes = updatedPost['contador_likes_post'] ?? countLikes;
+                  //         widget.post['contador_likes_post'] = countLikes;
+                  //       });
+                  //     }
+                  //   }
+                  // },
                   onTap:  () {
                     if (widget.currentPage == 'post') {
+                      widget.post['contador_likes_post'] = countLikes;
                       context.push('/commentPage', extra: widget.post);
                     }
                   },

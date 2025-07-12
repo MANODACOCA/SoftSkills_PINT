@@ -1,6 +1,4 @@
 // ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, prefer_typing_uninitialized_variables, unused_field
-import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
@@ -22,14 +20,12 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> {
-  List<File> files = [];
   Color paint = Colors.white;
   bool addPost = false;
   late final String? userId;
   bool isLoading = true;
 
   final TextEditingController textControllerPost = TextEditingController();
-  final TextEditingController fileController = TextEditingController();
 
   late var forumInfo;
   late List users = [];
@@ -217,32 +213,5 @@ class _ForumPageState extends State<ForumPage> {
         ),
       ],
     );
-  }
-
-  Future<void> pickFile() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.any,
-      );
-
-      if (result != null && result.paths.isNotEmpty) {
-        setState(() {
-          files =
-              result.paths
-                  .where((path) => path != null)
-                  .map((path) => File(path!))
-                  .toList();
-
-          String fileNames = files
-              .map((file) => '[${file.path.split('\\').last}]')
-              .join(' ');
-          fileController.text += ' $fileNames';
-        });
-        print('Files selected: ${files.length}');
-      }
-    } catch (e) {
-      print('Error picking files: $e');
-    }
   }
 }

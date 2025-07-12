@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
 
-import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/comments_forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
@@ -19,12 +18,10 @@ class CommentPage extends StatefulWidget {
 }
 
 class _CommentPageState extends State<CommentPage> {
-  List<File> files = [];
   Color cor = Colors.white;
   bool addcomment = false;
   bool isLoading = true;
   TextEditingController commentController = TextEditingController();
-  TextEditingController fileController = TextEditingController();
 
   List<Map<String,dynamic>> comentarios = [];
   final ComentarioAPI _api = ComentarioAPI();
@@ -43,32 +40,6 @@ class _CommentPageState extends State<CommentPage> {
       }
     });
     fetchComentariosPost();
-  }
-
-  Widget buildAttachmentChips() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: files.map((file) {
-          return Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Chip(
-              backgroundColor: Colors.grey[200],
-              label: Text(
-                file.path.split('/').last,
-                style: TextStyle(fontSize: 12),
-              ),
-              deleteIcon: Icon(Icons.close, size: 16),
-              onDeleted: () {
-                setState(() {
-                  files.remove(file);
-                });
-              },
-            ),
-          );
-        }).toList(),
-      ),
-    );
   }
 
   Future<void> fetchComentariosPost() async {
@@ -148,7 +119,6 @@ class _CommentPageState extends State<CommentPage> {
                                 await ComentarioAPI.createComentario(formData);
                                 setState(() {
                                   commentController.clear();
-                                  files.clear();
                                   addcomment = false;
                                   cor = Colors.white;
                                   isLoading = true;
@@ -161,11 +131,6 @@ class _CommentPageState extends State<CommentPage> {
                         ),
                       ),
                     ),
-                    if (files.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: buildAttachmentChips(),
-                      ),
                   ],
                   Divider(color: Colors.grey, thickness: 1),
                   if (comentarios.isEmpty)
