@@ -83,7 +83,7 @@ class _CommentPageState extends State<CommentPage> {
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
