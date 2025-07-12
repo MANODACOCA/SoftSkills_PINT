@@ -5,6 +5,7 @@ import 'package:mobile/API/utilizadores_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import 'package:mobile/ui/core/shared/cursos/cursos_comp/tabbar_cursos_inscrever.dart';
+import 'package:mobile/utils/verifica_internet.dart';
 import 'package:provider/provider.dart';
 import '../../core/shared/export.dart';
 
@@ -139,24 +140,42 @@ class _InscreverState extends State<Inscrever> {
                       width: MediaQuery.of(context).size.width,
                       height: 185,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child:Image.network(
-                          curso['imagem'],
-                          height: 135,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['nome_curso'])}&background=random&bold=true';
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      ),
+                      child: FutureBuilder<bool>(
+                        future: temInternet(),
+                        builder: (context, snapshot) {
+                          final online = snapshot.data ?? true;
+                          final imageUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['nome_curso'])}&background=random&bold=true';
+                          if (online) {
                             return Image.network(
-                              fallbackImg,
-                              height: 135,
+                              curso['imagem'],
                               width: double.infinity,
+                              height: 135,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Image.network(
+                                  imageUrl,
+                                  width: double.infinity,
+                                  height: 135,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            );
+                          } else {
+                            return Image.asset(
+                              'assets/course-horizontal.png',
+                              width: double.infinity,
+                              height: 135,
                               fit: BoxFit.cover,
                             );
-                          },
-                        )
+                          }
+                        },
                       ),
                     ),
+                  ), 
                     SizedBox(height: 5,),
                     Align(
                       alignment: Alignment.centerLeft,
