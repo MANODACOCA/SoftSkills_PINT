@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/API/comments_forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/core/shared/forum/card_post.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:mobile/ui/core/shared/forum/card_comentario.dart';
 import 'package:provider/provider.dart';
 import '../../../core/shared/export.dart';
@@ -44,33 +43,6 @@ class _CommentPageState extends State<CommentPage> {
       }
     });
     fetchComentariosPost();
-  }
-
-
-  Future<void> pickFile() async {
-    try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
-        allowMultiple: true,
-        type: FileType.any,
-      );
-
-      if (result != null && result.paths.isNotEmpty) {
-        setState(() {
-          files = result.paths
-              .where((path) => path != null)
-              .map((path) => File(path!))
-              .toList();
-
-          String fileNames = files
-              .map((file) => '[${file.path.split('\\').last}]')
-              .join(' ');
-          fileController.text += ' $fileNames';
-        });
-        print('Files selected: ${files.length}');
-      }
-    } catch (e) {
-      print('Error picking files: $e');
-    }
   }
 
   Widget buildAttachmentChips() {
@@ -158,10 +130,6 @@ class _CommentPageState extends State<CommentPage> {
                       child: TextField(
                         controller: commentController,
                         decoration: InputDecoration(
-                          prefixIcon: IconButton(
-                            icon: Icon(Icons.attach_file_outlined, color: AppColors.secondary),
-                            onPressed: pickFile,
-                          ),
                           hintText: 'Adicionar comentário...',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
