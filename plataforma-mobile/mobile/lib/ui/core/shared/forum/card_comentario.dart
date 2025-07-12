@@ -269,28 +269,25 @@ class _CommentBoxState extends State<CommentBox> {
                         isLiking = false;
                       });
                     },
-                    child: Opacity(
-                      opacity: isLiking ? 0.6 : 1.0, // efeito visual
-                      child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                            SizedBox(width: 4),
-                            Text(
-                              widget.comentario['contador_likes_com'].toString(),
-                              style: TextStyle(color: Colors.white, fontSize: 14),
-                            ),
-                          ],
-                        ),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            widget.comentario['contador_likes_com'].toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ],
                       ),
                     ),
                   ),
