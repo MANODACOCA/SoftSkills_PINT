@@ -230,7 +230,7 @@ class ForumAPI {
 
   //PARTE DOS LIKES DO FORUNS
 
-  static Future<dynamic> putLike(String idPost, String idUtilizador) async {
+  Future<dynamic> putLike(String idPost, int idUtilizador) async {
     try {
       await http.put(Uri.parse('https://softskills-api.onrender.com/posts/addLike/$idPost'));
       final response = await http.post(
@@ -249,7 +249,7 @@ class ForumAPI {
     }
   }
 
-  static Future<dynamic> deleteLike(String idPost, String idUtilizador) async {
+  Future<dynamic> deleteLike(String idPost, int idUtilizador) async {
     try {
       await http.put(Uri.parse('https://softskills-api.onrender.com/posts/deleteLike/$idPost'));
       final response = await http.delete(
@@ -268,7 +268,7 @@ class ForumAPI {
     }
   }
 
-  static Future<dynamic> jaDeuLike(String idPost, String idUtilizador) async {
+  Future<dynamic> jaDeuLike(String idPost, int idUtilizador) async {
     try {
       final response = await http.get(
         Uri.parse('https://softskills-api.onrender.com/likes-post/get/$idPost/$idUtilizador'),
