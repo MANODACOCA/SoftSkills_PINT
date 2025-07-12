@@ -18,17 +18,14 @@ const FooterAdmin = () => {
             <div className="container">
                 <div className="row justify-content-between mb-4">
                     <div className="col-md-3 mb-3 text-center text-md-start">
-                        <a
-                            href="https://softskills-three.vercel.app/admin/home"
-                            className="d-inline-flex align-items-center text-decoration-none"
-                        >
+                        <Link to="/admin/home">
                             <img
                                 src={logo}
                                 alt="Flowbite Logo"
                                 height="50"
                                 className="me-2"
                             />
-                        </a>
+                        </Link>
                     </div>
 
                     <div className="col-md-8">
