@@ -30,19 +30,13 @@ const FooterIncial = () => {
 
                     <div className="col-md-8">
                         <div className="row">
-                            <div className="col-6 col-md-4 mb-3">
-                                <h6 className="text-uppercase fw-bold">LINKS RÁPIDOS</h6>
+                            <div className="col-6 col-md-8 mb-3">
+                                <h6 className="text-uppercase fw-bold">CONTACTOS</h6>
                                 <div className="d-flex flex-column">
-                                    <Link to="/cursos">Cursos</Link>
-                                    <Link to="/forum">Fórum</Link>
-                                    <Link to="/notificacoes">Notificações</Link>
-                                </div>
-                            </div>
-                            <div className="col-6 col-md-4 mb-3">
-                                <h6 className="text-uppercase fw-bold">SUPORTE</h6>
-                                <div className="d-flex flex-column">
-                                    <Link to="/perguntas-frequentes"><span>Perguntas Frequentes</span></Link>
-                                    <Link to="/politica-privacidade"><span>Política de Privacidade</span></Link>
+                                    <h8><strong>Email:</strong> suporte@softinsa.com</h8>
+                                    <h8><strong>Telefone:</strong> 213219600</h8>
+                                    <h8><strong>Morada:</strong> Zona Industrial de Coimbrões 16b <br />
+                                        3500-618 Viseu</h8>
                                 </div>
                             </div>
                             <div className="col-6 col-md-4 mx-auto text-center">
