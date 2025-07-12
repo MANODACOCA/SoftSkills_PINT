@@ -32,6 +32,7 @@ class _CommentBoxState extends State<CommentBox> {
   int? idUser;
   bool isLiked = false;
   bool isLiking = false;
+  late int countLikes;
 
   @override
   void initState() {
@@ -42,6 +43,7 @@ class _CommentBoxState extends State<CommentBox> {
         print('ID do utilizador: $userId');
         setState(() {
           idUser = int.parse(userId);
+          countLikes = widget.comentario['contador_likes_com'] ?? 0;
         });
         carregarEstadoLike();
       }
@@ -66,7 +68,7 @@ class _CommentBoxState extends State<CommentBox> {
     final idComentario = widget.comentario['id_comentario'].toString();
     setState(() {
       isLiked = true;
-      widget.comentario['contador_likes_com'] += 1;
+      countLikes = countLikes + 1;
     });
     try {
       await _apiComentario.likeComentario(idComentario, idUser!);
@@ -75,7 +77,7 @@ class _CommentBoxState extends State<CommentBox> {
       print('Erro ao criar like: $e');
       setState(() {
         isLiked = false;
-        widget.comentario['contador_likes_com'] -= 1;
+        countLikes = countLikes - 1;
       });
     }
   }
@@ -84,7 +86,7 @@ class _CommentBoxState extends State<CommentBox> {
     final idComentario = widget.comentario['id_comentario'].toString();
     setState(() {
       isLiked = false;
-      widget.comentario['contador_likes_com'] -= 1;
+      countLikes = countLikes - 1;
     });
     try {
       await _apiComentario.unlikeComentario(idComentario, idUser!);
@@ -93,7 +95,7 @@ class _CommentBoxState extends State<CommentBox> {
       print('Erro ao remover like: $e');
       setState(() {
         isLiked = true;
-        widget.comentario['contador_likes_com'] += 1;
+        countLikes = countLikes + 1;
       });
     }
   }
@@ -284,7 +286,7 @@ class _CommentBoxState extends State<CommentBox> {
                           ),
                           SizedBox(width: 4),
                           Text(
-                            widget.comentario['contador_likes_com'].toString(),
+                            countLikes.toString(),
                             style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ],
