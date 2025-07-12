@@ -14,10 +14,12 @@ class CommentBox extends StatefulWidget {
     super.key,
     required this.comentario,
     this.onDelete,
+    this.onLike,
   });
 
   final Map<String,dynamic> comentario;
-  final void Function(String comentarioId)? onDelete;
+  final Future<void> Function(String comentarioId)? onDelete;
+  final Future<void> Function(String comentarioId)? onLike;
 
   @override
   State<CommentBox> createState() => _CommentBoxState();
@@ -40,8 +42,42 @@ class _CommentBoxState extends State<CommentBox> {
         setState(() {
           idUser = int.parse(userId);
         });
+        carregarEstadoLike();
       }
     });
+  }
+
+  Future<void> carregarEstadoLike() async {
+      final idComentario = widget.comentario['id_comentario'].toString();
+      try {
+        final deuLike = await _apiComentario.jaDeuLike(idComentario, idUser!);
+        print(deuLike);
+        setState(() {
+          isLiked = deuLike;
+        });
+      } catch (e) {
+        print('Erro ao carregar estado do like: $e');
+      }
+  }
+
+  Future<void> createLike () async {
+    final idComentario = widget.comentario['id_comentario'].toString();
+    try{
+      final fazerLike = await _apiComentario.likeComentario(idComentario , idUser!);
+      carregarEstadoLike();
+    } catch (e) {
+      print('Erro ao criar like: $e');
+    }
+  }
+
+  Future<void> deleteLike() async {
+    final idComentario = widget.comentario['id_comentario'].toString();
+    try{
+      final retirarLike = await _apiComentario.unlikeComentario(idComentario, idUser!);
+      carregarEstadoLike();
+    } catch (e) {
+      print('Erro ao retirar like: $e');
+    }
   }
 
   Future<void> fetchTipoDenuncias() async {
@@ -201,9 +237,11 @@ class _CommentBoxState extends State<CommentBox> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      isLiked = !isLiked;
-                    });
+                    if(isLiked == false){
+                      createLike();
+                    } else{
+                      deleteLike();
+                    }
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -219,7 +257,7 @@ class _CommentBoxState extends State<CommentBox> {
                           size: 20,
                         ),
                         SizedBox(width: 4),
-                        Text('10', style: TextStyle(color: Colors.white, fontSize: 14),
+                        Text('${widget.comentario['contador_likes_com']}', style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                       ],
                     ),

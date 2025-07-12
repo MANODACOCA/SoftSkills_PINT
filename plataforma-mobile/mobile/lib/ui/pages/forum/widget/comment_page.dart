@@ -213,7 +213,15 @@ class _CommentPageState extends State<CommentPage> {
                         final comentario = comentarios[index];
                         return ListTile(
                           contentPadding: EdgeInsets.symmetric(vertical: 8.0),
-                          title: CommentBox(comentario: comentario),
+                          title: CommentBox(
+                          comentario: comentario,
+                          onDelete: (comentarioId) async {
+                            await fetchComentariosPost();
+                          },
+                          onLike: (comentarioId) async {
+                            await fetchComentariosPost();
+                          },
+                          ),
                         );
                       },
                     ),

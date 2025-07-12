@@ -98,9 +98,9 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> likeComentario(
+   Future<dynamic> likeComentario(
     String idComentario,
-    String idUtilizador,
+    int idUtilizador,
   ) async {
     try {
       await http.put(Uri.parse('$API_URL_COMENTARIOS/addLike/$idComentario'));
@@ -123,9 +123,9 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> unlikeComentario(
+  Future<dynamic> unlikeComentario(
     String idComentario,
-    String idUtilizador,
+    int idUtilizador,
   ) async {
     try {
       await http.put(
@@ -150,9 +150,9 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> jaDeuLike(
+  Future<bool> jaDeuLike(
     String idComentario,
-    String idUtilizador,
+    int idUtilizador,
   ) async {
     try {
       final response = await http.get(
