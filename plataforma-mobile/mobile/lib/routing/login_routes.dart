@@ -27,49 +27,11 @@ final List<GoRoute> loginRoutes = [
       path: '/confirmacao',
       builder: (context, state) => ConfirmAccountScreen(),
     ),
-    // GoRoute(
-    //   name: 'alterarpassword',
-    //   path: '/alterarpassword',
-    //   builder: (context, state) => ChangePassword(),
-    // ),
     GoRoute(
       name: 'registo',
       path: '/registo',
       builder: (context, state) => Register(),
     ),
-    // GoRoute(
-    //   name: 'twofa',
-    //   path: '/twofa',
-    //   builder: (context, state) => TwoFactorAuthentication(),
-    // ),
-    // GoRoute(
-    //   name: 'check',
-    //   path: '/check',
-    //   builder: (context, state) {
-    //     final data = state.extra as CheckmarkScreen;
-    //     return CheckmarkScreen(path: data.path, message: data.message);
-    //   },
-    // ),
-    // GoRoute(
-    //   name: 'return',
-    //   path: '/returnLogin',
-    //   builder: (context, state) => ReturnLogin(),
-    // ),
-    // GoRoute(
-    //   name: 'changePassword',
-    //   path: '/changePassword',
-    //   builder: (context, state) => ChangePassword(),
-    // ),
-    // GoRoute(
-    //   name: 'activateTwofa',
-    //   path: '/activateTwofa',
-    //   builder: (context, state) => TwoFactorActivate(idUser: state.extra as String),
-    // ),
-    // GoRoute(
-    //   name: 'createPassword',
-    //   path: '/createPassword',
-    //   builder: (context, state) => CreatePassword(email: state.extra as String),
-    // ),
     GoRoute(
       name: 'changeforgotpass',
       path: '/changeforgotpass',

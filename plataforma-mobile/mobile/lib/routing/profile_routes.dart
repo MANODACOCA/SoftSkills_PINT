@@ -14,7 +14,6 @@ final List<GoRoute> profileRoutes = [
     pageBuilder: (context, state) => NoTransitionPage(
       child: Profile(),
     ),
-    //builder: (context, state) { return Profile(); },
   ),
     GoRoute(
     name: 'alterarInformacoes',
@@ -22,7 +21,6 @@ final List<GoRoute> profileRoutes = [
     pageBuilder: (context, state) => NoTransitionPage(
       child: ChangePersonalInfo(),
     ),
-    //builder: (context, state) => ChangePersonalInfo(),
   ),
   GoRoute(
     name: 'seeinfoprofile',
@@ -30,20 +28,14 @@ final List<GoRoute> profileRoutes = [
     pageBuilder: (context, state) => NoTransitionPage(
       child: SeeInfoProfile(),
     ),
-    //builder: (context, state) => SeeInfoProfile(),
   ),
-/*  GoRoute(
-    name: 'logoutAllDevices',
-    path: '/logoutAllDevices',
-    builder: (context, state) => LogOut(),
- ), */ 
+
   GoRoute(
     name: 'changeinfopass',
     path: '/changeinfopass',
     pageBuilder: (context, state) => NoTransitionPage(
       child: ChangeInfoPassword(idUser: state.extra as String),
     ),
-    //builder: (context, state) => ChangeInfoPassword(idUser: state.extra as String),
   ),
   GoRoute(
     name: 'privacypolitics',
@@ -51,7 +43,6 @@ final List<GoRoute> profileRoutes = [
     pageBuilder: (context, state) => NoTransitionPage(
       child: PrivacyPolitics(),
     ),
-    //builder: (context, state) => PrivacyPolitics(),
   ),
   GoRoute(
     name: 'support',
@@ -59,16 +50,5 @@ final List<GoRoute> profileRoutes = [
     pageBuilder: (context, state) => NoTransitionPage(
       child: Support(),
     ),
-    //builder: (context, state) => Support(),
   ),
-  /* GoRoute(
-    name: 'notificacoes',
-    path: '/notificacoes',
-    builder: (context, state) => Notification(),
-  ), */
-  /* GoRoute(
-    name: 'gerirnotification',
-    path: '/gerirnotification',
-    builder: (context, state) => GerirNotification(),
-  ), */
 ];

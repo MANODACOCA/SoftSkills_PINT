@@ -21,8 +21,8 @@ final rotas = GoRouter(
     final goingConfirmacao = state.uri.path == '/confirmacao';
     final goingChangeForgotPass = state.uri.path == '/changeforgotpass';
 
-    if (!initialized) return null; // Não redireciona enquanto não inicializar!
-    // Permitir acesso a /login, /registo, /firstlogin, /forgetpassword, /confirmacao e /changeforgotpass sem login
+    if (!initialized) return null; 
+    
     if (!loggedIn && !goingLogin && !goingRegisto && !goingFirstLogin && !goingForgetPassword && !goingConfirmacao && !goingChangeForgotPass) return '/login';
     if (loggedIn && goingLogin) return '/';
     return null;
@@ -40,13 +40,3 @@ final rotas = GoRouter(
   ],
 );
 
-// final rotas = GoRouter(
-//   initialLocation: '/',
-//   routes: [
-//     ...homeRoutes,
-//     ...loginRoutes,
-//     ...forumRoutes,
-//     ...cursosRoutes,
-//     ...profileRoutes,
-//   ],
-// );
