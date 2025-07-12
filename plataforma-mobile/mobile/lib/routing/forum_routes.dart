@@ -29,14 +29,7 @@ final List<GoRoute> forumRoutes = [
     pageBuilder: (context, state) {
       final extra = state.extra as Map<String, dynamic>;
       return NoTransitionPage(
-        child: CommentPage(
-          postId: (extra['postId'] ?? '').toString(),
-          postName: "${extra['postName']}",
-          description: "${extra['description']}",
-          likes: extra['likes'] as int,
-          comments: extra['comments'] as int,
-          photo: "${extra['photo']}",
-        ),
+        child: CommentPage( post: state.extra as Map<String,dynamic> ),
       );
     },
     /* builder: (context, state) {

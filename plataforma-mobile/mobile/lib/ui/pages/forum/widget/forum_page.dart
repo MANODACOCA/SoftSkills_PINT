@@ -138,45 +138,12 @@ class _ForumPageState extends State<ForumPage> {
                                     padding: const EdgeInsets.only(
                                       bottom: 16.0,
                                     ),
-                                    child: Post(
-                                      postID: post['id_post']?.toString() ?? '',
-                                      forumName:
-                                          user['nome_utilizador'] ??
-                                          'Desconhecido',
-                                      forumComments:
-                                          post['contador_comentarios'] ?? 0,
-                                      forumLike:
-                                          post['contador_likes_post'] ?? 0,
-                                      description: post['texto_post'] ?? '',
-                                      photo:
-                                          (() {
-                                            final img =
-                                                user['img_perfil']
-                                                    ?.toString() ??
-                                                '';
-                                            if (img.isEmpty || img == 'null') {
-                                              return 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(user['nome_utilizador'] ?? '')}&background=random&bold=true';
-                                            }
-                                            if (img.startsWith('http')) {
-                                              return img;
-                                            }
-                                            final cleaned =
-                                                img.startsWith('.')
-                                                    ? img.substring(1)
-                                                    : img;
-                                            return 'https://softskills-api.onrender.com/$cleaned';
-                                          })(),
-                                      selectComment: false,
-                                      datePost:
-                                          post['data_criacao_post'] != null
-                                              ? post['data_criacao_post'].toString()
-                                              : '',
+                                    child: CardPost(
+                                      post: post,
                                       onDelete: (postId) {
                                         setState(() {
                                           posts.removeWhere(
-                                            (p) =>
-                                                p['id_post'].toString() ==
-                                                postId,
+                                            (p) => p['id_post'].toString() == postId,
                                           );
                                         });
                                       },

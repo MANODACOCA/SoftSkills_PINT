@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:mobile/ui/core/shared/base_comp/dropdown_component.dart';
 
 /// Mostra um popup de sucesso genérico
 Future<void> showSuccessDialog({
@@ -69,3 +70,69 @@ Future<bool?> showConfirmDialog({
     ),
   );
 }
+
+//para denunciar
+Future<int?> showDenunciaDialog(
+  BuildContext context,
+  List<Map<String, dynamic>> motivos,
+) async {
+  String? selectedLabel;
+
+  final List<String> motivoLabels = motivos
+      .map<String>((motivo) => motivo['tipo_denuncia'].toString())
+      .toList();
+
+  return showDialog<int>(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (context, setState) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: const Text('Denunciar Post'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Selecione o motivo da denúncia'),
+              const SizedBox(height: 10),
+              DropdownComponent(
+                type: '-- Selecione um motivo --',
+                items: motivoLabels,
+                value: selectedLabel,
+                onChanged: (value) {
+                  setState(() => selectedLabel = value);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(null),
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.grey.shade700,
+              ),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: selectedLabel == null
+                  ? null
+                  : () {
+                      final selectedItem = motivos.firstWhere(
+                        (motivo) => motivo['tipo_denuncia'] == selectedLabel,
+                      );
+                      Navigator.of(context).pop(selectedItem['id_tipo_denuncia']);
+                    },
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: Colors.red,
+              ),
+              child: const Text('Enviar denúncia', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+

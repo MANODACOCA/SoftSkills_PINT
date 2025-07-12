@@ -1,389 +1,210 @@
-// ignore_for_file: avoid_print, unnecessary_string_interpolations, unnecessary_null_comparison, curly_braces_in_flow_control_structures, prefer_typing_uninitialized_variables, use_build_context_synchronously
-import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:like_button/like_button.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
-import 'package:mobile/ui/core/shared/export.dart';
+import 'package:mobile/ui/core/shared/forum/dropdown_report_delete.dart';
+import 'package:mobile/ui/core/shared/popup_check_generico/custom_dialogs.dart';
 import 'package:mobile/utils/uteis.dart';
 import 'package:provider/provider.dart';
-import '../../../../API/utilizadores_api.dart';
 
-// ignore: must_be_immutable
+class CardPost extends StatefulWidget{
+  const CardPost({super.key, required this.post,this.onDelete});
 
-class Post extends StatefulWidget {
-  const Post({
-    super.key,
-    required this.postID,
-    required this.forumName,
-    required this.forumComments,
-    required this.forumLike,
-    required this.description,
-    required this.photo,
-    required this.datePost,
-    required this.selectComment,
-    this.onDelete,
-  });
-
+  final Map<String, dynamic> post;
   final void Function(String postId)? onDelete;
-  final String postID;
-  final String forumName;
-  final int forumComments;
-  final int forumLike;
-  final String datePost;
-  final String description;
-  final String photo;
-  final bool selectComment;
 
   @override
-  State<Post> createState() => _PostState();
+  State<CardPost> createState() => _CardPostState();
 }
 
-class _PostState extends State<Post> {
-  late int likes;
-  final TextEditingController _copiar = TextEditingController();
-  String _denunciar = '';
-  //bool _expanded = false;
-  String? userId;
-  late int userIdINT;
-  late Future<Map<String, dynamic>> user;
-  late String? nameUser;
+class _CardPostState extends State<CardPost> {
+  final ForumAPI _api = ForumAPI();
+  List<Map<String, dynamic>> denuncias = [];
+  int? idUser;
 
   @override
   void initState() {
     super.initState();
-    likes = widget.forumLike;
-    userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
-    userIdINT = int.parse(userId!);
-    user = UtilizadoresApi().getUtilizador(userIdINT);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (userId != null) {
+        print('ID do utilizador: $userId');
+        setState(() {
+          idUser = int.parse(userId);
+        });
+      }
+    });
   }
 
-  @override
-  void dispose() {
-    _copiar.dispose();
-    super.dispose();
+  Future<void> fetchTipoDenuncias() async {
+    try { 
+      final esteDenuncia = await _api.listDenuncias();
+      setState(() {
+        denuncias = esteDenuncia;
+      });
+    } catch(e) {
+      print('Erro ao encontrar tipo denuncia');
+    }
+  }
+
+//eliminar post
+  Future<void> removerPost(String id) async {
+    try {
+      await _api.deletePost(id);
+    } catch (e) {
+      print('Erro ao remover post');
+    }
+  }
+
+  Future<void> confirmarEEliminarPost(String postId) async {
+    final confirm = await showConfirmDialog(
+      context: context, 
+      title: 'Tem a certeza que pretende eliminar o seu post?', 
+      content: 'Esta ação não poderá ser desfeita!', 
+      confirmText: 'Eliminar', 
+      cancelText: 'Cancelar'
+    );
+
+    if (confirm == true) {
+      try {
+        await removerPost(postId); 
+        widget.onDelete?.call(postId);
+        if(!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Post eliminado com sucesso')),
+        );
+      } catch (e) {
+        if(!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erro ao eliminar post')),
+        );
+      }
+    }
+  }
+
+//enviar denuncia
+  Future<void> enviarDenuncia(String postId, int idTipoDenuncia) async {
+    try {
+      final data = {
+        'id_comentario': null, 
+        'id_utilizador': idUser, 
+        'id_post': int.parse(postId), 
+        'id_tipo_denuncia': idTipoDenuncia
+      };
+      await _api.criarDenuncia(data);
+    } catch (e) {
+      print('Erro ao criar denuncia: $e');
+    }
+  }
+
+  Future<void> confirmarEEnviarDenuncia(String postId) async {
+    if (denuncias.isEmpty) {
+      await fetchTipoDenuncias();
+    }
+
+    final int? idTipo = await showDenunciaDialog(context, denuncias);
+
+    if (idTipo != null) {
+      try {
+        await enviarDenuncia(postId, idTipo);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Denúncia enviada com sucesso')),
+        );
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erro ao enviar denúncia')),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final img = widget.post['id_utilizador_utilizador']?['img_perfil'];
+    final imageUrl = 'https://ui-avatars.com/api/?name= ${Uri.encodeComponent(widget.post['id_utilizador_utilizador']?['nome_utilizador'])}&background=random&bold=true';            
     return Container(
+      
       width: double.infinity,
       decoration: BoxDecoration(
+        color: Colors.white,
         border: Border.all(
-          color: const Color.fromARGB(255, 216, 216, 216),
+          color: Color(0xFFEEEEEE),
           width: 1,
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10)
       ),
       child: Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(8),
         child: Column(
-        children: <Widget>[
-          SizedBox(height: 5),
-          SizedBox(
-            child: FutureBuilder<Map<String, dynamic>>(
-              future: user,
-              builder: (context, snapshot) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          CircleAvatar(
-                            backgroundImage: NetworkImage(widget.photo),
-                            radius: 30,
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.forumName,
-                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  tempoDecorrido(widget.datePost),
-                                  style: const TextStyle(fontSize: 16, color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Transform.translate(
-                      offset: const Offset(5, 0),
-                      child: PopupMenuButton<String>(
-                        offset: const Offset(-20, 0.5),
-                        position: PopupMenuPosition.under,
-                        icon: const Icon(Icons.more_vert, color: Colors.grey),
-                        onSelected: (value) {
-                          if (value == 'copiar') {
-                            _copiar.text = widget.description;
-                            Clipboard.setData(ClipboardData(text: _copiar.text));
-                          } else if (value == 'denunciar') {
-                            denunciar();
-                          } else if (value == 'eliminar') {
-                            Future.delayed(Duration.zero, () async {
-                              final confirm = await showDialog<bool>(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                  title: const Text('Confirmar eliminação'),
-                                  content: const Text('Tens a certeza que queres eliminar este post?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(false),
-                                      child: const Text('Cancelar'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () => Navigator.of(context).pop(true),
-                                      child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
-                                    ),
-                                  ],
-                                ),
-                              );
-                              if (confirm == true) {
-                                await ForumAPI.deletePost(widget.postID);
-                                if (widget.onDelete != null) {
-                                  widget.onDelete!(widget.postID);
-                                }
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Post eliminado com sucesso!'),
-                                  ),
-                                );
-                              }
-                            });
-                          }
-                        },
-                        itemBuilder: (BuildContext context) {
-                          List<PopupMenuEntry<String>> items = [
-                            const PopupMenuItem(
-                              value: 'copiar',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.copy, color: Colors.grey),
-                                  SizedBox(width: 8),
-                                  Text('Copy'),
-                                ],
-                              ),
-                            ),
-                            const PopupMenuItem(
-                              value: 'denunciar',
-                              child: Row(
-                                children: [
-                                  Icon(Icons.flag, color: Colors.grey),
-                                  SizedBox(width: 8),
-                                  Text('Report'),
-                                ],
-                              ),
-                            ),
-                          ];
-                          if (snapshot.connectionState == ConnectionState.done &&
-                              snapshot.hasData &&
-                              widget.forumName == snapshot.data!['nome_utilizador']) {
-                            items.add(
-                              const PopupMenuItem(
-                                value: 'eliminar',
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.delete, color: Colors.red),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Eliminar',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                          return items;
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(5),
-            child: SizedBox(
-              width: double.infinity,
-              child: Text(widget.description, textAlign: TextAlign.justify,),
-            ), 
-          ),
-          SizedBox(
-            child: Row(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SizedBox(width: 15),
-                LikeButton(
-                  size: 30,
-                  likeCount: likes,
-                  likeBuilder: (isLiked) {
-                    return Icon(
-                      Icons.thumb_up,
-                      color: isLiked ? AppColors.primary : Colors.grey,
-                    );
-                  },
-                  onTap: (isLiked) async {
-                    setState(() {
-                      if (isLiked) {
-                        likes--;
-                      } else {
-                        likes++;
-                      }
-                    });
-                    return !isLiked;
-                  },
-                ),
-                SizedBox(width: 5),
-                Column(
+                Row(
                   children: [
-                    IconButton(
-                      isSelected: widget.selectComment,
-                      icon: Icon(
-                        Icons.comment,
-                        color: widget.selectComment ? AppColors.secondary : Colors.grey,
-                      ),
-                      onPressed: () async {
-                        context.push(
-                          '/commentPage',
-                          extra: {
-                            'postId': widget.postID,
-                            'postName': widget.forumName,
-                            'description': widget.description,
-                            'likes': likes,
-                            'comments': widget.forumComments,
-                            'photo': widget.photo,
+                    ClipOval(
+                      child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: Image.network(
+                          'https://softskills-api.onrender.com/$img',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
+                            );
                           },
-                        );
-                      },
+                        )
+                      ),
                     ),
-                    SizedBox(height: 5),
+                    SizedBox(width: 8,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.post['id_utilizador_utilizador']?['nome_utilizador'], style: TextStyle(fontSize: 16),),
+                        Text(tempoDecorrido(widget.post['data_criacao_post']), style: TextStyle(fontSize: 12),),
+                      ],
+                    ),
                   ],
                 ),
+                //denuncia ou eliminar dropdown
+                if (idUser != null)
+                PostOptionsDropdown(
+                  post: widget.post,
+                  userId: idUser!,
+                  onDelete: confirmarEEliminarPost,
+                  onDenunciar: confirmarEEnviarDenuncia,
+                )
               ],
             ),
-          ),
-        ],
-      ),
-      )
-      
-    );
-  }
-
-  void denunciar() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Container(
-            width: double.infinity,
-            height: 250,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Denunciar Por que motivo?',
-                  style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            SizedBox(height: 10,),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(widget.post['texto_post']),
+            ),
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(Icons.thumb_up_alt_outlined, color: Colors.black,),
+                  onPressed: (){
+                    
+                  }
                 ),
-                SizedBox(height: 5),
-                Row(
-                  children: <Widget>[
-                    TextButton(
-                      child: Text(
-                        'Conteúdo Inapropriado',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      onPressed: () {
-                        _denunciar = 'Conteúdo Inapropriado';
-                        print('Denunciar: $_denunciar');
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    TextButton(
-                      child: Text('Spam', style: TextStyle(fontSize: 13)),
-                      onPressed: () {
-                        _denunciar = 'Spam';
-                        print('Denunciar: $_denunciar');
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    TextButton(
-                      child: Text(
-                        'Informação Falsa',
-                        style: TextStyle(fontSize: 13),
-                      ),
-                      onPressed: () {
-                        _denunciar = 'Informação Falsa';
-                        print('Denunciar: $_denunciar');
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 5),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
+                IconButton(
+                  icon: Icon(Icons.chat , color: Colors.black),
                   onPressed: () {
-                    print('Denunciar: $_denunciar');
+                    context.push('/commentPage', extra: widget.post); 
                   },
-                  child: Text(
-                    'Denunciar',
-                    style: TextStyle(fontSize: 13, color: Colors.white),
-                  ),
                 ),
               ],
+              //like e coment
             ),
-          ),
-        );
-      },
+          ],
+        ),
+      ),
     );
-  }
-
-  verSeNULL() {
-    if (widget.postID == null)
-      print('postID é null');
-    else
-      print(widget.postID);
-    if (widget.forumName == null)
-      print('forumName é null');
-    else
-      print(widget.forumName);
-    if (widget.description == null)
-      print('description é null');
-    else
-      print(widget.description);
-    if (likes == null)
-      print('likes é null');
-    else
-      print('likes: $likes');
-    if (widget.forumComments == null)
-      print('forumComments é null');
-    else
-      print('forumComments: ${widget.forumComments}');
-    if (widget.photo == null)
-      print('photo é null');
-    else
-      print('photo: ${widget.photo}');
   }
 }

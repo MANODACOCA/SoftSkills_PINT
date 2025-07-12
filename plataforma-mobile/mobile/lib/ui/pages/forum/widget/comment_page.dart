@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously
+
 import 'dart:io';
-//import '../../../API/comments_forum.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/comments_forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
@@ -13,27 +13,25 @@ import '../../../core/shared/export.dart';
 class CommentPage extends StatefulWidget {
   const CommentPage({
     super.key,
-    required this.postId,
-    required this.postName,
-    required this.description,
-    required this.likes,
-    required this.comments,
-    required this.photo,
+    required this.post,
   });
 
-  final String postId;
-  final String postName;
-  final String description;
-  final int likes;
-  final int comments;
-  final String photo;
+  final Map<String, dynamic> post;
 
   @override
-  // ignore: library_private_types_in_public_api
-  _CommentPageState createState() => _CommentPageState();
+  State<CommentPage> createState() => _CommentPageState();
 }
 
 class _CommentPageState extends State<CommentPage> {
+  List<File> files = [];
+  Color cor = Colors.white;
+  bool addcomment = false;
+  bool isLoading = true;
+  TextEditingController commentController = TextEditingController();
+  TextEditingController fileController = TextEditingController();
+  late Future<List<dynamic>> comentarios;
+  late String idUser;
+
   Future<void> pickFile() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -43,11 +41,10 @@ class _CommentPageState extends State<CommentPage> {
 
       if (result != null && result.paths.isNotEmpty) {
         setState(() {
-          files =
-              result.paths
-                  .where((path) => path != null)
-                  .map((path) => File(path!))
-                  .toList();
+          files = result.paths
+              .where((path) => path != null)
+              .map((path) => File(path!))
+              .toList();
 
           String fileNames = files
               .map((file) => '[${file.path.split('\\').last}]')
@@ -65,42 +62,41 @@ class _CommentPageState extends State<CommentPage> {
     return Wrap(
       spacing: 8.0,
       runSpacing: 4.0,
-      children:
-          files.map((file) {
-            return Chip(
-              backgroundColor: Colors.grey[200],
-              label: Text(
-                file.path.split('/').last,
-                style: TextStyle(fontSize: 12),
-              ),
-              deleteIcon: Icon(Icons.close, size: 16),
-              onDeleted: () {
-                setState(() {
-                  files.remove(file);
-                });
-              },
-            );
-          }).toList(),
+      children: files.map((file) {
+        return Chip(
+          backgroundColor: Colors.grey[200],
+          label: Text(
+            file.path.split('/').last,
+            style: TextStyle(fontSize: 12),
+          ),
+          deleteIcon: Icon(Icons.close, size: 16),
+          onDeleted: () {
+            setState(() {
+              files.remove(file);
+            });
+          },
+        );
+      }).toList(),
     );
   }
 
-  List<File> files = [];
-  Color cor = Colors.white;
-  bool addcomment = false;
-  bool isLoading = true;
-  TextEditingController commentController = TextEditingController();
-  TextEditingController fileController = TextEditingController();
-  late Future<List<dynamic>> comentarios;
-  late String idUser;
-
   Future<void> carregarTudo() async {
-    comentarios = ComentarioAPI.getComentariosByPost(widget.postId);
-    await comentarios;
-    idUser = Provider.of<AuthProvider>(context, listen: false).user?.id ?? '';
-    print('Carregou os comentários para o post $comentarios}');
-    setState(() {
-      isLoading = false;
-    });
+    try {
+      final comentariosCarregados = await ComentarioAPI.getComentariosByPost(widget.post['id_post']);
+      if (!mounted) return;
+      idUser = Provider.of<AuthProvider>(context, listen: false).user?.id ?? '';
+
+      setState(() {
+        comentarios = Future.value(comentariosCarregados);
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Erro ao carregar comentários: $e');
+      setState(() {
+        comentarios = Future.value([]);
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -128,162 +124,139 @@ class _CommentPageState extends State<CommentPage> {
             onPressed: () {
               setState(() {
                 addcomment = !addcomment;
-                if (addcomment) {
-                  cor = AppColors.secondary;
-                } else {
-                  cor = Colors.white;
-                }
+                cor = addcomment ? AppColors.secondary : Colors.white;
               });
             },
           ),
         ],
       ),
-      body:
-          isLoading
-              ? Center(child: CircularProgressIndicator())
-              : Padding(
-                padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Post(
-                      postID: widget.postId,
-                      forumName: widget.postName,
-                      forumComments: widget.comments,
-                      forumLike: widget.likes,
-                      description: widget.description,
-                      photo: widget.photo,
-                      datePost: DateTime.now().toLocal().toString().substring(
-                        0,
-                        10,
-                      ),
-                      selectComment: true,
-                    ),
-                    if (addcomment)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextField(
-                              controller: commentController,
-                              decoration: InputDecoration(
-                                prefixIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.attach_file_outlined,
-                                    color: AppColors.secondary,
-                                  ),
-                                  onPressed: () async {
-                                    await pickFile();
-                                  },
+      body: isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  CardPost(
+                    post: widget.post,
+                    onDelete: (postId) {
+                      setState(() {
+                        // Se quiseres remover o post da UI, podes fazê-lo aqui
+                      });
+                    },
+                  ),
+                  if (addcomment)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            controller: commentController,
+                            decoration: InputDecoration(
+                              prefixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.attach_file_outlined,
+                                  color: AppColors.secondary,
                                 ),
-                                hintText: 'Adicionar comentário...',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                                onPressed: pickFile,
+                              ),
+                              hintText: 'Adicionar comentário...',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.send,
+                                  color: AppColors.secondary,
                                 ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.send,
-                                    color: AppColors.secondary,
-                                  ),
-                                  onPressed: () async {
-                                    final textoComentario =
-                                        commentController.text.trim();
+                                onPressed: () async {
+                                  final textoComentario =
+                                      commentController.text.trim();
 
-                                    if (textoComentario.isNotEmpty) {
-                                      try {
-                                        final formData = {
-                                          "id_utilizador": idUser,
-                                          "id_post": widget.postId,
-                                          "id_formato": 1,
-                                          "texto_comentario": textoComentario,
-                                        };
+                                  if (textoComentario.isNotEmpty) {
+                                    try {
+                                      final formData = {
+                                        "id_utilizador": idUser,
+                                        "id_post": widget.post['id_post'],
+                                        "id_formato": 1,
+                                        "texto_comentario": textoComentario,
+                                      };
 
-                                        await ComentarioAPI.createComentario(
-                                          formData,
-                                        );
+                                      await ComentarioAPI.createComentario(
+                                        formData,
+                                      );
 
-                                        setState(() {
-                                          commentController.clear();
-                                          addcomment = false;
-                                          cor = Colors.white;
-                                          isLoading = true;
-                                        });
+                                      setState(() {
+                                        commentController.clear();
+                                        addcomment = false;
+                                        cor = Colors.white;
+                                        isLoading = true;
+                                      });
 
-                                        await carregarTudo(); // Atualiza os comentários
-                                      } catch (e) {
-                                        print('Erro ao criar comentário: $e');
-                                      }
+                                      await carregarTudo(); // Atualiza os comentários
+                                    } catch (e) {
+                                      print('Erro ao criar comentário: $e');
                                     }
-                                  },
-                                ),
+                                  }
+                                },
                               ),
                             ),
-                            if (files.isNotEmpty) buildAttachmentChips(),
-                          ],
-                        ),
-                      ),
-                    Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                      indent: 10,
-                      endIndent: 10,
-                    ),
-                    Expanded(
-                      child: FutureBuilder<List<dynamic>>(
-                        future: comentarios,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          }
-                          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                            return Center(child: Text('Sem comentários.'));
-                          }
-                          final comentariosList = snapshot.data!;
-                          return ListView.builder(
-                            itemCount: comentariosList.length,
-                            itemBuilder: (context, index) {
-                              final comentario = comentariosList[index];
-                              final user =
-                                  comentario['id_utilizador_utilizador'];
-                              final imgPerfil = user['img_perfil'];
-                              return ListTile(
-                                contentPadding: EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                title: CommentBox(
-                                  id: comentario['id_comentario'],
-                                  avatarUrl:
-                                      imgPerfil != null && imgPerfil.isNotEmpty
-                                          ? imgPerfil
-                                          : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(user['nome_utilizador'] ?? '')}&background=random&bold=true',
-                                  nome: user['nome_utilizador'] ?? 'Utilizador',
-                                  email: user['email'] ?? '',
-                                  tempo: comentario['data_comentario'] ?? '',
-                                  likes: comentario['num_gostos'] ?? 0,
-                                  // forumName: user['nome_utilizador'] ?? 'Utilizador',
-                                  // forumComments: comentario['num_comentarios'] ?? 0,
-                                  // forumLike: comentario['num_gostos'] ?? 0,
-                                  description:
-                                      comentario['texto_comentario'] ?? '',
-                                  onDelete: (id) {
-                                    setState(() {
-                                      comentariosList.removeWhere(
-                                        (c) => c['id_comentario'] == id,
-                                      );
-                                    });
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        },
+                          ),
+                          if (files.isNotEmpty) buildAttachmentChips(),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  Divider(
+                    color: Colors.grey,
+                    thickness: 1,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  Expanded(
+                    child: FutureBuilder<List<dynamic>>(
+                      future: comentarios,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return Center(child: Text('Sem comentários.'));
+                        }
+                        final comentariosList = snapshot.data!;
+                        return ListView.builder(
+                          itemCount: comentariosList.length,
+                          itemBuilder: (context, index) {
+                            final comentario = comentariosList[index];
+                            final user = comentario['id_utilizador_utilizador'];
+                            final imgPerfil = user['img_perfil'];
+
+                            return ListTile(
+                              contentPadding: EdgeInsets.symmetric(vertical: 8.0),
+                              title: CommentBox(
+                                id: comentario['id_comentario'],
+                                avatarUrl: imgPerfil != null && imgPerfil.isNotEmpty
+                                    ? imgPerfil
+                                    : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(user['nome_utilizador'] ?? '')}&background=random&bold=true',
+                                nome: user['nome_utilizador'] ?? 'Utilizador',
+                                email: user['email'] ?? '',
+                                tempo: comentario['data_comentario'] ?? '',
+                                likes: comentario['num_gostos'] ?? 0,
+                                description: comentario['texto_comentario'] ?? '',
+                                onDelete: (id) async {
+                                  setState(() => isLoading = true);
+                                  await carregarTudo();
+                                },
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
+            ),
       bottomNavigationBar: Footer(),
     );
   }

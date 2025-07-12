@@ -212,7 +212,7 @@ class ForumAPI {
     }
   }
 
-  static Future<dynamic> deletePost(String id) async {
+  Future<dynamic> deletePost(String id) async {
     try {
       final response = await http.delete(Uri.parse('https://softskills-api.onrender.com/posts/delete/$id'));
       if (response.statusCode == 200) {
@@ -284,7 +284,7 @@ class ForumAPI {
     }
   }
 
-  Future<Map<String,dynamic>> listDenuncias() async {
+  Future<List<Map<String,dynamic>>> listDenuncias() async {
     try {
       /* final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -301,8 +301,9 @@ class ForumAPI {
         }, */
       );
       if (response.statusCode == 200) {
-        print('Curso encontrado: ${response.body}');
-        final denuncias = jsonDecode(response.body);
+        print('Tipo de denuncias encontradas: ${response.body}');
+        final List<dynamic> data = jsonDecode(response.body);
+        final denuncias = data.cast<Map<String, dynamic>>();
         return denuncias;
       }
 

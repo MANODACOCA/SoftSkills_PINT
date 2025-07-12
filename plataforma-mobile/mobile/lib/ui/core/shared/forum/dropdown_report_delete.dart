@@ -6,7 +6,7 @@ class PostOptionsDropdown extends StatelessWidget {
   final Map<String, dynamic> post;
   final int userId;
   final void Function(String postId)? onDelete;
-  final void Function()? onDenunciar;
+  final void Function(String postId)? onDenunciar;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class PostOptionsDropdown extends StatelessWidget {
     return PopupMenuButton<String>(
       onSelected: (value) {
         if (value == 'denunciar') {
-          onDenunciar?.call();
+          onDenunciar?.call(post['id_post'].toString());
         } else if (value == 'eliminar') {
           onDelete?.call(post['id_post'].toString());
         }

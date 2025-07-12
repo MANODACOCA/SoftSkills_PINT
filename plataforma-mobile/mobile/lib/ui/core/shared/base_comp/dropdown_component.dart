@@ -33,7 +33,6 @@ class _DropdownComponentState extends State<DropdownComponent> {
           child:  DropdownButton<String>(
             value: widget.value,
             isExpanded: true,
-            menuWidth: screenWidth - 40,
             focusColor:Colors.white,
             style: TextStyle(color: Colors.white),
             iconEnabledColor:Colors.black,
