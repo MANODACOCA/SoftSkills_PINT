@@ -105,7 +105,8 @@ class _CardPostState extends State<CardPost> {
     if (denuncias.isEmpty) {
       await fetchTipoDenuncias();
     }
-
+    
+    if (!mounted) return;
     final int? idTipo = await showDenunciaDialog(context, denuncias);
 
     if (idTipo != null) {
