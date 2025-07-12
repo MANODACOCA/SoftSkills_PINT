@@ -118,7 +118,7 @@ class _InscreverState extends State<Inscrever> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBarArrow(
         onBack: () => context.go('/cursos'),
         title: (curso.isNotEmpty && curso['nome_curso'] != null && curso['nome_curso'].toString().isNotEmpty) 

@@ -121,7 +121,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text(

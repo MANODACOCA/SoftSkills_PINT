@@ -28,7 +28,7 @@ class _SeeInfoProfileState extends State<SeeInfoProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
