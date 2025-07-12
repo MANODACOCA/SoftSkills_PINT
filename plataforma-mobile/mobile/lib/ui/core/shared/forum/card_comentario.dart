@@ -32,7 +32,7 @@ class _CommentBoxState extends State<CommentBox> {
   int? idUser;
   bool isLiked = false;
   bool isLiking = false;
-  late int countLikes;
+  late int countLikes = 0;
 
   @override
   void initState() {
@@ -68,7 +68,7 @@ class _CommentBoxState extends State<CommentBox> {
     final idComentario = widget.comentario['id_comentario'].toString();
     setState(() {
       isLiked = true;
-      countLikes = countLikes + 1;
+      countLikes++;
     });
     try {
       await _apiComentario.likeComentario(idComentario, idUser!);
@@ -77,7 +77,7 @@ class _CommentBoxState extends State<CommentBox> {
       print('Erro ao criar like: $e');
       setState(() {
         isLiked = false;
-        countLikes = countLikes - 1;
+        countLikes--;
       });
     }
   }
@@ -86,7 +86,7 @@ class _CommentBoxState extends State<CommentBox> {
     final idComentario = widget.comentario['id_comentario'].toString();
     setState(() {
       isLiked = false;
-      countLikes = countLikes - 1;
+      countLikes--;
     });
     try {
       await _apiComentario.unlikeComentario(idComentario, idUser!);
@@ -95,7 +95,7 @@ class _CommentBoxState extends State<CommentBox> {
       print('Erro ao remover like: $e');
       setState(() {
         isLiked = true;
-        countLikes = countLikes + 1;
+        countLikes++;
       });
     }
   }

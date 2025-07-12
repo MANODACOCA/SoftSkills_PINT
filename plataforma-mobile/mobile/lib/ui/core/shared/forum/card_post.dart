@@ -23,6 +23,8 @@ class _CardPostState extends State<CardPost> {
   List<Map<String, dynamic>> denuncias = [];
   int? idUser;
   bool isLiked = false;
+  bool isLiking = false;
+  late int countLikes = 0;
 
   @override
   void initState() {
@@ -33,9 +35,57 @@ class _CardPostState extends State<CardPost> {
         print('ID do utilizador: $userId');
         setState(() {
           idUser = int.parse(userId);
+          countLikes = widget.post['contador_likes_post'] ?? 0;
         });
+        carregarEstadoLikePost();
       }
     });
+  }
+
+  Future<void> carregarEstadoLikePost() async {
+    final idPost = widget.post['id_post'].toString();
+    try{
+      final deuLikePost = await _api.jaDeuLike(idPost, idUser!);
+      setState(() {
+        isLiked = deuLikePost;
+      });
+    } catch (e) {
+      print('Erro ao carregar estado do like do post: $e');
+    }
+  }
+
+  Future<void> createLikePost() async {
+    final idPost = widget.post['id_post'].toString();
+    setState(() {
+      isLiked = true;
+      countLikes++;
+    });
+    try{
+      await _api.putLike(idPost, idUser!);
+    } catch(e) {
+      print('Erro ao criar like no post: $e');
+      setState(() {
+        isLiked = false;
+        countLikes--;
+      });
+    }
+  }
+
+  Future<void> deleteLikePost() async {
+    final idPost = widget.post['id_post'].toString();
+    setState(() {
+      isLiked = false;
+      countLikes--;
+    });
+    try{
+      await _api.deleteLike(idPost, idUser!);
+    } catch(e) {
+      print('Erro ao remover like no post: $e');
+      setState(() {
+        isLiked =  true;
+        countLikes++;
+      });
+    }
   }
 
   Future<void> fetchTipoDenuncias() async {
@@ -195,29 +245,42 @@ class _CardPostState extends State<CardPost> {
             //like e coment
             Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isLiked = !isLiked;
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                        SizedBox(width: 4),
-                        Text('10', style: TextStyle(color: Colors.white, fontSize: 14),
-                        ),
-                      ],
+                AbsorbPointer(
+                  absorbing: isLiking,
+                  child: GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        isLiking = true;
+                      });
+                      if(!isLiked) {
+                        await createLikePost();
+                      } else {
+                        await deleteLikePost();
+                      }
+                      setState(() {
+                        isLiking = false;
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                          SizedBox(width: 4),
+                          Text(
+                            countLikes.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
