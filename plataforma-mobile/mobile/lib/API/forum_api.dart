@@ -215,6 +215,8 @@ class ForumAPI {
   Future<dynamic> deletePost(String id) async {
     try {
       final response = await http.delete(Uri.parse('https://softskills-api.onrender.com/posts/delete/$id'));
+      print('Status: ${response.statusCode}');
+    print('Body: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {

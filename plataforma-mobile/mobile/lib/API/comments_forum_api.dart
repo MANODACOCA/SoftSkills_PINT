@@ -23,14 +23,16 @@ class ComentarioAPI {
     }
   }
 
-  static Future<List<dynamic>> getComentariosByPost(String idPost) async {
+  Future<List<Map<String,dynamic>>> getComentariosByPost(int idPost) async {
     try {
       final response = await http.get(
         Uri.parse('$API_URL_COMENTARIOS/get/comentarios?id_post=$idPost'),
       );
       if (response.statusCode == 200) {
         print('Response: ${response.body}');
-        return jsonDecode(response.body);
+        final List<dynamic> data = jsonDecode(response.body);
+        final comentario = data.cast<Map<String, dynamic>>();
+        return comentario;
       } else {
         throw Exception('Erro ao buscar Comentários do post!');
       }
@@ -80,7 +82,7 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> deleteComentario(String id) async {
+   Future<dynamic> deleteComentario(String id) async {
     try {
       final response = await http.delete(
         Uri.parse('$API_URL_COMENTARIOS/delete/$id'),

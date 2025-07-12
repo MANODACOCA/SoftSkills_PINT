@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class PostOptionsDropdown extends StatelessWidget {
-  const PostOptionsDropdown({super.key, required this.post, required this.userId, this.onDelete, this.onDenunciar});
+  const PostOptionsDropdown({super.key, required this.post, required this.userId, this.onDelete, this.onDenunciar, required this.tipo});
 
   final Map<String, dynamic> post;
   final int userId;
   final void Function(String postId)? onDelete;
   final void Function(String postId)? onDenunciar;
+  final String tipo;
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +16,17 @@ class PostOptionsDropdown extends StatelessWidget {
     return PopupMenuButton<String>(
       onSelected: (value) {
         if (value == 'denunciar') {
-          onDenunciar?.call(post['id_post'].toString());
+          if (tipo == 'post'){
+            onDenunciar?.call(post['id_post'].toString());
+          }else if (tipo == 'comentario') {
+            onDenunciar?.call(post['id_comentario'].toString());
+          }
         } else if (value == 'eliminar') {
-          onDelete?.call(post['id_post'].toString());
+          if (tipo == 'post'){
+            onDelete?.call(post['id_post'].toString());
+          }else if (tipo == 'comentario') {
+            onDelete?.call(post['id_comentario'].toString());
+          }
         }
       },
       itemBuilder: (context) => [

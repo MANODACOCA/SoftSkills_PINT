@@ -147,6 +147,7 @@ class _ForumPageState extends State<ForumPage> {
                                           );
                                         });
                                       },
+                                      currentPage: 'post',
                                     ),
                                   );
                                 }),

@@ -1,17 +1,18 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
+import 'package:mobile/ui/core/shared/export.dart';
 import 'package:mobile/ui/core/shared/forum/dropdown_report_delete.dart';
 import 'package:mobile/ui/core/shared/popup_check_generico/custom_dialogs.dart';
 import 'package:mobile/utils/uteis.dart';
 import 'package:provider/provider.dart';
 
 class CardPost extends StatefulWidget{
-  const CardPost({super.key, required this.post,this.onDelete});
+  const CardPost({super.key, required this.post,this.onDelete, required this.currentPage});
 
   final Map<String, dynamic> post;
   final void Function(String postId)? onDelete;
+  final String currentPage;
 
   @override
   State<CardPost> createState() => _CardPostState();
@@ -21,6 +22,7 @@ class _CardPostState extends State<CardPost> {
   final ForumAPI _api = ForumAPI();
   List<Map<String, dynamic>> denuncias = [];
   int? idUser;
+  bool isLiked = false;
 
   @override
   void initState() {
@@ -53,6 +55,7 @@ class _CardPostState extends State<CardPost> {
       await _api.deletePost(id);
     } catch (e) {
       print('Erro ao remover post');
+      rethrow;
     }
   }
 
@@ -94,6 +97,7 @@ class _CardPostState extends State<CardPost> {
       await _api.criarDenuncia(data);
     } catch (e) {
       print('Erro ao criar denuncia: $e');
+      rethrow;
     }
   }
 
@@ -177,6 +181,7 @@ class _CardPostState extends State<CardPost> {
                   userId: idUser!,
                   onDelete: confirmarEEliminarPost,
                   onDenunciar: confirmarEEnviarDenuncia,
+                  tipo: 'post',
                 )
               ],
             ),
@@ -185,22 +190,64 @@ class _CardPostState extends State<CardPost> {
               alignment: Alignment.centerLeft,
               child: Text(widget.post['texto_post']),
             ),
+            SizedBox(height: 15,),
+            //like e coment
             Row(
               children: [
-                IconButton(
-                  icon: Icon(Icons.thumb_up_alt_outlined, color: Colors.black,),
-                  onPressed: (){
-                    
-                  }
-                ),
-                IconButton(
-                  icon: Icon(Icons.chat , color: Colors.black),
-                  onPressed: () {
-                    context.push('/commentPage', extra: widget.post); 
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isLiked = !isLiked;
+                    });
                   },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(width: 4),
+                        Text('10', style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap:  () {
+                    if (widget.currentPage == 'post') {
+                      context.push('/commentPage', extra: widget.post);
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          widget.currentPage == 'post' ? Icons.chat_outlined : Icons.chat,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(width: 4),
+                        Text('10', style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
-              //like e coment
             ),
           ],
         ),

@@ -1,263 +1,229 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:mobile/API/comments_forum_api.dart';
-import 'package:mobile/API/utilizadores_api.dart';
+import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
+import 'package:mobile/ui/core/shared/forum/dropdown_report_delete.dart';
+import 'package:mobile/ui/core/shared/popup_check_generico/custom_dialogs.dart';
+import 'package:mobile/ui/core/themes/colors.dart';
+import 'package:mobile/utils/uteis.dart';
 import 'package:provider/provider.dart';
 
 class CommentBox extends StatefulWidget {
   const CommentBox({
     super.key,
-    required this.id,
-    required this.avatarUrl,
-    required this.nome,
-    required this.email,
-    required this.tempo,
-    required this.description,
-    required this.likes,
+    required this.comentario,
     this.onDelete,
   });
 
-  final int id;
-  final String avatarUrl;
-  final String nome;
-  final String email;
-  final String tempo;
-  final String description;
-  final int likes;
-  final void Function(int id)? onDelete; //Callback para apagar comentário
+  final Map<String,dynamic> comentario;
+  final void Function(String comentarioId)? onDelete;
 
   @override
   State<CommentBox> createState() => _CommentBoxState();
 }
 
 class _CommentBoxState extends State<CommentBox> {
-  bool expanded = false;
-  late String idUser = '';
-  late Future<Map<String, dynamic>> userINFO;
-  late String nameUser;
+  final ForumAPI _apiForum = ForumAPI();
+  final ComentarioAPI _apiComentario = ComentarioAPI();
+  List<Map<String, dynamic>> denuncias = [];
+  int? idUser;
+  bool isLiked = false;
 
   @override
   void initState() {
     super.initState();
-    idUser = Provider.of<AuthProvider>(context, listen: false).user?.id ?? '';
-    userINFO = UtilizadoresApi().getUtilizador(int.parse(idUser));
-    userINFO.then((value) {
-      nameUser = value['nome_utilizador'];
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
+      if (userId != null) {
+        print('ID do utilizador: $userId');
+        setState(() {
+          idUser = int.parse(userId);
+        });
+      }
     });
+  }
+
+  Future<void> fetchTipoDenuncias() async {
+    try { 
+      final esteDenuncia = await _apiForum.listDenuncias();
+      setState(() {
+        denuncias = esteDenuncia;
+      });
+    } catch(e) {
+      print('Erro ao encontrar tipo denuncia');
+    }
+  }
+
+  //eliminar post
+  Future<void> removerComentario(String id) async {
+    try {
+      await _apiComentario.deleteComentario(id);
+    } catch (e) {
+      print('Erro ao remover comentario');
+      rethrow;
+    }
+  }
+
+  Future<void> confirmarEEliminarComentario(String comentarioId) async {
+    final confirm = await showConfirmDialog(
+      context: context, 
+      title: 'Tem a certeza que pretende eliminar o seu comentário?', 
+      content: 'Esta ação não poderá ser desfeita!', 
+      confirmText: 'Eliminar', 
+      cancelText: 'Cancelar'
+    );
+
+    if (confirm == true) {
+      try {
+        await removerComentario(comentarioId); 
+        widget.onDelete?.call(comentarioId);
+        if(!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Comentario eliminado com sucesso')),
+        );
+      } catch (e) {
+        if(!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erro ao eliminar comentario')),
+        );
+      }
+    }
+  }
+
+//enviar denuncia
+  Future<void> enviarDenuncia(String comentarioId, int idTipoDenuncia) async {
+    try {
+      final data = {
+        'id_comentario': int.parse(comentarioId), 
+        'id_utilizador': idUser, 
+        'id_post': null, 
+        'id_tipo_denuncia': idTipoDenuncia
+      };
+      await _apiForum.criarDenuncia(data);
+    } catch (e) {
+      print('Erro ao criar denuncia: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> confirmarEEnviarDenuncia(String comentarioId) async {
+    if (denuncias.isEmpty) {
+      await fetchTipoDenuncias();
+    }
+
+    final int? idTipo = await showDenunciaDialog(context, denuncias);
+
+    if (idTipo != null) {
+      try {
+        await enviarDenuncia(comentarioId, idTipo);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Denúncia enviada com sucesso')),
+        );
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Erro ao enviar denúncia')),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final showSeeMore = widget.description.length > 120;
+    final img = widget.comentario['id_utilizador_utilizador']?['img_perfil'];
+    final imageUrl = 'https://ui-avatars.com/api/?name= ${Uri.encodeComponent(widget.comentario['id_utilizador_utilizador']?['nome_utilizador'])}&background=random&bold=true';            
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 1)),
-        ],
+        color: Colors.white,
+        border: Border.all(
+          color: Color(0xFFEEEEEE),
+          width: 1,
+        ),
+        borderRadius: BorderRadius.circular(10)
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+        padding: EdgeInsets.all(8),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(widget.avatarUrl),
-                  radius: 22,
-                  backgroundColor: Colors.blue[100],
-                  child:
-                      widget.avatarUrl.isEmpty
-                          ? Text(
-                            widget.nome.isNotEmpty
-                                ? widget.nome
-                                    .trim()
-                                    .split(' ')
-                                    .map((e) => e[0])
-                                    .take(2)
-                                    .join()
-                                    .toUpperCase()
-                                : '',
-                          )
-                          : null,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            widget.nome,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue[900],
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: Text(
-                              "<${widget.email}>",
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 13,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        widget.tempo,
-                        style: TextStyle(color: Colors.grey[500], fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-                PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert, color: Colors.grey[700]),
-                  onSelected: (value) async {
-                    if (value == 'apagar') {
-                      final confirm = await showDialog<bool>(
-                        context: context,
-                        builder:
-                            (context) => AlertDialog(
-                              title: Text('Confirmar eliminação'),
-                              content: Text(
-                                'Tens a certeza que queres apagar este comentário?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed:
-                                      () => Navigator.of(context).pop(false),
-                                  child: Text('Cancelar'),
-                                ),
-                                TextButton(
-                                  onPressed:
-                                      () => Navigator.of(context).pop(true),
-                                  child: Text(
-                                    'Apagar',
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
-                              ],
-                            ),
-                      );
-                      if (confirm == true) {
-                        try {
-                          final String idUserString = widget.id.toString();
-                          await ComentarioAPI.deleteComentario(idUserString);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Comentário apagado com sucesso!'),
-                            ),
-                          );
-                          if (widget.onDelete != null) {
-                            widget.onDelete!(
-                              widget.id,
+                Row(
+                  children: [
+                    ClipOval(
+                      child: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: Image.network(
+                          'https://softskills-api.onrender.com/$img',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.network(
+                              imageUrl,
+                              fit: BoxFit.cover,
                             );
-                          }
-                        } catch (e) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Erro ao apagar comentário!'),
-                            ),
-                          );
-                        }
-                      }
-                    } else if (value == 'denunciar') {
-                      // Handle report action
-                    }
-                  },
-                  itemBuilder:
-                      (context) => [
-                        if (nameUser == widget.nome)
-                          PopupMenuItem(
-                            value: 'apagar',
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, color: Colors.red, size: 18),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Apagar',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          )
-                        else
-                          PopupMenuItem(
-                            value: 'denunciar',
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.warning,
-                                  color: Colors.red,
-                                  size: 18,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Denunciar',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          ),
+                          },
+                        )
+                      ),
+                    ),
+                    SizedBox(width: 8,),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.comentario['id_utilizador_utilizador']?['nome_utilizador'], style: TextStyle(fontSize: 16),),
+                        Text(tempoDecorrido(widget.comentario['data_criacao_comentario']), style: TextStyle(fontSize: 12),),
                       ],
+                    ),
+                  ],
                 ),
+                //denuncia ou eliminar dropdown
+                if (idUser != null)
+                PostOptionsDropdown(
+                  post: widget.comentario,
+                  userId: idUser!,
+                  onDelete: confirmarEEliminarComentario,
+                  onDenunciar: confirmarEEnviarDenuncia,
+                  tipo: 'comentario',
+                )
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              widget.description,
-              maxLines: expanded ? null : 3,
-              overflow: expanded ? TextOverflow.visible : TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 15),
+            SizedBox(height: 10,),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(widget.comentario['texto_comentario']),
             ),
-            if (showSeeMore)
-              TextButton(
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: Size(50, 30),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  visualDensity: VisualDensity.compact,
-                ),
-                onPressed: () => setState(() => expanded = !expanded),
-                child: Text(
-                  expanded ? 'Ver menos' : 'Ver mais',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            const SizedBox(height: 8),
-            Divider(),
+            //like
             Row(
               children: [
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF3B5998),
-                    foregroundColor: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isLiked = !isLiked;
+                    });
+                  },
+                  child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(width: 4),
+                        Text('10', style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                      ],
                     ),
                   ),
-                  icon: Icon(Icons.thumb_up_alt_outlined, size: 18),
-                  label: Text(
-                    '${widget.likes}',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  onPressed: () {},
                 ),
               ],
             ),
