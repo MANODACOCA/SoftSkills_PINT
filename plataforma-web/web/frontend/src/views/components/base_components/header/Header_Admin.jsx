@@ -115,7 +115,7 @@ const HeaderAdmin = ({ toggleSidebar, collapsed }) => {
                             <div className="d-flex flex-column align-items-center justify-content-between">
                                 <NavLink className="dropdown-item" to={'/perfil/editar'} onClick={() => setShowProfileMenu(false)}><CgProfile /> Alterar dados pessoais <IoIosArrowForward /></NavLink>
                                 <NavLink className="dropdown-item" to={'/perfil/info'} onClick={() => setShowProfileMenu(false)}><GoKey /> Informações de login <IoIosArrowForward /></NavLink>
-                                <NavLink className="dropdown-item text-danger" to="/login" onClick={() => { localStorage.removeItem('token'); setShowProfileMenu(false); }}><RxExit /> Encerrar sessão <IoIosArrowForward /></NavLink>
+                                <NavLink className="dropdown-item text-danger" to="/" onClick={() => { localStorage.removeItem('token'); setShowProfileMenu(false); }}><RxExit /> Encerrar sessão <IoIosArrowForward /></NavLink>
                             </div>
                         </div>
                     )}

@@ -43,16 +43,17 @@ const TokenChecker = () => {
 
       const paginaAtual = location.pathname;
       const isLoginPage = paginaAtual.startsWith("/login");
+      const isMainPage = paginaAtual.startsWith("/");
       const token = localStorage.getItem("token");
 
-      if (!isLoginPage) {
+      if (!isLoginPage || !isMainPage) {
         if (token) {
           localStorage.removeItem("token");
           alert("Sessão expirada.  Por favor, efetue novamente o login.");
           navigate("/login", { replace: true });
         } else {
           localStorage.removeItem("token");
-          navigate("/login", { replace: true });
+          navigate("/", { replace: true });
         }
 
       } else {

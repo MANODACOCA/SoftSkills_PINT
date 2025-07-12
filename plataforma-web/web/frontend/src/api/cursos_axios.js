@@ -200,7 +200,7 @@ export const verificar_acesso_curso = async (userId, cursoId) => {
 
 export const cursos_contagem = async () => {
     try{
-        const response = await axios.get(`${API_URL}/count`, getAuthHeader());
+        const response = await axios.get(`${API_URL}/count`);
         return response.data;
     } catch(error) {
         console.error('Erro ao contar o numero de cursos', error);
