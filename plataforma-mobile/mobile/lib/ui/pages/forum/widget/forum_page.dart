@@ -29,7 +29,6 @@ class _ForumPageState extends State<ForumPage> {
   bool isLoading = true;
 
   final TextEditingController textControllerPost = TextEditingController();
-  final TextEditingController textControllerTitlePost = TextEditingController();
   final TextEditingController fileController = TextEditingController();
 
   late var forumInfo;
@@ -173,14 +172,6 @@ class _ForumPageState extends State<ForumPage> {
         ),
         SizedBox(height: 12),
         TextField(
-          controller: textControllerTitlePost,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(),
-            labelText: 'Título do Post',
-          ),
-        ),
-        SizedBox(height: 12),
-        TextField(
           maxLines: 5,
           controller: textControllerPost,
           decoration: InputDecoration(
@@ -192,16 +183,6 @@ class _ForumPageState extends State<ForumPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton.icon(
-              icon: Icon(Icons.attach_file_sharp, color: AppColors.primary),
-              label: Text(
-                "Anexar Arquivo",
-                style: TextStyle(color: AppColors.primary),
-              ),
-              onPressed: () {
-                pickFile();
-              },
-            ),
             ElevatedButton.icon(
               icon: Icon(Icons.send, color: Colors.white),
               label: Text("Publicar", style: TextStyle(color: Colors.white)),
@@ -209,10 +190,8 @@ class _ForumPageState extends State<ForumPage> {
                 backgroundColor: AppColors.primary,
               ),
               onPressed: () async {
-                final title = textControllerTitlePost.text;
                 final description = textControllerPost.text;
-
-                if (title.isNotEmpty && description.isNotEmpty) {
+                if (description.isNotEmpty) {
                   try {
                     final postData = {
                       "id_utilizador": userId,
@@ -220,11 +199,8 @@ class _ForumPageState extends State<ForumPage> {
                       "id_formato": 1,
                       "texto_post": description,
                     };
-
                     await ForumAPI.createPost(postData);
-
                     setState(() {
-                      textControllerTitlePost.clear();
                       textControllerPost.clear();
                       addPost = false;
                       paint = Colors.white;
