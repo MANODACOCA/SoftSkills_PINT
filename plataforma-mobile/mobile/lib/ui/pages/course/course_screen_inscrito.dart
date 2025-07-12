@@ -38,7 +38,7 @@ class _CourseInscritoState extends State<CourseInscrito> {
   @override
   Widget build(BuildContext context) {
     //double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBarArrow(onBack: () => context.go('/cursos'),title: 'Curso'),
       body: Center(
         child: curso.isEmpty 

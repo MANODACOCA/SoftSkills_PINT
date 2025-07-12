@@ -42,7 +42,7 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBarArrow(
         onBack: () => context.pop(),
         title: 'Cursos terminados'

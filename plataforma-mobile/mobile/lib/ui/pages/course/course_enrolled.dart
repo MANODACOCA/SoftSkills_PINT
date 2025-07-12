@@ -42,7 +42,7 @@ class _CourseEnrolledState extends State<CourseEnrolled> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
       appBar: AppBarArrow(
         onBack: () => context.pop(),
         title: 'Cursos Inscritos'
