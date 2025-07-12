@@ -305,7 +305,7 @@ class _CardPostState extends State<CardPost> {
                           size: 20,
                         ),
                         SizedBox(width: 4),
-                        Text('10', style: TextStyle(color: Colors.white, fontSize: 14),
+                        Text(widget.post['contador_comentarios'].toString(), style: TextStyle(color: Colors.white, fontSize: 14),
                         ),
                       ],
                     ),

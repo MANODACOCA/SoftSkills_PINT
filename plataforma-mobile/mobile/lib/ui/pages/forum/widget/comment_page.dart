@@ -184,6 +184,7 @@ class _CommentPageState extends State<CommentPage> {
                                   addcomment = false;
                                   cor = Colors.white;
                                   isLoading = true;
+                                  widget.post['contador_comentarios'] = (widget.post['contador_comentarios'] ?? 0) + 1;
                                 });
                                 await fetchComentariosPost();
                               }
