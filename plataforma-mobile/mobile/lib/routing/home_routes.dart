@@ -8,6 +8,5 @@ final List<GoRoute> homeRoutes = [
     pageBuilder: (context, state) => NoTransitionPage(
       child: HomePage(),
     ),
-    //builder: (context, state) => HomePage(),
   ),
 ];
