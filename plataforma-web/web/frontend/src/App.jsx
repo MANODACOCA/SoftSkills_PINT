@@ -5,6 +5,10 @@ import TokenChecker from './utils/authService.js';
 import NotFoundPage from './views/pages/base/page_not_found/PageNotFound';
 import NotPermisson from './views/pages/base/page_not_found/PageNotPermisson.jsx';
 
+
+//inicial page
+import InicialPage from './views/pages/InicialPage/inicialPage.jsx';
+
 //components login
 import Login from './views/components/login_comp/login/Login';
 import NewPassword from './views/components/login_comp/newPassword/newPassword';
@@ -69,8 +73,12 @@ function App() {
       <TokenChecker />
       <Routes>
 
+ //#region{/*Pagina Incial*/}
+        <Route path="/" element={<InicialPage />} />
+ //#region{/*Pagina Incial*/}
+
+
  //#region{/*CONTEUDO DO LOGIN*/}
-        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route element={<LoginPage />}>
           <Route path="/login" element={<Login />} />
           <Route path="/login/nova-password" element={<NewPassword />} />

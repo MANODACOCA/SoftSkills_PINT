@@ -68,4 +68,22 @@ header {
   }
 }
 
+.btn-outline-secundaria {
+    width: 150px;
+    border: 1px solid var(--cor-secundaria);
+    color: var(--cor-secundaria);
+    background-color: transparent;
+    border-radius: 8px;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+}
+
+.btn-outline-secundaria:hover {
+    background-color: var(--cor-secundaria);
+    color: white;
+}
+
 /* #endregion */

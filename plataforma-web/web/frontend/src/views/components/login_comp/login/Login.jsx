@@ -137,25 +137,10 @@ const FirstLogin = () => {
 
     return (
         <div className="login-form-container">
-            <img src={softskills} alt="SoftSkills Logo" className="login-logo" />
+            <Link to="/"><img src={softskills} alt="SoftSkills Logo" className="login-logo" /></Link>
             <h2 className="login-title text-start">Entre na sua conta</h2>
             <p className="login-subtitle text-start">Invista no seu futuro, aprende com a SoftSkills!</p>
 
-            {/*             <div className="login-buttons">
-                {providers.map((provider) =>
-                    provider.id !== 'credentials' ? (
-                        <button
-                            key={provider.id}
-                            className="login-button social outlook"
-                            onClick={() => handleProviderSignIn(provider)}
-                        >
-                            <PiMicrosoftOutlookLogoBold />  Login com {provider.name}
-                        </button>
-                    ) : null
-                )}
-            </div>
-
-            <div className="login-divider"><p>ou use o seu email</p></div> */}
             <form onSubmit={(e) => {
                 e.preventDefault(); // Previne reload da página
                 handleProviderSignIn({ id: 'credentials', name: 'Email and Password' });
