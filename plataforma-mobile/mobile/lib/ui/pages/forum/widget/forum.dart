@@ -68,43 +68,43 @@ class _ForumState extends State<Forum> {
           centerTitle: true,
         ),
         body:
-            loading
-                ? Center(child: CircularProgressIndicator())
-                : foruns.isEmpty
-                ? Center(child: Text('Nenhum fórum encontrado.'))
-                : SingleChildScrollView(
-                  padding: EdgeInsets.all(20),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: foruns.length,
-                    itemBuilder: (context, index) {
-                      final forum = foruns[index];
-                      return GestureDetector(
-                        onTap: () {
-                          context.push(
-                            '/forumPage',
-                            extra: {
-                              'forumID':
-                                  forum['id_conteudos_partilhado'].toString(),
-                              'name': forum['id_topico_topico']?['nome_topico'],
-                            },
-                          );
+          loading
+            ? Center(child: CircularProgressIndicator())
+            : foruns.isEmpty
+            ? Center(child: Text('Nenhum fórum encontrado.'))
+            : SingleChildScrollView(
+              padding: EdgeInsets.all(20),
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: foruns.length,
+                itemBuilder: (context, index) {
+                  final forum = foruns[index];
+                  return GestureDetector(
+                    onTap: () {
+                      context.push(
+                        '/forumPage',
+                        extra: {
+                          'forumID':
+                              forum['id_conteudos_partilhado'].toString(),
+                          'name': forum['id_topico_topico']?['nome_topico'],
                         },
-                        child: CardForum(
-                          title:
-                              forum['id_topico_topico']?['nome_topico'] ??
-                              'Sem título',
-                          description:
-                              forum['id_topico_topico']?['descricao_top'] ?? '',
-                          imageUrl:
-                              forum['imagem'] ??
-                              'https://ui-avatars.com/api/?name=${Uri.encodeComponent(forum['id_topico_topico']?['nome_topico'] ?? 'Forum')}&background=random&bold=true',
-                        ),
                       );
                     },
-                  ),
-                ),
+                    child: CardForum(
+                      title:
+                          forum['id_topico_topico']?['nome_topico'] ??
+                          'Sem título',
+                      description:
+                          forum['id_topico_topico']?['descricao_top'] ?? '',
+                      imageUrl:
+                          forum['imagem'] ??
+                          'https://ui-avatars.com/api/?name=${Uri.encodeComponent(forum['id_topico_topico']?['nome_topico'] ?? 'Forum')}&background=random&bold=true',
+                    ),
+                  );
+                },
+              ),
+            ),
         bottomNavigationBar: Footer(),
       ),
     );
