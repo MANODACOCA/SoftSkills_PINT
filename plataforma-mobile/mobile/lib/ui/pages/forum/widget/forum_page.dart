@@ -141,11 +141,7 @@ class _ForumPageState extends State<ForumPage> {
                                     child: CardPost(
                                       post: post,
                                       onDelete: (postId) {
-                                        setState(() {
-                                          posts.removeWhere(
-                                            (p) => p['id_post'].toString() == postId,
-                                          );
-                                        });
+                                        carregarDados();
                                       },
                                       currentPage: 'post',
                                     ),
