@@ -31,6 +31,7 @@ class _CommentBoxState extends State<CommentBox> {
   List<Map<String, dynamic>> denuncias = [];
   int? idUser;
   bool isLiked = false;
+  bool isLiking = false;
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _CommentBoxState extends State<CommentBox> {
     });
   }
 
+  //adicionar remover like comentario
   Future<void> carregarEstadoLike() async {
       final idComentario = widget.comentario['id_comentario'].toString();
       try {
@@ -60,23 +62,39 @@ class _CommentBoxState extends State<CommentBox> {
       }
   }
 
-  Future<void> createLike () async {
+  Future<void> createLike() async {
     final idComentario = widget.comentario['id_comentario'].toString();
-    try{
-      final fazerLike = await _apiComentario.likeComentario(idComentario , idUser!);
-      carregarEstadoLike();
+    setState(() {
+      isLiked = true;
+      widget.comentario['contador_likes_com'] += 1;
+    });
+    try {
+      await _apiComentario.likeComentario(idComentario, idUser!);
+      widget.onLike?.call(idComentario);
     } catch (e) {
       print('Erro ao criar like: $e');
+      setState(() {
+        isLiked = false;
+        widget.comentario['contador_likes_com'] -= 1;
+      });
     }
   }
 
   Future<void> deleteLike() async {
     final idComentario = widget.comentario['id_comentario'].toString();
-    try{
-      final retirarLike = await _apiComentario.unlikeComentario(idComentario, idUser!);
-      carregarEstadoLike();
+    setState(() {
+      isLiked = false;
+      widget.comentario['contador_likes_com'] -= 1;
+    });
+    try {
+      await _apiComentario.unlikeComentario(idComentario, idUser!);
+      widget.onLike?.call(idComentario);
     } catch (e) {
-      print('Erro ao retirar like: $e');
+      print('Erro ao remover like: $e');
+      setState(() {
+        isLiked = true;
+        widget.comentario['contador_likes_com'] += 1;
+      });
     }
   }
 
@@ -91,7 +109,7 @@ class _CommentBoxState extends State<CommentBox> {
     }
   }
 
-  //eliminar post
+  //eliminar comentario
   Future<void> removerComentario(String id) async {
     try {
       await _apiComentario.deleteComentario(id);
@@ -235,31 +253,45 @@ class _CommentBoxState extends State<CommentBox> {
             //like
             Row(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    if(isLiked == false){
-                      createLike();
-                    } else{
-                      deleteLike();
-                    }
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: AppColors.primary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
-                          color: Colors.white,
-                          size: 20,
+                AbsorbPointer(
+                  absorbing: isLiking,
+                  child: GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        isLiking = true;
+                      });
+                      if (!isLiked) {
+                        await createLike();
+                      } else {
+                        await deleteLike();
+                      }
+                      setState(() {
+                        isLiking = false;
+                      });
+                    },
+                    child: Opacity(
+                      opacity: isLiking ? 0.6 : 1.0, // efeito visual
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        SizedBox(width: 4),
-                        Text('${widget.comentario['contador_likes_com']}', style: TextStyle(color: Colors.white, fontSize: 14),
+                        child: Row(
+                          children: [
+                            Icon(
+                              isLiked ? Icons.thumb_up : Icons.thumb_up_outlined,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              widget.comentario['contador_likes_com'].toString(),
+                              style: TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
