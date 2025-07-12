@@ -64,12 +64,8 @@ class CardForum extends StatelessWidget {
               ),
         ),
         contentPadding: EdgeInsets.all(10),
-        title: Text(title),
-        subtitle: Builder(
-          builder: (context) {
-            return TextExpand(text: description, maxLines: 2,);
-          },
-        ),
+        title: Text(title, overflow: TextOverflow.ellipsis,),
+        subtitle:TextExpand(text: description, maxLines: 2,),
       ),
     );
   }

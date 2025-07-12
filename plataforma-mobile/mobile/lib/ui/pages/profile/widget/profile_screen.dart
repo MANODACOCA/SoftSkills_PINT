@@ -32,7 +32,7 @@ class _ProfileState extends State<Profile> {
     });
   }
 
-  Future<void> fetchUtilizador (int idUtilizador) async {
+  Future<void> fetchUtilizador(int idUtilizador) async {
     try{
       final esteUtilizador = await _api.getUtilizador(idUtilizador);
       setState(() {
@@ -81,7 +81,7 @@ class _ProfileState extends State<Profile> {
                                     builder: (context, snapshot) {
                                       final online = snapshot.data ?? true;
                                       final img = utilizador['img_perfil'];
-                                      final imageUrl = 'https://ui-avatars.com/api/?name=0${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
+                                      final imageUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
                                       if (online) {
                                         return Image.network(
                                           'https://softskills-api.onrender.com/$img',
