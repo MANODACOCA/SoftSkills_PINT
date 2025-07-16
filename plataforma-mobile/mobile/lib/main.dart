@@ -4,13 +4,13 @@ import 'package:provider/provider.dart';
 import 'ui/core/shared/export.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:go_router/go_router.dart';
-import 'services/auth_service.dart'; // Importa o authService
+import 'services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   debugPrintGlobalKeyedWidgetLifecycle = true; 
   await initializeDateFormatting('pt_PT', null);
-  await authService.init(); // Inicializa antes do runApp
+  await authService.init();
   runApp(
     MultiProvider(
       providers: [
@@ -30,13 +30,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // constrói UMA vez
-  late final GoRouter _router = rotas;   // rotas já contém o refreshListenable
+  late final GoRouter _router = rotas;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      routerConfig: _router,           // sempre a mesma instância
+      routerConfig: _router,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
