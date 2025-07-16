@@ -22,7 +22,7 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _checkAuth() async {
-    await Future.delayed(const Duration(milliseconds: 500)); // pequeno delay para UX
+    await Future.delayed(const Duration(milliseconds: 500)); 
     if (authService.isLoggedIn && authService.token != null) {
       try {
         // Decodificar token para obter o id
@@ -47,7 +47,7 @@ class _SplashPageState extends State<SplashPage> {
           }
         }
       } catch (e) {
-        // Se falhar, ignora e segue para homepage
+        // Se falhar ignora e segue para homepage
       }
       if (mounted) context.go('/homepage');
     } else {

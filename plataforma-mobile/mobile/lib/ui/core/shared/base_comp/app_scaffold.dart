@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'offline_banner.dart';
 
-/// Scaffold base para todas as páginas principais, incluindo o banner offline no topo.
 class AppScaffold extends StatelessWidget {
   final PreferredSizeWidget? appBar;
   final Widget body;
@@ -27,7 +26,6 @@ class AppScaffold extends StatelessWidget {
             return Column(
               children: [
                 const OfflineBannerGlobal(),
-                // Garante que o body sempre expanda corretamente
                 Expanded(
                   child: SizedBox(
                     width: double.infinity,
