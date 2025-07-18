@@ -7,7 +7,6 @@ var _categoria = require("./categoria");
 var _certificados = require("./certificados");
 var _comentario = require("./comentario");
 var _conteudos = require("./conteudos");
-var _conteudos_forum = require("./conteudos_forum");
 var _conteudos_partilhado = require("./conteudos_partilhado");
 var _cursos = require("./cursos");
 var _denuncia = require("./denuncia");
@@ -43,7 +42,6 @@ function initModels(sequelize) {
   var certificados = _certificados(sequelize, DataTypes);
   var comentario = _comentario(sequelize, DataTypes);
   var conteudos = _conteudos(sequelize, DataTypes);
-  var conteudos_forum = _conteudos_forum(sequelize, DataTypes);
   var conteudos_partilhado = _conteudos_partilhado(sequelize, DataTypes);
   var cursos = _cursos(sequelize, DataTypes);
   var denuncia = _denuncia(sequelize, DataTypes);
@@ -76,8 +74,6 @@ function initModels(sequelize) {
   aulas.hasMany(conteudos, { as: "conteudos", foreignKey: "id_aula"});
   area.belongsTo(categoria, { as: "id_categoria_categorium", foreignKey: "id_categoria"});
   categoria.hasMany(area, { as: "areas", foreignKey: "id_categoria"});
-  conteudos_forum.belongsTo(comentario, { as: "id_comentario_comentario", foreignKey: "id_comentario"});
-  comentario.hasMany(conteudos_forum, { as: "conteudos_forums", foreignKey: "id_comentario"});
   denuncia.belongsTo(comentario, { as: "id_comentario_comentario", foreignKey: "id_comentario"});
   comentario.hasMany(denuncia, { as: "denuncia", foreignKey: "id_comentario"});
   likes_comentario.belongsTo(comentario, { as: "id_comentario_comentario", foreignKey: "id_comentario"});
@@ -102,6 +98,10 @@ function initModels(sequelize) {
   cursos.hasMany(notificacoes_curso, { as: "notificacoes_cursos", foreignKey: "id_curso"});
   ocorrencias_edicoes.belongsTo(cursos, { as: "id_curso_curso", foreignKey: "id_curso"});
   cursos.hasMany(ocorrencias_edicoes, { as: "ocorrencias_edicos", foreignKey: "id_curso"});
+  ocorrencias_edicoes.belongsTo(cursos, { as: "id_curso_anterior_curso", foreignKey: "id_curso_anterior"});
+  cursos.hasMany(ocorrencias_edicoes, { as: "id_curso_anterior_ocorrencias_edicos", foreignKey: "id_curso_anterior"});
+  ocorrencias_edicoes.belongsTo(cursos, { as: "id_curso_raiz_curso", foreignKey: "id_curso_raiz"});
+  cursos.hasMany(ocorrencias_edicoes, { as: "id_curso_raiz_ocorrencias_edicos", foreignKey: "id_curso_raiz"});
   sincrono.belongsTo(cursos, { as: "id_curso_sincrono_curso", foreignKey: "id_curso_sincrono"});
   cursos.hasOne(sincrono, { as: "sincrono", foreignKey: "id_curso_sincrono"});
   trabalhos.belongsTo(cursos, { as: "id_curso_tr_curso", foreignKey: "id_curso_tr"});
@@ -122,8 +122,6 @@ function initModels(sequelize) {
   gestor_administrador.hasMany(cursos, { as: "cursos", foreignKey: "id_gestor_administrador"});
   comentario.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
   post.hasMany(comentario, { as: "comentarios", foreignKey: "id_post"});
-  conteudos_forum.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
-  post.hasMany(conteudos_forum, { as: "conteudos_forums", foreignKey: "id_post"});
   denuncia.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
   post.hasMany(denuncia, { as: "denuncia", foreignKey: "id_post"});
   likes_post.belongsTo(post, { as: "id_post_post", foreignKey: "id_post"});
@@ -136,8 +134,6 @@ function initModels(sequelize) {
   tipo_formato.hasMany(comentario, { as: "comentarios", foreignKey: "id_formato"});
   conteudos.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
   tipo_formato.hasMany(conteudos, { as: "conteudos", foreignKey: "id_formato"});
-  conteudos_forum.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
-  tipo_formato.hasMany(conteudos_forum, { as: "conteudos_forums", foreignKey: "id_formato"});
   material_apoio.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
   tipo_formato.hasMany(material_apoio, { as: "material_apoios", foreignKey: "id_formato"});
   post.belongsTo(tipo_formato, { as: "id_formato_tipo_formato", foreignKey: "id_formato"});
@@ -184,7 +180,6 @@ function initModels(sequelize) {
     certificados,
     comentario,
     conteudos,
-    conteudos_forum,
     conteudos_partilhado,
     cursos,
     denuncia,

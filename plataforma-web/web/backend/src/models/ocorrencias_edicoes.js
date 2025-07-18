@@ -18,6 +18,22 @@ module.exports = function(sequelize, DataTypes) {
     data_ult_ocorrencia: {
       type: DataTypes.DATE,
       allowNull: false
+    },
+    id_curso_anterior: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'cursos',
+        key: 'id_curso'
+      }
+    },
+    id_curso_raiz: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'cursos',
+        key: 'id_curso'
+      }
     }
   }, {
     sequelize,
