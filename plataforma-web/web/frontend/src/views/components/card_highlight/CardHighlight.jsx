@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDayMonthYear, parseDateWithoutTimezone } from '../../components/shared_functions/FunctionsUtils';
-import { FaCalendarAlt, FaExclamationTriangle } from 'react-icons/fa';
+import { FaCalendarAlt, FaExclamationTriangle, FaHourglassStart } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
 import './CardHighlight.css';
 
@@ -144,9 +144,11 @@ const FeaturedCourseCard = ({
             {course.tipo === 'sincrono' &&
               <span className="fw-semibold">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
             }
-            <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
-              Ver Curso
-            </button>
+            {course.tipo === 'sincrono' && (
+              <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
+                Ver Curso
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -159,14 +161,30 @@ const FeaturedCourseCard = ({
   if (variant === 'enrolled') {
     const today = new Date();
     const endDate = new Date(course.data_fim_curso);
+    const startDate = new Date(course.data_inicio_curso);
     endDate.setHours(23, 59, 59, 999);
+    startDate.setHours(23, 59, 59, 999);
 
-    const diffTime = endDate.getTime() - today.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const diffHours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const diffMinutes = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60));
+    /*     CALCULO PARA FIM DE CURSO */
+    const diffTimeEnd = endDate.getTime() - today.getTime();
 
-    const showWarning = diffTime > 0 && diffTime <= 15 * 24 * 60 * 60 * 1000;//se faltatem 15 dias para terminar o curso
+    const diffDaysEnd = Math.floor(diffTimeEnd / (1000 * 60 * 60 * 24));
+    const diffHoursEnd = Math.floor((diffTimeEnd % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const diffMinutesEnd = Math.floor((diffTimeEnd % (1000 * 60 * 60 * 24)) / (1000 * 60));
+
+    const showWarningEnd = diffTimeEnd > 0 && diffTimeEnd <= 15 * 24 * 60 * 60 * 1000 && today >= startDate;//se faltarem 15 dias ao menos para terminar o curso
+    /*     CALCULO PARA FIM DE CURSO */
+
+    /*     CALCULO PARA INICIO DE CURSO */
+    const diffTimeStart = startDate.getTime() - today.getTime();
+
+    const diffDaysStart = Math.floor(diffTimeStart / (1000 * 60 * 60 * 24));
+    const diffHoursStart = Math.floor((diffTimeStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const diffMinutesStart = Math.floor((diffTimeStart % (1000 * 60 * 60 * 24)) / (1000 * 60));
+
+    const showWarningStart = diffTimeStart > 0 && diffTimeStart <= 5 * 24 * 60 * 60 * 1000 && today < startDate;//se faltarem 5 dias ao menos para comecar o curso
+    /*     CALCULO PARA INICIO DE CURSO */
+
     const tipoBadge = course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono';
 
     return (
@@ -194,22 +212,30 @@ const FeaturedCourseCard = ({
               {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
             </p>
           </div>
-
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <p className={`mb-0 me-auto ${showWarning ? 'text-danger d-flex align-items-center' : 'text-success'}`}>
-              {showWarning ? (
+            <p className={`mb-0 me-auto ${showWarningEnd ? 'text-danger d-flex align-items-center' : 'text-success'}`}>
+              {showWarningEnd ? (
                 <>
                   <FaExclamationTriangle className="me-2" />
-                  Curso termina em {diffDays !== 0 && `${diffDays}d`} {/* //dias */}
-                  {diffHours !== 0 && `${diffHours}h`} {/* //horas */}
-                  {diffMinutes !== 0 && diffHours === 0 && diffDays === 0 && `${diffMinutes}m`} {/* //minutos */}
-                  {diffMinutes === 0 && diffHours === 0 && diffDays === 0 && `poucos segundos`} {/* //segundos */}
+                  Curso termina em {diffDaysEnd !== 0 && `${diffDaysEnd}d`} {/* //dias */}
+                  {diffHoursEnd !== 0 && `${diffHoursEnd}h`} {/* //horas */}
+                  {diffMinutesEnd !== 0 && diffHoursEnd === 0 && diffDaysEnd === 0 && `${diffMinutesEnd}m`} {/* //minutos */}
+                  {diffMinutesEnd === 0 && diffHoursEnd === 0 && diffDaysEnd === 0 && `poucos segundos`} {/* //segundos */}
                 </>
-              ) : (
+              ) : showWarningStart ? (
+                <>
+                  <FaHourglassStart className="me-2" />
+                  Curso começa em {diffDaysStart !== 0 && `${diffDaysStart}d`} {/* //dias */}
+                  {diffHoursStart !== 0 && `${diffHoursStart}h`} {/* //horas */}
+                  {diffMinutesStart !== 0 && diffHoursStart === 0 && diffDaysStart === 0 && `${diffMinutesStart}m`} {/* //minutos */}
+                  {diffMinutesStart === 0 && diffHoursStart === 0 && diffDaysStart === 0 && `poucos segundos`} {/* //segundos */}
+                </>
+              ) : diffTimeStart < 0 ? (
                 'Em curso...'
+              ) : (
+                ' '
               )}
             </p>
-
             <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
               Ver Curso
             </button>
