@@ -54,8 +54,14 @@ export const columnsCursos = [
     }
   },
   {
-    label: 'Ocorrencia', render: (item) =>{
-      
-    }
+  label: 'Ocorrência',
+  render: (item) => {
+    const ocorrenciaAtual = item.ocorrencias_edicos?.[0];
+    return (
+      <div style={{ textAlign: 'center' }}>
+        {ocorrenciaAtual ? `#${ocorrenciaAtual.nr_ocorrencia}` : '-'}
+      </div>
+    );
+  }
   }
 ];
