@@ -5,7 +5,7 @@ import { create_cursos } from "../../../../api/cursos_axios";
 import ISO6391 from 'iso-639-1';
 import Select from 'react-select';
 import { useUser } from '../../../../utils/useUser';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
 const CreateCourse = () => {
@@ -23,6 +23,9 @@ const CreateCourse = () => {
         numero_vagas: null,
     });
     const { user } = useUser();
+
+    const {state} = useLocation();
+    const cursoAnterior = state?.cursoAnterior || null;
 
     const todayStr = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" });
 
@@ -133,7 +136,17 @@ const CreateCourse = () => {
         if (result.isConfirmed) {
             try {
                 console.log({ cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
-                await create_cursos({ cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
+                const payload = {
+                    cursoData: cursos,
+                    sincrono: cursos.issincrono ? sincrono : null,
+                };
+
+                if (cursoAnterior) {
+                    payload.id_curso_anterior = cursoAnterior.id_curso;
+                }
+                console.log('Payload a enviar:', { cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
+                await create_cursos(payload);
+                //await create_cursos({ cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
                 Swal.fire({
                     title: 'Sucesso',
                     text: `Criado com sucesso`,

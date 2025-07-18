@@ -18,29 +18,29 @@ const CourseTable = () => {
         }
     }
     
-    const HandleEditCreate = async (id) => {
-        //console.log(id);
-        const result = await Swal.fire({
-            title: id == null ? 'Tem a certeza que deseja adicionar curso?' : 'Tem a certeza que deseja editar curso?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sim',
-            cancelButtonText: 'Não',
-            customClass: {
-                confirmButton: 'btn btn-success me-2',
-                cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false,
-        });
+    // const HandleEditCreate = async (id) => {
+    //     //console.log(id);
+    //     const result = await Swal.fire({
+    //         title: id == null ? 'Tem a certeza que deseja adicionar curso?' : 'Tem a certeza que deseja editar curso?',
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonText: 'Sim',
+    //         cancelButtonText: 'Não',
+    //         customClass: {
+    //             confirmButton: 'btn btn-success me-2',
+    //             cancelButton: 'btn btn-danger'
+    //         },
+    //         buttonsStyling: false,
+    //     });
 
-        if(result.isConfirmed) {
-            if(id != null || id != undefined) {
-                navigate(`/admin/cursos/editar/${id}`);
-            } else {
-                navigate(`/admin/cursos/criar`);
-            }
-        }  
-    };
+    //     if(result.isConfirmed) {
+    //         if(id != null || id != undefined) {
+    //             navigate(`/admin/cursos/editar/${id}`);
+    //         } else {
+    //             navigate(`/admin/cursos/criar`);
+    //         }
+    //     }  
+    // };
 
     const HandleUpdate = async (id, estado) => {
         const result = await Swal.fire({
@@ -84,14 +84,34 @@ const CourseTable = () => {
         }
     }
 
-    const HandleCriarNovaOcorrencia = async (id) =>{
-        try{
-            const cursoAnterior = cursos.find((c) => c.id_curso === id);
-            navigate(`/admin/cursos/criar`, {state: {cursoAnterior}});
-        }catch(error){
-            console.error("Erro ao inserir dados do curso anterior para nova ocorrencia", error);
+    const HandleEditCreate = (id = null) => {
+        if (id != null) {
+            navigate(`/admin/cursos/editar/${id}`);
+        } else {
+            navigate(`/admin/cursos/criar`);
         }
-    }
+    };
+
+    const HandleCriarNovaOcorrencia = async (id) => {
+        const cursoAnterior = cursos.find((c) => c.id_curso === id);
+
+        const result = await Swal.fire({
+            title: 'Pretende criar nova ocorrência baseada neste curso?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Cancelar',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false,
+        });
+
+        if (result.isConfirmed) {
+            navigate(`/admin/cursos/criar`, { state: { cursoAnterior } });
+        }
+    };
 
     const renderActions = (item) => {
         return(
