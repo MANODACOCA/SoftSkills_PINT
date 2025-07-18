@@ -616,7 +616,7 @@ async function createCursoCompleto(reqBody) {
     const curso = await cursos.create(cursoData);
     
     if(curso) {
-      await ocorrenciaService .createNovaOcorrencia(curso.id_curso);;
+      await ocorrenciaService.createNovaOcorrencia(curso.id_curso);
     }
 
     if (cursoData.issincrono && sincronoBody) {
