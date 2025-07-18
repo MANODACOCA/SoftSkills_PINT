@@ -53,4 +53,9 @@ export const columnsCursos = [
     return <span className=" badge bg-danger">concluído</span>;
     }
   },
+  {
+    label: 'Ocorrencia', render: (item) =>{
+      
+    }
+  }
 ];

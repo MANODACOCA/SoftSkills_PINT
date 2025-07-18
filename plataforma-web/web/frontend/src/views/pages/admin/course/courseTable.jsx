@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 const CourseTable = () => {
     const [cursos, setcursos] = useState([]);
     const navigate = useNavigate();
-    
+ 
     const FetchCursos = async () => {
         try {
             const response = await getCourseAdminLista(); 
@@ -84,15 +84,29 @@ const CourseTable = () => {
         }
     }
 
+    const HandleCriarNovaOcorrencia = async (id) =>{
+        try{
+            const cursoAnterior = cursos.find((c) => c.id_curso === id);
+            navigate(`/admin/cursos/criar`, {state: {cursoAnterior}});
+        }catch(error){
+            console.error("Erro ao inserir dados do curso anterior para nova ocorrencia", error);
+        }
+    }
+
     const renderActions = (item) => {
         return(
             <div className="d-flex">
                 <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(item.id_curso)}>
                     <i className="bi bi-pencil"></i>
                 </button>
-                <button className="btn btn-outline-danger" onClick={() =>  HandleUpdate(item.id_curso, item.estado)}>
+                <button className="btn btn-outline-danger me-2" onClick={() =>  HandleUpdate(item.id_curso, item.estado)}>
                     <i className={`bi ${item.estado ? "bi-eye" : "bi-eye-slash"}`}></i>
                 </button>
+                {item.estado === false && (
+                    <button className="btn btn-outline-primary me-2" onClick={() => HandleCriarNovaOcorrencia(item.id_curso)}>
+                        <i className="bi bi-plus-circle"></i>
+                    </button>
+                )}
             </div>
         );
     }

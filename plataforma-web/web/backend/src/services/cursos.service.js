@@ -1,7 +1,7 @@
 const { Sequelize, Op, where, Model, literal } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria } = require('../models/init-models')(sequelize);
-
+const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria, ocorrencias_edicoes } = require('../models/init-models')(sequelize);
+const ocorrenciaService = require('./ocorrencias.service');
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
 async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null, search = "", topicosIDs = []) {
@@ -453,6 +453,10 @@ async function getAllCoursesWithAllInfo() {
       ],
       include: [
         {
+          model: ocorrencias_edicoes,
+          as: 'ocorrencias_edicos',
+        },
+        {
           model: sincrono,
           as: 'sincrono',
           attributes: ['numero_vagas'],
@@ -610,6 +614,10 @@ async function createCursoCompleto(reqBody) {
     const { cursoData, sincrono: sincronoBody } = reqBody;
 
     const curso = await cursos.create(cursoData);
+    
+    if(curso) {
+      await ocorrenciaService .createNovaOcorrencia(curso.id_curso);;
+    }
 
     if (cursoData.issincrono && sincronoBody) {
       await sincrono.create({

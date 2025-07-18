@@ -4,7 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).ocorrencias_edicoes;
 const controllers = {};
-
+const ocorrenciaService = require('../services/ocorrencias.service');
 
 
 controllers.list = async (req,res)=>{
@@ -28,12 +28,16 @@ controllers.get = async (req,res)=>{
 
 controllers.create = async (req,res)=>{
   try{
-    if(req.body){
-      const data = await model.create(req.body);
-      res.status(201).json(data);
-    }else{
-      res.status(400).json({erro: 'Erro ao criar Ocorrencia de edicao!',desc: 'Corpo do pedido esta vazio.'});
+    const {id_curso} = req.body;
+
+    if(!id_curso){
+      return res.status(400).json({erro: 'Erro ao criar ocorrencia de edição', 
+                                  desc: 'Campo "id_curso" é obrigatorio'});
     }
+
+    const novaOcorrencia = await ocorrenciaService.createNovaOcorrencia(id_curso);
+
+    res.status(201).json(novaOcorrencia);
   }catch(err){
     res.status(500).json({erro: 'Erro ao criar Ocorrencia de edicao!',desc: err.message});
   }
