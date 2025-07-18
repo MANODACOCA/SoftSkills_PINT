@@ -28,14 +28,19 @@ controllers.get = async (req,res)=>{
 
 controllers.create = async (req,res)=>{
   try{
-    const {id_curso} = req.body;
+   const { idCursoNovo, idCursoAnterior } = req.body;
 
-    if(!id_curso){
-      return res.status(400).json({erro: 'Erro ao criar ocorrencia de edição', 
-                                  desc: 'Campo "id_curso" é obrigatorio'});
+    if (!idCursoNovo) {
+      return res.status(400).json({
+        erro: 'Falta de dados obrigatórios',
+        desc: 'Campo "idCursoNovo" é obrigatório.',
+      });
     }
 
-    const novaOcorrencia = await ocorrenciaService.createNovaOcorrencia(id_curso);
+    const novaOcorrencia = await ocorrenciaService.createNovaOcorrencia({ 
+      idCursoNovo,
+      idCursoAnterior: idCursoAnterior || null,
+    });
 
     res.status(201).json(novaOcorrencia);
   }catch(err){

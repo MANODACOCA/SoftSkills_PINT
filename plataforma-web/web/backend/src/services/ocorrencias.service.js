@@ -1,20 +1,26 @@
 const sequelize = require('../models/database');
 const { ocorrencias_edicoes } = require('../models/init-models')(sequelize);
 
-async function createNovaOcorrencia(id_curso) {
+async function createNovaOcorrencia({idCursoNovo, idCursoAnterior}) {
     try{
-        const ultimaOcorrencia = await ocorrencias_edicoes.findOne({
-            where: { id_curso },
+        const ocorrenciaAnterior  = await ocorrencias_edicoes.findOne({
+            where: { id_curso: idCursoAnterior },
             order: [['nr_ocorrencia', 'DESC']],
         });
 
-        const proximaOcorrencia = ultimaOcorrencia ? ultimaOcorrencia.nr_ocorrencia + 1 : 1;
+        const nrOcorrenciaNova = ocorrenciaAnterior ? ocorrenciaAnterior.nr_ocorrencia + 1 : 1;
 
-        return await ocorrencias_edicoes.create({
-            id_curso,
-            nr_ocorrencia: proximaOcorrencia,
+        const idCursoRaiz = ocorrenciaAnterior ? ocorrenciaAnterior.id_curso_raiz : idCursoNovo;
+
+        const novaOcorrencia = await ocorrencias_edicoes.create({
+            id_curso: idCursoNovo,
+            nr_ocorrencia: nrOcorrenciaNova,
             data_ult_ocorrencia: new Date(),
+            id_curso_anterior: ocorrenciaAnterior ? idCursoAnterior : null,
+            id_curso_raiz: idCursoRaiz,
         });
+
+        return novaOcorrencia;
     }catch (error){
         console.error('Erro ao criar ocorrencia de edições', error);
         throw error;
