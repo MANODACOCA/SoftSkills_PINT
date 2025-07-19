@@ -36,6 +36,7 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                 {
                     model: trabalhos,
                     as: 'trabalhos',
+                    order: [['data_entrega_tr', 'ASC']]
                 }
             ],
         });
@@ -75,7 +76,7 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
 
         return {
             dadosCurso,
-            todasAulas:  todasAulas || [],
+            todasAulas: todasAulas || [],
             materialApoio: materialApoio || []
         };
     } catch (error) {

@@ -1,15 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import SpinnerBorder from '../spinner-border/spinner-border'
+import { useUser } from '../../../utils/useUser';
 import { useNavigate } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
-import { FaFileAlt, FaInfoCircle } from 'react-icons/fa';
+import { FaFileAlt, FaInfoCircle, FaRegCheckCircle } from 'react-icons/fa';
 import { MdDateRange } from "react-icons/md";
+import { get_entrega_trabalhos } from '../../../api/entrega_trabalhos_axios';
 
-const WorkCard = ({ trabalho, index, onSubmit }) => {
+
+const WorkCard = ({ trabalho, index }) => {
     const navigate = useNavigate();
 
     const onClick = () => {
         navigate(`?tab=eventos&trabalho=${trabalho.id_trabalho}`);
     };
+
+
+    const { user } = useUser();
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [loading, setLoading] = useState(true);
+    //vai verificar se sumteu algum ficheiro
+    const verifySubmitWork = async () => {
+        try {
+            const res = await get_entrega_trabalhos(trabalho.id_trabalho, user?.id_utilizador);
+            if (res.jaEntregou) {
+                setIsSubmitted(true);
+            }
+        } catch (error) {
+            console.error('Erro ao verificar entrega de trabalho:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        verifySubmitWork();
+    }, []);
+    //vai verificar se sumteu algum ficheiro
+
+    if (loading) {
+        return <SpinnerBorder />;
+    }
 
     return (
         <Card className="d-flex flex-row align-items-center justify-content-between p-3 mb-4 shadow-sm border">
@@ -28,11 +59,21 @@ const WorkCard = ({ trabalho, index, onSubmit }) => {
                 </div>
 
             </div>
-            <div>
-                <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm' onClick={onClick} variant="primary">
-                    <FaInfoCircle />Mais Informações
-                </Button>
-            </div>
+
+            {isSubmitted ? (
+                <div>
+                    <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm  bg-success' onClick={onClick} variant="primary">
+                        <FaRegCheckCircle />Entregue
+                    </Button>
+                </div>
+            ) : (
+                <div>
+                    <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm' onClick={onClick} variant="primary">
+                        <FaInfoCircle />Mais Informações
+                    </Button>
+                </div>
+            )}
+
         </Card>
     );
 };

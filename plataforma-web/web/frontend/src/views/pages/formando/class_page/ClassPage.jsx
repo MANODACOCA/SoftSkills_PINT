@@ -233,14 +233,14 @@ const ClassPage = () => {
                                             <div className="mt-4">
                                                 <h3>Material de Apoio</h3>
                                                 <div className="row g-4 mt-1">
-                                                    {materialApoio.map((material) => (
+                                                    {materialApoio.map((material, index) => (
                                                         <div className="col-md-6 col-lg-4" key={material.id_material_apoio}>
                                                             <Card className="h-100 shadow-sm">
                                                                 <Card.Body>
                                                                     <div className="d-flex align-items-center mb-3">
                                                                         {renderIconoFormato(material.id_formato)}
                                                                         <h5 className="mb-0 ms-2">
-                                                                            Material {material.id_material_apoio}
+                                                                            Material {index+1}
                                                                         </h5>
                                                                     </div>
                                                                     <Card.Text>
