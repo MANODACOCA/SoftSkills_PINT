@@ -36,9 +36,9 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                 {
                     model: trabalhos,
                     as: 'trabalhos',
-                    order: [['data_entrega_tr', 'ASC']]
                 }
             ],
+            order: [[{ model: trabalhos, as: 'trabalhos' }, 'data_entrega_tr', 'ASC']]
         });
 
         if (!dadosCurso) {
