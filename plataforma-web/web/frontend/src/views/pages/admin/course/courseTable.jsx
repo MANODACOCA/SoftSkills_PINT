@@ -149,8 +149,11 @@ const CourseTable = () => {
                                         <div>
                                             <strong>#{ocorr.ocorrencias_edicos?.[0]?.nr_ocorrencia || idx + 1}</strong> - {ocorr.nome_curso}
                                             <div className="text-muted small">
-                                                {new Date(ocorr.data_inicio_curso).toLocaleDateString()} - {new Date(ocorr.data_fim_curso).toLocaleDateString()}
+                                                Datas Curso: {new Date(ocorr.data_inicio_curso).toLocaleDateString()} - {new Date(ocorr.data_fim_curso).toLocaleDateString()}
                                             </div>
+                                            {ocorr.sincrono?.numero_vagas != null && (
+                                                <div className="text-muted small">Formandos: {ocorr.contador_formandos} / {ocorr.sincrono.numero_vagas}</div>
+                                            )}
                                         </div>
                                         <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(ocorr.id_curso)}>
                                             <i className="bi bi-eye"></i>
