@@ -296,7 +296,7 @@ const CreateCourse = () => {
         setCursos(cursoPreparado);
         setTopico(cursoAnterior.id_topico_topico?.id_topico?.toString() || "");
         setArea(cursoAnterior.id_topico_topico?.id_area_area?.id_area?.toString() || "");
-        setCategoria(cursoAnterior.id_topico_topico?.id_area_area?.id_categoria_categorium?.id_categoria?.toString() || "");
+        setCategoria(cursoAnterior.id_topico_topico?.id_area_area?.id_categoria_categorium?.id_catego?.toString() || "");
 
         const defaultLang = ISO6391.getAllCodes().find(code => code === cursoAnterior.idioma);
         if (defaultLang) {
