@@ -306,11 +306,12 @@ const CreateCourse = () => {
         setIsSincrono(cursoAnterior.issincrono ? "true" : "false");
 
         if (cursoAnterior.issincrono && cursoAnterior.sincrono) {
+            const formador = cursoAnterior.sincrono.id_formador_formadore;
             setSincrono({
-                id_formador: cursoAnterior.sincrono.id_formador,
-                numero_vagas: cursoAnterior.sincrono.numero_vagas,
+                id_formador: formador?.id_formador || null,
+                numero_vagas: cursoAnterior.sincrono.numero_vagas || null,
             });
-            setFormadorSelecionado(cursoAnterior.sincrono.id_formador?.toString() || "");
+            setFormadorSelecionado(formador?.id_formador?.toString() || "");
         }
     };
 
