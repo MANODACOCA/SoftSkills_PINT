@@ -449,7 +449,10 @@ async function getAllCoursesWithAllInfo() {
         'horas_curso',
         'contador_formandos',
         'estado',
-        'id_gestor_administrador'
+        'id_gestor_administrador',
+        'imagem',
+        'idioma',
+        'descricao_curso',
       ],
       include: [
         {
@@ -492,17 +495,17 @@ async function getAllCoursesWithAllInfo() {
         {
           model: topico,
           as: 'id_topico_topico',
-          attributes: ['nome_topico'],
+          attributes: ['id_topico', 'nome_topico'],
           include: [
             {
               model: area,
               as: 'id_area_area',
-              attributes: ['nome_area'],
+              attributes: ['id_area', 'nome_area'],
               include: [
                 {
                   model: categoria,
                   as: 'id_categoria_categorium',
-                  attributes: ['nome_cat']
+                  attributes: ['id_categoria', 'nome_cat']
                 }
               ]
             }

@@ -60,7 +60,7 @@ const CreateCourse = () => {
     const fetchCategoriaAreaTopico = async () => {
         try {
             const response = await getCategoriaAreaTopico();
-            console.log(response);
+            //console.log(response);
             setCatAreaTop(response);
         } catch (error) {
             console.log('Erro ao ir buscar os categoria, área e tópico');
@@ -120,8 +120,8 @@ const CreateCourse = () => {
         }
 
         const result = await Swal.fire({
-            title: 'Pretende criar curso?',
-            text: 'Irá adicionar um novo curso',
+            title: cursoAnterior ? 'Pretende criar nova ocorrência deste curso?' : 'Pretende criar curso?',
+            text: cursoAnterior ? 'Será criada uma nova ocorrência com base neste curso' : 'Irá adicionar um novo curso',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: 'Sim',
@@ -272,6 +272,47 @@ const CreateCourse = () => {
         }
     }
 
+    const prepararCursoAnterior = () => {
+        if (!cursoAnterior || !user) return;
+
+        const cursoPreparado = {
+            nome_curso: cursoAnterior.nome_curso || "",
+            descricao_curso: cursoAnterior.descricao_curso || "",
+            imagem: cursoAnterior.imagem || "",
+            idioma: cursoAnterior.idioma || "",
+            horas_curso: cursoAnterior.horas_curso || "",
+            id_gestor_administrador: user.id_utilizador,
+            issincrono: cursoAnterior.issincrono || false,
+            isassincrono: cursoAnterior.isassincrono || false,
+            estado: true,
+            contador_formandos: 0,
+            data_inicio_inscricao: "",
+            data_fim_inscricao: "",
+            data_inicio_curso: "",
+            data_fim_curso: "",
+            id_topico: cursoAnterior.id_topico_topico?.id_topico || "",
+        };
+
+        setCursos(cursoPreparado);
+        setTopico(cursoAnterior.id_topico_topico?.id_topico?.toString() || "");
+        setArea(cursoAnterior.id_topico_topico?.id_area_area?.id_area?.toString() || "");
+        setCategoria(cursoAnterior.id_topico_topico?.id_area_area?.id_categoria_categorium?.id_categoria?.toString() || "");
+
+        const defaultLang = ISO6391.getAllCodes().find(code => code === cursoAnterior.idioma);
+        if (defaultLang) {
+            setSelectedLanguage({ value: defaultLang, label: ISO6391.getNativeName(defaultLang) });
+        }
+
+        setIsSincrono(cursoAnterior.issincrono ? "true" : "false");
+
+        if (cursoAnterior.issincrono && cursoAnterior.sincrono) {
+            setSincrono({
+                id_formador: cursoAnterior.sincrono.id_formador,
+                numero_vagas: cursoAnterior.sincrono.numero_vagas,
+            });
+            setFormadorSelecionado(cursoAnterior.sincrono.id_formador?.toString() || "");
+        }
+    };
 
     useEffect(() => {
         if (user) {
@@ -279,6 +320,14 @@ const CreateCourse = () => {
             fetchCategoriaAreaTopico();
         }
     }, [user])
+
+    useEffect(() => {
+        if(cursoAnterior && user && catAreaTop.length > 0){
+            //console.log(cursoAnterior);
+            prepararCursoAnterior();
+            console.log(cursoAnterior);
+        }
+    }, [cursoAnterior, user, catAreaTop]);
 
     return (
         <div className='form-group'>
@@ -288,33 +337,33 @@ const CreateCourse = () => {
                         <div className='mx-5'>
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Nome do Curso</label>
-                                <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required />
+                                <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." value={cursos.nome_curso} onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required />
                             </div>
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Descrição do Curso</label>
-                                <textarea name="descricao_curso" className='form-control' rows="4" placeholder="Descrição do curso..." onChange={(e) => setCursos(prev => ({ ...prev, descricao_curso: e.target.value }))} required />
+                                <textarea name="descricao_curso" className='form-control' rows="4" placeholder="Descrição do curso..." value={cursos.descricao_curso} onChange={(e) => setCursos(prev => ({ ...prev, descricao_curso: e.target.value }))} required />
                             </div>
 
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início da Inscrição</label>
-                                    <input type="date" name="data_insc_ini" className='form-control' min={todayStr} onChange={(e) => setCursos(prev => ({ ...prev, data_inicio_inscricao: e.target.value }))} required />
+                                    <input type="date" name="data_insc_ini" className='form-control' min={todayStr} value={cursos.data_inicio_inscricao} onChange={(e) => setCursos(prev => ({ ...prev, data_inicio_inscricao: e.target.value }))} required />
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim da Inscrição</label>
-                                    <input type="date" name="data_insc_fim" className='form-control' min={cursos.data_inicio_inscricao || todayStr} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_inscricao: e.target.value }))} required />
+                                    <input type="date" name="data_insc_fim" className='form-control' min={cursos.data_inicio_inscricao || todayStr} value={cursos.data_fim_inscricao} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_inscricao: e.target.value }))} required />
                                 </div>
                             </div>
 
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início do Curso</label>
-                                    <input type="date" name="data_curso_ini" className='form-control' min={cursos.data_fim_inscricao || todayStr} onChange={(e) => setCursos(prev => ({ ...prev, data_inicio_curso: e.target.value }))} required />
+                                    <input type="date" name="data_curso_ini" className='form-control' min={cursos.data_fim_inscricao || todayStr} value={cursos.data_inicio_curso} onChange={(e) => setCursos(prev => ({ ...prev, data_inicio_curso: e.target.value }))} required />
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim do Curso</label>
-                                    <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_curso: e.target.value }))} required />
+                                    <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} value={cursos.data_fim_curso} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_curso: e.target.value }))} required />
                                 </div>
                             </div>
 
@@ -332,7 +381,7 @@ const CreateCourse = () => {
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Horas do Curso</label>
-                                <input type="number" step="0.5" min="0.5" name="horas_curso" className='form-control' placeholder="Horas do curso..." onChange={(e) => setCursos(prev => ({ ...prev, horas_curso: parseInt(e.target.value) }))} required />
+                                <input type="number" step="0.5" min="0.5" name="horas_curso" className='form-control' placeholder="Horas do curso..." value={cursos.horas_curso || ""} onChange={(e) => setCursos(prev => ({ ...prev, horas_curso: parseInt(e.target.value) }))} required />
                             </div>
 
                             <div className='mt-2'>
@@ -388,7 +437,14 @@ const CreateCourse = () => {
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Tópico</label>
-                                <select className="form-select" value={topico.toString()} onChange={(e) => { setTopico(parseInt(e.target.value)); setCursos(prev => ({ ...prev, id_topico: parseInt(e.target.value) })); }}>
+                                <select className="form-select" value={topico.toString()}
+                                 onChange={(e) => {
+                                    const value = e.target.value;
+                                    setTopico(value);
+                                    setCursos(prev => ({ ...prev, id_topico: value ? parseInt(value) : "" }));
+                                }}
+                                >
+                                {/*  onChange={(e) => { setTopico(parseInt(e.target.value)); setCursos(prev => ({ ...prev, id_topico: parseInt(e.target.value) })); }}> */}
                                     <option value="">--Escolher Tópico--</option>
                                     {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.find((ar) => ar.id_area.toString() == area)?.topicos?.map((t) => {
                                         return (
@@ -398,7 +454,7 @@ const CreateCourse = () => {
                                 </select>
                             </div>
                             <div className="d-flex justify-content-between">
-                                <button type="submit" className='btn btn-success mt-3'>Criar Curso</button>
+                                <button type="submit" className='btn btn-success mt-3'>{cursoAnterior ? 'Criar Ocorrência' : 'Criar Curso'}</button>
                                 <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Curso</button>
                             </div>
                         </div>
