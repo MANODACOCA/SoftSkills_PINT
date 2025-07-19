@@ -505,7 +505,7 @@ async function getAllCoursesWithAllInfo() {
                 {
                   model: categoria,
                   as: 'id_categoria_categorium',
-                  attributes: ['id_categoria', 'nome_cat']
+                  attributes: [['id_categoria', 'id_categoria_categoria'], 'nome_cat']
                 }
               ]
             }
