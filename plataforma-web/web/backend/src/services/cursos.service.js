@@ -506,7 +506,7 @@ async function getAllCoursesWithAllInfo() {
                   model: categoria,
                   as: 'id_categoria_categorium',
                   attributes: [ 
-                    [sequelize.col('id_categoria'), 'id_categoria_categoria'],
+                    [sequelize.col('id_categoria'), 'id_catego'],
                     'nome_cat']
                 }
               ]
