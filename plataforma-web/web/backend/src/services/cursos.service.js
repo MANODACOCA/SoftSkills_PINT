@@ -434,9 +434,24 @@ async function updateFormandosCounter() {
 }
 /*APENAS PARA TESTES DESENVOLVIEMENTO!!!!!!!!!!!!!!!!!!!!! APGAR DEPOIS */
 
-async function getAllCoursesWithAllInfo() {
+async function getAllCoursesWithAllInfo(search = "") {
   try {
+    const whereClause = {};
+
+    if (search) {
+      const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      whereClause[Op.and] = [
+        where(
+          fn('unaccent', col('nome_curso')),
+          {
+            [Op.iLike]: `%${unaccentedSearch}%`
+          }
+        )
+      ];
+    }
+
     const cursoInfoTotal = await cursos.findAll({
+      where: whereClause,
       attributes: [
         'id_curso',
         'nome_curso',
@@ -473,8 +488,8 @@ async function getAllCoursesWithAllInfo() {
                   model: utilizador,
                   as: 'id_formador_utilizador',
                   attributes: [
-                    [sequelize.col('id_utilizador'), 'id_util'],
-                    [sequelize.col('nome_utilizador'), 'nome_util']
+                    [col('id_utilizador'), 'id_util'],
+                    [col('nome_utilizador'), 'nome_util']
                   ]
                 }
               ]
@@ -505,9 +520,10 @@ async function getAllCoursesWithAllInfo() {
                 {
                   model: categoria,
                   as: 'id_categoria_categorium',
-                  attributes: [ 
-                    [sequelize.col('id_categoria'), 'id_catego'],
-                    'nome_cat']
+                  attributes: [
+                    [col('id_categoria'), 'id_catego'],
+                    'nome_cat'
+                  ]
                 }
               ]
             }

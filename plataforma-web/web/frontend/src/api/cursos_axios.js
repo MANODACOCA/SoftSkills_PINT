@@ -178,7 +178,7 @@ export const getCoursePopular = async () => {
 }
 
 
-export const getCourseAdminLista = async () => {
+/* export const getCourseAdminLista = async () => {
     try {
         const response = await axios.get(`${API_URL}/all-info`, getAuthHeader());
         return response.data;
@@ -186,7 +186,23 @@ export const getCourseAdminLista = async () => {
         console.error('Erro ao carregar cursos para lista Admin!');
         throw error;
     }
-}
+} */
+
+export const getCourseAdminLista = async (search = "") => {
+  try {
+    let url = `${API_URL}/all-info`;
+
+    if (search) {
+      url += `?search=${encodeURIComponent(search)}`;
+    }
+
+    const response = await axios.get(url, getAuthHeader());
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao carregar cursos para lista Admin!');
+    throw error;
+  }
+};
 
 export const verificar_acesso_curso = async (userId, cursoId) => {
     try {

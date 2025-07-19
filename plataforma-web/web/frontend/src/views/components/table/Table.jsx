@@ -56,7 +56,12 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
           <input
             className="input-group d-none d-md-flex form-control form-control-md w-25 col-6"
             type="search"
-            placeholder="Pesquisar por id"
+            placeholder="Pesquisar"
+            onChange={(e) => {
+                const value = e.target.value;
+                setSearchTerm(value);
+                debouncedNavigate(value);
+            }}
             aria-label="Pesquisar"
           />
         }

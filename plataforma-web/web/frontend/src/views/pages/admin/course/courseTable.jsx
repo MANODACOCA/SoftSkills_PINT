@@ -8,10 +8,11 @@ import Swal from 'sweetalert2';
 const CourseTable = () => {
     const [cursos, setcursos] = useState([]);
     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState('');
  
     const FetchCursos = async () => {
         try {
-            const response = await getCourseAdminLista(); 
+            const response = await getCourseAdminLista(searchTerm);
             setcursos(response);
         } catch(error) {
             console.log('Erro ao listar Cursos')
@@ -137,7 +138,7 @@ const CourseTable = () => {
 
     return(
         <div>
-            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={{callback: HandleEditCreate, label: 'Curso'}}/>
+            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={{callback: HandleEditCreate, label: 'Curso'}} pesquisa={true}/>
         </div>
     );
 }
