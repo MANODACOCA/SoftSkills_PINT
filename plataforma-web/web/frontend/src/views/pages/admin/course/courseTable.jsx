@@ -13,36 +13,34 @@ const CourseTable = () => {
     const FetchCursos = async () => {
         try {
             const response = await getCourseAdminLista(searchTerm || "");
-            setcursos(response);
+    
+            const cursosPorRaiz = {};
+
+            response.forEach((curso) => {
+                const raiz = curso.ocorrencias_edicos?.[0]?.id_curso_raiz || curso.id_curso;
+                if (!cursosPorRaiz[raiz]) cursosPorRaiz[raiz] = [];
+                cursosPorRaiz[raiz].push(curso);
+            });
+
+            const cursosFinais = Object.values(cursosPorRaiz).map(grupo => {
+                const ordenado = grupo.sort((a, b) => {
+                    const dataA = new Date(a.ocorrencias_edicos?.[0]?.data_ult_ocorrencia || a.data_inicio_curso);
+                    const dataB = new Date(b.ocorrencias_edicos?.[0]?.data_ult_ocorrencia || b.data_inicio_curso);
+                    return dataB - dataA;
+                });
+                return {
+                    ...ordenado[0],
+                    ocorrencias_anteriores: ordenado.slice(1)
+                };
+            });
+
+            setcursos(cursosFinais);
+
         } catch(error) {
             console.log('Erro ao listar Cursos')
         }
     }
     
-    // const HandleEditCreate = async (id) => {
-    //     //console.log(id);
-    //     const result = await Swal.fire({
-    //         title: id == null ? 'Tem a certeza que deseja adicionar curso?' : 'Tem a certeza que deseja editar curso?',
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'Sim',
-    //         cancelButtonText: 'Não',
-    //         customClass: {
-    //             confirmButton: 'btn btn-success me-2',
-    //             cancelButton: 'btn btn-danger'
-    //         },
-    //         buttonsStyling: false,
-    //     });
-
-    //     if(result.isConfirmed) {
-    //         if(id != null || id != undefined) {
-    //             navigate(`/admin/cursos/editar/${id}`);
-    //         } else {
-    //             navigate(`/admin/cursos/criar`);
-    //         }
-    //     }  
-    // };
-
     const HandleUpdate = async (id, estado) => {
         const result = await Swal.fire({
             title: estado ? 'Deseja ocultar este curso?' : 'Deseja mostrar este curso?',
@@ -132,13 +130,57 @@ const CourseTable = () => {
         );
     }
 
+    const renderOcorrencias = (item, isExpanded, expandedContent = false) => {
+        const ocorrencias = item.ocorrencias_anteriores || [];
+
+        if (expandedContent) {
+            return (
+                <div className="m-0 bg-light border rounded">
+                    <h6 className="p-2">Ocorrências anteriores</h6>
+                    <div className="mx-2 my-1 border rounded">
+                        {ocorrencias.length === 0 ? (
+                            <div className="p-2 text-muted">
+                                Sem ocorrências anteriores
+                            </div>
+                        ) : (
+                            ocorrencias.map((ocorr, idx) => (
+                                <div key={ocorr.id_curso} className={`${idx % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
+                                    <div className="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <strong>#{ocorr.ocorrencias_edicos?.[0]?.nr_ocorrencia || idx + 1}</strong> - {ocorr.nome_curso}
+                                            <div className="text-muted small">
+                                                {new Date(ocorr.data_inicio_curso).toLocaleDateString()} - {new Date(ocorr.data_fim_curso).toLocaleDateString()}
+                                            </div>
+                                        </div>
+                                        <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(ocorr.id_curso)}>
+                                            <i className="bi bi-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        if (ocorrencias.length > 0) {
+            return (
+                <div>
+                    <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
+                </div>
+            );
+        }
+        return null;
+    };
+
     useEffect(() => {
         FetchCursos();
     }, [])
 
     return(
         <div>
-            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={{callback: HandleEditCreate, label: 'Curso'}} pesquisa={true}/>
+            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={{callback: HandleEditCreate, label: 'Curso'}} pesquisa={true} conteudos={renderOcorrencias}/>
         </div>
     );
 }
