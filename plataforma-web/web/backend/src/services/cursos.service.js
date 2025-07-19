@@ -439,15 +439,18 @@ async function getAllCoursesWithAllInfo(search = "") {
     const whereClause = {};
 
     if (search) {
+
       const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      whereClause[Op.and] = [
-        where(
-          fn('unaccent', col('nome_curso')),
-          {
-            [Op.iLike]: `%${unaccentedSearch}%`
-          }
-        )
-      ];
+
+      const searchFilter = Sequelize.where(
+        Sequelize.fn('unaccent', Sequelize.col('nome_curso')),
+        {
+          [Op.iLike]: `%${unaccentedSearch}%`
+        }
+      );
+
+      baseWhereAssincrono[Op.and] = [searchFilter];
+      baseWhereSincrono[Op.and] = [searchFilter];
     }
 
     const cursoInfoTotal = await cursos.findAll({

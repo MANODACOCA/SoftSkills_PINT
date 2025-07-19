@@ -12,7 +12,7 @@ const CourseTable = () => {
  
     const FetchCursos = async () => {
         try {
-            const response = await getCourseAdminLista(searchTerm);
+            const response = await getCourseAdminLista(searchTerm || "");
             setcursos(response);
         } catch(error) {
             console.log('Erro ao listar Cursos')
