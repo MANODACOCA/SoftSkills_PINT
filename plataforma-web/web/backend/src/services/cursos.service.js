@@ -442,8 +442,8 @@ async function getAllCoursesWithAllInfo(search = "") {
       { estado: false },
       {
         where: {
-          data_fim_curso: { [Op.lt]: today },
-          estado: true,
+          data_fim_curso: { [Op.lt]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')") },
+          estado: true
         }
       }
     );
