@@ -436,6 +436,18 @@ async function updateFormandosCounter() {
 
 async function getAllCoursesWithAllInfo(search = "") {
   try {
+    const today = new Date().toISOString().slice(0, 10); 
+
+    await cursos.update(
+      { estado: false },
+      {
+        where: {
+          data_fim_curso: { [Op.lt]: today },
+          estado: true,
+        }
+      }
+    );
+    
     const whereClause = {};
 
     if (search) {

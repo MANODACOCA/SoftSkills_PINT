@@ -33,8 +33,10 @@ export const columnsCursos = [
    },
   { label: 'Duração', key: 'horas_curso' },
   { label: 'Vagas', render: (item) => {
-      if (item.issincrono) return item.sincrono.numero_vagas;
-      else return '-';
+      if(item.issincrono) return `${item.contador_formandos} / ${item.sincrono.numero_vagas}`;
+      else return ( <>{item.contador_formandos} / <i className="bi bi-infinity"></i></>);
+      // if (item.issincrono) return item.sincrono.numero_vagas;
+      // else return '-';
     } 
   },
   { label: 'Categoria/Área/Tópico', render: (item) => {
