@@ -491,8 +491,8 @@ async function getAllCoursesWithAllInfo(search = "") {
                   model: utilizador,
                   as: 'id_formador_utilizador',
                   attributes: [
-                    [col('id_utilizador'), 'id_util'],
-                    [col('nome_utilizador'), 'nome_util']
+                    [sequelize.col('id_utilizador'), 'id_util'],
+                    [sequelize.col('nome_utilizador'), 'nome_util']
                   ]
                 }
               ]
@@ -524,7 +524,7 @@ async function getAllCoursesWithAllInfo(search = "") {
                   model: categoria,
                   as: 'id_categoria_categorium',
                   attributes: [
-                    [col('id_categoria'), 'id_catego'],
+                    [sequelize.col('id_categoria'), 'id_catego'],
                     'nome_cat'
                   ]
                 }
