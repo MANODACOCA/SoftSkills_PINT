@@ -3,7 +3,6 @@ import HeaderInicial from '../../components/base_components/header/Header_Inicia
 import PageInicial from './PageInicial';
 import FooterInicial from '../../components/base_components/footer/Footer_Inicial';
 
-
 const InicialPage = () => {
     return (
         <>

@@ -45,6 +45,8 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
             throw new Error('Curso não encontrado');
         }
 
+        const isSincrono = dadosCurso.sincrono !== null;
+
         const todasAulas = await aulas.findAll({
             where: { id_curso: cursoId },
             include: [
@@ -60,7 +62,7 @@ async function getAulasAndMateriaApoioForCurso(cursoId) {
                     ],
                 }
             ],
-            order: [['data_aula', 'ASC']]
+            order: isSincrono ? [['data_aula', 'ASC']] : [['id_aula', 'ASC']]
         });
 
         const materialApoio = await material_apoio.findAll({

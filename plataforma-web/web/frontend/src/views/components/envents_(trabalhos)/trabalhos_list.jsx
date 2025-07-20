@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import SpinnerBorder from '../spinner-border/spinner-border'
 import { useUser } from '../../../utils/useUser';
 import { useNavigate } from 'react-router-dom';
 import { Card, Button } from 'react-bootstrap';
 import { FaFileAlt, FaInfoCircle, FaRegCheckCircle } from 'react-icons/fa';
+import { IoIosCloseCircleOutline } from "react-icons/io";
 import { MdDateRange } from "react-icons/md";
 import { get_entrega_trabalhos } from '../../../api/entrega_trabalhos_axios';
 
@@ -17,6 +17,7 @@ const WorkCard = ({ trabalho, index }) => {
 
 
     const { user } = useUser();
+    const today = new Date();
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [loading, setLoading] = useState(true);
     //vai verificar se sumteu algum ficheiro
@@ -38,10 +39,6 @@ const WorkCard = ({ trabalho, index }) => {
     }, []);
     //vai verificar se sumteu algum ficheiro
 
-    if (loading) {
-        return <SpinnerBorder />;
-    }
-
     return (
         <Card className="d-flex flex-row align-items-center justify-content-between p-3 mb-4 shadow-sm border">
             <div className="d-flex align-items-center gap-3">
@@ -60,15 +57,23 @@ const WorkCard = ({ trabalho, index }) => {
 
             </div>
 
-            {isSubmitted ? (
+            {loading ? (
+                <div></div>
+            ) : isSubmitted ? (
                 <div>
-                    <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm  bg-success' onClick={onClick} variant="primary">
+                    <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm bg-success border-0' onClick={onClick} variant="primary" style={{ width: "200px" }}>
                         <FaRegCheckCircle />Entregue
+                    </Button>
+                </div>
+            ) : !isSubmitted && new Date(trabalho.data_entrega_tr) < today ? (
+                <div>
+                    <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm bg-danger border-0' onClick={onClick} variant="primary" style={{ width: "200px" }}>
+                        <IoIosCloseCircleOutline />Não Entregue
                     </Button>
                 </div>
             ) : (
                 <div>
-                    <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm' onClick={onClick} variant="primary">
+                    <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm' onClick={onClick} variant="primary" style={{ width: "200px" }}>
                         <FaInfoCircle />Mais Informações
                     </Button>
                 </div>

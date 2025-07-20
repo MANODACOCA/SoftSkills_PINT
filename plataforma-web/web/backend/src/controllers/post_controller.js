@@ -178,6 +178,8 @@ controllers.delete = async (req, res) => {
 
     const idsComentarios = comentarios.map(c => c.id_comentario);
     await likes_comentario.destroy({ where: { id_comentario: idsComentarios } });
+    
+    await denuncia.destroy({ where: { id_comentario: idsComentarios } });
 
     await comentario.destroy({ where: { id_post: id } });
 

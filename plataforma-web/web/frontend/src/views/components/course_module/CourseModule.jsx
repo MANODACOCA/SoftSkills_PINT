@@ -59,7 +59,7 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
   };
 
   useEffect(() => {
-    if (usarAulaAtualId) {
+    if (cursoTipo === 'assincrono' && usarAulaAtualId) {
       setIsExpanded(module.id === aulaAtualId);
     } else {
       setIsExpanded(false);
@@ -69,7 +69,7 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
   return (
     <div className="mb-3 border rounded-4 shadow-sm">
       <button
-        className={`w-100 text-start border-0 px-3 py-3 d-flex justify-content-between align-items-center rounded-4 ${usarAulaAtualId && module.id === aulaAtualId ? 'bg-secondary bg-opacity-75 text-white' : 'bg-light'}`}
+        className={`w-100 text-start border-0 px-3 py-3 d-flex justify-content-between align-items-center rounded-4 ${cursoTipo === 'assincrono' && usarAulaAtualId && module.id === aulaAtualId ? 'bg-secondary bg-opacity-75 text-white' : 'bg-light'}`}
         onClick={() => setIsExpanded(prev => !prev)}
       >
         <div className="d-flex align-items-center gap-3">
@@ -87,11 +87,7 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
             <>
               {DataFimAula < DataAtual && (
                 <div className="bg-success text-white rounded-5 p-2 d-flex justify-content-between align-items-center gap-3"
-                  style={{ backgroundColor: '#3b5b84' }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onChangeAula();
-                  }}>
+                  style={{ backgroundColor: '#3b5b84' }}>
                   <div className='d-flex justify-content-between align-items-center gap-2'>
                     <FaChalkboardTeacher /><strong>Realizada</strong>
                   </div>
@@ -100,11 +96,7 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
               {module.conteudo && DataAtual >= DataInicioAula && DataAtual <= DataFimAula && (
                 <a href={module.conteudo} target='blank' className='text-black text-decoration-none'>
                   <div className="btn btn-primary text-white rounded-5 p-2 d-flex justify-content-between align-items-center gap-3"
-                    style={{ backgroundColor: '#3b5b84' }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onChangeAula();
-                    }}>
+                    style={{ backgroundColor: '#3b5b84' }}>
                     <div className='d-flex justify-content-between align-items-center gap-2'>
                       <FaChalkboardTeacher /><strong>Participar</strong>
                     </div>
@@ -113,23 +105,13 @@ const CourseModule = ({ module, index, aulaAtualId, usarAulaAtualId = false, onC
               )}
               {DataAtual < DataInicioAula && (
                 <div className="text-white rounded-circle d-flex justify-content-center align-items-center p-0"
-                  style={{ width: '32px', height: '32px', backgroundColor: '#3b5b84' }} onClick={(e) => {
-                    e.stopPropagation();
-                    onChangeAula();
-                  }}>
+                  style={{ width: '32px', height: '32px', backgroundColor: '#3b5b84' }}>
                   <FaChalkboardTeacher />
                 </div>
               )}
             </>
           )}
-          {cursoTipo === 'sincrono' && (
-            <>
-              <strong>{index + 1}. {module.title}</strong>
-            </>
-          )}
-          {cursoTipo === 'assincrono' && (
-            <strong>{index + 1}. {module.title}</strong>
-          )}
+          <strong>{index + 1}. {module.title}</strong>
         </div>
         <div className='d-flex justify-content-between align-items-center gap-4'>
           <div
