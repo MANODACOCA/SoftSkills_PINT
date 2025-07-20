@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "575420306913",
-    "project_id": "pint-softinsa",
-    "storage_bucket": "pint-softinsa.firebasestorage.app"
+    "project_number": "335002191995",
+    "project_id": "pint-83a31",
+    "storage_bucket": "pint-83a31.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:575420306913:android:5ddf1968deef6f57ca6ea0",
+        "mobilesdk_app_id": "1:335002191995:android:2528357d2b870d99a9bade",
         "android_client_info": {
           "package_name": "com.example.mobile"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBx1iCJyQhOGJuzPw1n4-rAID6Hgb-LMWY"
+          "current_key": "AIzaSyDAD5BdDQQENm9Xzf7N6PPqggs5CkWIHZs"
         }
       ],
       "services": {
