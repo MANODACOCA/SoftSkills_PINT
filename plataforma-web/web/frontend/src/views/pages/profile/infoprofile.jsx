@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import './profile.css';
 import { useUser } from '../../../utils/useUser';
 import Swal from 'sweetalert2';
+import { FaRegClock } from "react-icons/fa";
+import { GrUpgrade } from "react-icons/gr";
 import { alterarPassword, update_utilizador } from '../../../api/utilizador_axios';
 
 const InfoProfile = () => {
@@ -11,6 +13,7 @@ const InfoProfile = () => {
     const [repNovapassword, setRepNovapassword] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [jaPediuUpgrade, setJaPediuUpgrade] = useState(false);
 
     const handleChangeRole = (role) => {
         if (role !== activeRole) {
@@ -100,7 +103,7 @@ const InfoProfile = () => {
         setIs2FAEnabled(user?.auten2fat || false);
     }, [user]);
 
-
+    console.log("TESTE", roles);
     return (
         <div>
             {successMessage && <div className="alert alert-success mt-2">{successMessage}</div>}
@@ -151,8 +154,6 @@ const InfoProfile = () => {
                     </div>
                 </div>
 
-
-
                 <div className="col-12 col-md-8 p-5">
                     <div className="mb-5">
                         <h4 className="mb-3">Tipo de Conta</h4>
@@ -189,16 +190,30 @@ const InfoProfile = () => {
                             A autenticação dois fatores (2FA) adiciona uma camada extra de segurança à tua conta: além da palavra-passe, será necessário introduzir um código de verificação enviado para o teu email para concluir o login.
                         </small>
                     </div>
+                    {!roles[1] && (
+                        <>
+                            <hr />
 
-                    {/*           <hr />
+                            <div className="mb-3 d-flex align-items-center justify-content-between">
+                                <h4 className="m-0">Queres ser Formador?</h4>
+                                {jaPediuUpgrade ? (
+                                    <button className="btn btn-success d-flex align-items-center gap-2">
+                                        <FaRegClock />
+                                        Pedido Enviado
+                                    </button>
+                                ) : (
+                                    <button className="btn btn-primary d-flex align-items-center gap-2">
+                                        <GrUpgrade />
+                                        Pedir Evolução
+                                    </button>
+                                )}
+                            </div>
+                            <small className="text-muted">
+                                Se queres lecionar cursos, clica para solicitar a evolução da tua conta para Formador.
+                            </small>
+                        </>
+                    )}
 
-                    <div className="mb-3 d-flex align-items-center justify-content-between">
-                        <h4 className="m-0">Queres ser Formador?</h4>
-                        <button className="btn btn-primary">Pedir Evolução</button>
-                    </div>
-                    <small className="text-muted">
-                        Se queres lecionar cursos, clica para solicitar a evolução da tua conta para Formador.
-                    </small> */}
                 </div>
             </div>
         </div>

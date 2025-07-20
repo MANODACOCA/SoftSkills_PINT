@@ -32,6 +32,20 @@ controllers.list = async (req, res) => {
     }
 };
 
+controllers.get = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const data = await model.findOne({ where: { id_formando: id } });
+        if (data) {
+            res.status(200).json({ jaPediu: true });
+        } else {
+            res.status(404).json({ jaPediu: false });
+        }
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao procurar pedido de upgrade de cargo!', desc: err.message });
+    }
+};
+
 controllers.create = async (req, res) => {
     try {
         if (req.body) {
