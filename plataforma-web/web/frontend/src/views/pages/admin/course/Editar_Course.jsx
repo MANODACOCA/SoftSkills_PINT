@@ -4,7 +4,7 @@ import { getCategoriaAreaTopico, list_topico, update_topico } from '../../../../
 import { create_material_apoio, delete_material_apoio, get_material_apoio, get_material_apoio_curso, list_material_apoio, update_material_apoio } from '../../../../api/material_apoio_axios';
 import { getAulas_Curso, update_aulas, create_aulas, delete_aulas } from '../../../../api/aulas_axios';
 import { get_cursos, getCoursePopular, update_cursos } from '../../../../api/cursos_axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { calcularHorasCurso, formatYearMonthDay } from '../../../components/shared_functions/FunctionsUtils';
 import { Tab, Tabs } from 'react-bootstrap';
 import './Editar_Course.css';
@@ -55,7 +55,8 @@ const EditCourse = () => {
         7: <FaVideo className="text-primary" />, 
     };
     const [horasCursoFormato, setHorasCursoFormato] = useState();
-
+    const location = useLocation();
+    const isViewMode = new URLSearchParams(location.search).get('view') === 'true';
     //#endregion
     
     useEffect(() => {
@@ -1138,34 +1139,34 @@ const EditCourse = () => {
                         <div className='mx-5'>
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Nome do Curso</label>
-                                <input type="text" name="nome_curso" className='form-control' value={cursos.nome_curso || ""} onChange={handleChange} required />
+                                <input type="text" name="nome_curso" className='form-control' value={cursos.nome_curso || ""} onChange={handleChange} required disabled={isViewMode}/>
                             </div>
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Descrição do Curso</label>
-                                <textarea name="descricao_curso" className='form-control' rows="4" value={cursos.descricao_curso || ""} onChange={handleChange} required />
+                                <textarea name="descricao_curso" className='form-control' rows="4" value={cursos.descricao_curso || ""} onChange={handleChange} required disabled={isViewMode}/>
                             </div>
 
                             {/* DATAS */}
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início da Inscrição</label>
-                                    <input type="date" name="data_inicio_inscricao" min={todayStr} className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required />
+                                    <input type="date" name="data_inicio_inscricao" min={todayStr} className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required disabled={isViewMode}/>
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim da Inscrição</label>
-                                    <input type="date" name="data_fim_inscricao" min={cursos.data_inicio_inscricao || todayStr} className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required />
+                                    <input type="date" name="data_fim_inscricao" min={cursos.data_inicio_inscricao || todayStr} className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required disabled={isViewMode}/>
                                 </div>
                             </div>
 
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início do Curso</label>
-                                    <input type="date" name="data_inicio_curso" min={cursos.data_fim_inscricao || todayStr} className='form-control' value={cursos.data_inicio_curso ? formatYearMonthDay(cursos.data_inicio_curso) : ""} onChange={handleChange} required />
+                                    <input type="date" name="data_inicio_curso" min={cursos.data_fim_inscricao || todayStr} className='form-control' value={cursos.data_inicio_curso ? formatYearMonthDay(cursos.data_inicio_curso) : ""} onChange={handleChange} required disabled={isViewMode}/>
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim do Curso</label>
-                                    <input type="date" name="data_fim_curso" min={cursos.data_inicio_curso || todayStr} className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required />
+                                    <input type="date" name="data_fim_curso" min={cursos.data_inicio_curso || todayStr} className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required disabled={isViewMode}/>
                                 </div>
                             </div>
 
@@ -1178,18 +1179,19 @@ const EditCourse = () => {
                                     isClearable
                                     placeholder="--Escolha o idioma--"
                                     name="idioma"
+                                    isDisabled={isViewMode}
                                 />
                             </div>
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Horas do Curso</label>
-                                <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso || ""} onChange={handleChange} required />
+                                <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso || ""} onChange={handleChange} required disabled={isViewMode}/>
                             </div>
 
                             {/* Tipo */}
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Tipologia</label>
-                                <select name="issincrono" value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(valorBoolean); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean})); handleChange(e)}} className='form-select'>
+                                <select name="issincrono" value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(valorBoolean); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean})); handleChange(e)}} className='form-select' disabled={isViewMode}>
                                     <option value="">-- Escolher Tipologia --</option>
                                     <option value="true">Síncrono</option>
                                     <option value="false">Assíncrono</option>
@@ -1206,7 +1208,7 @@ const EditCourse = () => {
                                             setSincrono(prev => ({...prev, id_formador: valor})); 
                                             setFormadorSelecionado(valor); 
                                             handleChange(e);}} 
-                                        className='form-select'>
+                                        className='form-select' disabled={isViewMode}>
                                         <option value="">-- Selecionar Formador --</option>
                                         {formadores.map((f) => {
                                             return(
@@ -1215,16 +1217,16 @@ const EditCourse = () => {
                                         })}
                                     </select>
                                     <label className='mt-2 fw-bold'>Descrição Formador</label>
-                                    <textarea name="descricao_formador" value={formadores?.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly/>
+                                    <textarea name="descricao_formador" value={formadores?.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly disabled={isViewMode}/>
                                     <label className='mt-2 fw-bold'>Número Vagas</label>
-                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} required />
+                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} required disabled={isViewMode}/>
                                 </div>
                             )}
 
                             {/* CATEGORIA */}
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Categoria</label>
-                                <select name="id_categoria" className='form-select' value={categoria} onChange={(e) => {setCategoria(e.target.value); handleChange(e)}} required>
+                                <select name="id_categoria" className='form-select' value={categoria} onChange={(e) => {setCategoria(e.target.value); handleChange(e)}} required disabled={isViewMode}>
                                     <option value="">--Escolher categoria--</option>
                                     {catAreaTopico?.map((c) => (
                                         <option key={c.id_categoria} value={c.id_categoria}>{c.nome_cat}</option>
@@ -1235,7 +1237,7 @@ const EditCourse = () => {
                             {/* AREA */}
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Area</label>
-                                <select name="id_area" className='form-select' value={area} onChange={(e) => {setArea(e.target.value); handleChange(e); }} required>
+                                <select name="id_area" className='form-select' value={area} onChange={(e) => {setArea(e.target.value); handleChange(e); }} required disabled={isViewMode}>
                                     <option value="">--Escolher area--</option>
                                     {catAreaTopico?.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.map((a) => (
                                         <option key={a.id_area} value={a.id_area}>{a.nome_area}</option>
@@ -1246,7 +1248,7 @@ const EditCourse = () => {
                             {/* TOPICO */}
                             <div ref={stopRef} className='mt-2'>
                                 <label className='form-label fw-bold'>Tópico</label>
-                                <select name="id_topico" className='form-select' value={topico} onChange={(e) => {setTopico(e.target.value); handleChange(e)}} required>
+                                <select name="id_topico" className='form-select' value={topico} onChange={(e) => {setTopico(e.target.value); handleChange(e)}} required disabled={isViewMode}>
                                     <option value="">--Escolher tópico--</option>
                                     {catAreaTopico?.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.find((ar) => ar.id_area.toString() == area)?.topicos?.map((t) => (
                                         <option key={t.id_topico} value={t.id_topico}>{t.nome_topico}</option>
@@ -1254,8 +1256,12 @@ const EditCourse = () => {
                                 </select>
                             </div>
                             <div className='d-flex justify-content-between'>
-                                <button type="submit" className='btn btn-success mt-3'>Submeter Alterações</button>
-                                <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Alterações</button>
+                                {!isViewMode && (
+                                <>
+                                    <button type="submit" className='btn btn-success mt-3'>Submeter Alterações</button>
+                                    <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Alterações</button>
+                                </>
+                                )}
                             </div>
                         </div>
                     </form>
@@ -1281,7 +1287,9 @@ const EditCourse = () => {
                                 <small>Número de inscritos: {cursos.contador_formandos}</small>
                                 <small>Horas de curso: {horasCursoFormato}</small>
                             </div>
-                            <button onClick={handleSubmitCursoImg} type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
+                            {!isViewMode && (
+                                <button onClick={handleSubmitCursoImg} type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
+                            )}
                         </div>
                     </div>
                 </div>

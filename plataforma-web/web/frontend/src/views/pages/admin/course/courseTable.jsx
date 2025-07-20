@@ -2,12 +2,14 @@ import Table from "../../../components/table/Table";
 import { columnsCursos } from "../../../components/table/ColumnsCursos";
 import { useEffect, useState } from "react";
 import { getCourseAdminLista, update_cursos } from "../../../../api/cursos_axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { debounce } from 'lodash';
 
 const CourseTable = () => {
     const [cursos, setcursos] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
  
     const FetchCursos = async () => {
@@ -35,11 +37,25 @@ const CourseTable = () => {
             });
 
             setcursos(cursosFinais);
-
         } catch(error) {
             console.log('Erro ao listar Cursos')
         }
     }
+
+    const debouncedNavigate = debounce((value) => {
+        const params = new URLSearchParams(location.search);
+        if (value) {
+            params.set("search", value);
+        } else {
+            params.delete("search");
+        }
+        navigate(`${location.pathname}?${params.toString()}`);
+    });
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        setSearchTerm(params.get('search') || '');
+    }, [location.search]);
     
     const HandleUpdate = async (id, estado) => {
         const result = await Swal.fire({
@@ -83,9 +99,10 @@ const CourseTable = () => {
         }
     }
 
-    const HandleEditCreate = (id = null) => {
+    const HandleEditCreate = (id = null, isView = false) => {
         if (id != null) {
-            navigate(`/admin/cursos/editar/${id}`);
+            const viewParam = isView ? '?view=true' : '';
+            navigate(`/admin/cursos/editar/${id}${viewParam}`);
         } else {
             navigate(`/admin/cursos/criar`);
         }
@@ -155,7 +172,7 @@ const CourseTable = () => {
                                                 <div className="text-muted small">Formandos: {ocorr.contador_formandos} / {ocorr.sincrono.numero_vagas}</div>
                                             )}
                                         </div>
-                                        <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(ocorr.id_curso)}>
+                                        <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(ocorr.id_curso, true)}>
                                             <i className="bi bi-eye"></i>
                                         </button>
                                     </div>
@@ -179,11 +196,23 @@ const CourseTable = () => {
 
     useEffect(() => {
         FetchCursos();
-    }, [])
+    }, [searchTerm])
 
     return(
         <div>
-            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={{callback: HandleEditCreate, label: 'Curso'}} pesquisa={true} conteudos={renderOcorrencias}/>
+            <Table 
+                columns={columnsCursos} 
+                data={cursos} 
+                actions={renderActions} 
+                onAddClick={{callback: HandleEditCreate, label: 'Curso'}} 
+                pesquisa={true} 
+                conteudos={renderOcorrencias} 
+                searchTerm={searchTerm}
+                onSearchChange={(value) => {
+                    setSearchTerm(value);
+                    debouncedNavigate(value);
+                }}
+            />
         </div>
     );
 }

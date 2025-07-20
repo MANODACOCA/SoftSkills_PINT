@@ -1,7 +1,7 @@
 import './Table.css';
 import React, { useState } from 'react';
 
-const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordenar}) => {
+const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordenar, searchTerm = '', onSearchChange}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPag, setitemsPag] = useState(10);
   const [expandedRows, setExpandedRows] = useState([]);
@@ -57,11 +57,8 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
             className="input-group d-none d-md-flex form-control form-control-md w-25 col-6"
             type="search"
             placeholder="Pesquisar"
-            onChange={(e) => {
-                const value = e.target.value;
-                setSearchTerm(value);
-                debouncedNavigate(value);
-            }}
+            value={searchTerm}
+            onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
             aria-label="Pesquisar"
           />
         }
