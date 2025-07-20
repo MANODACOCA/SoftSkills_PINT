@@ -878,7 +878,7 @@ async function getCursoCompletoComAulasEMaterial(id) {
                     ],
                 }
             ],
-            order: [[sequelize.literal('"data_aula" IS NULL'), 'ASC'], ['data_aula', 'ASC'], ['id_aula', 'ASC']]
+            //order: [[sequelize.literal('"data_aula" IS NULL'), 'ASC'], ['data_aula', 'ASC'], ['id_aula', 'ASC']]
         });
 
         const materiaisApoio = await material_apoio.findAll({
