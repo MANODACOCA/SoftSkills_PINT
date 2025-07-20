@@ -895,7 +895,7 @@ async function getCursoCompletoComAulasEMaterial(id) {
         return {
             ...curso.toJSON(), 
             aulas: aulasCurso,
-            materiais_apoio: materiaisApoio
+            material_apoio: materiaisApoio
         };
 
     } catch (error) {
