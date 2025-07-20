@@ -30,12 +30,12 @@ const HeaderInicial = () => {
 
     return (
         <header className='w-100 p-3 d-flex justify-content-between align-items-center gap-4 border-bottom'>
-            <div className="d-flex gap-4 ms-5">
+            <div className="d-flex gap-4 ms-4">
                 <Link to="/"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
             {token && (
-                <button onClick={handleClick} className="btn btn-primary me-4" style={{ width: '150px', }}>
-                    Ir para a home
+                <button onClick={handleClick} className="btn btn-primary d-flex justify-content-center align-items-center gap-2 px-3 py-2 me-4">
+                    <i className="bi bi-house-door"></i>Ir para a home
                 </button>
             )}
             {!token && (
