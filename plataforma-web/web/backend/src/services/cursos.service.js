@@ -881,21 +881,21 @@ async function getCursoCompletoComAulasEMaterial(id) {
             order: [[sequelize.literal('"data_aula" IS NULL'), 'ASC'], ['data_aula', 'ASC'], ['id_aula', 'ASC']]
         });
 
-        // const materiaisApoio = await material_apoio.findAll({
-        //     where: { id_curso: id },
-        //     include: [
-        //         {
-        //             model: tipo_formato,
-        //             as: 'id_formato_tipo_formato',
-        //             attributes: ['id_formato', 'formato']
-        //         }
-        //     ]
-        // });
+        const materiaisApoio = await material_apoio.findAll({
+            where: { id_curso: id },
+            include: [
+                {
+                    model: tipo_formato,
+                    as: 'id_formato_tipo_formato',
+                    attributes: ['id_formato', 'formato']
+                }
+            ]
+        });
 
         return {
             ...curso.toJSON(), 
             aulas: aulasCurso,
-            //material_apoio: materiaisApoio
+            material_apoio: materiaisApoio
         };
 
     } catch (error) {
