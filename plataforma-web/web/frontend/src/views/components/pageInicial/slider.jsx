@@ -6,6 +6,9 @@ import foruns from '../../../assets/images/InicialPage/foruns.png'
 
 
 const Slider = () => {
+    const activeRole = localStorage.getItem('activeRole');
+    const token = localStorage.getItem('token');
+
     const [showModal, setShowModal] = useState(false);
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
@@ -156,7 +159,7 @@ const Slider = () => {
                                     Ver Demonstração
                                 </button>
 
-                                <Link
+                                {(activeRole === 'formando' || !token) && (<Link
                                     to={rotaSlide}
                                     className="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-semibold"
                                     style={{
@@ -177,7 +180,7 @@ const Slider = () => {
                                     }}
                                 >
                                     🔎 Explorar
-                                </Link>
+                                </Link>)}
                             </div>
                         </div>
                     </div>
