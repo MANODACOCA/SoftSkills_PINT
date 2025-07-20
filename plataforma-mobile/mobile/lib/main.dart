@@ -8,23 +8,13 @@ import 'package:go_router/go_router.dart';
 import 'services/auth_service.dart';
 import 'ui/core/shared/export.dart';
 
-Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  handleBackgroundMessage(message);
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
-
-  await FirebaseApi().initNotification();
-
+  await FirebaseAPI().initNotifications();
   debugPrintGlobalKeyedWidgetLifecycle = true;
   await initializeDateFormatting('pt_PT', null);
   await authService.init();
-
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
