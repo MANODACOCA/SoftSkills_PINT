@@ -130,6 +130,11 @@ app.use('/likes-post', likePostRouter);
 const likeComentarioRouter = require('./routes/likes_comentario_route.js');
 app.use('/likes-comentario', likeComentarioRouter);
 
+const pedidosForum = require('./routes/pedidos_forum_route.js');
+app.use('/pedidos-upgrade-forum', pedidosForum)
+
+const pedidosUpgradeUser = require('./routes/pedidos_upgrade_cargo_route.js');
+app.use('/pedidos-upgrade-user', pedidosUpgradeUser)
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
