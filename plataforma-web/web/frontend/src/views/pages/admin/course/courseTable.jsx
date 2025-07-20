@@ -2,12 +2,14 @@ import Table from "../../../components/table/Table";
 import { columnsCursos } from "../../../components/table/ColumnsCursos";
 import { useEffect, useState } from "react";
 import { getCourseAdminLista, update_cursos } from "../../../../api/cursos_axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { debounce } from 'lodash';
 
 const CourseTable = () => {
     const [cursos, setcursos] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
  
     const FetchCursos = async () => {
@@ -40,6 +42,21 @@ const CourseTable = () => {
             console.log('Erro ao listar Cursos')
         }
     }
+
+    const debouncedNavigate = debounce((value) => {
+        const params = new URLSearchParams(location.search);
+        if (value) {
+            params.set("search", value);
+        } else {
+            params.delete("search");
+        }
+        navigate(`${location.pathname}?${params.toString()}`);
+    });
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        setSearchTerm(params.get('search') || '');
+    }, [location.search]);
     
     const HandleUpdate = async (id, estado) => {
         const result = await Swal.fire({
@@ -179,11 +196,23 @@ const CourseTable = () => {
 
     useEffect(() => {
         FetchCursos();
-    }, [])
+    }, [searchTerm])
 
     return(
         <div>
-            <Table columns={columnsCursos} data={cursos} actions={renderActions} onAddClick={{callback: HandleEditCreate, label: 'Curso'}} pesquisa={true} conteudos={renderOcorrencias}/>
+            <Table 
+                columns={columnsCursos} 
+                data={cursos} 
+                actions={renderActions} 
+                onAddClick={{callback: HandleEditCreate, label: 'Curso'}} 
+                pesquisa={true} 
+                conteudos={renderOcorrencias} 
+                searchTerm={searchTerm}
+                onSearchChange={(value) => {
+                    setSearchTerm(value);
+                    debouncedNavigate(value);
+                }}
+            />
         </div>
     );
 }
