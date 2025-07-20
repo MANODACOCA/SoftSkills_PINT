@@ -460,9 +460,6 @@ async function getAllCoursesWithAllInfo(search = "") {
           [Op.iLike]: `%${unaccentedSearch}%`
         }
       );
-
-      baseWhereAssincrono[Op.and] = [searchFilter];
-      baseWhereSincrono[Op.and] = [searchFilter];
     }
 
     const cursoInfoTotal = await cursos.findAll({
