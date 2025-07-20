@@ -775,10 +775,10 @@ async function getCursosLecionadosAtualmenteService(userId) {
   }
 }
 
-async function getCursoCompletoComAulasEMaterial(cursoId) {
+async function getCursoCompletoComAulasEMaterial(id) {
     try {
         const curso = await cursos.findOne({
-            where: { id_curso: cursoId },
+            where: { id_curso: id },
             attributes: [
                 'id_curso',
                 'nome_curso',
@@ -864,7 +864,7 @@ async function getCursoCompletoComAulasEMaterial(cursoId) {
         }
 
         const aulasCurso = await aulas.findAll({
-            where: { id_curso: cursoId },
+            where: { id_curso: id },
             include: [
                 {
                     model: conteudos,
@@ -882,7 +882,7 @@ async function getCursoCompletoComAulasEMaterial(cursoId) {
         });
 
         const materiaisApoio = await material_apoio.findAll({
-            where: { id_curso: cursoId },
+            where: { id_curso: id },
             include: [
                 {
                     model: tipo_formato,

@@ -301,10 +301,9 @@ controllers.getCursoNovaOcorrenciaCompleto = async (req, res) => {
   try{
     const {id} = req.params;
     const curso = await cursosService.getCursoCompletoComAulasEMaterial(id);
-    return res.status(200).json(curso);
+    res.status(200).json(curso);
   } catch(error) {
     res.status(500).json({error: "Erro ao procurar info do curso todo"});
-
   }
 }
 
