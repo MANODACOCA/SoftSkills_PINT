@@ -22,6 +22,8 @@ var _material_apoio = require("./material_apoio");
 var _modelo_certificado = require("./modelo_certificado");
 var _notificacoes_curso = require("./notificacoes_curso");
 var _ocorrencias_edicoes = require("./ocorrencias_edicoes");
+var _pedidos_novos_foruns = require("./pedidos_novos_foruns");
+var _pedidos_upgrade_cargo = require("./pedidos_upgrade_cargo");
 var _post = require("./post");
 var _resultados = require("./resultados");
 var _s_s_o = require("./s_s_o");
@@ -57,6 +59,8 @@ function initModels(sequelize) {
   var modelo_certificado = _modelo_certificado(sequelize, DataTypes);
   var notificacoes_curso = _notificacoes_curso(sequelize, DataTypes);
   var ocorrencias_edicoes = _ocorrencias_edicoes(sequelize, DataTypes);
+  var pedidos_novos_foruns = _pedidos_novos_foruns(sequelize, DataTypes);
+  var pedidos_upgrade_cargo = _pedidos_upgrade_cargo(sequelize, DataTypes);
   var post = _post(sequelize, DataTypes);
   var resultados = _resultados(sequelize, DataTypes);
   var s_s_o = _s_s_o(sequelize, DataTypes);
@@ -116,6 +120,10 @@ function initModels(sequelize) {
   formandos.hasMany(entrega_trabalhos, { as: "entrega_trabalhos", foreignKey: "id_formando_et"});
   inscricoes.belongsTo(formandos, { as: "id_formando_formando", foreignKey: "id_formando"});
   formandos.hasMany(inscricoes, { as: "inscricos", foreignKey: "id_formando"});
+  pedidos_novos_foruns.belongsTo(formandos, { as: "id_formando_formando", foreignKey: "id_formando"});
+  formandos.hasMany(pedidos_novos_foruns, { as: "pedidos_novos_foruns", foreignKey: "id_formando"});
+  pedidos_upgrade_cargo.belongsTo(formandos, { as: "id_formando_formando", foreignKey: "id_formando"});
+  formandos.hasMany(pedidos_upgrade_cargo, { as: "pedidos_upgrade_cargos", foreignKey: "id_formando"});
   resultados.belongsTo(formandos, { as: "id_formando_formando", foreignKey: "id_formando"});
   formandos.hasMany(resultados, { as: "resultados", foreignKey: "id_formando"});
   cursos.belongsTo(gestor_administrador, { as: "id_gestor_administrador_gestor_administrador", foreignKey: "id_gestor_administrador"});
@@ -195,6 +203,8 @@ function initModels(sequelize) {
     modelo_certificado,
     notificacoes_curso,
     ocorrencias_edicoes,
+    pedidos_novos_foruns,
+    pedidos_upgrade_cargo,
     post,
     resultados,
     s_s_o,
