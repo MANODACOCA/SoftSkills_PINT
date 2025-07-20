@@ -26,6 +26,7 @@ const CreateCourse = () => {
 
     const {state} = useLocation();
     const cursoAnterior = state?.cursoAnterior || null;
+    const isNovaOcorrencia = !!cursoAnterior;
 
     const todayStr = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" });
 
@@ -338,7 +339,7 @@ const CreateCourse = () => {
                         <div className='mx-5'>
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Nome do Curso</label>
-                                <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." value={cursos.nome_curso} onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required />
+                                <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." value={cursos.nome_curso} onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required disabled={isNovaOcorrencia}/>
                             </div>
 
                             <div className='mt-2'>
@@ -387,7 +388,7 @@ const CreateCourse = () => {
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold' >Tipologia</label>
-                                <select className='form-select' value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean })); }}>
+                                <select className='form-select' value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean })); }} disabled={isNovaOcorrencia}>
                                     <option value="">-- Escolher Tipologia --</option>
                                     <option value="true">Síncrono</option>
                                     <option value="false">Assíncrono</option>
@@ -414,7 +415,7 @@ const CreateCourse = () => {
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Categoria</label>
-                                <select className="form-select" value={categoria.toString()} onChange={(e) => setCategoria(e.target.value)}>
+                                <select className="form-select" value={categoria.toString()} onChange={(e) => setCategoria(e.target.value)} disabled={isNovaOcorrencia}>
                                     <option value="">--Escolher Categoria--</option>
                                     {catAreaTop.map((c) => {
                                         return (
@@ -426,7 +427,7 @@ const CreateCourse = () => {
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Área</label>
-                                <select className="form-select" value={area.toString()} onChange={(e) => setArea(e.target.value)}>
+                                <select className="form-select" value={area.toString()} onChange={(e) => setArea(e.target.value)} disabled={isNovaOcorrencia}>
                                     <option value="">--Escolher Área--</option>
                                     {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.map((a) => {
                                         return (
@@ -444,6 +445,7 @@ const CreateCourse = () => {
                                     setTopico(value);
                                     setCursos(prev => ({ ...prev, id_topico: value ? parseInt(value) : "" }));
                                 }}
+                                disabled={isNovaOcorrencia}
                                 >
                                 {/*  onChange={(e) => { setTopico(parseInt(e.target.value)); setCursos(prev => ({ ...prev, id_topico: parseInt(e.target.value) })); }}> */}
                                     <option value="">--Escolher Tópico--</option>
@@ -472,7 +474,7 @@ const CreateCourse = () => {
                             <div className='d-flex flex-column align-items-center'>
                                 <h5 className='m-1 mb-3'>{cursos?.nome_curso || 'Novo Curso'}</h5>
                             </div>
-                            <button type="button" onClick={handleSubmitCursoImg} className='btn btn-color text-white w-100 mt-4'>Adicionar Imagem</button>
+                            <button type="button" onClick={handleSubmitCursoImg} className='btn btn-color text-white w-100 mt-4'>{cursoAnterior ? 'Alterar Imagem' : 'Adicionar Imagem'}</button>
                         </div>
                     </div>
                 </div>

@@ -173,7 +173,7 @@ const CourseTable = () => {
                                             )}
                                         </div>
                                         <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(ocorr.id_curso, true)}>
-                                            <i className="bi bi-eye"></i>
+                                            Ver Ocorrencia
                                         </button>
                                     </div>
                                 </div>

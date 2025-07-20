@@ -340,9 +340,11 @@ const EditCourse = () => {
                                 <div>
                                     <a href={conteudo.conteudo}  className="btn btn-outline-success me-2" target="_blank">
                                         <i className='bi bi-box-arrow-up-right'></i></a>
-                                    <button className="btn btn-outline-danger" onClick={()=> handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
-                                        <i className="bi bi-trash"></i>
-                                    </button>
+                                    {!isViewMode && (
+                                        <button className="btn btn-outline-danger" onClick={()=> handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
+                                            <i className="bi bi-trash"></i>
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -366,6 +368,7 @@ const EditCourse = () => {
     }
 
     const renderActionsAula = (item) => {
+        if(isViewMode) return null;
         return(
             <div className="d-flex">
                 <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreateAula(item.id_aula, item)}>
@@ -778,6 +781,7 @@ const EditCourse = () => {
     };
 
     const renderActionsMaterialApoio = (item) => {
+        if(isViewMode) return null;
         return(
         <div className="d-flex">
                    <a href={item.conteudo}  className="btn btn-outline-success me-2" target="_blank">
@@ -1303,7 +1307,7 @@ const EditCourse = () => {
                                 {/* Aulas */}
                                 {cursos.isassincrono === true && (
                                     <div className='mt-4'>
-                                        <Table columns={columnsAulas} data={aulas} actions={renderActionsAula} onAddClick={{callback: HandleEditCreateAula, label: 'Aula'}} conteudos={renderConteudos} />
+                                        <Table columns={columnsAulas} data={aulas} actions={renderActionsAula} onAddClick={!isViewMode ? {callback: HandleEditCreateAula, label: 'Aula'} : null} conteudos={renderConteudos} />
                                     </div>
                                 )}
                             </div>
@@ -1313,7 +1317,7 @@ const EditCourse = () => {
                                 {/* Material de Apoio */}
                                 {cursos.isassincrono === true && (
                                     <div className='mt-4'>
-                                        <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={{callback: handleEditCreateMaterialApoio, label: 'Material Apoio'}} />
+                                        <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={!isViewMode ? {callback: handleEditCreateMaterialApoio, label: 'Material Apoio'} : null} />
                                     </div>
                                 )}
                             </div>
