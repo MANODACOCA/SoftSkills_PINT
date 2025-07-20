@@ -243,3 +243,13 @@ export const getCursosLecionadosAtualmente = async (userId) => {
         throw error;
     }
 }
+
+export const getCourseAdminCursoTodoUm = async (id) => {
+    try{
+        const response = await axios.get(`${API_URL}/one-curso-all-info/${id}`, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao encontrar info de um curso completo para nova ocorrencia');
+        throw error;
+    }
+}

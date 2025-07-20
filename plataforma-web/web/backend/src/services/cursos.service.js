@@ -1,6 +1,6 @@
 const { Sequelize, Op, where, Model, literal } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria, ocorrencias_edicoes } = require('../models/init-models')(sequelize);
+const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria, ocorrencias_edicoes, material_apoio, tipo_formato } = require('../models/init-models')(sequelize);
 const ocorrenciaService = require('./ocorrencias.service');
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
@@ -775,6 +775,135 @@ async function getCursosLecionadosAtualmenteService(userId) {
   }
 }
 
+async function getCursoCompletoComAulasEMaterial(id) {
+    try {
+        const curso = await cursos.findOne({
+            where: { id_curso: id },
+            attributes: [
+                'id_curso',
+                'nome_curso',
+                'data_inicio_curso',
+                'data_fim_curso',
+                'data_inicio_inscricao',
+                'data_fim_inscricao',
+                'issincrono',
+                'isassincrono',
+                'horas_curso',
+                'contador_formandos',
+                'estado',
+                'id_gestor_administrador',
+                'imagem',
+                'idioma',
+                'descricao_curso',
+            ],
+            include: [
+                {
+                    model: ocorrencias_edicoes,
+                    as: 'ocorrencias_edicos',
+                },
+                {
+                    model: sincrono,
+                    as: 'sincrono',
+                    attributes: ['numero_vagas'],
+                    include: [
+                        {
+                            model: formadores,
+                            as: 'id_formador_formadore',
+                            attributes: ['id_formador', 'descricao_formador'],
+                            include: [
+                                {
+                                    model: utilizador,
+                                    as: 'id_formador_utilizador',
+                                    attributes: [
+                                        [sequelize.col('id_utilizador'), 'id_util'],
+                                        [sequelize.col('nome_utilizador'), 'nome_util']
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    model: gestor_administrador,
+                    as: 'id_gestor_administrador_gestor_administrador',
+                    include: [
+                        {
+                            model: utilizador,
+                            as: 'id_gestor_administrador_utilizador',
+                            attributes: ['nome_utilizador'],
+                        }
+                    ]
+                },
+                {
+                    model: topico,
+                    as: 'id_topico_topico',
+                    attributes: ['id_topico', 'nome_topico'],
+                    include: [
+                        {
+                            model: area,
+                            as: 'id_area_area',
+                            attributes: ['id_area', 'nome_area'],
+                            include: [
+                                {
+                                    model: categoria,
+                                    as: 'id_categoria_categorium',
+                                    attributes: [
+                                        [sequelize.col('id_categoria'), 'id_catego'],
+                                        'nome_cat'
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        });
+
+        if (!curso) {
+            throw new Error("Curso não encontrado");
+        }
+
+        const aulasCurso = await aulas.findAll({
+            where: { id_curso: id },
+            include: [
+                {
+                    model: conteudos,
+                    as: 'conteudos',
+                    include: [
+                        {
+                            model: tipo_formato,
+                            as: 'id_formato_tipo_formato',
+                            attributes: ['id_formato', 'formato']
+                        }
+                    ],
+                }
+            ],
+            order: [[sequelize.literal('"data_aula" IS NULL'), 'ASC'], ['data_aula', 'ASC'], ['id_aula', 'ASC']]
+        });
+
+        const materiaisApoio = await material_apoio.findAll({
+            where: { id_curso: id },
+            include: [
+                {
+                    model: tipo_formato,
+                    as: 'id_formato_tipo_formato',
+                    attributes: ['id_formato', 'formato']
+                }
+            ]
+        });
+
+        return {
+            ...curso.toJSON(), 
+            aulas: aulasCurso,
+            material_apoio: materiaisApoio
+        };
+
+    } catch (error) {
+        console.error('Erro ao obter curso completo:', error);
+        throw error;
+    }
+}
+
 module.exports = {
   getCursosDiponiveisParaInscricao,
   getCourseDestaqueSincrono,
@@ -793,4 +922,5 @@ module.exports = {
   updateCursoCompleto,
   getCursosLecionadosTerminadosService,
   getCursosLecionadosAtualmenteService,
+  getCursoCompletoComAulasEMaterial,
 };

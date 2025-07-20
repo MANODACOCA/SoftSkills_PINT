@@ -1,7 +1,7 @@
 import Table from "../../../components/table/Table";
 import { columnsCursos } from "../../../components/table/ColumnsCursos";
 import { useEffect, useState } from "react";
-import { getCourseAdminLista, update_cursos } from "../../../../api/cursos_axios";
+import { getCourseAdminCursoTodoUm, getCourseAdminLista, update_cursos } from "../../../../api/cursos_axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { debounce } from 'lodash';
@@ -125,7 +125,12 @@ const CourseTable = () => {
         });
 
         if (result.isConfirmed) {
-            navigate(`/admin/cursos/criar`, { state: { cursoAnterior } });
+            try{
+                const cursoCompleto = await getCourseAdminCursoTodoUm(id);
+                navigate(`/admin/cursos/criar`, { state: { cursoAnterior: cursoCompleto } });
+            } catch(error) {
+                Swal.fire("Erro", "Erro ao carregar dados do curso", "error");
+            }
         }
     };
 

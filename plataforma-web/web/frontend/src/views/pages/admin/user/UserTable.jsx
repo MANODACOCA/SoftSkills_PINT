@@ -2,22 +2,40 @@ import Table from "../../../components/table/Table";
 import { columnsUtilizadores } from "../../../components/table/ColumnsUtilizadores";
 import { useEffect, useState } from "react";
 import { create_utilizador, delete_utilizador, list_utilizador, update_utilizador } from "../../../../api/utilizador_axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { create_formadores } from "../../../../api/formadores_axios";
+import { debounce } from 'lodash';
 
 const UsersTables = () => {
     const [user, setuser] = useState([]);
     const navigate = useNavigate();
+    const location = useLocation();
+    const [searchTerm, setSearchTerm] = useState('');
 
     const FetchUtilizadores = async() => {
         try {
-            const response = await list_utilizador();
+            const response = await list_utilizador(searchTerm || "");
             setuser(response.data);
         } catch(error) {
             console.log('Erro ao aceder a tabela de utilizador');
         }
     }
+
+    const debouncedNavigate = debounce((value) => {
+        const params = new URLSearchParams(location.search);
+        if (value) {
+            params.set("search", value);
+        } else {
+            params.delete("search");
+        }
+        navigate(`${location.pathname}?${params.toString()}`);
+    });
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        setSearchTerm(params.get('search') || '');
+    }, [location.search]);
 
     const HandleBlock = async (id, estado) => {
         const result = await Swal.fire({
@@ -289,11 +307,22 @@ const UsersTables = () => {
 
     useEffect(() => {
         FetchUtilizadores();
-    }, [])
+    }, [searchTerm])
 
     return(
         <div>
-            <Table columns={columnsUtilizadores} data={user ?? []} actions={renderActions} onAddClick={{callback: HandleCreate, label: 'Utilizadores'}} />
+            <Table 
+                columns={columnsUtilizadores} 
+                data={user ?? []} 
+                actions={renderActions} 
+                onAddClick={{callback: HandleCreate, label: 'Utilizadores'}}
+                pesquisa={true}
+                searchTerm={searchTerm}
+                onSearchChange={(value) => {
+                    setSearchTerm(value);
+                    debouncedNavigate(value);
+                }} 
+            />
         </div>
     );
 }
