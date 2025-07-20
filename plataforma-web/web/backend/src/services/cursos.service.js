@@ -1,6 +1,6 @@
 const { Sequelize, Op, where, Model, literal } = require('sequelize');
 const sequelize = require('../models/database');
-const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria, ocorrencias_edicoes, material_apoio } = require('../models/init-models')(sequelize);
+const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria, ocorrencias_edicoes, material_apoio, tipo_formato } = require('../models/init-models')(sequelize);
 const ocorrenciaService = require('./ocorrencias.service');
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
@@ -863,23 +863,23 @@ async function getCursoCompletoComAulasEMaterial(id) {
             throw new Error("Curso não encontrado");
         }
 
-        // const aulasCurso = await aulas.findAll({
-        //     where: { id_curso: id },
-        //     include: [
-        //         {
-        //             model: conteudos,
-        //             as: 'conteudos',
-        //             include: [
-        //                 {
-        //                     model: tipo_formato,
-        //                     as: 'id_formato_tipo_formato',
-        //                     attributes: ['id_formato', 'formato']
-        //                 }
-        //             ],
-        //         }
-        //     ],
-        //     //order: [[sequelize.literal('"data_aula" IS NULL'), 'ASC'], ['data_aula', 'ASC'], ['id_aula', 'ASC']]
-        // });
+        const aulasCurso = await aulas.findAll({
+            where: { id_curso: id },
+            include: [
+                {
+                    model: conteudos,
+                    as: 'conteudos',
+                    include: [
+                        {
+                            model: tipo_formato,
+                            as: 'id_formato_tipo_formato',
+                            attributes: ['id_formato', 'formato']
+                        }
+                    ],
+                }
+            ],
+            order: [[sequelize.literal('"data_aula" IS NULL'), 'ASC'], ['data_aula', 'ASC'], ['id_aula', 'ASC']]
+        });
 
         // const materiaisApoio = await material_apoio.findAll({
         //     where: { id_curso: id },
@@ -894,7 +894,7 @@ async function getCursoCompletoComAulasEMaterial(id) {
 
         return {
             ...curso.toJSON(), 
-          //  aulas: aulasCurso,
+            aulas: aulasCurso,
             //material_apoio: materiaisApoio
         };
 
