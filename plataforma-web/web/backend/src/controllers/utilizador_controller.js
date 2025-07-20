@@ -32,7 +32,7 @@ const Formadores = models.formadores;
 const Formandos = models.formandos;
 const GestorAdministrador = models.gestor_administrador;
 
-
+const { Sequelize, Op } = require('sequelize');
 
 
 controllers.list = async (req, res) => {
