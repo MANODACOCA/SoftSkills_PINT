@@ -1,21 +1,33 @@
-//import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:mobile/Firebase/firebase_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
-import 'ui/core/shared/export.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:go_router/go_router.dart';
 import 'services/auth_service.dart';
+import 'ui/core/shared/export.dart';
+
+Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  handleBackgroundMessage(message);
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  debugPrintGlobalKeyedWidgetLifecycle = true; 
+  await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundHandler);
+
+  await FirebaseApi().initNotification();
+
+  debugPrintGlobalKeyedWidgetLifecycle = true;
   await initializeDateFormatting('pt_PT', null);
   await authService.init();
+
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
       child: const MyApp(),
     ),
   );
@@ -29,7 +41,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // constrói UMA vez
+  // construído uma única vez
   late final GoRouter _router = rotas;
 
   @override
@@ -37,11 +49,9 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       routerConfig: _router,
-      title: 'Flutter Demo',
+      title: 'SoftSkills',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 106, 107, 108),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff6A6B6C)),
       ),
     );
   }
