@@ -1,7 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const FundoComponent = () => {
+    const navigate = useNavigate();
+    const activeRole = localStorage.getItem('activeRole');
+
+    const handleClick = () => {
+        switch (activeRole) {
+            case 'formando':
+                navigate('/home');
+                break;
+            case 'formador':
+                navigate('/formador/home');
+                break;
+            case 'admin':
+                navigate('/admin/home');
+                break;
+            default:
+                navigate('/login');
+                break;
+        }
+    }
+
     const [showModal, setShowModal] = useState(false);
     const openModal = () => setShowModal(true);
     const closeModal = () => setShowModal(false);
@@ -134,8 +154,8 @@ const FundoComponent = () => {
                             </div>
 
                             <div className="d-flex gap-4 justify-content-center flex-wrap">
-                                <Link
-                                    to="/home"
+                                <button
+                                    onClick={handleClick}
                                     className="btn btn-light btn-lg px-5 py-4 rounded-pill shadow-lg fw-bold"
                                     style={{
                                         transform: 'translateY(0)',
@@ -153,7 +173,7 @@ const FundoComponent = () => {
                                     }}
                                 >
                                     🚀 Começar Agora
-                                </Link>
+                                </button>
 
                                 <button
                                     className="btn btn-outline-light btn-lg px-5 py-4 rounded-pill fw-bold"
