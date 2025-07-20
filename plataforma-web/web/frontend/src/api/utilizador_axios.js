@@ -3,9 +3,14 @@ import axios from 'axios';
 const API_URL = 'https://softskills-api.onrender.com/utilizador';
 
 
-export const list_utilizador = async () => {
+export const list_utilizador = async (search = "") => {
     try {
-        const response = await axios.get(`${API_URL}/list`);
+        let url = `${API_URL}/list`;
+
+        if (search) {
+        url += `?search=${encodeURIComponent(search)}`;
+        }
+        const response = await axios.get(url);
         return response.data;
     } catch (error) {
         console.error('Erro ao ir buscar lista de Utilizador!');

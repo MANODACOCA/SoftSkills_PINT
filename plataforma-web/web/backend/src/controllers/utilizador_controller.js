@@ -36,8 +36,28 @@ const GestorAdministrador = models.gestor_administrador;
 
 
 controllers.list = async (req, res) => {
-  const data = await model.findAll();
-  res.status(200).json({ success: true, data: data });
+  try {
+    const search = req.query.search || '';
+    const whereClause = {};
+    if (search) {
+      const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      whereClause[Op.and] = [
+        Sequelize.where(
+          Sequelize.fn('unaccent', Sequelize.col('nome_utilizador')),
+          {
+            [Op.iLike]: `%${unaccentedSearch}%`
+          }
+        )
+      ];
+    }
+
+    const data = await model.findAll({ where: whereClause});
+    res.status(200).json({ success: true, data: data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Erro ao encontrar utilizadores'});
+  }
+
 };
 
 controllers.get = async (req, res) => {
