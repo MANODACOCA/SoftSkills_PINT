@@ -37,7 +37,6 @@ const CourseTable = () => {
             });
 
             setcursos(cursosFinais);
-
         } catch(error) {
             console.log('Erro ao listar Cursos')
         }
@@ -100,9 +99,10 @@ const CourseTable = () => {
         }
     }
 
-    const HandleEditCreate = (id = null) => {
+    const HandleEditCreate = (id = null, isView = false) => {
         if (id != null) {
-            navigate(`/admin/cursos/editar/${id}`);
+            const viewParam = isView ? '?view=true' : '';
+            navigate(`/admin/cursos/editar/${id}${viewParam}`);
         } else {
             navigate(`/admin/cursos/criar`);
         }
@@ -172,7 +172,7 @@ const CourseTable = () => {
                                                 <div className="text-muted small">Formandos: {ocorr.contador_formandos} / {ocorr.sincrono.numero_vagas}</div>
                                             )}
                                         </div>
-                                        <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(ocorr.id_curso)}>
+                                        <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(ocorr.id_curso, true)}>
                                             <i className="bi bi-eye"></i>
                                         </button>
                                     </div>
