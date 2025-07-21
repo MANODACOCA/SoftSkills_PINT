@@ -131,7 +131,7 @@ const likeComentarioRouter = require('./routes/likes_comentario_route.js');
 app.use('/likes-comentario', likeComentarioRouter);
 
 const pedidosForum = require('./routes/pedidos_forum_route.js');
-app.use('/pedidos-upgrade-forum', pedidosForum)
+app.use('/pedidos-forum', pedidosForum)
 
 const pedidosUpgradeUser = require('./routes/pedidos_upgrade_cargo_route.js');
 app.use('/pedidos-upgrade-user', pedidosUpgradeUser)
