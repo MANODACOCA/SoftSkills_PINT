@@ -53,7 +53,7 @@ controllers.delete = async (req, res) => {
         const deleted = await model.destroy({ where: { id_pedidos_novos_foruns: id } });
         const user = await utilizador.findOne({ where: { id_utilizador: pedido.id_formando } });
         if (user?.email) {
-            await enviarEmailForumRecusado(user.email);
+            await enviarEmailForumRecusado(user.email, pedido.novo_forum);
         }
         if (deleted) {
             res.status(200).json({ msg: 'Pedido de forum apagado/a com sucesso!' });
