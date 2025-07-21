@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { create_formadores } from "../../../../api/formadores_axios";
 import { debounce } from 'lodash';
-import { list_pedidos_upgrade } from "../../../../api/pedidos_upgrade_cargo_axios";
+import { delete_pedidos_upgrade, list_pedidos_upgrade } from "../../../../api/pedidos_upgrade_cargo_axios";
 import { ColumnsUpgradeUser } from "../../../components/table/ColumnsUpgradeUser";
 
 const UsersTables = () => {
@@ -128,7 +128,7 @@ const UsersTables = () => {
         }
     }
 
-    const HandleType = async (id, utilizador) => {
+    const HandleType = async (id, utilizador, id_pedido = null) => {
         const result = await Swal.fire({
             title: `Tem a certeza que deseja alterar ${utilizador} para formador?`,
             icon: 'warning',
@@ -176,6 +176,10 @@ const UsersTables = () => {
                     const formador = adicionarFormador.value.descricao_formador;
                     await update_utilizador(id, {isformador: true});
                     await create_formadores({id_formador: id, descricao_formador: formador});
+                    if(id_pedido) {
+                        await delete_pedidos_upgrade(id_pedido);
+                    }
+                    FetchPedidos();
                     FetchUtilizadores();
                     Swal.fire({
                         icon: "success",
@@ -222,7 +226,7 @@ const UsersTables = () => {
                     onClick={() => HandleType( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
                     <i className='bi bi-person-fill-up fs-5'></i>
                 </button>
-                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
+                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util, item.id_pedidos_upgrade_cargo)}>
                     <i className="bi bi-person-lines-fill fs-5"></i>
                 </button>
             </div>
