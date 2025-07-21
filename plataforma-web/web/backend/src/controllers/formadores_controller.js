@@ -46,22 +46,22 @@ controllers.get = async (req,res)=>{
 
 controllers.create = async (req,res)=>{
   try{
-    const {id_formando} = req.body;
+    const {id_formador} = req.body;
     let pedidoRemovido = false;
     if(!req.body){
-      res.status(400).json({erro: 'Erro ao criar Formador!',desc: 'Corpo do pedido esta vazio.'});
+      return res.status(400).json({erro: 'Erro ao criar Formador!',desc: 'Corpo do pedido esta vazio.'});
     }
-    const pedidoExistente = await pedidos_upgrade_cargo.findOne({where: {id_formando}});
+    const pedidoExistente = await pedidos_upgrade_cargo.findOne({where: {id_formador}});
 
     if(pedidoExistente) {
-      await pedidos_upgrade_cargo.destroy({where: {id_formando}});
+      await pedidos_upgrade_cargo.destroy({where: {id_formando: id_formador}});
       pedidoRemovido = true;
     }
 
     const data = await model.create(req.body);
 
     if(pedidoRemovido) {
-      const formando = await utilizador.findOne({where: {id_utilizador: id_formando}});
+      const formando = await utilizador.findOne({where: {id_utilizador: id_formador}});
       if (formando && formando.email) {
         await enviarEmailUpgradeAprovado(formando.email);
       }  

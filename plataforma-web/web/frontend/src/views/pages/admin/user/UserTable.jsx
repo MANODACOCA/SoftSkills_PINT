@@ -237,8 +237,7 @@ const UsersTables = () => {
         }
     }
 
-    const HandleType = async (id, utilizador, id_pedido = null) => {
-        console.log(id_pedido);
+    const HandleType = async (id, utilizador) => {
         const result = await Swal.fire({
             title: `Tem a certeza que deseja alterar ${utilizador} para formador?`,
             icon: 'warning',
@@ -286,9 +285,6 @@ const UsersTables = () => {
                     const formador = adicionarFormador.value.descricao_formador;
                     await update_utilizador(id, {isformador: true});
                     await create_formadores({id_formador: id, descricao_formador: formador});
-                    if(id_pedido) {
-                        await delete_pedidos_upgrade(id_pedido);
-                    }
                     FetchPedidos();
                     FetchUtilizadores();
                     Swal.fire({
@@ -373,7 +369,7 @@ const UsersTables = () => {
             <div className="d-flex">
                 <button className='btn btn-outline-primary me-2'
                     disabled={item.id_formando_formando.id_formando_utilizador.isformador}
-                    onClick={() => HandleType( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util, item.id_pedidos_upgrade_cargo)}>
+                    onClick={() => HandleType( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
                     <i className='bi bi-person-fill-up fs-5'></i>
                 </button>
                 <button className="btn btn-outline-success me-2" onClick={() => HistoryUser( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
