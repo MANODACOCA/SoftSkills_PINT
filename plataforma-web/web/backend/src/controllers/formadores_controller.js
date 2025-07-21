@@ -4,7 +4,7 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).formadores;
 const controllers = {};
-const { utilizador } = require('../models/init-models')(sequelize);
+const { utilizador, pedidos_upgrade_cargo} = require('../models/init-models')(sequelize);
 
 
 
