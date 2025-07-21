@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 import { FaRegClock } from "react-icons/fa";
 import { GrUpgrade } from "react-icons/gr";
 import { alterarPassword, update_utilizador } from '../../../api/utilizador_axios';
+import { get_pedidos_upgrade } from '../../../api/pedidos_upgrade_cargo_axios';
+
 
 const InfoProfile = () => {
     const { user, setUser, roles, activeRole, setActiveRole } = useUser();
@@ -14,6 +16,11 @@ const InfoProfile = () => {
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
     const [jaPediuUpgrade, setJaPediuUpgrade] = useState(false);
+
+    const verifyPedidoUpgrade = async () => {
+            const data = await get_pedidos_upgrade(user.id_utilizador);
+            setJaPediuUpgrade(data);
+    };
 
     const handleChangeRole = (role) => {
         if (role !== activeRole) {
@@ -101,6 +108,7 @@ const InfoProfile = () => {
 
     useEffect(() => {
         setIs2FAEnabled(user?.auten2fat || false);
+        verifyPedidoUpgrade();
     }, [user]);
 
     console.log("TESTE", roles);
@@ -197,7 +205,7 @@ const InfoProfile = () => {
                             <div className="mb-3 d-flex align-items-center justify-content-between">
                                 <h4 className="m-0">Queres ser Formador?</h4>
                                 {jaPediuUpgrade ? (
-                                    <button className="btn btn-success d-flex align-items-center gap-2">
+                                    <button className="btn btn-success d-flex align-items-center gap-2" disabled>
                                         <FaRegClock />
                                         Pedido Enviado
                                     </button>
