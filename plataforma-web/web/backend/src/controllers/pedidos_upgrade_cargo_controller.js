@@ -1,5 +1,7 @@
+const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
+const { enviarEmailUpgradeRecusado } = require("../utils/enviarEmail");
 const { utilizador, formandos } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).pedidos_upgrade_cargo;
 const controllers = {};
@@ -63,7 +65,12 @@ controllers.create = async (req, res) => {
 controllers.delete = async (req, res) => {
     try {
         const { id } = req.params;
+        const pedido = await model.findOne({ where: { id_pedidos_upgrade_cargo: id }});
         const deleted = await model.destroy({ where: { id_pedidos_upgrade_cargo: id } });
+        const user = await utilizador.findOne({ where: { id_utilizador: pedido.id_formando } });
+        if (user?.email) {
+            await enviarEmailUpgradeRecusado(user.email);
+        }
         if (deleted) {
             res.status(200).json({ msg: 'Pedido de upgrade de cargo apagado/a com sucesso!' });
         } else {

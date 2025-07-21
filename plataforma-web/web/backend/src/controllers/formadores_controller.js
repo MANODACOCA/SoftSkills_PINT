@@ -1,7 +1,7 @@
 
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const { enviarEmailUpgradeAprovado, enviarEmailUpgradeAtribuido, enviarEmailUpgradeRecusado } = require("../utils/enviarEmail");
+const { enviarEmailUpgradeAprovado, enviarEmailUpgradeAtribuido } = require("../utils/enviarEmail");
 const model = initModels(sequelize).formadores;
 const controllers = {};
 const { utilizador, pedidos_upgrade_cargo } = require('../models/init-models')(sequelize);
@@ -95,16 +95,16 @@ controllers.update = async (req, res) => {
 
 controllers.delete = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deleted = await model.destroy({ where: { id_formador: id } });
+    const {id} = req.params;
+    const deleted = await model.destroy({where:{id_formador: id}});
     const user = await utilizador.findOne({ where: { id_utilizador: id } });
     if (user?.email) {
       await enviarEmailUpgradeRecusado(user.email);
     }
-    if (deleted) {
-      res.status(200).json({ msg: 'Formador apagado/a com sucesso!' });
-    } else {
-      res.status(404).json({ erro: 'Formador não foi apagado/a!' });
+    if(deleted){
+      res.status(200).json({msg:'Formador apagado/a com sucesso!'});
+    }else{
+      res.status(404).json({erro:'Formador não foi apagado/a!'});
     }
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao apagar o/a Formador!', desc: err.message });
