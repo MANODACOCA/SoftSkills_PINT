@@ -2,7 +2,7 @@
 
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const { enviarEmailUpgradeAprovado } = require("../utils/enviarEmail");
+const { enviarEmailUpgradeAprovado, enviarEmailUpgradeAtribuido } = require("../utils/enviarEmail");
 const model = initModels(sequelize).formadores;
 const controllers = {};
 const { utilizador, pedidos_upgrade_cargo} = require('../models/init-models')(sequelize);
@@ -62,6 +62,11 @@ controllers.create = async (req,res)=>{
       const user = await utilizador.findOne({ where: { id_utilizador: id_formador } });
       if (user?.email) {
         await enviarEmailUpgradeAprovado(user.email);
+      }
+    } else {
+      const user = await utilizador.findOne({ where: { id_utilizador: id_formador } });
+      if (user?.email) {
+        await enviarEmailUpgradeAtribuido(user.email);
       }
     }
 

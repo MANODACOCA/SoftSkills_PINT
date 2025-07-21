@@ -198,6 +198,31 @@ async function enviarEmailUpgradeAprovado(destinatario) {
   });
 }
 
+async function enviarEmailUpgradeAtribuido(destinatario) {
+  return transporter.sendMail({
+    from: '"SoftSkills" <softskills.service@gmail.com>',
+    to: destinatario,
+    subject: '🧑‍🏫 Acesso como Formador Atribuído',
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #1976d2; text-align: center;">🧑‍🏫 Acesso como Formador</h2>
+          <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+            Exmo.(a) Utilizador(a),<br><br>
+            Informamos que o seu perfil foi <strong style="color: #1976d2;">atualizado</strong> com permissões de <strong>Formador</strong> na plataforma <strong style="color: #1976d2;">SoftSkills</strong>.<br><br>
+            Esta alteração foi efetuada diretamente pela nossa equipa com base no seu perfil e contributo para a comunidade.<br><br>
+            Já pode aceder à área reservada aos Formadores e começar a partilhar os seus conteúdos com os restantes utilizadores.<br><br>
+            Em caso de dúvidas ou questões, não hesite em contactar-nos através do email <a href="mailto:softskills.service@gmail.com" style="color: #1976d2; text-decoration: none;">softskills.service@gmail.com</a>.<br><br>
+            Com os melhores cumprimentos,<br>
+            <strong>Equipa SoftSkills</strong> 💼
+          </p>
+        </div>
+      </div>
+    `
+  });
+}
+
+
 module.exports = { 
   sendEmail, 
   enviarEmailVerificaCode,
@@ -205,5 +230,6 @@ module.exports = {
   enviarEmailUserBloqueado, 
   enviarEmailUserDesbloqueado,
   enviarEmailUpgradeRecusado,
-  enviarEmailUpgradeAprovado
+  enviarEmailUpgradeAprovado,
+  enviarEmailUpgradeAtribuido
 };
