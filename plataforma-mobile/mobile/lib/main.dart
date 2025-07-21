@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:mobile/Firebase/firebase_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,9 +11,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await FirebaseAPI().initNotifications();
+
   debugPrintGlobalKeyedWidgetLifecycle = true;
   await initializeDateFormatting('pt_PT', null);
   await authService.init();
+
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
@@ -31,7 +32,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // construído uma única vez
   late final GoRouter _router = rotas;
 
   @override
