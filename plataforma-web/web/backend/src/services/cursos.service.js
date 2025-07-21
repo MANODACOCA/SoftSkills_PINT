@@ -645,7 +645,7 @@ async function getCursoWithAllInfoOneCourse(id) {
 
 async function createCursoCompleto(reqBody) {
   try {
-    const { cursoData, sincrono: sincronoBody } = reqBody;
+    const { cursoData, sincrono: sincronoBody, id_curso_anterior } = reqBody;
 
     const curso = await cursos.create(cursoData);
     
@@ -661,6 +661,13 @@ async function createCursoCompleto(reqBody) {
         id_curso_sincrono: curso.id_curso,
         id_formador: sincronoBody.id_formador,
         numero_vagas: sincronoBody.numero_vagas,
+      });
+    }
+
+    if (id_curso_anterior) {
+      await clonarConteudoDeCurso({
+        idCursoAnterior: id_curso_anterior,
+        idCursoNovo: curso.id_curso,
       });
     }
 
@@ -904,6 +911,57 @@ async function getCursoCompletoComAulasEMaterial(id) {
     }
 }
 
+async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
+  try {
+    const aulasAnteriores = await aulas.findAll({
+      where: { id_curso: idCursoAnterior },
+      include: [
+        {
+          model: conteudos,
+          as: "conteudos",
+        }
+      ]
+    });
+
+    for (const aula of aulasAnteriores) {
+      const novaAula = await aulas.create({
+        id_curso: idCursoNovo,
+        nome_aula: aula.nome_aula,
+        data_aula: aula.data_aula,
+        caminho_url: aula.caminho_url,
+        tempo_duracao: aula.tempo_duracao,
+      });
+
+      for (const conteudo of aula.conteudos || []) {
+        await conteudos.create({
+          id_aula: novaAula.id_aula,
+          id_formato: conteudo.id_formato,
+          nome_conteudo: conteudo.nome_conteudo,
+          conteudo: conteudo.conteudo,
+        });
+      }
+    }
+
+    const materiais = await material_apoio.findAll({
+      where: { id_curso: idCursoAnterior },
+    });
+
+    for (const material of materiais) {
+      await material_apoio.create({
+        id_curso: idCursoNovo,
+        id_formato: material.id_formato,
+        nome_material: material.nome_material,
+        conteudo: material.conteudo,
+      });
+    }
+
+    console.log(`Conteúdo do curso ${idCursoAnterior} clonado para curso ${idCursoNovo}`);
+  } catch (error) {
+    console.error("Erro ao clonar conteúdo do curso:", error);
+    throw error;
+  }
+}
+
 module.exports = {
   getCursosDiponiveisParaInscricao,
   getCourseDestaqueSincrono,
@@ -923,4 +981,5 @@ module.exports = {
   getCursosLecionadosTerminadosService,
   getCursosLecionadosAtualmenteService,
   getCursoCompletoComAulasEMaterial,
+  clonarConteudoDeCurso,
 };
