@@ -57,6 +57,7 @@ controllers.create = async (req, res) => {
         const user = await utilizador.findOne({where: {id_utilizador: pedido.id_formando}});
         const topico = await topico.findOne({where: {id_topico: id_topico}});
         await enviarEmailForumAprovado(user.email, topico.nome_topico);
+        await pedido.destroy();
       }
       res.status(201).json(data);
     } else {

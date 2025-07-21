@@ -159,7 +159,6 @@ const ForumTable = () => {
                 const id_topico = data.id_topico;
                 const data_criacao_cp = new Date();
                 await create_conteudos_partilhado({id_topico, data_criacao_cp, id_pedido});
-                await delete_pedido_forum(id_pedido);
                 await FetchPedidos();
                 Swal.fire({
                     title: 'Sucesso',
