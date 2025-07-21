@@ -122,7 +122,7 @@ const Foruns = () => {
     if (result.isConfirmed && result.value) {
       try{
         const topico = result.value;
-        create_pedido_forum({novo_forum: topico, id_formando: user.id_utilizador});
+        await create_pedido_forum({novo_forum: topico, id_formando: user.id_utilizador});
         Swal.fire({
           icon: 'success',
           title: 'Pedido submetido com sucesso!',
