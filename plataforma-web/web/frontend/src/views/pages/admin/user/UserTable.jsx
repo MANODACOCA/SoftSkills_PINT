@@ -214,6 +214,21 @@ const UsersTables = () => {
         );
     }
 
+    const renderActionsPedidos = (item) => {
+        return(
+            <div className="d-flex">
+                <button className='btn btn-outline-primary me-2'
+                    disabled={item.isformador}
+                    onClick={() => HandleType( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
+                    <i className='bi bi-person-fill-up fs-5'></i>
+                </button>
+                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
+                    <i className="bi bi-person-lines-fill fs-5"></i>
+                </button>
+            </div>
+        );
+    }
+
     const HandleCreate = async () => {
         const result = await Swal.fire({
             title: "Tem certeza que deseja adicionar utilizador?",
@@ -369,7 +384,7 @@ const UsersTables = () => {
                 />    
             )}
             { opcao === 'Pedidos' && (
-                <Table columns={ColumnsUpgradeUser} data={pedidos} />
+                <Table columns={ColumnsUpgradeUser} data={pedidos} actions={renderActionsPedidos}/>
             )}
             
         </div>
