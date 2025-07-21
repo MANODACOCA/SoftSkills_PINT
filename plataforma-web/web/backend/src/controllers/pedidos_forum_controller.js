@@ -1,5 +1,6 @@
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
+const { enviarEmailForumRecusado } = require("../utils/enviarEmail");
 const { utilizador, formandos } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).pedidos_novos_foruns;
 const controllers = {};
@@ -48,7 +49,12 @@ controllers.create = async (req, res) => {
 controllers.delete = async (req, res) => {
     try {
         const { id } = req.params;
+        const pedido = await model.findOne({ where: { id_pedidos_novos_foruns: id }});
         const deleted = await model.destroy({ where: { id_pedidos_novos_foruns: id } });
+        const user = await utilizador.findOne({ where: { id_utilizador: pedido.id_formando } });
+        if (user?.email) {
+            await enviarEmailForumRecusado(user.email);
+        }
         if (deleted) {
             res.status(200).json({ msg: 'Pedido de forum apagado/a com sucesso!' });
         } else {

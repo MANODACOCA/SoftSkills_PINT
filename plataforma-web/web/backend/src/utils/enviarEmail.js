@@ -161,7 +161,7 @@ async function enviarEmailUpgradeRecusado(destinatario) {
     html: `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
         <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
-          <h2 style="color: #d32f2f; text-align: center;">❌ Pedido Recusado</h2>
+          <h2 style="color: #d32f2f; text-align: center;">❌ Pedido de Upgrade Recusado</h2>
           <p style="font-size: 16px; color: #333333; line-height: 1.6;">
             Exmo.(a) Utilizador(a),<br><br>
             Lamentamos informar que o seu <strong>pedido para se tornar Formador</strong> na plataforma <strong style="color: #1976d2;">SoftSkills</strong> foi <strong style="color: #d32f2f;">recusado</strong> após análise.<br><br>
@@ -183,7 +183,7 @@ async function enviarEmailUpgradeAprovado(destinatario) {
     html: `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
         <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
-          <h2 style="color: #388e3c; text-align: center;">🎉 Pedido Aprovado</h2>
+          <h2 style="color: #388e3c; text-align: center;">🎉 Pedido de Upgrade Aprovado</h2>
           <p style="font-size: 16px; color: #333333; line-height: 1.6;">
             Exmo.(a) Utilizador(a),<br><br>
             Temos o prazer de informar que o seu <strong>pedido para se tornar Formador</strong> na plataforma <strong style="color: #1976d2;">SoftSkills</strong> foi <strong style="color: #388e3c;">aprovado</strong> com sucesso.<br><br>
@@ -222,6 +222,50 @@ async function enviarEmailUpgradeAtribuido(destinatario) {
   });
 }
 
+async function enviarEmailForumAprovado(destinatario, nomeForum) {
+  return transporter.sendMail({
+    from: '"SoftSkills" <softskills.service@gmail.com>',
+    to: destinatario,
+    subject: '✅ Pedido de Fórum Aprovado',
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #388e3c; text-align: center;">✅ Pedido de Fórum Aprovado</h2>
+          <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+            Exmo.(a) Utilizador(a),<br><br>
+            Informamos que o seu pedido para criação do fórum <strong style="color: #1976d2;">"${nomeForum}"</strong> foi <strong style="color: #388e3c;">aprovado</strong> e já se encontra disponível na plataforma <strong>SoftSkills</strong>.<br><br>
+            Agradecemos o seu contributo para o crescimento e partilha de conhecimento da comunidade.<br><br>
+            Em caso de dúvidas, poderá contactar-nos através do email <a href="mailto:softskills.service@gmail.com" style="color: #1976d2; text-decoration: none;">softskills.service@gmail.com</a>.<br><br>
+            <strong>Equipa SoftSkills</strong> 💼
+          </p>
+        </div>
+      </div>
+    `
+  });
+}
+
+async function enviarEmailForumRecusado(destinatario, nomeForum) {
+  return transporter.sendMail({
+    from: '"SoftSkills" <softskills.service@gmail.com>',
+    to: destinatario,
+    subject: '❌ Pedido de Fórum Recusado',
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #d32f2f; text-align: center;">❌ Pedido de Fórum Recusado</h2>
+          <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+            Exmo.(a) Utilizador(a),<br><br>
+            Lamentamos informar que o seu pedido para criação do fórum <strong style="color: #1976d2;">"${nomeForum}"</strong> na plataforma <strong>SoftSkills</strong> foi <strong style="color: #d32f2f;">recusado</strong>.<br><br>
+            Esta decisão foi tomada com base nos critérios editoriais da plataforma.<br><br>
+            Caso deseje obter mais informações, poderá entrar em contacto com a nossa equipa através do email <a href="mailto:softskills.service@gmail.com" style="color: #1976d2; text-decoration: none;">softskills.service@gmail.com</a>.<br><br>
+            Agradecemos o seu interesse e participação.<br><br>
+            <strong>Equipa SoftSkills</strong> 💼
+          </p>
+        </div>
+      </div>
+    `
+  });
+}
 
 module.exports = { 
   sendEmail, 
@@ -231,5 +275,7 @@ module.exports = {
   enviarEmailUserDesbloqueado,
   enviarEmailUpgradeRecusado,
   enviarEmailUpgradeAprovado,
-  enviarEmailUpgradeAtribuido
+  enviarEmailUpgradeAtribuido,
+  enviarEmailForumAprovado,
+  enviarEmailForumRecusado
 };
