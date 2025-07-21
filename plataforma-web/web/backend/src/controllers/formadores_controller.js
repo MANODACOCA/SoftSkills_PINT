@@ -97,10 +97,7 @@ controllers.delete = async (req, res) => {
   try {
     const {id} = req.params;
     const deleted = await model.destroy({where:{id_formador: id}});
-    const user = await utilizador.findOne({ where: { id_utilizador: id } });
-    if (user?.email) {
-      await enviarEmailUpgradeRecusado(user.email);
-    }
+    
     if(deleted){
       res.status(200).json({msg:'Formador apagado/a com sucesso!'});
     }else{
