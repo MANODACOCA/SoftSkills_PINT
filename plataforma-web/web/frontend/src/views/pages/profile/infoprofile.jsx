@@ -7,7 +7,7 @@ import { FaRegClock } from "react-icons/fa";
 import { GrUpgrade } from "react-icons/gr";
 import { MdOutlineCancel } from "react-icons/md";
 import { alterarPassword, update_utilizador } from '../../../api/utilizador_axios';
-import { get_pedidos_upgrade, create_pedidos_upgrade, delete_pedidos_upgrade } from '../../../api/pedidos_upgrade_cargo_axios';
+import { get_pedidos_upgrade, create_pedidos_upgrade, cancel_pedidos_upgrade } from '../../../api/pedidos_upgrade_cargo_axios';
 
 
 const InfoProfile = () => {
@@ -30,6 +30,17 @@ const InfoProfile = () => {
             setJaPediuUpgrade(data);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleCancel = async () => {
+        setErrorUpgrade('');
+        try {
+            await cancel_pedidos_upgrade(user.id_utilizador);
+            setJaPediuUpgrade(false);
+        } catch (error) {
+            setErrorUpgrade('Não foi possivel cancelar upgrade! Por favor, tente mais tarde.');
+            console.error("Erro ao cancelar pedido de upgrade", error);
         }
     };
 
@@ -244,7 +255,7 @@ const InfoProfile = () => {
                                                     <FaRegClock />
                                                     Pedido Enviado
                                                 </button>
-                                                <button onClick={handleDelete} className="btn btn-danger d-flex align-items-center gap-2">
+                                                <button onClick={handleCancel} className="btn btn-danger d-flex align-items-center gap-2">
                                                          <MdOutlineCancel />
                                                 </button>
                                             </div>
