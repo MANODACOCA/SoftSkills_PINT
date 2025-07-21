@@ -16,6 +16,7 @@ router.get('/delete',(req, res) => {
 router.get('/list',controller.list);
 router.get('/get/:id',controller.get);
 router.post('/create',controller.create);
+router.delete('/cancel/:id',controller.cancel);
 router.delete('/delete/:id',controller.delete);
 
 module.exports = router;

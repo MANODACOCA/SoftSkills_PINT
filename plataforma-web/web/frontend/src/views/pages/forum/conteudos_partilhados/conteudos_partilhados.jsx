@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
-import { GrUpgrade } from "react-icons/gr";
+import { LuCircleFadingPlus } from "react-icons/lu";
 import {
   list_conteudos_partilhado
 } from '../../../../api/conteudos_partilhado_axios';
@@ -148,8 +148,8 @@ const Foruns = () => {
         <div className="d-flex align-items-center gap-4 w-50">
           <h1 className="mb-0">Fóruns</h1>
           <button onClick={HandleCreatePedido} className="btn btn-primary d-flex align-items-center gap-2">
-              <GrUpgrade />
-              Pedir novo tópico
+              <LuCircleFadingPlus />
+              Pedir novo forúm
           </button>
           <input
             type="text"
