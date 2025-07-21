@@ -54,10 +54,17 @@ controllers.create = async (req, res) => {
 
       if(id_pedido) {
         const pedido = await pedidos_novos_foruns.findOne({where: {id_pedidos_novos_foruns: id_pedido}});
+        console.log('TESTE 11');
         const user = await utilizador.findOne({where: {id_utilizador: pedido.id_formando}});
+        console.log('TESTE 22');
         const topico = await topico.findOne({where: {id_topico: id_topico}});
-        await enviarEmailForumAprovado(user.email, topico.nome_topico);
+        console.log('TESTE 33');
+        if (user?.email) {
+          await enviarEmailForumAprovado(user.email, topico.nome_topico);
+        }
+        console.log('TESTE 44');
         await pedido.destroy();
+        console.log('TESTE 55');
       }
       res.status(201).json(data);
     } else {
