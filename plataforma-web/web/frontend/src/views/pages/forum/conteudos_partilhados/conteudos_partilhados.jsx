@@ -1,9 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
+import { GrUpgrade } from "react-icons/gr";
 import {
   list_conteudos_partilhado
 } from '../../../../api/conteudos_partilhado_axios';
+import Swal from "sweetalert2";
+import { create_pedido_forum } from "../../../../api/pedidos_forum_axios";
+import { useUser } from "../../../../utils/useUser";
 
 const Foruns = () => {
   const [foruns, setForuns] = useState([]);
@@ -11,6 +15,7 @@ const Foruns = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [pesquisa, setPesquisa] = useState('');
+  const { user } = useUser();
 
   const navigate = useNavigate();
 
@@ -89,12 +94,63 @@ const Foruns = () => {
     );
   };
 
+  const HandleCreatePedido = async () => { 
+    const result = await Swal.fire({
+      title: 'Pedido de novo tópico',
+      html: `
+        <label for="topico" class="form-label">Nome do tópico</label>
+        <input id="topico" class="form-control" placeholder="Insira o nome do tópico">
+      `, 
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: 'Submeter Pedido',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn btn-success me-2',
+        cancelButton: 'btn btn-danger'
+      },
+      buttonsStyling: false,
+      preConfirm: () => {
+        const topico = document.getElementById('topico').value.trim();
+        if (!topico) {
+          Swal.showValidationMessage('O nome do tópico é obrigatório');
+          return;
+        }
+        return topico;
+      }
+    })
+    if (result.isConfirmed && result.value) {
+      try{
+        const topico = result.value;
+        create_pedido_forum({novo_forum: topico, id_formando: user.id_utilizador});
+        Swal.fire({
+          icon: 'success',
+          title: 'Pedido submetido com sucesso!',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }catch (error) {
+        console.log('Erro ao criar pedido');
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro',
+          text: 'Não foi possível enviar o pedido.',
+          confirmButtonText: 'Fechar'
+        });
+      }
+    }
+  }
+
   return (
     <div>
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 gap-3">
 
         <div className="d-flex align-items-center gap-4 w-50">
           <h1 className="mb-0">Fóruns</h1>
+          <button onClick={HandleCreatePedido} className="btn btn-primary d-flex align-items-center gap-2">
+              <GrUpgrade />
+              Pedir novo tópico
+          </button>
           <input
             type="text"
             className="form-control w-50"

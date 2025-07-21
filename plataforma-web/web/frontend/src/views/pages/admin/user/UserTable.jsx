@@ -339,14 +339,13 @@ const UsersTables = () => {
             } catch(error){
                 Swal.fire({
                     title: 'Erro', 
-                    text: 'Ocorreu um erro ao atualizar o utilizador', 
+                    text: 'Ocorreu um erro ao eliminar predido', 
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {
                         confirmButton: 'btn btn-danger',
                     },
                 });
-                console.error("Erro ao bloquear utilizador", error);
             }
         }
     }
@@ -433,7 +432,7 @@ const UsersTables = () => {
                 />    
             )}
             { opcao === 'Pedidos' && (
-                <Table columns={ColumnsUpgradeUser} data={pedidos} actions={renderActionsPedidos}/>
+                <Table columns={ColumnsUpgradeUser} data={pedidos} actions={renderActionsPedidos} />
             )}
             
         </div>
