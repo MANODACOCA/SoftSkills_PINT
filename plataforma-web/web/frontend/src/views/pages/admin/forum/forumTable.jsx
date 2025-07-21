@@ -3,9 +3,12 @@ import { useEffect, useState } from "react";
 import { columnsForum } from "../../../components/table/ColumnsForum";
 import { list_conteudos_partilhado, delete_conteudos_partilhado } from "../../../../api/conteudos_partilhado_axios";
 import { useNavigate } from "react-router-dom";
+import { list_pedidos_forum } from "../../../../api/pedidos_forum_axios";
+import { columnsPedidosForum } from "../../../components/table/ColumnsPedidosForum";
 
 const ForumTable = () => {
     const [forum, setforum] = useState([]);
+    const [pedidos, setPedidos] = useState([]);
     const opcoes = ['Fóruns', 'Pedidos'];
     const [opcao, setOpcao] = useState("Fóruns");
     const navigate = useNavigate();
@@ -13,6 +16,7 @@ const ForumTable = () => {
     const handleChangeOpcao = (a) => {
         setOpcao(a);
     };
+
     const FetchForum = async () => {
         try {
             const response = await list_conteudos_partilhado();
@@ -23,21 +27,18 @@ const ForumTable = () => {
         }
     }
 
-    const HandleEdit = (id) => {
-        navigate(`/forum/editar/${id}`);
-    };
-
-    const HandleDelete = async (id) => {
-        try{
-            await delete_conteudos_partilhado(id);
-            FetchForum();
-        } catch(error){
-            console.error("Erro ao eliminar conteudo partilhado", error);
+    const FetchPedidos = async () => {
+        try {
+            const response = await list_pedidos_forum();
+            setPedidos(response);
+        } catch (error) {
+            console.log('Erro ao encontrar Pedidos de forum');
         }
     }
 
     useEffect(() => {
         FetchForum();
+        FetchPedidos();
     },[])
 
     return(
@@ -68,7 +69,7 @@ const ForumTable = () => {
                <Table columns={columnsForum} data={forum} /> 
             )}
             {opcao === 'Pedidos' && (
-               <div>olaaaa</div>
+               <Table columns={columnsPedidosForum} data={pedidos} />
             )}
         </div>
     );
