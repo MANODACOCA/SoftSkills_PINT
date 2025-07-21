@@ -5,8 +5,9 @@ import { useUser } from '../../../utils/useUser';
 import Swal from 'sweetalert2';
 import { FaRegClock } from "react-icons/fa";
 import { GrUpgrade } from "react-icons/gr";
+import { MdOutlineCancel } from "react-icons/md";
 import { alterarPassword, update_utilizador } from '../../../api/utilizador_axios';
-import { get_pedidos_upgrade, create_pedidos_upgrade } from '../../../api/pedidos_upgrade_cargo_axios';
+import { get_pedidos_upgrade, create_pedidos_upgrade, delete_pedidos_upgrade } from '../../../api/pedidos_upgrade_cargo_axios';
 
 
 const InfoProfile = () => {
@@ -134,7 +135,7 @@ const InfoProfile = () => {
         }
     }, [user]);
 
-    
+
     if (loading) return (
         <div className="mt-4">
             <div className="text-center py-5">
@@ -238,10 +239,17 @@ const InfoProfile = () => {
                                 {!loading && (
                                     <>
                                         {jaPediuUpgrade ? (
-                                            <button className="btn btn-success d-flex align-items-center gap-2" disabled>
-                                                <FaRegClock />
-                                                Pedido Enviado
-                                            </button>
+                                            <>  <div className='d-flex gap-2'>
+                                                <button className="btn btn-success d-flex align-items-center gap-2" disabled>
+                                                    <FaRegClock />
+                                                    Pedido Enviado
+                                                </button>
+                                                <button onClick={handleDelete} className="btn btn-danger d-flex align-items-center gap-2">
+                                                         <MdOutlineCancel />
+                                                </button>
+                                            </div>
+
+                                            </>
                                         ) : (
                                             <button onClick={makeUpgradeFormador} className="btn btn-primary d-flex align-items-center gap-2">
                                                 <GrUpgrade />
