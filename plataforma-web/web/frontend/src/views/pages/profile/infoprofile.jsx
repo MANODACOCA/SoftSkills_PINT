@@ -1,11 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, use } from 'react';
+import { Spinner } from 'react-bootstrap';
 import './profile.css';
 import { useUser } from '../../../utils/useUser';
 import Swal from 'sweetalert2';
 import { FaRegClock } from "react-icons/fa";
 import { GrUpgrade } from "react-icons/gr";
 import { alterarPassword, update_utilizador } from '../../../api/utilizador_axios';
-import { get_pedidos_upgrade } from '../../../api/pedidos_upgrade_cargo_axios';
+import { get_pedidos_upgrade, create_pedidos_upgrade } from '../../../api/pedidos_upgrade_cargo_axios';
 
 
 const InfoProfile = () => {
@@ -15,11 +16,31 @@ const InfoProfile = () => {
     const [repNovapassword, setRepNovapassword] = useState('');
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+
+    const [loading, setLoading] = useState(true);
     const [jaPediuUpgrade, setJaPediuUpgrade] = useState(false);
+    const [errorUpgrade, setErrorUpgrade] = useState('');
+
 
     const verifyPedidoUpgrade = async () => {
+        setLoading(true);
+        try {
             const data = await get_pedidos_upgrade(user.id_utilizador);
             setJaPediuUpgrade(data);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const makeUpgradeFormador = async () => {
+        setErrorUpgrade('');
+        try {
+            await create_pedidos_upgrade(user.id_utilizador);
+            verifyPedidoUpgrade();
+        } catch (error) {
+            setErrorUpgrade('Não foi possivel pedir upgrade! Por favor, tente mais tarde.');
+            console.error("Erro ao criar pedido de upgrade", error);
+        }
     };
 
     const handleChangeRole = (role) => {
@@ -107,11 +128,21 @@ const InfoProfile = () => {
     };
 
     useEffect(() => {
-        setIs2FAEnabled(user?.auten2fat || false);
-        verifyPedidoUpgrade();
+        if (user) {
+            verifyPedidoUpgrade();
+            setIs2FAEnabled(user?.auten2fat || false);
+        }
     }, [user]);
 
-    console.log("TESTE", roles);
+    
+    if (loading) return (
+        <div className="mt-4">
+            <div className="text-center py-5">
+                <Spinner animation="border" variant="primary" />
+            </div>
+        </div>
+    );
+
     return (
         <div>
             {successMessage && <div className="alert alert-success mt-2">{successMessage}</div>}
@@ -204,27 +235,34 @@ const InfoProfile = () => {
 
                             <div className="mb-3 d-flex align-items-center justify-content-between">
                                 <h4 className="m-0">Queres ser Formador?</h4>
-                                {jaPediuUpgrade ? (
-                                    <button className="btn btn-success d-flex align-items-center gap-2" disabled>
-                                        <FaRegClock />
-                                        Pedido Enviado
-                                    </button>
-                                ) : (
-                                    <button className="btn btn-primary d-flex align-items-center gap-2">
-                                        <GrUpgrade />
-                                        Pedir Evolução
-                                    </button>
+                                {!loading && (
+                                    <>
+                                        {jaPediuUpgrade ? (
+                                            <button className="btn btn-success d-flex align-items-center gap-2" disabled>
+                                                <FaRegClock />
+                                                Pedido Enviado
+                                            </button>
+                                        ) : (
+                                            <button onClick={makeUpgradeFormador} className="btn btn-primary d-flex align-items-center gap-2">
+                                                <GrUpgrade />
+                                                Pedir Evolução
+                                            </button>
+                                        )}
+                                    </>
                                 )}
                             </div>
-                            <small className="text-muted">
-                                Se queres lecionar cursos, clica para solicitar a evolução da tua conta para Formador.
-                            </small>
+                            <div className="d-flex align-items-center justify-content-between">
+                                <small className="text-muted">
+                                    Se queres lecionar cursos, clica para solicitar a evolução da tua conta para Formador.
+                                </small>
+                                {errorUpgrade && <p className="text-danger text-end mb-2">{errorUpgrade}</p>}
+                            </div>
                         </>
                     )}
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
