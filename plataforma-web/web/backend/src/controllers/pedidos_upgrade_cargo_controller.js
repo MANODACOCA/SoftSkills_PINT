@@ -65,7 +65,7 @@ controllers.create = async (req, res) => {
 controllers.delete = async (req, res) => {
     try {
         const { id } = req.params;
-        const pedido = model.findOne({ where: { id_pedidos_upgrade_cargo: id }});
+        const pedido = await model.findOne({ where: { id_pedidos_upgrade_cargo: id }});
         const deleted = await model.destroy({ where: { id_pedidos_upgrade_cargo: id } });
         const user = await utilizador.findOne({ where: { id_utilizador: pedido.id_formando } });
         if (user?.email) {
