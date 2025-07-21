@@ -1,10 +1,14 @@
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
+const pedidos_novos_foruns = require("../models/pedidos_novos_foruns");
+const topico = require("../models/topico");
+const utilizador = require("../models/utilizador");
 const model = initModels(sequelize).conteudos_partilhado;
 const models = initModels(sequelize);
 const controllers = {};
 
 const conteudoPartilhadoService = require('../services/conteudo_partilhado.service');
+const { enviarEmailForumAprovado } = require("../utils/enviarEmail");
 
 
 controllers.list = async (req, res) => {
@@ -45,7 +49,15 @@ controllers.get = async (req, res) => {
 controllers.create = async (req, res) => {
   try {
     if (req.body) {
-      const data = await model.create(req.body);
+      const { id_topico, data_criacao_cp, id_pedido } = req.body;
+      const data = await model.create({id_topico, data_criacao_cp});
+
+      if(id_pedido) {
+        const pedido = await pedidos_novos_foruns.findOne({where: {id_pedidos_novos_foruns: id_pedido}});
+        const user = await utilizador.findOne({where: {id_utilizador: pedido.id_formando}});
+        const topico = await topico.findOne({where: {id_topico: id_topico}});
+        await enviarEmailForumAprovado(user.email, topico.nome_topico);
+      }
       res.status(201).json(data);
     } else {
       res.status(400).json({ erro: 'Erro ao criar Conteudo Partilhado!', desc: 'Corpo do pedido esta vazio.' });
