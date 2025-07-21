@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { columnsForum } from "../../../components/table/ColumnsForum";
 import { list_conteudos_partilhado, delete_conteudos_partilhado } from "../../../../api/conteudos_partilhado_axios";
 import { useNavigate } from "react-router-dom";
+import { list_pedidos_forum } from "../../../../api/pedidos_forum_axios";
+import { columnsPedidosForum } from "../../../components/table/ColumnsPedidosForum";
 
 const ForumTable = () => {
     const [forum, setforum] = useState([]);
@@ -27,7 +29,7 @@ const ForumTable = () => {
 
     const FetchPedidos = async () => {
         try {
-            const response = list;
+            const response = await list_pedidos_forum();
             setPedidos(response);
         } catch (error) {
             console.log('Erro ao encontrar Pedidos de forum');
@@ -67,7 +69,7 @@ const ForumTable = () => {
                <Table columns={columnsForum} data={forum} /> 
             )}
             {opcao === 'Pedidos' && (
-               <div>olaaaa</div>
+               <Table columns={columnsPedidosForum} data={pedidos} />
             )}
         </div>
     );

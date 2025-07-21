@@ -6,12 +6,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { create_formadores } from "../../../../api/formadores_axios";
 import { debounce } from 'lodash';
+import { list_pedidos_upgrade } from "../../../../api/pedidos_upgrade_cargo_axios";
+import { ColumnsUpgradeUser } from "../../../components/table/ColumnsUpgradeUser";
 
 const UsersTables = () => {
     const [user, setuser] = useState([]);
+    const opcoes = ['Utilizadores', 'Pedidos'];
+    const [opcao, setOpcao] = useState("Utilizadores");
+    const [pedidos, setPedidos] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
+
+    const handleChangeOpcao = (a) => {
+        setOpcao(a);
+    };
 
     const FetchUtilizadores = async() => {
         try {
@@ -19,6 +28,15 @@ const UsersTables = () => {
             setuser(response.data);
         } catch(error) {
             console.log('Erro ao aceder a tabela de utilizador');
+        }
+    }
+
+    const FetchPedidos = async () => {
+        try {
+            const response = await list_pedidos_upgrade();
+            setPedidos(response);
+        } catch (error) {
+            console.log('Erro ao encontrar pedido de update formador');
         }
     }
 
@@ -309,20 +327,51 @@ const UsersTables = () => {
         FetchUtilizadores();
     }, [searchTerm])
 
+    useEffect(() => {
+        FetchPedidos();
+    },[])
+
     return(
         <div>
-            <Table 
-                columns={columnsUtilizadores} 
-                data={user ?? []} 
-                actions={renderActions} 
-                onAddClick={{callback: HandleCreate, label: 'Utilizadores'}}
-                pesquisa={true}
-                searchTerm={searchTerm}
-                onSearchChange={(value) => {
-                    setSearchTerm(value);
-                    debouncedNavigate(value);
-                }} 
-            />
+            <div className="mb-3 d-flex justify-content-between">
+                <div>
+                    {opcao === 'Utilizadores' && (
+                    <h3>Lista utilizadores</h3>
+                    )}
+                    {opcao === 'Pedidos' && (
+                    <h3>Pedidos de upgrade formador</h3>
+                    )}
+                </div>
+                <div className="btn-group w-25">
+                    {opcoes.map((o, index) => (
+                    <button
+                        key={index}
+                        className={`btn ${opcao === o ? 'btn-active' : 'btn-outline-custom'}`}
+                        onClick={() => handleChangeOpcao(o)}
+                    >
+                        {o.charAt(0).toUpperCase() + o.slice(1)}
+                    </button>
+                    ))}
+                </div>    
+            </div>
+            { opcao === 'Utilizadores' && (
+                <Table 
+                    columns={columnsUtilizadores} 
+                    data={user ?? []} 
+                    actions={renderActions} 
+                    onAddClick={{callback: HandleCreate, label: 'Utilizadores'}}
+                    pesquisa={true}
+                    searchTerm={searchTerm}
+                    onSearchChange={(value) => {
+                        setSearchTerm(value);
+                        debouncedNavigate(value);
+                    }} 
+                />    
+            )}
+            { opcao === 'Pedidos' && (
+                <Table columns={ColumnsUpgradeUser} data={pedidos} />
+            )}
+            
         </div>
     );
 }
