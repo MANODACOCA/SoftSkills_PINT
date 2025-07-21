@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 const ForumTable = () => {
     const [forum, setforum] = useState([]);
+    const [pedidos, setPedidos] = useState([]);
     const opcoes = ['Fóruns', 'Pedidos'];
     const [opcao, setOpcao] = useState("Fóruns");
     const navigate = useNavigate();
@@ -13,6 +14,7 @@ const ForumTable = () => {
     const handleChangeOpcao = (a) => {
         setOpcao(a);
     };
+
     const FetchForum = async () => {
         try {
             const response = await list_conteudos_partilhado();
@@ -23,21 +25,18 @@ const ForumTable = () => {
         }
     }
 
-    const HandleEdit = (id) => {
-        navigate(`/forum/editar/${id}`);
-    };
-
-    const HandleDelete = async (id) => {
-        try{
-            await delete_conteudos_partilhado(id);
-            FetchForum();
-        } catch(error){
-            console.error("Erro ao eliminar conteudo partilhado", error);
+    const FetchPedidos = async () => {
+        try {
+            const response = list;
+            setPedidos(response);
+        } catch (error) {
+            console.log('Erro ao encontrar Pedidos de forum');
         }
     }
 
     useEffect(() => {
         FetchForum();
+        FetchPedidos();
     },[])
 
     return(
