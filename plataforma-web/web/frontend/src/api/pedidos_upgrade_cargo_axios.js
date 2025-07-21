@@ -33,6 +33,16 @@ export const create_pedidos_upgrade = async (data) => {
     }
 };
 
+export const cancel_pedidos_upgrade = async (id) => {
+    try {
+        const response = await axios.delete(`${API_URL}/cancel/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao excluir pedido de upgrade de cargo!');
+        throw error;
+    }
+};
+
 export const delete_pedidos_upgrade = async (id) => {
     try {
         const response = await axios.delete(`${API_URL}/delete/${id}`);

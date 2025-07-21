@@ -10,6 +10,7 @@ import { create_pedido_forum } from "../../../../api/pedidos_forum_axios";
 import { useUser } from "../../../../utils/useUser";
 
 const Foruns = () => {
+  const activeRole = localStorage.getItem('activeRole');
   const [foruns, setForuns] = useState([]);
   const [ordenar, setOrdenar] = useState('Mais Recentes');
   const [loading, setLoading] = useState(false);
@@ -94,13 +95,13 @@ const Foruns = () => {
     );
   };
 
-  const HandleCreatePedido = async () => { 
+  const HandleCreatePedido = async () => {
     const result = await Swal.fire({
       title: 'Pedido de novo tópico',
       html: `
         <label for="topico" class="form-label">Nome do tópico</label>
         <input id="topico" class="form-control" placeholder="Insira o nome do tópico">
-      `, 
+      `,
       focusConfirm: false,
       showCancelButton: true,
       confirmButtonText: 'Submeter Pedido',
@@ -120,16 +121,16 @@ const Foruns = () => {
       }
     })
     if (result.isConfirmed && result.value) {
-      try{
+      try {
         const topico = result.value;
-        await create_pedido_forum({novo_forum: topico, id_formando: user.id_utilizador});
+        await create_pedido_forum({ novo_forum: topico, id_formando: user.id_utilizador });
         Swal.fire({
           icon: 'success',
           title: 'Pedido submetido com sucesso!',
           timer: 2000,
           showConfirmButton: false
         });
-      }catch (error) {
+      } catch (error) {
         console.log('Erro ao criar pedido');
         Swal.fire({
           icon: 'error',
@@ -147,10 +148,12 @@ const Foruns = () => {
 
         <div className="d-flex align-items-center gap-4 w-50">
           <h1 className="mb-0">Fóruns</h1>
-          <button onClick={HandleCreatePedido} className="btn btn-primary d-flex align-items-center gap-2">
+          {activeRole != 'admin' && (
+            <button onClick={HandleCreatePedido} className="btn btn-primary d-flex align-items-center gap-2">
               <LuCircleFadingPlus />
               Pedir novo forúm
-          </button>
+            </button>
+          )}
           <input
             type="text"
             className="form-control w-50"
