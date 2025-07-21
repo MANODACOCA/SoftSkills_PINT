@@ -153,5 +153,57 @@ async function enviarEmailUserDesbloqueado(destinatario) {
   });
 }
 
+async function enviarEmailUpgradeRecusado(destinatario) {
+  return transporter.sendMail({
+    from: '"SoftSkills" <softskills.service@gmail.com>',
+    to: destinatario,
+    subject: '❌ Pedido Recusado - Upgrade para Formador',
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #d32f2f; text-align: center;">❌ Pedido Recusado</h2>
+          <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+            Exmo.(a) Utilizador(a),<br><br>
+            Lamentamos informar que o seu <strong>pedido para se tornar Formador</strong> na plataforma <strong style="color: #1976d2;">SoftSkills</strong> foi <strong style="color: #d32f2f;">recusado</strong> após análise.<br><br>
+            Caso pretenda obter mais informações ou esclarecer algum ponto, poderá entrar em contacto com a nossa equipa através do email <a href="mailto:softskills.service@gmail.com" style="color: #1976d2; text-decoration: none;">softskills.service@gmail.com</a>.<br><br>
+            Agradecemos o seu interesse e compreensão.<br><br>
+            <strong>Equipa SoftSkills</strong> 💼
+          </p>
+        </div>
+      </div>
+    `
+  });
+}
 
-module.exports = { sendEmail, enviarEmailVerificaCode, enviarEmailConfirmacaoInscricao, enviarEmailUserBloqueado, enviarEmailUserDesbloqueado };
+async function enviarEmailUpgradeAprovado(destinatario) {
+  return transporter.sendMail({
+    from: '"SoftSkills" <softskills.service@gmail.com>',
+    to: destinatario,
+    subject: '✅ Pedido Aprovado - Acesso como Formador',
+    html: `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f8; padding: 40px 20px;">
+        <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #388e3c; text-align: center;">🎉 Pedido Aprovado</h2>
+          <p style="font-size: 16px; color: #333333; line-height: 1.6;">
+            Exmo.(a) Utilizador(a),<br><br>
+            Temos o prazer de informar que o seu <strong>pedido para se tornar Formador</strong> na plataforma <strong style="color: #1976d2;">SoftSkills</strong> foi <strong style="color: #388e3c;">aprovado</strong> com sucesso.<br><br>
+            A partir deste momento, já poderá aceder à área reservada aos Formadores e começar a partilhar o seu conhecimento com a nossa comunidade.<br><br>
+            Em caso de dúvidas, estamos disponíveis em <a href="mailto:softskills.service@gmail.com" style="color: #1976d2; text-decoration: none;">softskills.service@gmail.com</a>.<br><br>
+            Bem-vindo à nossa equipa!<br><br>
+            <strong>Equipa SoftSkills</strong> 💼
+          </p>
+        </div>
+      </div>
+    `
+  });
+}
+
+module.exports = { 
+  sendEmail, 
+  enviarEmailVerificaCode,
+  enviarEmailConfirmacaoInscricao, 
+  enviarEmailUserBloqueado, 
+  enviarEmailUserDesbloqueado,
+  enviarEmailUpgradeRecusado,
+  enviarEmailUpgradeAprovado
+};
