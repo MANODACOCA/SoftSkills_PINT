@@ -767,7 +767,7 @@ async function getCursosLecionadosTerminadosService(userId) {
   }
 }
 
-async function getCursosLecionadosAtualmenteService(userId, search, data_inicio, data_fim) {
+async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_curso, data_fim_curso) {
   try {
     const whereCurso = {
       data_fim_curso: { [Op.gte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')") }
