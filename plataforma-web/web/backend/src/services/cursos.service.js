@@ -931,9 +931,9 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
       const novaAula = await aulas.create({
         id_curso: idCursoNovo,
         nome_aula: aula.nome_aula,
-        data_aula: aula.data_aula,
+        //data_aula: aula.data_aula,
         caminho_url: aula.caminho_url,
-        tempo_duracao: aula.tempo_duracao,
+        //tempo_duracao: aula.tempo_duracao,
       });
      console.log(`✅ Aula clonada com ID: ${novaAula.id_aula}`);
       for (const conteudo of aula.conteudos || []) {
