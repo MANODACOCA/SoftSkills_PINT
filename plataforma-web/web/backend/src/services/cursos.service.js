@@ -743,12 +743,12 @@ async function verifyInscription(userId, cursoId) {
   }
 }
 
-async function getCursosLecionadosTerminadosService(userId) {
+async function getCursosLecionadosTerminadosService(userId, search, data_inicio_curso, data_fim_curso) {
   try {
     const today = new Date().toISOString().split('T')[0];
 
     const whereCurso = {
-      data_fim_curso: { [Op.gte]: Sequelize.literal(`DATE(NOW() AT TIME ZONE 'Europe/Lisbon')`) }
+      data_fim_curso: { [Op.lte]: Sequelize.literal(`DATE(NOW() AT TIME ZONE 'Europe/Lisbon')`) }
     };
 
     if (search) {

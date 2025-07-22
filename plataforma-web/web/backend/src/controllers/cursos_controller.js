@@ -272,7 +272,10 @@ controllers.verificarInscricao = async (req,res) => {
 controllers.getCursosLecionadosTerminados = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const cursosLecionados = await cursosService.getCursosLecionadosTerminadosService(userId);
+    const search = req.query.search;
+    const data_inicio = req.query.data_inicio;
+    const data_fim = req.query.data_fim;
+    const cursosLecionados = await cursosService.getCursosLecionadosTerminadosService(userId, search, data_inicio, data_fim);
     if (cursosLecionados){
       res.status(200).json(cursosLecionados);
     } else if (!cursosLecionados) {
