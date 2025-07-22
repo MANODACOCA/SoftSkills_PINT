@@ -292,6 +292,8 @@ controllers.getCursosLecionadosAtualmente = async (req, res) => {
     const cursosLecionados = await cursosService.getCursosLecionadosAtualmenteService(userId);
 
     const cursosFiltrados = cursosLecionados.filter(item => {
+      if (!item.id_curso_sincrono_curso) return false;
+
       const curso = {
         ...item.id_curso_sincrono_curso,
         id_formador: item.id_formador,
@@ -302,16 +304,18 @@ controllers.getCursosLecionadosAtualmente = async (req, res) => {
       return filtrarCursos([curso], { search, data_inicio_curso, data_fim_curso }).length > 0;
     });
 
-    if (cursosFiltrados.length > 0){
+    if (cursosFiltrados.length > 0) {
       res.status(200).json(cursosFiltrados);
     } else {
-      res.status(404).json({erro: 'Nao foram encontrados cursos lecionados atualmente'});
+      res.status(404).json({ erro: 'Não foram encontrados cursos lecionados atualmente' });
     }
-    
+
   } catch (error) {
-    res.status(500).json({erro: 'Erro a procurar cursos lecionados atualmente'});
+    console.error('Erro no controller getCursosLecionadosAtualmente:', error);
+    res.status(500).json({ erro: 'Erro a procurar cursos lecionados atualmente', detalhe: error.message });
   }
-}
+};
+
 
 controllers.getCursoNovaOcorrenciaCompleto = async (req, res) => {
   try{
