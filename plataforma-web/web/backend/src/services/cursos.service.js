@@ -652,7 +652,7 @@ async function createCursoCompleto(reqBody) {
     if (curso) {
       await ocorrenciaService.createNovaOcorrencia({
         idCursoNovo: curso.id_curso,
-        idCursoAnterior: reqBody.id_curso_anterior || null,
+        idCursoAnterior: id_curso_anterior || null,
       });
     }
 
@@ -955,7 +955,6 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
       });
     }
 
-    console.log(`Conteúdo do curso ${idCursoAnterior} clonado para curso ${idCursoNovo}`);
   } catch (error) {
     console.error("Erro ao clonar conteúdo do curso:", error);
     throw error;
