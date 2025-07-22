@@ -769,8 +769,10 @@ async function getCursosLecionadosTerminadosService(userId) {
 
 async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_curso, data_fim_curso) {
   try {
+    const today = new Date().toISOString().split('T')[0];
+
     const whereCurso = {
-      data_fim_curso: { [Op.gte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')") }
+      data_fim_curso: { [Op.gte]: Sequelize.literal(`DATE(NOW() AT TIME ZONE 'Europe/Lisbon')`) }
     };
 
     if (search) {
@@ -800,8 +802,11 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
     }
 
     if (data_inicio_curso && data_fim_curso) {
-      whereCurso.data_inicio_curso = { [Op.gte]: new Date(data_inicio_curso) };
-      whereCurso.data_fim_curso = { [Op.lte]: new Date(data_fim_curso) };
+      whereCurso[Op.and] = whereCurso[Op.and] || [];
+      whereCurso[Op.and].push({
+        data_inicio_curso: { [Op.lte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.gte]: new Date(data_fim_curso) }
+      });
     }
 
     const cursoLecionado = await sincrono.findAll({
@@ -812,9 +817,7 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
         {
           model: cursos,
           as: 'id_curso_sincrono_curso',
-          where: {
-            ...whereCurso
-          },
+          where: whereCurso,
         }
       ]
     });
