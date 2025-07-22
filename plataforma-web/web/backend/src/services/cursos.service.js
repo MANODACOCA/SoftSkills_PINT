@@ -922,50 +922,52 @@ async function getCursoCompletoComAulasEMaterial(id) {
 
 async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo, ignorarAulas = false }) {
   try {
-    const aulasAnteriores = await aulas.findAll({
-      where: { id_curso: idCursoAnterior },
-      include: [
-        {
-          model: conteudos,
-          as: "conteudos",
-        }
-      ]
-    });
-
-    for (const aula of aulasAnteriores) {
-    
-      let tempo_duracao_final = null;
-
-      if (aula.caminho_url && isYoutubeLink(aula.caminho_url)) {
-        try {
-          const { hours, minutes, seconds } = await getVideoDuration(aula.caminho_url);
-          tempo_duracao_final =
-            `${String(hours).padStart(2, '0')}:` +
-            `${String(minutes).padStart(2, '0')}:` +
-            `${String(seconds).padStart(2, '0')}`;
-        } catch (err) {
-          console.warn(`Falha ao obter duração do vídeo de ${aula.nome_aula}: ${err.message}`);
-        }
-      }
-
-      const novaAula = await aulas.create({
-        id_curso: idCursoNovo,
-        nome_aula: aula.nome_aula,
-        data_aula: aula.data_aula,
-        caminho_url: aula.caminho_url,
-        tempo_duracao: tempo_duracao_final,
+    if (!ignorarAulas) {
+      const aulasAnteriores = await aulas.findAll({
+        where: { id_curso: idCursoAnterior },
+        include: [
+          {
+            model: conteudos,
+            as: "conteudos",
+          }
+        ]
       });
 
-      for (const conteudo of aula.conteudos || []) {
-        await conteudos.create({
-          id_aula: novaAula.id_aula,
-          id_formato: conteudo.id_formato,
-          nome_conteudo: conteudo.nome_conteudo,
-          conteudo: conteudo.conteudo,
+      for (const aula of aulasAnteriores) {
+      
+        let tempo_duracao_final = null;
+
+        if (aula.caminho_url && isYoutubeLink(aula.caminho_url)) {
+          try {
+            const { hours, minutes, seconds } = await getVideoDuration(aula.caminho_url);
+            tempo_duracao_final =
+              `${String(hours).padStart(2, '0')}:` +
+              `${String(minutes).padStart(2, '0')}:` +
+              `${String(seconds).padStart(2, '0')}`;
+          } catch (err) {
+            console.warn(`Falha ao obter duração do vídeo de ${aula.nome_aula}: ${err.message}`);
+          }
+        }
+
+        const novaAula = await aulas.create({
+          id_curso: idCursoNovo,
+          nome_aula: aula.nome_aula,
+          data_aula: aula.data_aula,
+          caminho_url: aula.caminho_url,
+          tempo_duracao: tempo_duracao_final,
         });
+
+        for (const conteudo of aula.conteudos || []) {
+          await conteudos.create({
+            id_aula: novaAula.id_aula,
+            id_formato: conteudo.id_formato,
+            nome_conteudo: conteudo.nome_conteudo,
+            conteudo: conteudo.conteudo,
+          });
+        }
       }
     }
-
+    
     const materiais = await material_apoio.findAll({
       where: { id_curso: idCursoAnterior },
     });
