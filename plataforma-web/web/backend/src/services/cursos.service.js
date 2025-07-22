@@ -921,8 +921,6 @@ async function getCursoCompletoComAulasEMaterial(id) {
 
 async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
   try {
-    console.log(`🔁 A iniciar clonagem do curso ${idCursoAnterior} → ${idCursoNovo}`);
-
     const aulasAnteriores = await aulas.findAll({
       where: { id_curso: idCursoAnterior },
       include: [
@@ -933,11 +931,8 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
       ]
     });
 
-    console.log(`📚 Aulas encontradas: ${aulasAnteriores.length}`);
-
     for (const aula of aulasAnteriores) {
-      console.log(`➡️ Clonando aula: ${aula.nome_aula}`);
-
+    
       let tempo_duracao_final = null;
 
       if (aula.caminho_url && isYoutubeLink(aula.caminho_url)) {
@@ -948,7 +943,7 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
             `${String(minutes).padStart(2, '0')}:` +
             `${String(seconds).padStart(2, '0')}`;
         } catch (err) {
-          console.warn(`⚠️ Falha ao obter duração do vídeo de ${aula.nome_aula}: ${err.message}`);
+          console.warn(`Falha ao obter duração do vídeo de ${aula.nome_aula}: ${err.message}`);
         }
       }
 
@@ -960,24 +955,19 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
         tempo_duracao: tempo_duracao_final,
       });
 
-      console.log(`✅ Aula clonada com ID: ${novaAula.id_aula}`);
       for (const conteudo of aula.conteudos || []) {
-             console.log(`   ↪️ Clonando conteúdo: ${conteudo.nome_conteudo}`);
         await conteudos.create({
           id_aula: novaAula.id_aula,
           id_formato: conteudo.id_formato,
           nome_conteudo: conteudo.nome_conteudo,
           conteudo: conteudo.conteudo,
         });
-            console.log(`   ✅ Conteúdo criado.`);
       }
     }
 
     const materiais = await material_apoio.findAll({
       where: { id_curso: idCursoAnterior },
     });
-
-    console.log(`📎 Materiais de apoio encontrados: ${materiais.length}`);
 
     for (const material of materiais) {
       await material_apoio.create({
@@ -986,9 +976,7 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
         nome_material: material.nome_material,
         conteudo: material.conteudo,
       });
-            console.log(`✅ Material criado.`);
     }
-console.log(`🎉 Clonagem de conteúdo concluída com sucesso!`);
   } catch (error) {
     console.error("Erro ao clonar conteúdo do curso:", error);
     throw error;
