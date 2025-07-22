@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import Spinner from 'react-bootstrap/Spinner';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import '../login/Login.css';
 import './twofa.css';
@@ -22,6 +23,7 @@ const TwoFA = () => {
     const [error, setError] = useState('');
     const [verificationCode, setVerificationCode] = useState(['', '', '', '', '']);
     const [timeLeft, setTimeLeft] = useState(60);//1min para colocar o código
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e, index) => {
         const value = e.target.value;
@@ -69,12 +71,15 @@ const TwoFA = () => {
 
     const handleResendCode = async () => {
         setError('');
+        setLoading(true);
         try {
             await resendCodigo(email);
             setTimeLeft(60);
         } catch (error) {
             console.error('Erro ao reenviar código:', error);
             setError('Erro ao enviar código de autenticação. Por favor tente mais tarde!');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -129,11 +134,11 @@ const TwoFA = () => {
                         </button>
                     )}
                     {timeLeft === 0 && (
-                        <button onClick={handleResendCode} className="login-button social mt-2">
+                        <button onClick={handleResendCode} className="login-button social mt-2" disabled={loading}>
                             Reenviar código
+                            {loading && (<Spinner size='sm' className='ms-2' />)}
                         </button>
                     )}
-
                 </div>
             </form>
         </div>
