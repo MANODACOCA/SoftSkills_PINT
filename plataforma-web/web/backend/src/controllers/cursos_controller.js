@@ -291,7 +291,7 @@ controllers.getCursosLecionadosAtualmente = async (req, res) => {
 
     const cursosLecionados = await cursosService.getCursosLecionadosAtualmenteService(userId);
 
-    const filtrados = filtrarCursos(cursosLecionados, {search, data_inicio_curso, data_fim_curso});
+    const filtrados = filtrarCursos(cursosLecionados.id_curso_sincrono_curso, {search, data_inicio_curso, data_fim_curso});
 
 
     if (filtrados){
