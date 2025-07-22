@@ -296,7 +296,7 @@ controllers.getCursosLecionadosAtualmente = async (req, res) => {
 
     if (filtrados){
       res.status(200).json(filtrados);
-    } else if (!cursosLecionados) {
+    } else if (!filtrados) {
       res.status(404).json({erro: 'Nao foram encontrados cursos lecionados atualmente'});
     }
     
