@@ -917,36 +917,36 @@ async function getCursoCompletoComAulasEMaterial(id) {
 async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
   try {
      console.log(`🔁 A iniciar clonagem do curso ${idCursoAnterior} → ${idCursoNovo}`);
-    const aulasAnteriores = await aulas.findAll({
-      where: { id_curso: idCursoAnterior },
-      include: [
-        {
-          model: conteudos,
-          as: "conteudos",
-        }
-      ]
-    });
- console.log(`📚 Aulas encontradas: ${aulasAnteriores.length}`);
-    for (const aula of aulasAnteriores) {
-      const novaAula = await aulas.create({
-        id_curso: idCursoNovo,
-        nome_aula: aula.nome_aula,
-        //data_aula: aula.data_aula,
-        caminho_url: aula.caminho_url,
-        //tempo_duracao: aula.tempo_duracao,
-      });
-     console.log(`✅ Aula clonada com ID: ${novaAula.id_aula}`);
-      for (const conteudo of aula.conteudos || []) {
-             console.log(`   ↪️ Clonando conteúdo: ${conteudo.nome_conteudo}`);
-        await conteudos.create({
-          id_aula: novaAula.id_aula,
-          id_formato: conteudo.id_formato,
-          nome_conteudo: conteudo.nome_conteudo,
-          conteudo: conteudo.conteudo,
-        });
-            console.log(`   ✅ Conteúdo criado.`);
-      }
-    }
+//     const aulasAnteriores = await aulas.findAll({
+//       where: { id_curso: idCursoAnterior },
+//       include: [
+//         {
+//           model: conteudos,
+//           as: "conteudos",
+//         }
+//       ]
+//     });
+//  console.log(`📚 Aulas encontradas: ${aulasAnteriores.length}`);
+//     for (const aula of aulasAnteriores) {
+//       const novaAula = await aulas.create({
+//         id_curso: idCursoNovo,
+//         nome_aula: aula.nome_aula,
+//         //data_aula: aula.data_aula,
+//         caminho_url: aula.caminho_url,
+//         //tempo_duracao: aula.tempo_duracao,
+//       });
+//      console.log(`✅ Aula clonada com ID: ${novaAula.id_aula}`);
+//       for (const conteudo of aula.conteudos || []) {
+//              console.log(`   ↪️ Clonando conteúdo: ${conteudo.nome_conteudo}`);
+//         await conteudos.create({
+//           id_aula: novaAula.id_aula,
+//           id_formato: conteudo.id_formato,
+//           nome_conteudo: conteudo.nome_conteudo,
+//           conteudo: conteudo.conteudo,
+//         });
+//             console.log(`   ✅ Conteúdo criado.`);
+//       }
+//     }
 
     const materiais = await material_apoio.findAll({
       where: { id_curso: idCursoAnterior },
