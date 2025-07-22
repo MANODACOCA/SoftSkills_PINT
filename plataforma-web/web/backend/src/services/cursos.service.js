@@ -778,8 +778,8 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
     if (search) {
       const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-      const searchFilter = Sequelize.where(
-        Sequelize.fn('unaccent', Sequelize.col(`unaccent("id_curso_sincrono_curso"."nome_curso") ILIKE '%${unaccentedSearch}%'`)),
+      const searchFilter = Sequelize.literal(
+        `unaccent("id_curso_sincrono_curso"."nome_curso") ILIKE '%${unaccentedSearch}%'`
       );
 
       whereCurso[Op.and] = whereCurso[Op.and] || [];
