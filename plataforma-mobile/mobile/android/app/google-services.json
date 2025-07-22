@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "335002191995",
-    "project_id": "pint-83a31",
-    "storage_bucket": "pint-83a31.firebasestorage.app"
+    "project_number": "695425925082",
+    "project_id": "pint-5f0b7",
+    "storage_bucket": "pint-5f0b7.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:335002191995:android:2528357d2b870d99a9bade",
+        "mobilesdk_app_id": "1:695425925082:android:80710fb02e396dd47f0ae3",
         "android_client_info": {
           "package_name": "com.example.mobile"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDAD5BdDQQENm9Xzf7N6PPqggs5CkWIHZs"
+          "current_key": "AIzaSyBlo6PDAIFxqp0TyvlXyCGBnEcDJJ4BLxk"
         }
       ],
       "services": {
