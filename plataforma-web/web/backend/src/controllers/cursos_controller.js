@@ -300,10 +300,9 @@ controllers.getCursosLecionadosAtualmente = async (req, res) => {
 
     const filtrados = filtrarCursos(cursosBase, {search, data_inicio_curso, data_fim_curso});
 
-
-    if (filtrados){
+    if (filtrados.length > 0){
       res.status(200).json(filtrados);
-    } else if (!filtrados) {
+    } else {
       res.status(404).json({erro: 'Nao foram encontrados cursos lecionados atualmente'});
     }
     
