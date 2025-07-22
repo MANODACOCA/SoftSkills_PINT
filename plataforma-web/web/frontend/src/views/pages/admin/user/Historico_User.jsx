@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { Tab, Tabs } from 'react-bootstrap';
 import './Historico_User.css';
 import { get_utilizador } from "../../../../api/utilizador_axios";
+import FeaturedCourseCard from "../../../components/card_highlight/CardHighlight";
 
 const HistoryUser = () => {
     const {id} = useParams();
@@ -151,22 +152,15 @@ const HistoryUser = () => {
                                 ) : (
                                     cursosInscrito.map((cu, index) => {
                                         return (
-                                            <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
-                                                <img
-                                                    src={cu.id_curso_curso.imagem}
-                                                    onError={(e) => {
-                                                        e.target.onerror = null;
-                                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_curso.nome_curso)}&background=random&bold=true`;
-                                                    }}
-                                                    className="rounded-start-4 highlights-images"
-                                                    alt="imagem curso"
-                                                />
-                                                <div className="card-body d-flex flex-column justify-content-between">
-                                                    <div>
-                                                        <h5 className="mb-2">{cu.id_curso_curso.nome_curso}</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <FeaturedCourseCard
+                                                key={`${id}-${cu.id_curso_curso.id_curso}`}
+                                                course={cu.id_curso_curso}
+                                                userId={id}
+                                                showDescription={false}
+                                                showFormador={false}
+                                                variant="enrolled"
+                                                verCurso={false}
+                                            /> 
                                         );
                                     })
                                 )}  
@@ -183,22 +177,15 @@ const HistoryUser = () => {
                                 ) : (
                                     cursosTerminados.map((cu, index) => {
                                         return(
-                                            <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
-                                                <img
-                                                    src={cu.imagem}
-                                                    onError={(e) => {
-                                                        e.target.onerror = null;
-                                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.nome_curso)}&background=random&bold=true`;
-                                                    }}
-                                                    className="rounded-start-4 highlights-images"
-                                                    alt="imagem curso"
-                                                />
-                                                <div className="card-body d-flex flex-column justify-content-between">
-                                                    <div>
-                                                        <h5 className="mb-2">{cu.nome_curso}</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <FeaturedCourseCard
+                                                key={`${id}-terminado-${cu.id_curso}`}
+                                                course={cu}
+                                                userId={id}
+                                                showDescription={false}
+                                                showFormador={false}
+                                                variant="evaluation"
+                                                verCurso={false}
+                                            />
                                         );
                                     })
                                     )}
@@ -215,22 +202,15 @@ const HistoryUser = () => {
                             ) : (
                                 cursosLecionadosAtualmente.map((cu, index) => {
                                     return(
-                                        <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
-                                            <img
-                                                src={cu.id_curso_sincrono_curso.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`}
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`;
-                                                }}
-                                                className="rounded-start-4 highlights-images"
-                                                alt="imagem curso"
-                                            />
-                                            <div className="card-body d-flex flex-column justify-content-between">
-                                                <div>
-                                                    <h5 className="mb-2">{cu.id_curso_sincrono_curso.nome_curso}</h5>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <FeaturedCourseCard
+                                            key={`teaching-${cu.id_curso_sincrono_curso.id_curso}`}
+                                            course={cu.id_curso_sincrono_curso}
+                                            userId={id}
+                                            showDescription={false}
+                                            showFormador={false}
+                                            variant="teaching-now"
+                                            verCurso={false}
+                                        />
                                     );
                                 })
                             )}
@@ -248,22 +228,15 @@ const HistoryUser = () => {
                             ) : (
                                 cursosLecionadosTerminados.map((cu, index) => {
                                     return(
-                                        <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
-                                            <img
-                                                src={cu.id_curso_sincrono_curso.imagem}
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`;
-                                                }}
-                                                className="rounded-start-4 highlights-images"
-                                                alt="imagem curso"
-                                            />
-                                            <div className="card-body d-flex flex-column justify-content-between">
-                                                <div>
-                                                    <h5 className="mb-2">{cu.id_curso_sincrono_curso.nome_curso}</h5>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <FeaturedCourseCard
+                                            key={`taught-${cu.id_curso_sincrono_curso.id_curso}`}
+                                            course={cu.id_curso_sincrono_curso}
+                                            userId={id}
+                                            showDescription={false}
+                                            showFormador={false}
+                                            variant="teaching-finished"
+                                            verCurso={false}
+                                        />   
                                     );
                                 })
                             )}

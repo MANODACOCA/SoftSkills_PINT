@@ -5,6 +5,7 @@ const initModels = require("../models/init-models");
 const model = initModels(sequelize).cursos;
 const controllers = {};
 const cursosService = require('../services/cursos.service');
+const { filtrarCursos } = require("../utils/filtros_cursos");
 const { criarNotifacoesGenerica } = require("../utils/SendNotification");
 
 
@@ -286,12 +287,19 @@ controllers.getCursosLecionadosTerminados = async (req, res) => {
 controllers.getCursosLecionadosAtualmente = async (req, res) => {
   try {
     const userId = req.params.userId;
+    const { search, data_inicio_curso, data_fim_curso } = req.query;
+
     const cursosLecionados = await cursosService.getCursosLecionadosAtualmenteService(userId);
-    if (cursosLecionados){
-      res.status(200).json(cursosLecionados);
+
+    const filtrados = filtrarCursos(cursosLecionados, {search, data_inicio_curso, data_fim_curso});
+
+
+    if (filtrados){
+      res.status(200).json(filtrados);
     } else if (!cursosLecionados) {
       res.status(404).json({erro: 'Nao foram encontrados cursos lecionados atualmente'});
     }
+    
   } catch (error) {
     res.status(500).json({erro: 'Erro a procurar cursos lecionados atualmente'});
   }

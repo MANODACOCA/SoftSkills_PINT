@@ -12,7 +12,8 @@ const FeaturedCourseCard = ({
   showFormador = true,
   customMessage = null,
   variant = '',
-  onRemoveFavorite = null, }) => {
+  onRemoveFavorite = null, 
+  verCurso = true}) => {
   const navigate = useNavigate();
 
   if (!course) return null;
@@ -26,12 +27,13 @@ const FeaturedCourseCard = ({
     const now = new Date();
     const dataInicioCurso = parseDateWithoutTimezone(course.data_inicio_curso)
 
-
     if (now >= dataInicioCurso) {
       if (location.pathname.startsWith('/my/cursos/inscritos')) {
         navigate(`/my/cursos/inscritos/curso/${course.id_curso}?tab=aulas`);
       } else if (location.pathname.startsWith('/my/cursos/terminados')) {
         navigate(`/my/cursos/terminados/curso/${course.id_curso}?tab=aulas`);
+      } else if (location.pathname.startsWith('/formador/cursos')) {
+        navigate(`/formador/cursos/${course.id_curso}`);
       }
     } else {
       navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
@@ -144,7 +146,7 @@ const FeaturedCourseCard = ({
             {course.tipo === 'sincrono' &&
               <span className="fw-semibold">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
             }
-            {course.tipo === 'sincrono' && (
+            {course.tipo === 'sincrono' && verCurso === true && (
               <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
                 Ver Curso
               </button>
@@ -154,7 +156,6 @@ const FeaturedCourseCard = ({
       </div>
     );
   }
-
 
 
   //CARD PARA CURSOS INSCRITOS 
@@ -236,14 +237,61 @@ const FeaturedCourseCard = ({
                 ' '
               )}
             </p>
-            <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
-              Ver Curso
-            </button>
+            { verCurso === true && (
+              <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
+                Ver Curso
+              </button>
+            )}
+            
           </div>
         </div>
       </div>
     );
   }
+
+
+  //CARD PARA CURSOS LECIONAR
+  if (variant === 'teaching-now' || variant === 'teaching-finished') {
+    const tipoBadge = course.issincrono === true ? 'Síncrono' : 'Assíncrono';
+
+    return (
+      <div className="card flex-row rounded-4 card-highlight card-admin">
+        <img
+          src={img || `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(course.nome_curso)}&background=random&bold=true`;
+          }}
+          alt="Foto do curso"
+          className="rounded-start-4 highlight-image"
+        />
+        <div className="card-body d-flex flex-column justify-content-between w-100">
+          <div className="d-flex justify-content-between align-items-start">
+            <h4 className="card-title mb-2">{course.nome_curso}</h4>
+            <span className="badge rounded-pill px-3 py-2 no-pointer custom-badge">
+              {tipoBadge}
+            </span>
+          </div>
+
+          <div className="d-flex justify-content-between align-items-center text-muted mb-2">
+            <p className="mb-0">
+              <FaCalendarAlt className="me-2" />
+              {formatDayMonthYear(course.data_inicio_curso)} - {formatDayMonthYear(course.data_fim_curso)}
+            </p>
+          </div>
+
+          <div className="d-flex justify-content-end align-items-center mt-3">
+            {verCurso === true && (
+              <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
+                Ver Curso
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 
   //CARD PARA CURSOS NA HOMEPAGE
   return (
@@ -298,6 +346,7 @@ const FeaturedCourseCard = ({
       </div>
     </div>
   );
+
 };
 
 export default FeaturedCourseCard;
