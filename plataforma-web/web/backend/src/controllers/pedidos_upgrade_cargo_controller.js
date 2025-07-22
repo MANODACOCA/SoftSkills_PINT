@@ -1,5 +1,7 @@
+const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
+const { enviarEmailUpgradeRecusado } = require("../utils/enviarEmail");
 const { utilizador, formandos } = require('../models/init-models')(sequelize);
 const model = initModels(sequelize).pedidos_upgrade_cargo;
 const controllers = {};
@@ -19,7 +21,8 @@ controllers.list = async (req, res) => {
                             attributes: [
                                 [sequelize.col('id_utilizador'), 'id_util'],
                                 [sequelize.col('nome_utilizador'), 'nome_util'],
-                                [sequelize.col('email'), 'email']
+                                [sequelize.col('email'), 'email'],
+                                'isformador'
                             ]
                         }
                     ]
@@ -59,10 +62,30 @@ controllers.create = async (req, res) => {
     }
 };
 
+controllers.cancel = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await model.destroy({ where: { id_formando: id } });
+    
+        if (deleted) {
+            res.status(200).json({ msg: 'Pedido de upgrade de cargo cancelado/a com sucesso!' });
+        } else {
+            res.status(404).json({ erro: 'Pedido de upgrade de cargo não foi cancelado/a!' });
+        }
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao cancelar o/a pedido de upgrade de cargo!', desc: err.message });
+    }
+};
+
 controllers.delete = async (req, res) => {
     try {
         const { id } = req.params;
+        const pedido = await model.findOne({ where: { id_pedidos_upgrade_cargo: id }});
         const deleted = await model.destroy({ where: { id_pedidos_upgrade_cargo: id } });
+        const user = await utilizador.findOne({ where: { id_utilizador: pedido.id_formando } });
+        if (user?.email) {
+            await enviarEmailUpgradeRecusado(user.email);
+        }
         if (deleted) {
             res.status(200).json({ msg: 'Pedido de upgrade de cargo apagado/a com sucesso!' });
         } else {

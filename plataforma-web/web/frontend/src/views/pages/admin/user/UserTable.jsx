@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { create_formadores } from "../../../../api/formadores_axios";
 import { debounce } from 'lodash';
-import { list_pedidos_upgrade } from "../../../../api/pedidos_upgrade_cargo_axios";
+import { delete_pedidos_upgrade, list_pedidos_upgrade } from "../../../../api/pedidos_upgrade_cargo_axios";
 import { ColumnsUpgradeUser } from "../../../components/table/ColumnsUpgradeUser";
 
 const UsersTables = () => {
@@ -128,92 +128,6 @@ const UsersTables = () => {
         }
     }
 
-    const HandleType = async (id, utilizador) => {
-        const result = await Swal.fire({
-            title: `Tem a certeza que deseja alterar ${utilizador} para formador?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Sim',
-            cancelButtonText: 'Não',
-            customClass: {
-                confirmButton: 'btn btn-success me-2',
-                cancelButton: 'btn btn-danger'
-            },
-            buttonsStyling: false
-        });
-
-        if(result.isConfirmed) {
-            const adicionarFormador = await Swal.fire({
-                title: 'Adicionar Formador',
-                html: ` 
-                    <label for="nome" class="form-label">Nome de Utilizador</label>
-                    <input id="nome" class="form-control mb-3" value="${utilizador}" readonly>
-                    <label for="descricaoformador" class="form-label">Descrição do formador</label>
-                    <textarea id="descricaoFormador" class="form-control mb-3" style="min-height: 300px; max-height: 500px;" placeholder="Descrição do formador"></textarea> 
-                `,
-                preConfirm: () => {
-                    const descricaoformador = document.getElementById('descricaoFormador').value.trim();
-   
-                    if (!descricaoformador) {
-                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
-                        return;
-                    }
-
-                    return{
-                        descricao_formador: descricaoformador,
-                    };
-                },
-                showCancelButton: true,
-                confirmButtonText: 'Atualizar Utilizador',
-                cancelButtonText: 'Cancelar',
-                customClass: {
-                    confirmButton: 'btn btn-success me-2',
-                    cancelButton: 'btn btn-danger'
-                },
-            });
-            if (adicionarFormador.isConfirmed && adicionarFormador.value) {
-                try {
-                    const formador = adicionarFormador.value.descricao_formador;
-                    await update_utilizador(id, {isformador: true});
-                    await create_formadores({id_formador: id, descricao_formador: formador});
-                    FetchUtilizadores();
-                    Swal.fire({
-                        icon: "success",
-                        title: "Utilizador atualizado com sucesso!",
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
-                } catch (error) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Erro",
-                        text: "Não foi possível atualizar o utilizador",
-                        timer: 2000,
-                        showConfirmButton: false,
-                    });
-                }    
-            }     
-        }
-    }
-
-    const renderActions = (item) => {
-        return(
-            <div className="d-flex">
-                <button className='btn btn-outline-primary me-2'
-                    disabled={item.isformador}
-                    onClick={() => HandleType(item.id_utilizador, item.nome_utilizador)}>
-                    <i className='bi bi-person-fill-up fs-5'></i>
-                </button>
-                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser(item.id_utilizador, item.nome_utilizador)}>
-                    <i className="bi bi-person-lines-fill fs-5"></i>
-                </button>
-                <button className="btn btn-outline-danger" onClick={() => HandleBlock(item.id_utilizador, item.estado_utilizador)}>
-                    <i className={`bi ${item.estado_utilizador ? 'bi-unlock' :  'bi-lock'}`}></i>
-                </button>
-            </div>
-        );
-    }
-
     const HandleCreate = async () => {
         const result = await Swal.fire({
             title: "Tem certeza que deseja adicionar utilizador?",
@@ -323,6 +237,151 @@ const UsersTables = () => {
         }
     }
 
+    const HandleType = async (id, utilizador) => {
+        const result = await Swal.fire({
+            title: `Tem a certeza que deseja alterar ${utilizador} para formador?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        if(result.isConfirmed) {
+            const adicionarFormador = await Swal.fire({
+                title: 'Adicionar Formador',
+                html: ` 
+                    <label for="nome" class="form-label">Nome de Utilizador</label>
+                    <input id="nome" class="form-control mb-3" value="${utilizador}" readonly>
+                    <label for="descricaoformador" class="form-label">Descrição do formador</label>
+                    <textarea id="descricaoFormador" class="form-control mb-3" style="min-height: 300px; max-height: 500px;" placeholder="Descrição do formador"></textarea> 
+                `,
+                preConfirm: () => {
+                    const descricaoformador = document.getElementById('descricaoFormador').value.trim();
+   
+                    if (!descricaoformador) {
+                        Swal.showValidationMessage('Todos os campos são obrigatórios!');
+                        return;
+                    }
+
+                    return{
+                        descricao_formador: descricaoformador,
+                    };
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Atualizar Utilizador',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    confirmButton: 'btn btn-success me-2',
+                    cancelButton: 'btn btn-danger'
+                },
+            });
+            if (adicionarFormador.isConfirmed && adicionarFormador.value) {
+                try {
+                    const formador = adicionarFormador.value.descricao_formador;
+                    await update_utilizador(id, {isformador: true});
+                    await create_formadores({id_formador: id, descricao_formador: formador});
+                    FetchPedidos();
+                    FetchUtilizadores();
+                    Swal.fire({
+                        icon: "success",
+                        title: "Utilizador atualizado com sucesso!",
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Erro",
+                        text: "Não foi possível atualizar o utilizador",
+                        timer: 2000,
+                        showConfirmButton: false,
+                    });
+                }    
+            }     
+        }
+    }
+
+    const HandleDeletePedidos = async (id_pedido) => {
+        const result = await Swal.fire({
+            title: 'Tem a certeza que pretende eliminar pedido?',
+            text: 'O utilizador vai continuar apenas como formando!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sim',
+            cancelButtonText: 'Não',
+            customClass: {
+                confirmButton: 'btn btn-success me-2',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        });
+
+        if(result.isConfirmed){
+            try{
+                await delete_pedidos_upgrade(id_pedido);
+                await FetchPedidos();
+                Swal.fire({
+                    title: 'Sucesso',
+                    text: `O pedido foi ignorado`,
+                    icon: 'success',
+                    timer: 1500,
+                    showConfirmButton: false
+                }); 
+            } catch(error){
+                Swal.fire({
+                    title: 'Erro', 
+                    text: 'Ocorreu um erro ao eliminar predido', 
+                    icon: 'error',
+                    confirmButtonText: 'Fechar',
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                    },
+                });
+            }
+        }
+    }
+
+    const renderActions = (item) => {
+        return(
+            <div className="d-flex">
+                <button className='btn btn-outline-primary me-2'
+                    disabled={item.isformador}
+                    onClick={() => HandleType(item.id_utilizador, item.nome_utilizador)}>
+                    <i className='bi bi-person-fill-up fs-5'></i>
+                </button>
+                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser(item.id_utilizador, item.nome_utilizador)}>
+                    <i className="bi bi-person-lines-fill fs-5"></i>
+                </button>
+                <button className="btn btn-outline-danger" onClick={() => HandleBlock(item.id_utilizador, item.estado_utilizador)}>
+                    <i className={`bi ${item.estado_utilizador ? 'bi-unlock' :  'bi-lock'}`}></i>
+                </button>
+            </div>
+        );
+    }
+
+    const renderActionsPedidos = (item) => {
+        return(
+            <div className="d-flex">
+                <button className='btn btn-outline-primary me-2'
+                    disabled={item.id_formando_formando.id_formando_utilizador.isformador}
+                    onClick={() => HandleType( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
+                    <i className='bi bi-person-fill-up fs-5'></i>
+                </button>
+                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
+                    <i className="bi bi-person-lines-fill fs-5"></i>
+                </button>
+                <button className="btn btn-outline-danger me-2" onClick={() => HandleDeletePedidos(item.id_pedidos_upgrade_cargo)}>
+                    <i className="bi bi-trash fs-5"></i>
+                </button>
+            </div>
+        );
+    }
+
     useEffect(() => {
         FetchUtilizadores();
     }, [searchTerm])
@@ -369,7 +428,7 @@ const UsersTables = () => {
                 />    
             )}
             { opcao === 'Pedidos' && (
-                <Table columns={ColumnsUpgradeUser} data={pedidos} />
+                <Table columns={ColumnsUpgradeUser} data={pedidos} actions={renderActionsPedidos} />
             )}
             
         </div>
