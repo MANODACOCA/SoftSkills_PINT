@@ -676,6 +676,7 @@ console.log("📦 A criar novo curso com os dados:", cursoData);
       await clonarConteudoDeCurso({
         idCursoAnterior: id_curso_anterior,
         idCursoNovo: curso.id_curso,
+        ignorarAulas: cursoData.issincrono === true,
       });
     }
  console.log("✅ Processo completo: curso + ocorrência + conteúdo (se aplicável).");
@@ -919,7 +920,7 @@ async function getCursoCompletoComAulasEMaterial(id) {
     }
 }
 
-async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
+async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo, ignorarAulas = false }) {
   try {
     const aulasAnteriores = await aulas.findAll({
       where: { id_curso: idCursoAnterior },
