@@ -283,19 +283,49 @@ controllers.getCursosLecionadosTerminados = async (req, res) => {
   }
 }
 
+import { filtrarCursos } from '../utils/filtrarCursos'; // ajuste o caminho se necessário
+
+
 controllers.getCursosLecionadosAtualmente = async (req, res) => {
   try {
     const userId = req.params.userId;
+    const { search, data_inicio_curso, data_fim_curso } = req.query;
+
     const cursosLecionados = await cursosService.getCursosLecionadosAtualmenteService(userId);
-    if (cursosLecionados){
-      res.status(200).json(cursosLecionados);
-    } else if (!cursosLecionados) {
-      res.status(404).json({erro: 'Nao foram encontrados cursos lecionados atualmente'});
+
+    if (!cursosLecionados || cursosLecionados.length === 0) {
+      return res.status(404).json({ erro: 'Não foram encontrados cursos lecionados atualmente' });
     }
+
+    // Criar novo array com os dados do curso principal + dados externos
+    const cursosComInfo = cursosLecionados.map(item => ({
+      ...item,
+      ...item.id_curso_sincrono_curso,
+    }));
+
+    // Aplicar os filtros
+    const cursosFiltrados = filtrarCursos(cursosComInfo, {
+      search,
+      data_inicio_curso,
+      data_fim_curso,
+    });
+
+    if (cursosFiltrados.length === 0) {
+      return res.status(404).json({ erro: 'Nenhum curso corresponde aos filtros aplicados' });
+    }
+
+    // Re-associar com o objeto original (completo)
+    const resultadoFinal = cursosLecionados.filter(curso =>
+      cursosFiltrados.some(f => f.id_curso === curso.id_curso_sincrono_curso.id_curso)
+    );
+
+    res.status(200).json(resultadoFinal);
   } catch (error) {
-    res.status(500).json({erro: 'Erro a procurar cursos lecionados atualmente'});
+    console.error(error);
+    res.status(500).json({ erro: 'Erro ao procurar cursos lecionados atualmente' });
   }
-}
+};
+
 
 controllers.getCursoNovaOcorrenciaCompleto = async (req, res) => {
   try{
