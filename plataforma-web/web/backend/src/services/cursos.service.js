@@ -646,7 +646,7 @@ async function getCursoWithAllInfoOneCourse(id) {
 async function createCursoCompleto(reqBody) {
   try {
     const { cursoData, sincrono: sincronoBody, id_curso_anterior } = reqBody;
-
+console.log("📦 A criar novo curso com os dados:", cursoData);
     const curso = await cursos.create(cursoData);
     
     if (curso) {
@@ -654,6 +654,7 @@ async function createCursoCompleto(reqBody) {
         idCursoNovo: curso.id_curso,
         idCursoAnterior: id_curso_anterior || null,
       });
+       console.log("📝 Nova ocorrência criada com base no curso anterior:", id_curso_anterior);
     }
 
     if (cursoData.issincrono && sincronoBody) {
@@ -662,15 +663,17 @@ async function createCursoCompleto(reqBody) {
         id_formador: sincronoBody.id_formador,
         numero_vagas: sincronoBody.numero_vagas,
       });
+      console.log("👨‍🏫 Curso síncrono criado com formador:", sincronoBody.id_formador);
     }
 
     if (id_curso_anterior) {
+      console.log("🔁 A clonar conteúdo do curso anterior:", id_curso_anterior);
       await clonarConteudoDeCurso({
         idCursoAnterior: id_curso_anterior,
         idCursoNovo: curso.id_curso,
       });
     }
-
+ console.log("✅ Processo completo: curso + ocorrência + conteúdo (se aplicável).");
     return curso;
   } catch (error) {
     console.error('Erro no service ao criar curso:', error);
@@ -913,6 +916,7 @@ async function getCursoCompletoComAulasEMaterial(id) {
 
 async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
   try {
+     console.log(`🔁 A iniciar clonagem do curso ${idCursoAnterior} → ${idCursoNovo}`);
     const aulasAnteriores = await aulas.findAll({
       where: { id_curso: idCursoAnterior },
       include: [
@@ -922,7 +926,7 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
         }
       ]
     });
-
+ console.log(`📚 Aulas encontradas: ${aulasAnteriores.length}`);
     for (const aula of aulasAnteriores) {
       const novaAula = await aulas.create({
         id_curso: idCursoNovo,
@@ -931,20 +935,24 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
         caminho_url: aula.caminho_url,
         tempo_duracao: aula.tempo_duracao,
       });
-
+     console.log(`✅ Aula clonada com ID: ${novaAula.id_aula}`);
       for (const conteudo of aula.conteudos || []) {
+             console.log(`   ↪️ Clonando conteúdo: ${conteudo.nome_conteudo}`);
         await conteudos.create({
           id_aula: novaAula.id_aula,
           id_formato: conteudo.id_formato,
           nome_conteudo: conteudo.nome_conteudo,
           conteudo: conteudo.conteudo,
         });
+            console.log(`   ✅ Conteúdo criado.`);
       }
     }
 
     const materiais = await material_apoio.findAll({
       where: { id_curso: idCursoAnterior },
     });
+
+    console.log(`📎 Materiais de apoio encontrados: ${materiais.length}`);
 
     for (const material of materiais) {
       await material_apoio.create({
@@ -953,8 +961,9 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
         nome_material: material.nome_material,
         conteudo: material.conteudo,
       });
+            console.log(`✅ Material criado.`);
     }
-
+console.log(`🎉 Clonagem de conteúdo concluída com sucesso!`);
   } catch (error) {
     console.error("Erro ao clonar conteúdo do curso:", error);
     throw error;
