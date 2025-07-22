@@ -295,7 +295,6 @@ controllers.getCursosLecionadosAtualmente = async (req, res) => {
       ...item.id_curso_sincrono_curso,
       id_formador: item.id_formador,
       numero_vagas: item.numero_vagas,
-      id_curso_sincrono: item.id_curso_sincrono,
     }));
 
     const filtrados = filtrarCursos(cursosBase, {search, data_inicio_curso, data_fim_curso});
