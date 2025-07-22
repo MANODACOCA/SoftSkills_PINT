@@ -1,11 +1,8 @@
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
-const pedidos_novos_foruns = require("../models/pedidos_novos_foruns");
-const topico = require("../models/topico");
-const utilizador = require("../models/utilizador");
 const model = initModels(sequelize).conteudos_partilhado;
-const models = initModels(sequelize);
 const controllers = {};
+const { utilizador, pedidos_novos_foruns, topico } = require('../models/init-models')(sequelize);
 
 const conteudoPartilhadoService = require('../services/conteudo_partilhado.service');
 const { enviarEmailForumAprovado } = require("../utils/enviarEmail");
@@ -52,16 +49,16 @@ controllers.create = async (req, res) => {
       const { id_topico, data_criacao_cp, id_pedido } = req.body;
       const data = await model.create({id_topico, data_criacao_cp});
       console.log('TESTE000.., ',id_pedido);
-      
+
       if(id_pedido) {
         const pedido = await pedidos_novos_foruns.findOne({where: {id_pedidos_novos_foruns: id_pedido}});
         console.log('TESTE 11');
         const user = await utilizador.findOne({where: {id_utilizador: pedido.id_formando}});
         console.log('TESTE 22');
-        const topico = await topico.findOne({where: {id_topico: id_topico}});
+        const top = await topico.findOne({where: {id_topico: id_topico}});
         console.log('TESTE 33');
         if (user?.email) {
-          await enviarEmailForumAprovado(user.email, topico.nome_topico);
+          await enviarEmailForumAprovado(user.email, top.nome_topico);
         }
         console.log('TESTE 44');
         await pedido.destroy();
