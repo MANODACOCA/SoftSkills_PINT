@@ -52,10 +52,10 @@ controllers.list = async (req, res) => {
       ];
     }
 
-    const data = await model.findAll({ where: whereClause});
+    const data = await model.findAll({ where: whereClause });
     res.status(200).json({ success: true, data: data });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Erro ao encontrar utilizadores'});
+    res.status(500).json({ success: false, message: 'Erro ao encontrar utilizadores' });
   }
 
 };
@@ -118,7 +118,7 @@ controllers.create = async (req, res) => {
   }
 };
 
-controllers.update = async (req, res) => { 
+controllers.update = async (req, res) => {
   try {
     if (req.body) {
       const { id } = req.params;
@@ -127,7 +127,7 @@ controllers.update = async (req, res) => {
       if (updated) {
         const modelUpdated = await model.findByPk(id);
         if (req.body.hasOwnProperty('estado_utilizador')) {
-          if(req.body.estado_utilizador === false){
+          if (req.body.estado_utilizador === false) {
             enviarEmailUserBloqueado(modelUpdated.email);
           } else if (req.body.estado_utilizador === true) {
             enviarEmailUserDesbloqueado(modelUpdated.email);
@@ -146,7 +146,7 @@ controllers.update = async (req, res) => {
 };
 
 controllers.countUtilizadores = async (req, res) => {
-  try{
+  try {
     const total = await model.count();
     res.status(200).json(total);
   } catch (error) {
@@ -222,15 +222,13 @@ controllers.login = async (req, res) => {
 
     if (user.auten2fat) {
       const codigo = Math.floor(10000 + Math.random() * 90000).toString();
-      await guardarCodigo(email, codigo);
-      enviarEmailVerificaCode(email, codigo);
+      guardarCodigo(email, codigo);
+      await enviarEmailVerificaCode(email, codigo);
     }
 
-    if(!user.estado_utilizador) {
-      return res.status(403).json({ message: 'A sua conta foi bloqueada'});
+    if (!user.estado_utilizador) {
+      return res.status(403).json({ message: 'A sua conta foi bloqueada' });
     }
-
-    const roles = [];
 
     let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '120min' });
     res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token, jaAtivou: user.data_ativ_utili, twoFa: user.auten2fat });
@@ -242,7 +240,7 @@ controllers.login = async (req, res) => {
 
 controllers.alterarPassword = async (req, res) => {
   const { email, novaPassword } = req.body;
-  
+
   try {
     const utilizador = await model.findOne({ where: { email } });
     if (!utilizador) {
@@ -252,17 +250,17 @@ controllers.alterarPassword = async (req, res) => {
     }
 
     const hash = await bcrypt.hash(novaPassword, 10);
-    
+
     const updateData = { password_util: hash };
-    
- 
+
+
     if (utilizador.data_ativ_utili === null) {
       updateData.data_ativ_utili = new Date();
     }
 
     await model.update(updateData, {
       where: { email: email },
-      fields: Object.keys(updateData) 
+      fields: Object.keys(updateData)
     });
 
     return res.json({ success: true, message: 'Password alterada' });
@@ -321,19 +319,38 @@ controllers.verificarCodigo = async (req, res) => {
   }
 };
 
+controllers.resendCodeTwoFa = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    res.status(400).json({ success: false, message: 'Email é campo obrigatório.' });
+  }
+
+  try {
+    const codigo = Math.floor(10000 + Math.random() * 90000).toString();
+    guardarCodigo(email, codigo);
+    await enviarEmailVerificaCode(email, codigo);
+    res.status(200).json({ success: true, message: 'C´ódigo reenviado com sucesso para o email!' });
+  } catch (error) {
+    console.log("Erro ao reenviar código para email.", error);
+    return res.status(500).json({ success: false, message: 'Erro ao reenviar código para email.' })
+  }
+
+};
+
 controllers.verificarUserState = async (req, res) => {
-  try{
+  try {
     const id = req.decoded.id;
-    
+
     const utilizador = await model.findByPk(id);
 
-    if(!utilizador || utilizador.estado_utilizador === false) {
-      return res.status(403).json({message: 'A sua conta foi bloqueada'});
+    if (!utilizador || utilizador.estado_utilizador === false) {
+      return res.status(403).json({ message: 'A sua conta foi bloqueada' });
     }
 
-    return res.status(200).json({success: 'ok'});
-  } catch(error) {
-    return res.status(500).json({error: 'Erro interno '});
+    return res.status(200).json({ success: 'ok' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Erro interno ' });
   }
 }
 

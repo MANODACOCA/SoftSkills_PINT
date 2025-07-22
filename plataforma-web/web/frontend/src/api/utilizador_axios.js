@@ -8,7 +8,7 @@ export const list_utilizador = async (search = "") => {
         let url = `${API_URL}/list`;
 
         if (search) {
-        url += `?search=${encodeURIComponent(search)}`;
+            url += `?search=${encodeURIComponent(search)}`;
         }
         const response = await axios.get(url);
         return response.data;
@@ -128,24 +128,36 @@ export const verificarCodigo = async (email, codigo) => {
     }
 };
 
+export const resendCodigo = async (email) => {
+    try {
+        const data = { email };
+        const response = await axios.post(`${API_URL}/resend-codigo`, data);
+
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao reenviar codigo 2FA.', error);
+        throw error;
+    }
+};
+
 export const utilizadores_contagem = async () => {
-    try{
+    try {
         const response = await axios.get(`${API_URL}/count`);
         return response.data;
-    } catch(error) {
+    } catch (error) {
         console.error('Erro ao contar o numero de utilizadores', error);
         throw error;
     }
 }
 
 export const checkUserBloqueado = async (token) => {
-  try {
-    const response = await axios.get(`${API_URL}/verificar-utilizador-block`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao verificar estado do utilizador", error);
-    throw error;
-  }
+    try {
+        const response = await axios.get(`${API_URL}/verificar-utilizador-block`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao verificar estado do utilizador", error);
+        throw error;
+    }
 };

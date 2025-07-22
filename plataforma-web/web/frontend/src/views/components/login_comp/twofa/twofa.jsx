@@ -4,7 +4,7 @@ import '../login/Login.css';
 import './twofa.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 
-import { verificarCodigo } from '../../../../api/utilizador_axios';
+import { verificarCodigo, resendCodigo } from '../../../../api/utilizador_axios';
 import { useUser } from '../../../../utils/useUser';
 
 const TwoFA = () => {
@@ -68,9 +68,10 @@ const TwoFA = () => {
     };
 
     const handleResendCode = async () => {
-        setTimeLeft(60);
+        setError('');
         try {
-            console.log('Chupamos tenho de fazer');
+            await resendCodigo(email);
+            setTimeLeft(60);
         } catch (error) {
             console.error('Erro ao reenviar código:', error);
             setError('Erro ao enviar código de autenticação. Por favor tente mais tarde!');
