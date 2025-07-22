@@ -2,6 +2,11 @@ const { Sequelize, Op, where, Model, literal } = require('sequelize');
 const sequelize = require('../models/database');
 const { cursos, inscricoes, resultados, aulas, conteudos, formadores, sincrono, utilizador, formandos, assincrono, gestor_administrador, topico, area, categoria, ocorrencias_edicoes, material_apoio, tipo_formato } = require('../models/init-models')(sequelize);
 const ocorrenciaService = require('./ocorrencias.service');
+const { getVideoDuration } = require('../utils/youtube_aulas');
+const isYoutubeLink = (url) => {
+  return /^https:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]{11}(?:&.*)?$/i.test(url)
+      || /^https:\/\/youtu\.be\/[\w-]{11}(?:\?.*)?$/i.test(url);
+};
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
 async function getCursosDiponiveisParaInscricao(tipo = "todos", id_curso = null, search = "", topicosIDs = []) {
@@ -916,37 +921,57 @@ async function getCursoCompletoComAulasEMaterial(id) {
 
 async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo }) {
   try {
-     console.log(`🔁 A iniciar clonagem do curso ${idCursoAnterior} → ${idCursoNovo}`);
-//     const aulasAnteriores = await aulas.findAll({
-//       where: { id_curso: idCursoAnterior },
-//       include: [
-//         {
-//           model: conteudos,
-//           as: "conteudos",
-//         }
-//       ]
-//     });
-//  console.log(`📚 Aulas encontradas: ${aulasAnteriores.length}`);
-//     for (const aula of aulasAnteriores) {
-//       const novaAula = await aulas.create({
-//         id_curso: idCursoNovo,
-//         nome_aula: aula.nome_aula,
-//         //data_aula: aula.data_aula,
-//         caminho_url: aula.caminho_url,
-//         //tempo_duracao: aula.tempo_duracao,
-//       });
-//      console.log(`✅ Aula clonada com ID: ${novaAula.id_aula}`);
-//       for (const conteudo of aula.conteudos || []) {
-//              console.log(`   ↪️ Clonando conteúdo: ${conteudo.nome_conteudo}`);
-//         await conteudos.create({
-//           id_aula: novaAula.id_aula,
-//           id_formato: conteudo.id_formato,
-//           nome_conteudo: conteudo.nome_conteudo,
-//           conteudo: conteudo.conteudo,
-//         });
-//             console.log(`   ✅ Conteúdo criado.`);
-//       }
-//     }
+    console.log(`🔁 A iniciar clonagem do curso ${idCursoAnterior} → ${idCursoNovo}`);
+
+    const aulasAnteriores = await aulas.findAll({
+      where: { id_curso: idCursoAnterior },
+      include: [
+        {
+          model: conteudos,
+          as: "conteudos",
+        }
+      ]
+    });
+
+    console.log(`📚 Aulas encontradas: ${aulasAnteriores.length}`);
+
+    for (const aula of aulasAnteriores) {
+      console.log(`➡️ Clonando aula: ${aula.nome_aula}`);
+
+      let tempo_duracao_final = null;
+
+      if (aula.caminho_url && isYoutubeLink(aula.caminho_url)) {
+        try {
+          const { hours, minutes, seconds } = await getVideoDuration(aula.caminho_url);
+          tempo_duracao_final =
+            `${String(hours).padStart(2, '0')}:` +
+            `${String(minutes).padStart(2, '0')}:` +
+            `${String(seconds).padStart(2, '0')}`;
+        } catch (err) {
+          console.warn(`⚠️ Falha ao obter duração do vídeo de ${aula.nome_aula}: ${err.message}`);
+        }
+      }
+
+      const novaAula = await aulas.create({
+        id_curso: idCursoNovo,
+        nome_aula: aula.nome_aula,
+        data_aula: aula.data_aula,
+        caminho_url: aula.caminho_url,
+        tempo_duracao: tempo_duracao_final,
+      });
+
+      console.log(`✅ Aula clonada com ID: ${novaAula.id_aula}`);
+      for (const conteudo of aula.conteudos || []) {
+             console.log(`   ↪️ Clonando conteúdo: ${conteudo.nome_conteudo}`);
+        await conteudos.create({
+          id_aula: novaAula.id_aula,
+          id_formato: conteudo.id_formato,
+          nome_conteudo: conteudo.nome_conteudo,
+          conteudo: conteudo.conteudo,
+        });
+            console.log(`   ✅ Conteúdo criado.`);
+      }
+    }
 
     const materiais = await material_apoio.findAll({
       where: { id_curso: idCursoAnterior },
