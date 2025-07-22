@@ -780,9 +780,6 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
 
       const searchFilter = Sequelize.where(
         Sequelize.fn('unaccent', Sequelize.col(`unaccent("id_curso_sincrono_curso"."nome_curso") ILIKE '%${unaccentedSearch}%'`)),
-        {
-          [Op.iLike]: `%${unaccentedSearch}%`
-        }
       );
 
       whereCurso[Op.and] = whereCurso[Op.and] || [];
@@ -808,7 +805,6 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
         data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
       });
     }
-
 
     const cursoLecionado = await sincrono.findAll({
       where: {
