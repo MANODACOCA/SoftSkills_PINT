@@ -291,16 +291,19 @@ controllers.getCursosLecionadosAtualmente = async (req, res) => {
 
     const cursosLecionados = await cursosService.getCursosLecionadosAtualmenteService(userId);
 
-    const cursosBase = cursosLecionados.map(item => ({
-      ...item.id_curso_sincrono_curso,
-      id_formador: item.id_formador,
-      numero_vagas: item.numero_vagas,
-    }));
+    const cursosFiltrados = cursosLecionados.filter(item => {
+      const curso = {
+        ...item.id_curso_sincrono_curso,
+        id_formador: item.id_formador,
+        numero_vagas: item.numero_vagas,
+        id_curso_sincrono: item.id_curso_sincrono
+      };
 
-    const filtrados = filtrarCursos(cursosBase, {search, data_inicio_curso, data_fim_curso});
+      return filtrarCursos([curso], { search, data_inicio_curso, data_fim_curso }).length > 0;
+    });
 
-    if (filtrados.length > 0){
-      res.status(200).json(filtrados);
+    if (cursosFiltrados.length > 0){
+      res.status(200).json(cursosFiltrados);
     } else {
       res.status(404).json({erro: 'Nao foram encontrados cursos lecionados atualmente'});
     }
