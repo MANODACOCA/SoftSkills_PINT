@@ -804,10 +804,11 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
     if (data_inicio_curso && data_fim_curso) {
       whereCurso[Op.and] = whereCurso[Op.and] || [];
       whereCurso[Op.and].push({
-        data_inicio_curso: { [Op.lte]: new Date(data_inicio_curso) },
-        data_fim_curso: { [Op.gte]: new Date(data_fim_curso) }
+        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
+        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
       });
     }
+
 
     const cursoLecionado = await sincrono.findAll({
       where: {
