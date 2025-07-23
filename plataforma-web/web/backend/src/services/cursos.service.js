@@ -547,6 +547,10 @@ async function getAllCoursesWithAllInfo(search = "") {
             }
           ]
         }
+      ],
+      order: [
+        ['estado', 'DESC'],
+        ['id_curso', 'ASC']
       ]
     });
 
@@ -651,7 +655,7 @@ async function getCursoWithAllInfoOneCourse(id) {
 async function createCursoCompleto(reqBody) {
   try {
     const { cursoData, sincrono: sincronoBody, id_curso_anterior } = reqBody;
-console.log("📦 A criar novo curso com os dados:", cursoData);
+
     const curso = await cursos.create(cursoData);
     
     if (curso) {
@@ -659,7 +663,6 @@ console.log("📦 A criar novo curso com os dados:", cursoData);
         idCursoNovo: curso.id_curso,
         idCursoAnterior: id_curso_anterior || null,
       });
-       console.log("📝 Nova ocorrência criada com base no curso anterior:", id_curso_anterior);
     }
 
     if (cursoData.issincrono && sincronoBody) {
@@ -668,18 +671,15 @@ console.log("📦 A criar novo curso com os dados:", cursoData);
         id_formador: sincronoBody.id_formador,
         numero_vagas: sincronoBody.numero_vagas,
       });
-      console.log("👨‍🏫 Curso síncrono criado com formador:", sincronoBody.id_formador);
     }
 
     if (id_curso_anterior) {
-      console.log("🔁 A clonar conteúdo do curso anterior:", id_curso_anterior);
       await clonarConteudoDeCurso({
         idCursoAnterior: id_curso_anterior,
         idCursoNovo: curso.id_curso,
         ignorarAulas: cursoData.issincrono === true,
       });
     }
- console.log("✅ Processo completo: curso + ocorrência + conteúdo (se aplicável).");
     return curso;
   } catch (error) {
     console.error('Erro no service ao criar curso:', error);
