@@ -211,6 +211,9 @@ controllers.getDestaqueSincrono = async (req, res) => {
 controllers.getUserEnrolledCourses = async (req, res) => {
   try {
     const userId = req.params.id || req.params.userId;
+    const search = req.query.search;
+    const data_inicio = req.query.data_inicio;
+    const data_fim = req.query.data_fim;
     console.log('Parâmetros recebidos:', req.params);
     if (!userId) {
       return res.status(400).json({ erro: 'ID do usuário não fornecido' });
@@ -219,7 +222,7 @@ controllers.getUserEnrolledCourses = async (req, res) => {
 
     console.log(`Buscando cursos para usuário ${userId} com tipologia: ${tipologia}`);
 
-    const enrolledCourses = await cursosService.getEnrolledCoursesForUser(userId, tipologia);
+    const enrolledCourses = await cursosService.getEnrolledCoursesForUser(userId, tipologia, search, data_inicio, data_fim);
     res.status(200).json(enrolledCourses);
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao buscar cursos inscritos', desc: err.message });
@@ -230,9 +233,12 @@ controllers.getCompleteCourses = async (req, res) => {
   try {
 
     const userId = req.params.id || req.params.userId;
+    const search = req.query.search;
+    const data_inicio = req.query.data_inicio;
+    const data_fim = req.query.data_fim;
     const tipologia = req.query.tipologia || null;
 
-    const completedCourses = await cursosService.getCompleteCoursesFromUser(userId, tipologia);
+    const completedCourses = await cursosService.getCompleteCoursesFromUser(userId, tipologia, search, data_inicio, data_fim);
 
     if (completedCourses && completedCourses.length > 0) {
       res.status(200).json(completedCourses);

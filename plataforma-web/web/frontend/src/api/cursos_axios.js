@@ -224,9 +224,23 @@ export const cursos_contagem = async () => {
     }
 }
 
-export const getCursosLecionadosTerminados = async (userId) => {
+export const getCursosLecionadosTerminados = async (userId, search = ' ', data_fim = null, data_inicio = null) => {
     try {
-        const response = await axios.get(`${API_URL}/users/${userId}/cursos-lecionados-terminados`, getAuthHeader());
+        let url = `${API_URL}/users/${userId}/cursos-lecionados-terminados`;
+
+        if (search) {
+            url += `?search=${encodeURIComponent(search)}`;
+        }
+
+        if (data_fim !== null && data_fim !== undefined) {
+            url += `&data_fim=${data_fim}`;
+        }
+
+        if (data_inicio !== null && data_inicio !== undefined) {
+            url += `&data_inicio=${data_inicio}`;
+        }
+
+        const response = await axios.get(url, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao contar o numero de cursos', error);
@@ -234,9 +248,22 @@ export const getCursosLecionadosTerminados = async (userId) => {
     }
 }
 
-export const getCursosLecionadosAtualmente = async (userId) => {
+export const getCursosLecionadosAtualmente = async (userId, search = ' ', data_fim = null, data_inicio = null) => {
     try {
-        const response = await axios.get(`${API_URL}/users/${userId}/cursos-lecionados-atualmente`, getAuthHeader());
+        let url = `${API_URL}/users/${userId}/cursos-lecionados-atualmente`;
+
+        if (search) {
+            url += `?search=${encodeURIComponent(search)}`;
+        }
+
+        if (data_fim !== null && data_fim !== undefined) {
+            url += `&data_fim=${data_fim}`;
+        }
+
+        if (data_inicio !== null && data_inicio !== undefined) {
+            url += `&data_inicio=${data_inicio}`;
+        }
+        const response = await axios.get(url, getAuthHeader());
         return response.data;
     } catch (error) {
         console.error('Erro ao contar o numero de cursos', error);

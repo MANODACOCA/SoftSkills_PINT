@@ -5,6 +5,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 import './Historico_User.css';
 import { get_utilizador } from "../../../../api/utilizador_axios";
 import FeaturedCourseCard from "../../../components/card_highlight/CardHighlight";
+import FilterHistorico from "../../../components/filter_menu/filter_historico";
 
 const HistoryUser = () => {
     const {id} = useParams();
@@ -13,7 +14,19 @@ const HistoryUser = () => {
     const [utilizador, setUtilizador] = useState([]);
     const [cursosLecionadosTerminados, setCursosLecionadosTerminados] = useState([]);
     const [cursosLecionadosAtualmente, setCursosLecionadosAtualmente] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [dataInicio, setDataInicio] = useState('');
+    const [dataFim, setDataFim] = useState('');
 
+    const handleApply = (inicio, fim) => {
+        setDataInicio(inicio);
+        setDataFim(fim);
+    };
+    
+    const handleClean = () => {
+        setDataFim('');
+        setDataInicio('');
+    }
 
     const fetchEnrolledCourses = async (userId) => {
         try {
@@ -56,9 +69,9 @@ const HistoryUser = () => {
         }
     };
 
-    const fetchCursosLecionadosTerminados = async (userId) => {
+    const fetchCursosLecionadosTerminados = async (userId, searchTerm = ' ', dataInicio = '', dataFim = '') => {
         try {
-            const data = await getCursosLecionadosTerminados(userId);
+            const data = await getCursosLecionadosTerminados(userId, searchTerm || " ", dataFim || null, dataInicio || null);
             setCursosLecionadosTerminados(data);
             console.log(data);
         } catch (error) {
@@ -71,9 +84,9 @@ const HistoryUser = () => {
         }
     }
 
-    const fetchCursosLecionadosAtualmente = async (userId) => {
+    const fetchCursosLecionadosAtualmente = async (userId, searchTerm = ' ', dataInicio = '', dataFim = '') => {
         try {
-            const data = await getCursosLecionadosAtualmente(userId);
+            const data = await getCursosLecionadosAtualmente(userId, searchTerm || " ", dataFim || null, dataInicio || null);
             setCursosLecionadosAtualmente(data);
             console.log(data);
         } catch (error) {
@@ -99,10 +112,10 @@ const HistoryUser = () => {
     useEffect(() => {
         fetchEnrolledCourses(id);
         fetchCompletedCourses(id);
-        fetchCursosLecionadosAtualmente(id);
-        fetchCursosLecionadosTerminados(id);
+        fetchCursosLecionadosAtualmente(id, searchTerm, dataInicio, dataFim);
+        fetchCursosLecionadosTerminados(id, searchTerm, dataInicio, dataFim);
         fetchUtilizador(id);
-    }, [])
+    }, [searchTerm, dataInicio, dataFim])
 
     return(
         <div className="container">
@@ -144,6 +157,13 @@ const HistoryUser = () => {
                 <Tabs defaultActiveKey="cursoInscrito" className="my-4 nav-justified custom-tabs">
                     {utilizador.isformando && 
                         <Tab eventKey="cursoInscrito" title="Cursos Inscritos">
+                            <FilterHistorico
+                                searchTerm={searchTerm}
+                                onSearchChange={(value) => setSearchTerm(value)} 
+                                dataInicio={dataInicio}
+                                dataFim={dataFim}
+                                onApply={handleApply}
+                            />
                             <div className="mt-4">
                                 {cursosInscrito.length === 0 ? (
                                     <div className="d-flex justify-content-center p-5">
@@ -169,6 +189,13 @@ const HistoryUser = () => {
                     }
                     {utilizador.isformando &&
                         <Tab eventKey="cursoTerminado" title="Cursos Terminados">
+                            <FilterHistorico
+                                searchTerm={searchTerm}
+                                onSearchChange={(value) => setSearchTerm(value)} 
+                                dataInicio={dataInicio}
+                                dataFim={dataFim}
+                                onApply={handleApply}
+                            />
                             <div className="mt-4">
                                 {cursosTerminados.length === 0 ? (
                                     <div className="d-flex justify-content-center p-5">
@@ -194,6 +221,14 @@ const HistoryUser = () => {
                     }
                     {utilizador.isformador &&  
                     <Tab eventKey="cursosLecionadosAtualmente" title="Cursos a Lecionar" >
+                        <FilterHistorico
+                            searchTerm={searchTerm}
+                            onSearchChange={(value) => setSearchTerm(value)} 
+                            dataInicio={dataInicio}
+                            dataFim={dataFim}
+                            onApply={handleApply}
+                            onClean={handleClean}
+                        />
                         <div className="mt-4">
                             {cursosLecionadosAtualmente.length === 0 ? (
                                 <div className="d-flex justify-content-center p-5">
@@ -220,6 +255,13 @@ const HistoryUser = () => {
                     }
                     {utilizador.isformador &&  
                     <Tab eventKey="cursosLecionadosTerminados" title="Cursos já Lecionados" >
+                        <FilterHistorico
+                            searchTerm={searchTerm}
+                            onSearchChange={(value) => setSearchTerm(value)} 
+                            dataInicio={dataInicio}
+                            dataFim={dataFim}
+                            onApply={handleApply}
+                        />
                         <div className="mt-4">
                             {cursosLecionadosTerminados.length === 0 ? (
                                 <div className="d-flex justify-content-center p-5">
