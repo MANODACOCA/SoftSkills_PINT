@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "695425925082",
-    "project_id": "pint-5f0b7",
-    "storage_bucket": "pint-5f0b7.firebasestorage.app"
+    "project_number": "72896881333",
+    "project_id": "softskills-f3ab6",
+    "storage_bucket": "softskills-f3ab6.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:695425925082:android:80710fb02e396dd47f0ae3",
+        "mobilesdk_app_id": "1:72896881333:android:2b205a0c00a5b1c2a114fc",
         "android_client_info": {
           "package_name": "com.example.mobile"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBlo6PDAIFxqp0TyvlXyCGBnEcDJJ4BLxk"
+          "current_key": "AIzaSyC85FaoEQArK9sghjL3aAreRocgHuDEcLQ"
         }
       ],
       "services": {
