@@ -550,7 +550,7 @@ async function getAllCoursesWithAllInfo(search = "") {
       ],
       distinct: true,
       order: [
-        //['estado', 'DESC'],
+        ['estado', 'DESC'],
         ['id_curso', 'ASC']
       ]
     });
