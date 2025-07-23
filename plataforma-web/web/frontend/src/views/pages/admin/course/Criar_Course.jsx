@@ -51,7 +51,7 @@ const CreateCourse = () => {
     const fetchFormadores = async () => {
         try {
             const response = await list_formadores();
-            console.log(response);
+            //console.log(response);
             setFormadores(response);
         } catch (error) {
             console.log('Erro ao ir buscar os formadores');
@@ -77,6 +77,16 @@ const CreateCourse = () => {
             data_inicio_curso,
             data_fim_curso,
         } = cursos;
+
+        if (cursos.isassincrono && data_inicio_inscricao !== data_inicio_curso) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "Em cursos assíncronos, a inscrição tem de começar no mesmo dia que o curso.",
+                timer: 1500,
+            });
+            return;
+        }   
 
         const dToday = new Date(`${todayStr}T00:00:00`);
         const dInscIni = new Date(`${data_inicio_inscricao}T00:00:00`);
@@ -145,7 +155,7 @@ const CreateCourse = () => {
                 if (cursoAnterior) {
                     payload.id_curso_anterior = cursoAnterior.id_curso;
                 }
-                console.log('Payload a enviar:', { cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
+                //console.log('Payload a enviar:', { cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
                 await create_cursos(payload);
                 //await create_cursos({ cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
                 Swal.fire({
@@ -338,6 +348,17 @@ const CreateCourse = () => {
                     <form onSubmit={handleSubmit}>
                         <div className='mx-5'>
                             <div className='mt-2'>
+                                <label className='form-label fw-bold' >Tipologia</label>
+                                <select className='form-select' value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); 
+                                    setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean, 
+                                    data_inicio_inscricao: "", data_fim_inscricao: "", data_inicio_curso: "", data_fim_curso: "" })); }} disabled={isNovaOcorrencia}>
+                                    <option value="">-- Escolher Tipologia --</option>
+                                    <option value="true">Síncrono</option>
+                                    <option value="false">Assíncrono</option>
+                                </select>
+                            </div>
+
+                            <div className='mt-2'>
                                 <label className='form-label fw-bold'>Nome do Curso</label>
                                 <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." value={cursos.nome_curso} onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required disabled={isNovaOcorrencia}/>
                             </div>
@@ -346,7 +367,8 @@ const CreateCourse = () => {
                                 <label className='form-label fw-bold'>Descrição do Curso</label>
                                 <textarea name="descricao_curso" className='form-control' rows="4" placeholder="Descrição do curso..." value={cursos.descricao_curso} onChange={(e) => setCursos(prev => ({ ...prev, descricao_curso: e.target.value }))} required />
                             </div>
-
+                            {isSincrono !== "" && ( 
+                            <>
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início da Inscrição</label>
@@ -368,6 +390,7 @@ const CreateCourse = () => {
                                     <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} value={cursos.data_fim_curso} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_curso: e.target.value }))} required />
                                 </div>
                             </div>
+                            </> )}
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Idioma</label>
@@ -386,14 +409,14 @@ const CreateCourse = () => {
                                 <input type="number" step="0.5" min="0.5" name="horas_curso" className='form-control' placeholder="Horas do curso..." value={cursos.horas_curso || ""} onChange={(e) => setCursos(prev => ({ ...prev, horas_curso: parseInt(e.target.value) }))} required />
                             </div>
 
-                            <div className='mt-2'>
+                            {/* <div className='mt-2'>
                                 <label className='form-label fw-bold' >Tipologia</label>
                                 <select className='form-select' value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean })); }} disabled={isNovaOcorrencia}>
                                     <option value="">-- Escolher Tipologia --</option>
                                     <option value="true">Síncrono</option>
                                     <option value="false">Assíncrono</option>
                                 </select>
-                            </div>
+                            </div> */}
 
                             {cursos.isassincrono == false && (
                                 <div className='mt-2'>
@@ -409,7 +432,7 @@ const CreateCourse = () => {
                                     <label className='mt-2 fw-bold'>Descrição Formador</label>
                                     <textarea name="descricao_formador" value={formadores.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly />
                                     <label className='mt-2 fw-bold'>Número Vagas</label>
-                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} />
+                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas ?? ''} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} />
                                 </div>
                             )}
 
