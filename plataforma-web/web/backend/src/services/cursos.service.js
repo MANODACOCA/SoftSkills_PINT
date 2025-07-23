@@ -548,6 +548,7 @@ async function getAllCoursesWithAllInfo(search = "") {
           ]
         }
       ],
+      distinct: true,
       order: [
         ['estado', 'DESC'],
         ['id_curso', 'ASC']
