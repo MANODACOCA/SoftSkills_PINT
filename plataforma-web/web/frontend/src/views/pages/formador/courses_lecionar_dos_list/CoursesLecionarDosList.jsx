@@ -5,6 +5,7 @@ import { Tab, Tabs } from 'react-bootstrap';
 import './CoursesLecionarDosList.css';
 import { get_utilizador } from "../../../../api/utilizador_axios";
 import { useUser } from '../../../../utils/useUser';
+import FeaturedCourseCard from "../../../components/card_highlight/CardHighlight";
 
 const CursoLecionarList = ({cursosLecionadosA, cursosLecionadosTerm}) => {
     const { user } = useUser();
@@ -73,24 +74,14 @@ const CursoLecionarList = ({cursosLecionadosA, cursosLecionadosTerm}) => {
                             ) : (
                                 cursosLecionadosAtualmente.map((cu, index) => {
                                     return(
-                                        <Link to={`/formador/cursos/${cu.id_curso_sincrono_curso.id_curso}`} className="text-decoration-none text-white">
-                                        <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
-                                            <img
-                                                src={cu.id_curso_sincrono_curso.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`}
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`;
-                                                }}
-                                                className="rounded-start-4 highlights-images"
-                                                alt="imagem curso"
-                                            />
-                                            <div className="card-body d-flex flex-column justify-content-between">
-                                                <div>
-                                                    <h5 className="mb-2">{cu.id_curso_sincrono_curso.nome_curso}</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </Link>
+                                        <FeaturedCourseCard
+                                            key={`taught-${cu.id_curso_sincrono_curso.id_curso}`}
+                                            course={cu.id_curso_sincrono_curso}
+                                            userId={user?.id_utilizador}
+                                            showDescription={false}
+                                            showFormador={false}
+                                            variant="teaching-now"
+                                        />
                                     );
                                 })
                             )}
@@ -106,22 +97,15 @@ const CursoLecionarList = ({cursosLecionadosA, cursosLecionadosTerm}) => {
                             ) : (
                                 cursosLecionadosTerminados.map((cu, index) => {
                                     return(
-                                        <div key={index} className="card flex-row rounded-4 cards-highlights position-relative mb-3">
-                                            <img
-                                                src={cu.id_curso_sincrono_curso.imagem}
-                                                onError={(e) => {
-                                                    e.target.onerror = null;
-                                                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cu.id_curso_sincrono_curso.nome_curso)}&background=random&bold=true`;
-                                                }}
-                                                className="rounded-start-4 highlights-images"
-                                                alt="imagem curso"
-                                            />
-                                            <div className="card-body d-flex flex-column justify-content-between">
-                                                <div>
-                                                    <h5 className="mb-2">{cu.id_curso_sincrono_curso.nome_curso}</h5>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <FeaturedCourseCard
+                                            key={`taught-${cu.id_curso_sincrono_curso.id_curso}`}
+                                            course={cu.id_curso_sincrono_curso}
+                                            userId={user?.id_utilizador}
+                                            showDescription={false}
+                                            showFormador={false}
+                                            variant="teaching-finished"
+                                            verCurso={false}
+                                        />
                                     );
                                 })
                             )}

@@ -547,6 +547,11 @@ async function getAllCoursesWithAllInfo(search = "") {
             }
           ]
         }
+      ],
+      distinct: true,
+      order: [
+        ['estado', 'DESC'],
+        ['id_curso', 'ASC']
       ]
     });
 
@@ -651,7 +656,7 @@ async function getCursoWithAllInfoOneCourse(id) {
 async function createCursoCompleto(reqBody) {
   try {
     const { cursoData, sincrono: sincronoBody, id_curso_anterior } = reqBody;
-console.log("📦 A criar novo curso com os dados:", cursoData);
+
     const curso = await cursos.create(cursoData);
     
     if (curso) {
@@ -659,7 +664,6 @@ console.log("📦 A criar novo curso com os dados:", cursoData);
         idCursoNovo: curso.id_curso,
         idCursoAnterior: id_curso_anterior || null,
       });
-       console.log("📝 Nova ocorrência criada com base no curso anterior:", id_curso_anterior);
     }
 
     if (cursoData.issincrono && sincronoBody) {
@@ -668,18 +672,15 @@ console.log("📦 A criar novo curso com os dados:", cursoData);
         id_formador: sincronoBody.id_formador,
         numero_vagas: sincronoBody.numero_vagas,
       });
-      console.log("👨‍🏫 Curso síncrono criado com formador:", sincronoBody.id_formador);
     }
 
     if (id_curso_anterior) {
-      console.log("🔁 A clonar conteúdo do curso anterior:", id_curso_anterior);
       await clonarConteudoDeCurso({
         idCursoAnterior: id_curso_anterior,
         idCursoNovo: curso.id_curso,
         ignorarAulas: cursoData.issincrono === true,
       });
     }
- console.log("✅ Processo completo: curso + ocorrência + conteúdo (se aplicável).");
     return curso;
   } catch (error) {
     console.error('Erro no service ao criar curso:', error);
@@ -743,8 +744,45 @@ async function verifyInscription(userId, cursoId) {
   }
 }
 
-async function getCursosLecionadosTerminadosService(userId) {
+async function getCursosLecionadosTerminadosService(userId, search, data_inicio_curso, data_fim_curso) {
   try {
+    const today = new Date().toISOString().split('T')[0];
+
+    const whereCurso = {
+      data_fim_curso: { [Op.lte]: Sequelize.literal(`DATE(NOW() AT TIME ZONE 'Europe/Lisbon')`) }
+    };
+
+    if (search) {
+      const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      const searchFilter = Sequelize.literal(
+        `unaccent("id_curso_sincrono_curso"."nome_curso") ILIKE '%${unaccentedSearch}%'`
+      );
+
+      whereCurso[Op.and] = whereCurso[Op.and] || [];
+      whereCurso[Op.and].push(searchFilter);
+    }
+
+    if (data_inicio_curso && !data_fim_curso) {
+      whereCurso.data_inicio_curso = {
+        [Op.eq]: new Date(data_inicio_curso)
+      };
+    }
+
+    if (data_fim_curso && !data_inicio_curso) {
+      whereCurso.data_fim_curso = {
+        [Op.eq]: new Date(data_fim_curso)
+      };
+    }
+
+    if (data_inicio_curso && data_fim_curso) {
+      whereCurso[Op.and] = whereCurso[Op.and] || [];
+      whereCurso[Op.and].push({
+        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
+        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
+      });
+    }
+
     const cursoLecionado = await sincrono.findAll({
       where: {
         id_formador: userId,
@@ -753,9 +791,7 @@ async function getCursosLecionadosTerminadosService(userId) {
         {
           model: cursos,
           as: 'id_curso_sincrono_curso',
-          where: {
-            data_fim_curso: { [Op.lt]: Sequelize.literal('CURRENT_DATE') },
-          },
+          where: whereCurso,
         }
       ]
     });
@@ -767,8 +803,45 @@ async function getCursosLecionadosTerminadosService(userId) {
   }
 }
 
-async function getCursosLecionadosAtualmenteService(userId) {
+async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_curso, data_fim_curso) {
   try {
+    const today = new Date().toISOString().split('T')[0];
+
+    const whereCurso = {
+      data_fim_curso: { [Op.gte]: Sequelize.literal(`DATE(NOW() AT TIME ZONE 'Europe/Lisbon')`) }
+    };
+
+    if (search) {
+      const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+      const searchFilter = Sequelize.literal(
+        `unaccent("id_curso_sincrono_curso"."nome_curso") ILIKE '%${unaccentedSearch}%'`
+      );
+
+      whereCurso[Op.and] = whereCurso[Op.and] || [];
+      whereCurso[Op.and].push(searchFilter);
+    }
+
+    if (data_inicio_curso && !data_fim_curso) {
+      whereCurso.data_inicio_curso = {
+        [Op.eq]: new Date(data_inicio_curso)
+      };
+    }
+
+    if (data_fim_curso && !data_inicio_curso) {
+      whereCurso.data_fim_curso = {
+        [Op.eq]: new Date(data_fim_curso)
+      };
+    }
+
+    if (data_inicio_curso && data_fim_curso) {
+      whereCurso[Op.and] = whereCurso[Op.and] || [];
+      whereCurso[Op.and].push({
+        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
+        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
+      });
+    }
+
     const cursoLecionado = await sincrono.findAll({
       where: {
         id_formador: userId,
@@ -777,9 +850,7 @@ async function getCursosLecionadosAtualmenteService(userId) {
         {
           model: cursos,
           as: 'id_curso_sincrono_curso',
-          where: {
-            data_fim_curso: { [Op.gte]: Sequelize.literal('CURRENT_DATE') },
-          },
+          where: whereCurso,
         }
       ]
     });
