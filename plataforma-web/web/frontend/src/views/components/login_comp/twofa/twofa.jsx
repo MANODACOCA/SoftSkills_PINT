@@ -22,7 +22,7 @@ const TwoFA = () => {
     const inputRefs = useRef([]);
     const [error, setError] = useState('');
     const [verificationCode, setVerificationCode] = useState(['', '', '', '', '']);
-    const [timeLeft, setTimeLeft] = useState(60);//1min para colocar o código
+    const [timeLeft, setTimeLeft] = useState(0);//1min para colocar o código
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e, index) => {
@@ -46,15 +46,17 @@ const TwoFA = () => {
 
 
     const handleSubmitTwoFA = async () => {
-
+        setLoading(true);
         setError('');
         const codigo = verificationCode.join('');
         if (!codigo) {
             setError('Por favor, insira no campo acima o código que foi enviado para o seu e-mail.');
+            setLoading(false);
             return;
         }
         try {
             await verificarCodigo(email, codigo);
+            localStorage.removeItem(`2fa_sent`);
             localStorage.setItem('token', response_login.token);
             if (redirectTo === '/home') await refreshUser();
             console.log('TwoFA feita com sucesso.');
@@ -66,6 +68,8 @@ const TwoFA = () => {
         } catch (error) {
             console.error('Erro ao verificar código:', error);
             setError('Código inválido ou expirado. Por favor, tente novamente.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -74,6 +78,8 @@ const TwoFA = () => {
         setLoading(true);
         try {
             await resendCodigo(email);
+            const now = Date.now();
+            localStorage.setItem(`2fa_sent:`, now);
             setTimeLeft(60);
         } catch (error) {
             console.error('Erro ao reenviar código:', error);
@@ -82,6 +88,13 @@ const TwoFA = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        const sentAt = localStorage.getItem(`2fa_sent:`);
+        const elapsed = Math.floor((Date.now() - parseInt(sentAt, 10)) / 1000);
+        const remaining = 60 - elapsed;
+        setTimeLeft(remaining > 0 ? remaining : 0);
+    }, [email]);
 
     useEffect(() => {
         if (timeLeft === 0) return;
@@ -119,7 +132,7 @@ const TwoFA = () => {
                 {error && <p className="login-error text-end">{error}</p>}
                 <p className="countdown-timer text-center">
                     {timeLeft > 0
-                        ? `Tempo restante: ${timeLeft} segundos`
+                        ? `Tempo restante: ${timeLeft} s`
                         : 'O seu código expirou.'}
                 </p>
 
@@ -129,8 +142,10 @@ const TwoFA = () => {
                             type='submit'
                             className="login-button primary"
                             onClick={handleSubmitTwoFA}
+                            disabled={loading}
                         >
-                            Seguite
+                            {!loading && ('Seguite')}
+                            {loading && (<Spinner size='sm' className='ms-2' />)}
                         </button>
                     )}
                     {timeLeft === 0 && (

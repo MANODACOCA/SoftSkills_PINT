@@ -40,7 +40,8 @@ const ForgotPassword = () => {
 
         try {
             await esqueceuPassword(email);
-
+            const now = Date.now();
+            localStorage.setItem(`2fa_sent:`, now);
             Swal.fire({
                 title: 'E-mail enviado!',
                 text: 'Receberá brevemente um e-mail com os seus dados de acesso.',

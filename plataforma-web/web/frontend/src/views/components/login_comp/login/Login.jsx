@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './Login.css';
+import Spinner from 'react-bootstrap/Spinner';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
 import { PiMicrosoftOutlookLogoBold } from "react-icons/pi";
 import { login } from '../../../../api/utilizador_axios';
 import { useUser } from '../../../../utils/useUser';
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 
 const providers = [
@@ -25,6 +27,8 @@ const FirstLogin = () => {
     const [error, setError] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
 
     useEffect(() => {
@@ -53,7 +57,7 @@ const FirstLogin = () => {
 
     const handleProviderSignIn = async (provider) => {
         setError('');
-
+        setLoading(true);
         if (provider.id === 'credentials') {
             if (!email || !password) {
                 if (!email && !password) {
@@ -63,12 +67,14 @@ const FirstLogin = () => {
                 } else {
                     setError('Por favor, preencha o campo da password.');
                 }
+                setLoading(false);
                 return;
             }
 
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 setError('Por favor, insira um email válido.');
+                setLoading(false);
                 return;
             }
 
@@ -92,6 +98,8 @@ const FirstLogin = () => {
                         }
 
                     } else if (response_login.jaAtivou && response_login.twoFa) {
+                        const now = Date.now();
+                        localStorage.setItem(`2fa_sent:`, now);
                         navigate('/login/verificacao-identidade', {
                             state: {
                                 email,
@@ -120,11 +128,13 @@ const FirstLogin = () => {
                     } else if (field === 'password') {
                         setError('Password inserida é inválida. Por favor digite outra password!');
                     }
-                } else if(error.response?.status === 403) {
-                    setError('A sua conta foi bloqueada');
+                } else if (error.response?.status === 403) {
+                    setError('A sua conta foi bloqueada.');
                 } else {
                     setError('Erro ao efetuar login. Tente novamente mais tarde.');
                 }
+            } finally {
+                setLoading(false);
             }
         } else {//SSO
             setTimeout(() => {
@@ -154,25 +164,45 @@ const FirstLogin = () => {
                     className="login-input"
                 />
 
-                <input
-                    type="password"
-                    placeholder="Palavra-passe"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="login-input"
-                />
+                <div className='position-relative w-100'>
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Palavra-passe"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="login-input pe-5"
+                    />
+                    <button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="btn btn-sm position-absolute end-0 me-2"
+                        style={{ bottom: '33%' }}
+                    >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                </div>
+
 
                 <div className="login-forgot d-flex justify-content-between text-start">
                     <Link to="/login/esqueceu-password">Esqueceu-se da sua palavra-passe?</Link>
                     {error && <p className="login-error text-end">{error}</p>}
                 </div>
                 <div className="login-buttons">
-                    <button
-                        type="submit"
-                        className="login-button primary"
-                    >
-                        Login
-                    </button>
+                    {loading ? (
+                        <button
+                            type="submit"
+                            className="login-button primary"
+                            disabled>
+                            <Spinner size='sm' />
+                        </button>
+                    ) : (
+                        <button
+                            type="submit"
+                            className="login-button primary"
+                        >
+                            Login
+                        </button>
+                    )}
                 </div>
             </form>
             <div className="login-buttons">
