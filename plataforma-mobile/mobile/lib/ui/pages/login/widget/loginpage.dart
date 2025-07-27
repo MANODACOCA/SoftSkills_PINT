@@ -207,36 +207,48 @@ class _LoginPage extends State<LoginPage> {
                         );
                         print('==================Response: $response');
                         if (response['success'] == true) {
-                          if (response['twoFa'] == false ||
-                              response['twoFa'] == null) {
-                            final token = response['token'];
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setString('token', token);
-                            var userId = await api.getUserIdFromToken(token);
-                            if (userId == null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Erro ao obter ID do utilizador.',
-                                  ),
+                          final token = response['token'];
+                          final prefs = await SharedPreferences.getInstance();
+
+                          var userId = await api.getUserIdFromToken(token);
+                          if (userId == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Erro ao obter ID do utilizador.',
                                 ),
-                              );
-                              return;
-                            } else {
-                              final authProvider = Provider.of<AuthProvider>(
-                                context,
-                                listen: false,
-                              );
-                              final user = User(id: userId);
-                              if (!mounted) return;
-                              print('TOKEN LOGIN: $token');
-                              authProvider.setUser(user, token: token);
-                              await authService.login(token, isSwitched);
-                              context.go('/homepage');
-                            }
-                          } if (response['twoFa'] == true) {
-                            print('======Two-Factor Authentication is enabled.');
-                            //context.go('/twofauten');
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (response['twoFa'] == true) {
+                            print(
+                              '====== Two-Factor Authentication is enabled ======',
+                            );
+                            // Guarda o token temporariamente (não faz login ainda!)
+                            await prefs.setString('pending_token', token);
+                            await prefs.setString(
+                              'pending_userId',
+                              userId.toString(),
+                            );
+                            if (!mounted) return;
+                            context.go('/twofauten');
+                          } else {
+                            // Login normal, porque 2FA está desativado
+                            await prefs.setString(
+                              'token',
+                              token,
+                            ); // só agora grava o token real
+                            final authProvider = Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            );
+                            final user = User(id: userId);
+                            if (!mounted) return;
+                            authProvider.setUser(user, token: token);
+                            await authService.login(token, isSwitched);
+                            context.go('/homepage');
                           }
                         }
                       } catch (error) {
