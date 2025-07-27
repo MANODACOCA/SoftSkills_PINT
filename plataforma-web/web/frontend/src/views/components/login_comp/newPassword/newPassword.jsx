@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import '../login/Login.css';
 import softskills from '../../../../assets/images/logos/semfundo3.png';
-
+import Spinner from 'react-bootstrap/Spinner';
 import { alterarPassword } from '../../../../api/utilizador_axios';
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 
 const NewPassword = () => {
@@ -16,9 +17,12 @@ const NewPassword = () => {
     const [error, setError] = useState('');
     const [novapassword, setNovapassword] = useState('');
     const [repNovapassword, setRepNovapassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmitNewPassword = async () => {
         setError('');
+        setLoading(true);
         try {
             if (novapassword && repNovapassword) {
                 if (novapassword !== repNovapassword) {
@@ -44,6 +48,8 @@ const NewPassword = () => {
             } else {
                 setError('Erro ao alterar a password.');
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -56,31 +62,52 @@ const NewPassword = () => {
                 e.preventDefault(); // Previne reload da página
                 handleSubmitNewPassword();
             }}>
-                <input
-                    type="password"
-                    placeholder="Nova palavra-passe"
-                    value={novapassword}
-                    onChange={(e) => setNovapassword(e.target.value)}
-                    className="login-input"
-                    autoComplete="new-password"
-                />
-
-                <input
-                    type="password"
-                    placeholder="Repita nova palavra-passe"
-                    value={repNovapassword}
-                    onChange={(e) => setRepNovapassword(e.target.value)}
-                    className="login-input"
-                    autoComplete="new-password"
-                />
+                <div className='position-relative w-100'>
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Nova palavra-passe"
+                        value={novapassword}
+                        onChange={(e) => setNovapassword(e.target.value)}
+                        className="login-input pe-5"
+                        autoComplete="new-password"
+                    />
+                    <button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="btn btn-sm position-absolute end-0 me-2"
+                        style={{ bottom: '33%' }}
+                    >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                </div>
+                <div className='position-relative w-100'>
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Repita nova palavra-passe"
+                        value={repNovapassword}
+                        onChange={(e) => setRepNovapassword(e.target.value)}
+                        className="login-input pe-5"
+                        autoComplete="new-password"
+                    />
+                    <button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="btn btn-sm position-absolute end-0 me-2"
+                        style={{ bottom: '33%' }}
+                    >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </button>
+                </div>
                 {error && <p className="login-error text-end">{error}</p>}
                 <div className="login-buttons">
                     <button
                         type='submit'
                         className="login-button primary"
                         onClick={handleSubmitNewPassword}
+                        disabled={loading}
                     >
-                        Seguinte
+                        {!loading && ('Seguinte')}
+                        {loading && (<Spinner size='sm' />)}
                     </button>
                 </div>
             </form>

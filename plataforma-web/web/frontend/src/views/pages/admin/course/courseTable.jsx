@@ -24,7 +24,7 @@ const CourseTable = () => {
                 cursosPorRaiz[raiz].push(curso);
             });
 
-            const cursosFinais = Object.values(cursosPorRaiz).map(grupo => {
+            let cursosFinais = Object.values(cursosPorRaiz).map(grupo => {
                 const ordenado = grupo.sort((a, b) => {
                     const dataA = new Date(a.ocorrencias_edicos?.[0]?.data_ult_ocorrencia || a.data_inicio_curso);
                     const dataB = new Date(b.ocorrencias_edicos?.[0]?.data_ult_ocorrencia || b.data_inicio_curso);
@@ -35,6 +35,13 @@ const CourseTable = () => {
                     ocorrencias_anteriores: ordenado.slice(1)
                 };
             });
+
+            cursosFinais.sort((a, b) => {
+            if (a.estado === b.estado) {
+                return a.id_curso - b.id_curso; 
+            }
+            return b.estado - a.estado; 
+            })
 
             setcursos(cursosFinais);
         } catch(error) {

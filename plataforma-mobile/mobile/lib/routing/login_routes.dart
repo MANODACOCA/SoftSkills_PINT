@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/pages/login/widget/change_forgot_pass.dart';
+import 'package:mobile/ui/pages/login/widget/check_two_fa.dart';
 import 'package:mobile/ui/pages/login/widget/confirm_to_change_pass.dart';
 import 'package:mobile/ui/pages/login/widget/forgetpassword.dart';
 import 'package:mobile/ui/pages/login/widget/loginpage.dart';
@@ -36,5 +37,10 @@ final List<GoRoute> loginRoutes = [
       name: 'changeforgotpass',
       path: '/changeforgotpass',
       builder: (context, state) => ChangePasswordForget(),
+    ),
+    GoRoute(
+      name: 'twofauten',
+      path: '/twofauten',
+      builder: (context, state) => ConfirmTwoFaScreen(),
     ),
 ];
