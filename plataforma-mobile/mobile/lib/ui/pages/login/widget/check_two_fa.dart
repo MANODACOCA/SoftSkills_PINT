@@ -1,9 +1,6 @@
-// ignore: file_names
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/shared/export.dart';
-import '../../../../API/two_fa.dart';
-
-//FALTA COLOCAR NUMA ROTA
+//import '../../../../API/utilizadores_api.dart';
 
 class ConfirmTwoFaScreen extends StatefulWidget {
   const ConfirmTwoFaScreen({super.key});
@@ -13,12 +10,11 @@ class ConfirmTwoFaScreen extends StatefulWidget {
 }
 
 class _ConfirmTwoFaScreenState extends State<ConfirmTwoFaScreen> {
-  String? _twoFaCode;
   @override
   void initState() {
     super.initState();
     //Funcao de criar twofa
-    _twoFaCode = '123456'; // Simulação de código TwoFA
+    // verificarCodigo -> Funcao de verificar o codigo twofa
   }
 
   @override
