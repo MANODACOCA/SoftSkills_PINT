@@ -27,59 +27,61 @@ const FilterHistorico = ({ searchTerm, onSearchChange, onApply, dataInicio, data
             onClean();
         }
     }
-
-    const hasDates = localDataInicio || localDataFim;
-
+    
     return (
-        <div className="row g-3 mb-4">
-            <div className='col-md-3'>
-                <div className="pe-2 my-4">
-                    <label className="form-label"><FcSearch /> Pesquisar</label>
-                    <input 
-                        type="search" 
-                        className="form-control" 
-                        value={searchTerm}
-                        onChange={(e) => onSearchChange && onSearchChange(e.target.value)}
-                        placeholder="Pesquisar..." 
-                    />
-                </div>    
-            </div>
-            <div className='border rounded-4 shadow-sm bg-white row col-md-9 g-3 py-3 px-1 d-flex align-items-end'>
-                <div className="col-md-4 my-2">
-                    <label className="form-label"><FcCalendar /> Data Início</label>
-                    <input 
-                        type="date" 
-                        className="form-control" 
-                        value={localDataInicio}
-                        onChange={(e) => setLocalDataInicio(e.target.value)}
-                    />
+        <div className="card p-3 mb-4 shadow-sm border-0">
+            <div className="row g-3 align-items-end">
+                <div className="col-md-4">
+                    <label htmlFor="searchInput" className="form-label fw-bold">Pesquisar</label>
+                    <div className="input-group">
+                        <span className="input-group-text"><FcSearch /></span>
+                        <input
+                            id="searchInput"
+                            type="search"
+                            className="form-control"
+                            placeholder="Por nome curso..."
+                            value={searchTerm}
+                            onChange={(e) => onSearchChange?.(e.target.value)}
+                        />
+                    </div>
                 </div>
-                <div className="col-md-4 my-2">
-                    <label className="form-label"><FcCalendar /> Data Fim</label>
-                    <input 
-                        type="date" 
-                        className="form-control"
-                        value={localDataFim}
-                        onChange={(e) => setLocalDataFim(e.target.value)}
-                    />
+
+                <div className="col-md-3">
+                    <label htmlFor="dataInicioInput" className="form-label fw-bold">Data Início</label>
+                    <div className="input-group">
+                        <span className="input-group-text"><FcCalendar /></span>
+                        <input
+                            id="dataInicioInput"
+                            type="date"
+                            className="form-control"
+                            value={localDataInicio}
+                            onChange={(e) => setLocalDataInicio(e.target.value)}
+                        />
+                    </div>
                 </div>
-                <div className="col-md-4 d-flex align-items-end my-2"> 
-                    {!hasDates && 
-                        <button className="btn btn-outline-primary w-100" onClick={aplicarFiltros}>
-                            <FaFilter /> Aplicar
-                        </button>
-                    }
-                    {hasDates &&
-                        <div className='d-flex w-100'>
-                            <button className="btn btn-outline-primary w-75 me-2" onClick={aplicarFiltros}>
-                                <FaFilter /> Aplicar
-                            </button>
-                            <button className="btn btn-outline-danger w-25" onClick={limparFiltros}>
-                                <i className='bi bi-trash'></i>
-                            </button>
-                        </div>
-                    }
-                </div>    
+
+                <div className="col-md-3">
+                    <label htmlFor="dataFimInput" className="form-label fw-bold">Data Fim</label>
+                    <div className="input-group">
+                        <span className="input-group-text"><FcCalendar /></span>
+                        <input
+                            id="dataFimInput"
+                            type="date"
+                            className="form-control"
+                            value={localDataFim}
+                            onChange={(e) => setLocalDataFim(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                <div className="col-md-2 d-grid gap-2">
+                    <button className="btn btn-primary" onClick={aplicarFiltros}>
+                        <FaFilter className="me-2" /> Aplicar
+                    </button>
+                    <button className="btn btn-outline-danger" onClick={limparFiltros} disabled={!localDataInicio && !localDataFim}>
+                        <i className="bi bi-x-circle me-2"></i> Limpar
+                    </button>
+                </div>
             </div>
         </div>
     );

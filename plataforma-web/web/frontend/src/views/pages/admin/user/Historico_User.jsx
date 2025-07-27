@@ -28,9 +28,9 @@ const HistoryUser = () => {
         setDataInicio('');
     }
 
-    const fetchEnrolledCourses = async (userId) => {
+    const fetchEnrolledCourses = async (userId, searchTerm = ' ', dataInicio = '', dataFim = '') => {
         try {
-          const data = await getEnrolledCourses(userId, 'todos');
+          const data = await getEnrolledCourses(userId, 'todos', searchTerm || " ", dataFim || null, dataInicio || null);
     
           const formatted = data.map(item => {
             const curso = item.id_curso_curso || {};
@@ -54,9 +54,9 @@ const HistoryUser = () => {
         }
     };
 
-    const fetchCompletedCourses = async (userId) => {
+    const fetchCompletedCourses = async (userId, searchTerm = ' ', dataInicio = '', dataFim = '') => {
         try {
-            const data = await getCompletedCourses(userId);
+            const data = await getCompletedCourses(userId, 'todos', searchTerm || " ", dataFim || null, dataInicio || null);
             setCursosTerminados(data);
             console.log(data);
         } catch (error) {
@@ -110,8 +110,8 @@ const HistoryUser = () => {
     }
 
     useEffect(() => {
-        fetchEnrolledCourses(id);
-        fetchCompletedCourses(id);
+        fetchEnrolledCourses(id, searchTerm, dataInicio, dataFim);
+        fetchCompletedCourses(id, searchTerm, dataInicio, dataFim);
         fetchCursosLecionadosAtualmente(id, searchTerm, dataInicio, dataFim);
         fetchCursosLecionadosTerminados(id, searchTerm, dataInicio, dataFim);
         fetchUtilizador(id);
@@ -163,6 +163,7 @@ const HistoryUser = () => {
                                 dataInicio={dataInicio}
                                 dataFim={dataFim}
                                 onApply={handleApply}
+                                onClean={handleClean}
                             />
                             <div className="mt-4">
                                 {cursosInscrito.length === 0 ? (
@@ -195,6 +196,7 @@ const HistoryUser = () => {
                                 dataInicio={dataInicio}
                                 dataFim={dataFim}
                                 onApply={handleApply}
+                                onClean={handleClean}
                             />
                             <div className="mt-4">
                                 {cursosTerminados.length === 0 ? (
