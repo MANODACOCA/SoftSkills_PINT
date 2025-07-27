@@ -33,7 +33,7 @@ const FilterHistorico = ({ searchTerm, onSearchChange, onApply, dataInicio, data
     return (
         <div className="row g-3 mb-4">
             <div className='col-md-3'>
-                <div className="pe-2 my-2">
+                <div className="pe-2 my-4">
                     <label className="form-label"><FcSearch /> Pesquisar</label>
                     <input 
                         type="search" 
@@ -44,7 +44,7 @@ const FilterHistorico = ({ searchTerm, onSearchChange, onApply, dataInicio, data
                     />
                 </div>    
             </div>
-            <div className='border rounded shadow-sm bg-light row col-md-9 g-3 p-0 d-flex align-items-end'>
+            <div className='border rounded-4 shadow-sm bg-white row col-md-9 g-3 py-3 px-1 d-flex align-items-end'>
                 <div className="col-md-4 my-2">
                     <label className="form-label"><FcCalendar /> Data Início</label>
                     <input 
