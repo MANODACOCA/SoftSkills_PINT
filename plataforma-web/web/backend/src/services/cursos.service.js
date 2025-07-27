@@ -293,8 +293,8 @@ async function getEnrolledCoursesForUser(userId, tipologia = null, search, data_
     if (data_inicio_curso && data_fim_curso) {
       cursoWhere[Op.and] = cursoWhere[Op.and] || [];
       cursoWhere[Op.and].push({
-        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
-        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
+        data_inicio_curso: { [Op.gte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.lte]: new Date(data_fim_curso) }
       });
     }
 
@@ -399,8 +399,8 @@ async function getCompleteCoursesFromUser(userId, tipologia = null, search, data
     if (data_inicio_curso && data_fim_curso) {
       cursoWhere[Op.and] = cursoWhere[Op.and] || [];
       cursoWhere[Op.and].push({
-        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
-        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
+        data_inicio_curso: { [Op.gte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.lte]: new Date(data_fim_curso) }
       });
     }
 
@@ -834,10 +834,10 @@ async function getCursosLecionadosTerminadosService(userId, search, data_inicio_
     }
 
     if (data_inicio_curso && data_fim_curso) {
-      whereCurso[Op.and] = whereCurso[Op.and] || [];
-      whereCurso[Op.and].push({
-        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
-        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
+      cursoWhere[Op.and] = cursoWhere[Op.and] || [];
+      cursoWhere[Op.and].push({
+        data_inicio_curso: { [Op.gte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.lte]: new Date(data_fim_curso) }
       });
     }
 
@@ -893,10 +893,10 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
     }
 
     if (data_inicio_curso && data_fim_curso) {
-      whereCurso[Op.and] = whereCurso[Op.and] || [];
-      whereCurso[Op.and].push({
-        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
-        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
+      cursoWhere[Op.and] = cursoWhere[Op.and] || [];
+      cursoWhere[Op.and].push({
+        data_inicio_curso: { [Op.gte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.lte]: new Date(data_fim_curso) }
       });
     }
 
