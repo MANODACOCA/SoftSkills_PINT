@@ -1,10 +1,10 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
+// ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously, prefer_const_constructors_in_immutables, avoid_print
 
+import 'dart:async';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/shared/export.dart';
 import 'package:pinput/pinput.dart';
 import '../../../../API/utilizadores_api.dart';
-//import '../../../../API/utilizadores_api.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../services/auth_service.dart';
@@ -12,7 +12,7 @@ import '../../../../provider/user.dart';
 import '../../../../provider/auth_provider.dart';
 
 class ConfirmTwoFaScreen extends StatefulWidget {
-  const ConfirmTwoFaScreen({super.key, required this.id});
+  ConfirmTwoFaScreen({super.key, required this.id});
 
   final String id;
 
@@ -25,14 +25,45 @@ class _ConfirmTwoFaScreenState extends State<ConfirmTwoFaScreen> {
   bool errouCodigo = false;
   Color colorPIN = AppColors.primary;
   Map<String, dynamic> user = {};
+  bool codigo_valido = true;
+  int tempoRestante = 60;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    //Funcao de criar twofa
     fetchUtilizador(int.parse(widget.id));
     _checkRememberMe();
-    // verificarCodigo -> Funcao de verificar o codigo twofa
+    iniciarTimer();
+  }
+
+  void iniciarTimer() {
+    _timer?.cancel();
+    setState(() {
+      tempoRestante = 60;
+      codigo_valido = true;
+    });
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (tempoRestante > 0) {
+        setState(() {
+          tempoRestante--;
+        });
+      } else {
+        timer.cancel();
+        setState(() {
+          codigo_valido = false;
+        });
+        UtilizadoresApi().resendCodigo(user['email']);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    pininputController.dispose();
+    super.dispose();
   }
 
   Future<void> _checkRememberMe() async {
@@ -48,7 +79,7 @@ class _ConfirmTwoFaScreenState extends State<ConfirmTwoFaScreen> {
         user = esteUtilizador;
       });
     } catch (e) {
-      print('Erro ao buscar o curso: $e');
+      print('Erro ao buscar o utilizador: $e');
     }
   }
 
@@ -63,7 +94,7 @@ class _ConfirmTwoFaScreenState extends State<ConfirmTwoFaScreen> {
         centerTitle: true,
         backgroundColor: AppColors.primary,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             context.go('/login');
           },
@@ -71,7 +102,7 @@ class _ConfirmTwoFaScreenState extends State<ConfirmTwoFaScreen> {
       ),
       body: GestureDetector(
         child: Container(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -91,10 +122,7 @@ class _ConfirmTwoFaScreenState extends State<ConfirmTwoFaScreen> {
                       defaultPinTheme: PinTheme(
                         width: 50,
                         height: 50,
-                        textStyle: const TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                        ),
+                        textStyle: TextStyle(fontSize: 20, color: Colors.black),
                         decoration: BoxDecoration(
                           border: Border.all(color: colorPIN),
                           borderRadius: BorderRadius.circular(8),
@@ -105,90 +133,115 @@ class _ConfirmTwoFaScreenState extends State<ConfirmTwoFaScreen> {
                 ),
               ),
               SizedBox(height: 10),
-              if (errouCodigo == true)
+              if (errouCodigo)
                 Text(
                   "Código incorreto ou inválido. Tente novamente.",
                   style: TextStyle(color: Colors.red, fontSize: 14),
                 ),
               SizedBox(height: 5),
               Container(
-                padding: const EdgeInsets.only(right: 25),
+                padding: EdgeInsets.only(right: 25),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size(0, 0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    onPressed: () {
-                      colorPIN = AppColors.primary;
-                      pininputController.clear();
-                      setState(() {
-                        errouCodigo = false;
-                      });
-                      UtilizadoresApi().resendCodigo(user['email']);
-                    },
-                    child: Text(
-                      "Reenviar Código",
-                      style: TextStyle(
-                        color: AppColors.secondary,
-                        fontSize: 14,
-                        decoration: TextDecoration.underline,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "Tempo restante: ",
+                        style: TextStyle(
+                          color: AppColors.secondary,
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
+                      Text(
+                        "$tempoRestante",
+                        style: TextStyle(
+                          color: AppColors.secondary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        " s",
+                        style: TextStyle(
+                          color: AppColors.secondary,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
               SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    final response = await UtilizadoresApi().verificarCodigo(
-                      user['email'],
-                      pininputController.text,
-                    );
-                    if (response['success'] == true) {
-                      // recupera token e userId pendentes
-                      final prefs = await SharedPreferences.getInstance();
-                      final token = prefs.getString('pending_token');
-                      final userIdStr = prefs.getString('pending_userId');
-                      if (token != null && userIdStr != null) {
-                        final authProvider = Provider.of<AuthProvider>(
-                          context,
-                          listen: false,
-                        );
-                        final userModel = User(id: userIdStr);
-                        authProvider.setUser(userModel, token: token);
-                        final rememberMe =
-                            prefs.getBool('remember_me') ?? false;
-                        await authService.login(token, rememberMe);
-                        // limpa valores pendentes
-                        await prefs.remove('pending_token');
-                        await prefs.remove('pending_userId');
+              if (codigo_valido)
+                ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      final response = await UtilizadoresApi().verificarCodigo(
+                        user['email'],
+                        pininputController.text,
+                      );
+                      if (response['success'] == true) {
+                        final prefs = await SharedPreferences.getInstance();
+                        final token = prefs.getString('pending_token');
+                        final userIdStr = prefs.getString('pending_userId');
+                        if (token != null && userIdStr != null) {
+                          final authProvider = Provider.of<AuthProvider>(
+                            context,
+                            listen: false,
+                          );
+                          final userModel = User(id: userIdStr);
+                          authProvider.setUser(userModel, token: token);
+                          final rememberMe =
+                              prefs.getBool('remember_me') ?? false;
+                          await authService.login(token, rememberMe);
+                          await prefs.remove('pending_token');
+                          await prefs.remove('pending_userId');
+                        }
+                        context.go('/homepage');
+                      } else {
+                        setState(() {
+                          errouCodigo = true;
+                          colorPIN = Colors.red;
+                        });
                       }
-                      // finalmente navega para a home
-                      context.go('/homepage');
-                    } else {
+                    } catch (e) {
                       setState(() {
                         errouCodigo = true;
                         colorPIN = Colors.red;
                       });
                     }
-                  } catch (e) {
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    textStyle: TextStyle(fontSize: 16),
+                  ),
+                  child: Text(
+                    "Verificar",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+              else
+                ElevatedButton(
+                  onPressed: () {
+                    UtilizadoresApi().resendCodigo(user['email']);
+                    iniciarTimer(); // Reinicia o timer manual
                     setState(() {
-                      errouCodigo = true;
-                      colorPIN = Colors.red;
+                      errouCodigo = false;
+                      colorPIN = AppColors.primary;
                     });
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  textStyle: TextStyle(fontSize: 16),
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    textStyle: TextStyle(fontSize: 16),
+                  ),
+                  child: Text(
+                    "Reenviar Código",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-                child: Text("Verificar", style: TextStyle(color: Colors.white)),
-              ),
             ],
           ),
         ),
