@@ -205,12 +205,13 @@ class _LoginPage extends State<LoginPage> {
                           _emailController.text,
                           _passwordController.text,
                         );
-                        print('==================Response: $response');
+                        print('Response: $response');
                         if (response['success'] == true) {
                           final token = response['token'];
                           final prefs = await SharedPreferences.getInstance();
 
                           var userId = await api.getUserIdFromToken(token);
+                          print('User ID: $userId');
                           if (userId == null) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -233,7 +234,7 @@ class _LoginPage extends State<LoginPage> {
                               userId.toString(),
                             );
                             if (!mounted) return;
-                            context.go('/twofauten');
+                            context.go('/twofauten', extra: userId.toString());
                           } else {
                             // Login normal, porque 2FA está desativado
                             await prefs.setString(

@@ -204,12 +204,31 @@ class UtilizadoresApi {
         body: jsonEncode({'email': email, 'codigo': codigo}),
       );
       if (response.statusCode == 200) {
+        print('===Código verificado com sucesso: ${response.body}');
         return jsonDecode(response.body);
       }
       throw Exception('Erro ao validar codigo 2FA!');
     } catch (error) {
       print('Erro ao validar codigo 2FA: $error');
       throw error;
+    }
+  }
+
+  Future<Map<String, dynamic>> resendCodigo(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$urlAPI/resend-codigo'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email}),
+      );
+      if (response.statusCode == 200) {
+        print('=== Código reenviado com sucesso: ${response.body}');
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
+      throw Exception('Erro ao reenviar código 2FA!');
+    } catch (error) {
+      print('Erro ao reenviar código 2FA: $error');
+      rethrow;
     }
   }
 

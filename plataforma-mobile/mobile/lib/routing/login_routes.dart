@@ -41,6 +41,6 @@ final List<GoRoute> loginRoutes = [
     GoRoute(
       name: 'twofauten',
       path: '/twofauten',
-      builder: (context, state) => ConfirmTwoFaScreen(),
+      builder: (context, state) => ConfirmTwoFaScreen(id: (state.extra as String?) ?? ''),
     ),
 ];
