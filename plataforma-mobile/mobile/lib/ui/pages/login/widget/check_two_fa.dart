@@ -174,72 +174,85 @@ class _ConfirmTwoFaScreenState extends State<ConfirmTwoFaScreen> {
               ),
               SizedBox(height: 20),
               if (codigo_valido)
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      final response = await UtilizadoresApi().verificarCodigo(
-                        user['email'],
-                        pininputController.text,
-                      );
-                      if (response['success'] == true) {
-                        final prefs = await SharedPreferences.getInstance();
-                        final token = prefs.getString('pending_token');
-                        final userIdStr = prefs.getString('pending_userId');
-                        if (token != null && userIdStr != null) {
-                          final authProvider = Provider.of<AuthProvider>(
-                            context,
-                            listen: false,
-                          );
-                          final userModel = User(id: userIdStr);
-                          authProvider.setUser(userModel, token: token);
-                          final rememberMe =
-                              prefs.getBool('remember_me') ?? false;
-                          await authService.login(token, rememberMe);
-                          await prefs.remove('pending_token');
-                          await prefs.remove('pending_userId');
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      try {
+                        final response = await UtilizadoresApi()
+                            .verificarCodigo(
+                              user['email'],
+                              pininputController.text,
+                            );
+                        if (response['success'] == true) {
+                          final prefs = await SharedPreferences.getInstance();
+                          final token = prefs.getString('pending_token');
+                          final userIdStr = prefs.getString('pending_userId');
+                          if (token != null && userIdStr != null) {
+                            final authProvider = Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            );
+                            final userModel = User(id: userIdStr);
+                            authProvider.setUser(userModel, token: token);
+                            final rememberMe =
+                                prefs.getBool('remember_me') ?? false;
+                            await authService.login(token, rememberMe);
+                            await prefs.remove('pending_token');
+                            await prefs.remove('pending_userId');
+                          }
+                          context.go('/homepage');
+                        } else {
+                          setState(() {
+                            errouCodigo = true;
+                            colorPIN = Colors.red;
+                          });
                         }
-                        context.go('/homepage');
-                      } else {
+                      } catch (e) {
                         setState(() {
                           errouCodigo = true;
                           colorPIN = Colors.red;
                         });
                       }
-                    } catch (e) {
-                      setState(() {
-                        errouCodigo = true;
-                        colorPIN = Colors.red;
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    textStyle: TextStyle(fontSize: 16),
-                  ),
-                  child: Text(
-                    "Verificar",
-                    style: TextStyle(color: Colors.white),
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                      textStyle: TextStyle(fontSize: 16),
+                    ),
+                    child: Text(
+                      "Verificar",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 )
               else
-                ElevatedButton(
-                  onPressed: () {
-                    UtilizadoresApi().resendCodigo(user['email']);
-                    iniciarTimer(); // Reinicia o timer manual
-                    setState(() {
-                      errouCodigo = false;
-                      colorPIN = AppColors.primary;
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                    textStyle: TextStyle(fontSize: 16),
-                  ),
-                  child: Text(
-                    "Reenviar Código",
-                    style: TextStyle(color: Colors.white),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      UtilizadoresApi().resendCodigo(user['email']);
+                      iniciarTimer(); // Reinicia o timer
+                      setState(() {
+                        errouCodigo = false;
+                        colorPIN = AppColors.primary;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 32,
+                        vertical: 12,
+                      ),
+                      textStyle: TextStyle(fontSize: 16),
+                    ),
+                    child: Text(
+                      "Reenviar Código",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
             ],

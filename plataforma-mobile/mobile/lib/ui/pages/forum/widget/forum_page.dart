@@ -1,9 +1,11 @@
 // ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, prefer_typing_uninitialized_variables, unused_field
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
-
 import 'package:mobile/ui/core/shared/forum/card_post.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import '../../../../API/utilizadores_api.dart';
 import '../../../core/shared/export.dart';
@@ -29,13 +31,14 @@ class _ForumPageState extends State<ForumPage> {
 
   late var forumInfo;
   late List users = [];
+  final List<File> _attachedFiles = [];
   late Map<String, dynamic>? forumPost;
   late List<dynamic> posts = [];
   late String forumID = widget.forumID;
   String _ordem = "Mais Recentes";
 
   Future<void> carregarDados([String? ordem]) async {
-    _ordem = ordem ?? _ordem;  
+    _ordem = ordem ?? _ordem;
     try {
       forumInfo = await ForumAPI.getConteudosPartilhado(widget.forumID);
       forumPost = await ForumAPI.getPost(widget.forumID, ordenar: _ordem);
@@ -175,10 +178,61 @@ class _ForumPageState extends State<ForumPage> {
             labelText: 'Descrição do Post',
           ),
         ),
+        if (_attachedFiles.isNotEmpty) ...[
+          SizedBox(height: 12),
+          Text(
+            "Ficheiros anexados:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Column(
+            children:
+                _attachedFiles.map((file) {
+                  final name = p.basename(file.path);
+                  return ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Icon(Icons.insert_drive_file),
+                    title: Text(name, overflow: TextOverflow.ellipsis),
+                    trailing: IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        setState(() {
+                          _attachedFiles.remove(file);
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
+          ),
+        ],
         SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            ElevatedButton.icon(
+              onPressed: () async {
+                FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  allowMultiple: true,
+                );
+                if (result != null) {
+                  List<File> files = result.paths.map((p) => File(p!)).toList();
+                  setState(() {
+                    final newOnes = files.where(
+                      (f) =>
+                          !_attachedFiles.any((exist) => exist.path == f.path),
+                    );
+                    _attachedFiles.addAll(newOnes);
+                  });
+                  print(
+                    'Selected files: ${_attachedFiles.map((f) => f.path).toList()}',
+                  );
+                }
+              },
+              label: Text('Anexar', style: TextStyle(color: Colors.white)),
+              icon: Icon(Icons.attach_file, color: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+              ),
+            ),
             ElevatedButton.icon(
               icon: Icon(Icons.send, color: Colors.white),
               label: Text("Publicar", style: TextStyle(color: Colors.white)),
@@ -188,18 +242,22 @@ class _ForumPageState extends State<ForumPage> {
               onPressed: () async {
                 final description = textControllerPost.text;
                 if (description.isNotEmpty) {
+                  final List<String> caminhos =
+                      _attachedFiles.map((f) => f.path).toList();
                   try {
                     final postData = {
                       "id_utilizador": userId,
                       "id_conteudos_partilhado": widget.forumID,
                       "id_formato": 1,
                       "texto_post": description,
+                      "caminho_ficheiro": caminhos,
                     };
                     await ForumAPI.createPost(postData);
                     setState(() {
                       textControllerPost.clear();
                       addPost = false;
                       paint = Colors.white;
+                      _attachedFiles.clear();
                     });
 
                     await carregarDados();
