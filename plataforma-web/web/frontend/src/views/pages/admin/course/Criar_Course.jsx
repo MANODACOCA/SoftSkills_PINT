@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { list_formadores } from "../../../../api/formadores_axios";
 import { getCategoriaAreaTopico } from "../../../../api/topico_axios";
 import { create_cursos } from "../../../../api/cursos_axios";
@@ -27,6 +27,7 @@ const CreateCourse = () => {
     const {state} = useLocation();
     const cursoAnterior = state?.cursoAnterior || null;
     const isNovaOcorrencia = !!cursoAnterior;
+    const textareaRef = useRef(null);
 
     const todayStr = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" });
     const [cursoDataTouched, setCursoDataTouched] = useState(false);
@@ -81,9 +82,9 @@ const CreateCourse = () => {
 
         const dToday = new Date(`${todayStr}T00:00:00`);
         const dInscIni = new Date(`${data_inicio_inscricao}T00:00:00`);
-        const dInscFim = new Date(`${data_fim_inscricao}T00:00:00`);
+        const dInscFim = new Date(`${data_fim_inscricao}T23:59:59`);
         const dCursoIni = new Date(`${data_inicio_curso}T00:00:00`);
-        const dCursoFim = new Date(`${data_fim_curso}T00:00:00`);
+        const dCursoFim = new Date(`${data_fim_curso}T23:59:59`);
 
         if ([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
             Swal.fire({
@@ -139,7 +140,13 @@ const CreateCourse = () => {
             try {
                 console.log({ cursoData: cursos, sincrono: cursos.issincrono ? sincrono : null });
                 const payload = {
-                    cursoData: cursos,
+                    cursoData: {
+                        ...cursos,
+                        data_inicio_inscricao: dInscIni.toISOString(),
+                        data_fim_inscricao: dInscFim.toISOString(),
+                        data_inicio_curso: dCursoIni.toISOString(),
+                        data_fim_curso: dCursoFim.toISOString(),
+                    } ,
                     sincrono: cursos.issincrono ? sincrono : null,
                 };
 
@@ -274,6 +281,20 @@ const CreateCourse = () => {
         }
     }
 
+    const autoResize = () => {
+        const el = textareaRef.current;
+        if(el) {
+            el.style.height = 'auto';
+            el.style.height = `${el.scrollHeight}px`;
+        }
+    }
+
+    const handleChange = (e) => {
+        const value = e.target.value;
+        setCursos(prev => ({ ...prev, descricao_curso: value}));
+        autoResize();
+    }
+
     const prepararCursoAnterior = () => {
         if (!cursoAnterior || !user) return;
 
@@ -318,6 +339,10 @@ const CreateCourse = () => {
     };
 
     useEffect(() => {
+        autoResize();
+    }, [cursos.descricao_curso])
+
+    useEffect(() => {
         if (user) {
             fetchFormadores();
             fetchCategoriaAreaTopico();
@@ -343,9 +368,10 @@ const CreateCourse = () => {
                                 <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." value={cursos.nome_curso} onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required disabled={isNovaOcorrencia}/>
                             </div>
 
-                            <div className='mt-2'>
+                            <div className='mt-2 position-relative'>
                                 <label className='form-label fw-bold'>Descrição do Curso</label>
-                                <textarea name="descricao_curso" className='form-control' rows="4" placeholder="Descrição do curso..." value={cursos.descricao_curso} onChange={(e) => setCursos(prev => ({ ...prev, descricao_curso: e.target.value }))} required />
+                                <textarea ref={textareaRef} name="descricao_curso" className='form-control pe-2' rows="4" placeholder="Descrição do curso..." value={cursos.descricao_curso} onChange={handleChange} maxLength={2000} required style={{ resize: 'none' }}/>
+                                <div className="position-absolute" style={{bottom: '5px', right: '10px', fontSize: '0.8rem', color: '#6c757d'}}>{cursos.descricao_curso.length}/2000</div>
                             </div>
 
                             <div className='mt-2'>
