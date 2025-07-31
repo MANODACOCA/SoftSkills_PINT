@@ -205,7 +205,7 @@ class _CardPostState extends State<CardPost> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(result.message ?? 'Não foi possível abrir o arquivo'),
+            content: Text(result.message),
           ),
         );
       }

@@ -196,30 +196,27 @@ class ForumAPI {
     required String textoPost,
     required String userId,
     required String forumId,
-    List<File>? ficheiros,
+    File? ficheiro, // Apenas um ficheiro
   }) async {
     final uri = Uri.parse('https://softskills-api.onrender.com/posts/create');
-
     var request = http.MultipartRequest('POST', uri);
 
-    // Campos simples (enviados como form-data)
+    // Campos simples (form-data)
     request.fields['texto_post'] = textoPost;
     request.fields['id_utilizador'] = userId;
     request.fields['id_conteudos_partilhado'] = forumId;
-    request.fields['id_formato'] = '1'; // fixo, como no frontend Web
+    request.fields['id_formato'] = '1'; // valor fixo como no frontend web
 
-    // Enviar ficheiros (se houver)
-    if (ficheiros != null && ficheiros.isNotEmpty) {
-      for (var file in ficheiros) {
-        final fileName = p.basename(file.path);
-        request.files.add(
-          await http.MultipartFile.fromPath(
-            'ficheiro', // deve corresponder ao nome esperado pela API
-            file.path,
-            filename: fileName,
-          ),
-        );
-      }
+    // Enviar apenas 1 ficheiro (se fornecido)
+    if (ficheiro != null) {
+      final fileName = p.basename(ficheiro.path);
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'ficheiro', // nome do campo esperado pela API
+          ficheiro.path,
+          filename: fileName,
+        ),
+      );
     }
 
     try {
@@ -233,7 +230,9 @@ class ForumAPI {
           streamedResponse.statusCode == 201) {
         return jsonDecode(responseBody);
       } else {
-        throw Exception('Erro ao criar Post!');
+        throw Exception(
+          'Erro ao criar Post! Código ${streamedResponse.statusCode}',
+        );
       }
     } catch (e) {
       print('Erro ao criar Post! $e');

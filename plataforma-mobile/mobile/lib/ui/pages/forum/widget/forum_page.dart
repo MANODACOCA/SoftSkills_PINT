@@ -9,7 +9,6 @@ import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import '../../../../API/utilizadores_api.dart';
 import '../../../core/shared/export.dart';
-import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class ForumPage extends StatefulWidget {
@@ -32,7 +31,7 @@ class _ForumPageState extends State<ForumPage> {
 
   late var forumInfo;
   late List users = [];
-  final List<File> files = [];
+  File? ficheiro; // Apenas um ficheiro
   late Map<String, dynamic>? forumPost;
   late List<dynamic> posts = [];
   late String forumID = widget.forumID;
@@ -133,7 +132,7 @@ class _ForumPageState extends State<ForumPage> {
                                 ...List.generate(posts.length, (index) {
                                   final post = posts[index];
                                   final user = post['id_utilizador_utilizador'];
-                                  print('====== Post: $post'); // Debugging line
+                                  print('====== Post: $post');
                                   return Padding(
                                     padding: const EdgeInsets.only(
                                       bottom: 16.0,
@@ -180,30 +179,27 @@ class _ForumPageState extends State<ForumPage> {
             labelText: 'Descrição do Post',
           ),
         ),
-        if (files.isNotEmpty) ...[
+        if (ficheiro != null) ...[
           SizedBox(height: 12),
           Text(
-            "Ficheiros anexados:",
+            "Ficheiro anexado:",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          Column(
-            children:
-                files.map((file) {
-                  final name = p.basename(file.path);
-                  return ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: Icon(Icons.insert_drive_file),
-                    title: Text(name, overflow: TextOverflow.ellipsis),
-                    trailing: IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        setState(() {
-                          files.remove(file);
-                        });
-                      },
-                    ),
-                  );
-                }).toList(),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(Icons.insert_drive_file),
+            title: Text(
+              p.basename(ficheiro!.path),
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                setState(() {
+                  ficheiro = null;
+                });
+              },
+            ),
           ),
         ],
         SizedBox(height: 12),
@@ -212,21 +208,13 @@ class _ForumPageState extends State<ForumPage> {
           children: [
             ElevatedButton.icon(
               onPressed: () async {
-                FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  allowMultiple: true,
-                );
-                if (result != null) {
-                  List<File> files = result.paths.map((p) => File(p!)).toList();
+                FilePickerResult? result =
+                    await FilePicker.platform.pickFiles();
+                if (result != null && result.files.single.path != null) {
                   setState(() {
-                    final newOnes = files.where(
-                      (f) =>
-                          !files.any((exist) => exist.path == f.path),
-                    );
-                    files.addAll(newOnes);
+                    ficheiro = File(result.files.single.path!);
                   });
-                  print(
-                    'Selected files: ${files.map((f) => f.path).toList()}',
-                  );
+                  print('Ficheiro selecionado: ${ficheiro!.path}');
                 }
               },
               label: Text('Anexar', style: TextStyle(color: Colors.white)),
@@ -249,14 +237,14 @@ class _ForumPageState extends State<ForumPage> {
                       textoPost: description,
                       userId: userId!,
                       forumId: widget.forumID,
-                      ficheiros: files,
+                      ficheiro: ficheiro,
                     );
 
                     setState(() {
                       textControllerPost.clear();
                       addPost = false;
                       paint = Colors.white;
-                      files.clear();
+                      ficheiro = null;
                     });
 
                     await carregarDados();
