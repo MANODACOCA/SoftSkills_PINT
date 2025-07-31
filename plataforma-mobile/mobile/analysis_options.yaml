@@ -13,6 +13,8 @@ analyzer:
     avoid_print: ignore
     unused_local_variable: ignore
     non_constant_identifier_names: ignore
+    file_names: ignore
+    depend_on_referenced_packages: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

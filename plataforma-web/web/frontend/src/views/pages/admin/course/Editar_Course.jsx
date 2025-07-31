@@ -184,9 +184,9 @@ const EditCourse = () => {
         
         const dToday = new Date(`${todayStr}T00:00:00`);
         const dInscIni = new Date(`${cursos.data_inicio_inscricao}T00:00:00`);
-        const dInscFim = new Date(`${cursos.data_fim_inscricao}T00:00:00`);
+        const dInscFim = new Date(`${cursos.data_fim_inscricao}T23:59:59`);
         const dCursoIni = new Date(`${cursos.data_inicio_curso}T00:00:00`);
-        const dCursoFim = new Date(`${cursos.data_fim_curso}T00:00:00`);
+        const dCursoFim = new Date(`${cursos.data_fim_curso}T23:59:59`);
         
         if(cursos.isassincrono === false && !sincrono.id_formador){
             Swal.fire({
@@ -1223,7 +1223,8 @@ const EditCourse = () => {
                                     <label className='mt-2 fw-bold'>Descrição Formador</label>
                                     <textarea name="descricao_formador" value={formadores?.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly disabled={isViewMode}/>
                                     <label className='mt-2 fw-bold'>Número Vagas</label>
-                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} required disabled={isViewMode}/>
+                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} required 
+                                        disabled={isViewMode || (cursos.data_fim_inscricao && new Date() > new Date(cursos.data_fim_inscricao))}/>
                                 </div>
                             )}
 

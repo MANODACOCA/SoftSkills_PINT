@@ -248,7 +248,7 @@ async function getCourseDestaqueSincrono() {
 }
 
 /*Esta funcao vai buscar todos os cursos em curso de um determinado formando*/
-async function getEnrolledCoursesForUser(userId, tipologia = null) {
+async function getEnrolledCoursesForUser(userId, tipologia = null, search, data_inicio_curso, data_fim_curso) {
   try {
     if (!userId) {
       console.log('ID do formando não fornecido');
@@ -276,6 +276,35 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
       cursoWhere.issincrono = true;
     } else if (tipologia === 'assincrono') {
       cursoWhere.isassincrono = true;
+    }
+
+    if (data_inicio_curso && !data_fim_curso) {
+      cursoWhere.data_inicio_curso = {
+        [Op.eq]: new Date(data_inicio_curso)
+      };
+    }
+
+    if (data_fim_curso && !data_inicio_curso) {
+      cursoWhere.data_fim_curso = {
+        [Op.eq]: new Date(data_fim_curso)
+      };
+    }
+
+    if (data_inicio_curso && data_fim_curso) {
+      cursoWhere[Op.and] = cursoWhere[Op.and] || [];
+      cursoWhere[Op.and].push({
+        data_inicio_curso: { [Op.gte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.lte]: new Date(data_fim_curso) }
+      });
+    }
+
+    if (search) {
+      const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const searchFilter = Sequelize.literal(
+        `unaccent("id_curso_curso"."nome_curso") ILIKE '%${unaccentedSearch}%'`
+      );
+      cursoWhere[Op.and] = cursoWhere[Op.and] || [];
+      cursoWhere[Op.and].push(searchFilter);
     }
 
     const enrolledCourses = await inscricoes.findAll({
@@ -324,7 +353,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null) {
 }
 
 /*Esta funcao vai buscar todos os cursos completosa de um determinado formando*/
-async function getCompleteCoursesFromUser(userId, tipologia = null) {
+async function getCompleteCoursesFromUser(userId, tipologia = null, search, data_inicio_curso, data_fim_curso) {
 
   try {
     if (!userId) {
@@ -353,6 +382,35 @@ async function getCompleteCoursesFromUser(userId, tipologia = null) {
       cursoWhere.issincrono = true;
     } else if (tipologia === 'assincrono') {
       cursoWhere.isassincrono = true;
+    }
+
+    if (data_inicio_curso && !data_fim_curso) {
+      cursoWhere.data_inicio_curso = {
+        [Op.eq]: new Date(data_inicio_curso)
+      };
+    }
+
+    if (data_fim_curso && !data_inicio_curso) {
+      cursoWhere.data_fim_curso = {
+        [Op.eq]: new Date(data_fim_curso)
+      };
+    }
+
+    if (data_inicio_curso && data_fim_curso) {
+      cursoWhere[Op.and] = cursoWhere[Op.and] || [];
+      cursoWhere[Op.and].push({
+        data_inicio_curso: { [Op.gte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.lte]: new Date(data_fim_curso) }
+      });
+    }
+
+    if (search) {
+      const unaccentedSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      const searchFilter = Sequelize.literal(
+        `unaccent("id_curso_curso"."nome_curso") ILIKE '%${unaccentedSearch}%'`
+      );
+      cursoWhere[Op.and] = cursoWhere[Op.and] || [];
+      cursoWhere[Op.and].push(searchFilter);
     }
 
     const inscricoesComCursos = await inscricoes.findAll({//aqui vai buscar todas os cursos que tem inscricao daquele formando 
@@ -776,10 +834,10 @@ async function getCursosLecionadosTerminadosService(userId, search, data_inicio_
     }
 
     if (data_inicio_curso && data_fim_curso) {
-      whereCurso[Op.and] = whereCurso[Op.and] || [];
-      whereCurso[Op.and].push({
-        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
-        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
+      cursoWhere[Op.and] = cursoWhere[Op.and] || [];
+      cursoWhere[Op.and].push({
+        data_inicio_curso: { [Op.gte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.lte]: new Date(data_fim_curso) }
       });
     }
 
@@ -835,10 +893,10 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
     }
 
     if (data_inicio_curso && data_fim_curso) {
-      whereCurso[Op.and] = whereCurso[Op.and] || [];
-      whereCurso[Op.and].push({
-        data_inicio_curso: { [Op.lte]: new Date(data_fim_curso) },
-        data_fim_curso: { [Op.gte]: new Date(data_inicio_curso) }
+      cursoWhere[Op.and] = cursoWhere[Op.and] || [];
+      cursoWhere[Op.and].push({
+        data_inicio_curso: { [Op.gte]: new Date(data_inicio_curso) },
+        data_fim_curso: { [Op.lte]: new Date(data_fim_curso) }
       });
     }
 

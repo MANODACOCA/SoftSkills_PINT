@@ -1,12 +1,13 @@
 import 'package:go_router/go_router.dart';
 import '../utils/splash_page.dart';
+
 import 'login_routes.dart';
 import 'home_routes.dart';
 import 'forum_routes.dart';
 import 'cursos_routes.dart';
 import 'profile_routes.dart';
-import '../services/auth_service.dart';
 
+import '../services/auth_service.dart';
 final rotas = GoRouter(
   initialLocation: '/',
   refreshListenable: authService,
@@ -20,18 +21,25 @@ final rotas = GoRouter(
     final goingForgetPassword = state.uri.path == '/forgetpassword';
     final goingConfirmacao = state.uri.path == '/confirmacao';
     final goingChangeForgotPass = state.uri.path == '/changeforgotpass';
+    final goingTwoFaAuten      = state.uri.path == '/twofauten';
 
-    if (!initialized) return null; 
-    
-    if (!loggedIn && !goingLogin && !goingRegisto && !goingFirstLogin && !goingForgetPassword && !goingConfirmacao && !goingChangeForgotPass) return '/login';
+    if (!initialized) return null;
+
+    if (!loggedIn &&
+        !goingLogin &&
+        !goingRegisto &&
+        !goingFirstLogin &&
+        !goingForgetPassword &&
+        !goingConfirmacao &&
+        !goingChangeForgotPass &&
+        !goingTwoFaAuten) {
+      return '/login';
+    }
     if (loggedIn && goingLogin) return '/';
     return null;
   },
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (_, __) => const SplashPage(),
-    ),
+    GoRoute(path: '/', builder: (_, __) => const SplashPage()),
     ...loginRoutes,
     ...homeRoutes,
     ...forumRoutes,
@@ -39,4 +47,3 @@ final rotas = GoRouter(
     ...profileRoutes,
   ],
 );
-

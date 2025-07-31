@@ -1,9 +1,11 @@
-// ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, prefer_typing_uninitialized_variables, unused_field
+// ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, prefer_typing_uninitialized_variables, unused_field, use_build_context_synchronously
+import 'dart:io';
+import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
-
 import 'package:mobile/ui/core/shared/forum/card_post.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import '../../../../API/utilizadores_api.dart';
 import '../../../core/shared/export.dart';
@@ -29,13 +31,14 @@ class _ForumPageState extends State<ForumPage> {
 
   late var forumInfo;
   late List users = [];
+  File? ficheiro; // Apenas um ficheiro
   late Map<String, dynamic>? forumPost;
   late List<dynamic> posts = [];
   late String forumID = widget.forumID;
   String _ordem = "Mais Recentes";
 
   Future<void> carregarDados([String? ordem]) async {
-    _ordem = ordem ?? _ordem;  
+    _ordem = ordem ?? _ordem;
     try {
       forumInfo = await ForumAPI.getConteudosPartilhado(widget.forumID);
       forumPost = await ForumAPI.getPost(widget.forumID, ordenar: _ordem);
@@ -129,6 +132,7 @@ class _ForumPageState extends State<ForumPage> {
                                 ...List.generate(posts.length, (index) {
                                   final post = posts[index];
                                   final user = post['id_utilizador_utilizador'];
+                                  print('====== Post: $post');
                                   return Padding(
                                     padding: const EdgeInsets.only(
                                       bottom: 16.0,
@@ -175,10 +179,50 @@ class _ForumPageState extends State<ForumPage> {
             labelText: 'Descrição do Post',
           ),
         ),
+        if (ficheiro != null) ...[
+          SizedBox(height: 12),
+          Text(
+            "Ficheiro anexado:",
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(Icons.insert_drive_file),
+            title: Text(
+              p.basename(ficheiro!.path),
+              overflow: TextOverflow.ellipsis,
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                setState(() {
+                  ficheiro = null;
+                });
+              },
+            ),
+          ),
+        ],
         SizedBox(height: 12),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            ElevatedButton.icon(
+              onPressed: () async {
+                FilePickerResult? result =
+                    await FilePicker.platform.pickFiles();
+                if (result != null && result.files.single.path != null) {
+                  setState(() {
+                    ficheiro = File(result.files.single.path!);
+                  });
+                  print('Ficheiro selecionado: ${ficheiro!.path}');
+                }
+              },
+              label: Text('Anexar', style: TextStyle(color: Colors.white)),
+              icon: Icon(Icons.attach_file, color: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+              ),
+            ),
             ElevatedButton.icon(
               icon: Icon(Icons.send, color: Colors.white),
               label: Text("Publicar", style: TextStyle(color: Colors.white)),
@@ -189,22 +233,36 @@ class _ForumPageState extends State<ForumPage> {
                 final description = textControllerPost.text;
                 if (description.isNotEmpty) {
                   try {
-                    final postData = {
-                      "id_utilizador": userId,
-                      "id_conteudos_partilhado": widget.forumID,
-                      "id_formato": 1,
-                      "texto_post": description,
-                    };
-                    await ForumAPI.createPost(postData);
+                    await ForumAPI.createPost(
+                      textoPost: description,
+                      userId: userId!,
+                      forumId: widget.forumID,
+                      ficheiro: ficheiro,
+                    );
+
                     setState(() {
                       textControllerPost.clear();
                       addPost = false;
                       paint = Colors.white;
+                      ficheiro = null;
                     });
 
                     await carregarDados();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Post criado com sucesso!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
                   } catch (e) {
                     print('Erro ao criar post: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Erro ao criar post. Tente novamente.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 }
               },

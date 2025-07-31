@@ -176,9 +176,7 @@ class _LoginPage extends State<LoginPage> {
                   Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        
-                      ],
+                      children: const [],
                     ),
                   ),
                   const SizedBox(height: 30.0),
@@ -195,7 +193,9 @@ class _LoginPage extends State<LoginPage> {
                           _passwordController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Por favor, preencha todos os campos.'),
+                            content: Text(
+                              'Por favor, preencha todos os campos.',
+                            ),
                           ),
                         );
                         return;
@@ -205,38 +205,58 @@ class _LoginPage extends State<LoginPage> {
                           _emailController.text,
                           _passwordController.text,
                         );
+                        print('Response: $response');
                         if (response['success'] == true) {
-                          if (response['twoFa'] == false || response['twoFa'] == null) {
-                            final token = response['token'];
-                            final prefs = await SharedPreferences.getInstance();
-                            await prefs.setString('token', token);
-                            var userId = await api.getUserIdFromToken(token);
-                            if (userId == null) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Erro ao obter ID do utilizador.'),
+                          final token = response['token'];
+                          final prefs = await SharedPreferences.getInstance();
+
+                          var userId = await api.getUserIdFromToken(token);
+                          print('User ID: $userId');
+                          if (userId == null) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                  'Erro ao obter ID do utilizador.',
                                 ),
-                              );
-                              return;
-                            } else {
-                              final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                              final user = User(id: userId);
-                              if (!mounted) return;
-                              print('TOKEN LOGIN: $token');
-                              authProvider.setUser(user, token: token);
-                              await authService.login(token, isSwitched); 
-                              context.go('/homepage');
-                            }
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (response['twoFa'] == true) {
+                            print(
+                              '====== Two-Factor Authentication is enabled ======',
+                            );
+                            // Guarda o token temporariamente (não faz login ainda!)
+                            await prefs.setString('pending_token', token);
+                            await prefs.setString(
+                              'pending_userId',
+                              userId.toString(),
+                            );
+                            if (!mounted) return;
+                            context.go('/twofauten', extra: userId.toString());
+                          } else {
+                            // Login normal, porque 2FA está desativado
+                            await prefs.setString(
+                              'token',
+                              token,
+                            ); // só agora grava o token real
+                            final authProvider = Provider.of<AuthProvider>(
+                              context,
+                              listen: false,
+                            );
+                            final user = User(id: userId);
+                            if (!mounted) return;
+                            authProvider.setUser(user, token: token);
+                            await authService.login(token, isSwitched);
+                            context.go('/homepage');
                           }
                         }
                       } catch (error) {
-                       
                         String mensagem = 'Erro: $error';
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(mensagem),
-                          ),
-                        );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(mensagem)));
                       }
                     },
                     child: const Text(

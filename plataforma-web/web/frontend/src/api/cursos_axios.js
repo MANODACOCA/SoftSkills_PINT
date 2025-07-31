@@ -113,10 +113,23 @@ export const getCousesWithMoreFormandos = async () => {
 };
 
 
-export const getCompletedCourses = async (userId, tipologia = null) => {
+export const getCompletedCourses = async (userId, tipologia = 'todos', search = ' ', data_fim = null, data_inicio = null) => {
     try {
+        let url = `${API_URL}/users/${userId}/completed-courses`;
+
+        if (search) {
+            url += `?search=${encodeURIComponent(search)}`;
+        }
+
+        if (data_fim !== null && data_fim !== undefined) {
+            url += `&data_fim=${data_fim}`;
+        }
+
+        if (data_inicio !== null && data_inicio !== undefined) {
+            url += `&data_inicio=${data_inicio}`;
+        }
         const params = tipologia !== 'todos' ? { tipologia } : {};
-        const response = await axios.get(`${API_URL}/users/${userId}/completed-courses`, getAuthHeader({ params }));
+        const response = await axios.get(url, getAuthHeader({ params }));
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos terminados!');
@@ -124,10 +137,23 @@ export const getCompletedCourses = async (userId, tipologia = null) => {
     }
 };
 
-export const getEnrolledCourses = async (userId, tipologia = 'todos') => {
+export const getEnrolledCourses = async (userId, tipologia = 'todos', search = ' ', data_fim = null, data_inicio = null) => {
     try {
+        let url = `${API_URL}/users/${userId}/enrolled-courses`;
+
+        if (search) {
+            url += `?search=${encodeURIComponent(search)}`;
+        }
+
+        if (data_fim !== null && data_fim !== undefined) {
+            url += `&data_fim=${data_fim}`;
+        }
+
+        if (data_inicio !== null && data_inicio !== undefined) {
+            url += `&data_inicio=${data_inicio}`;
+        }
         const params = tipologia !== 'todos' ? { tipologia } : {};
-        const response = await axios.get(`${API_URL}/users/${userId}/enrolled-courses`, getAuthHeader({ params }));
+        const response = await axios.get(url, getAuthHeader({ params }));
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos inscritos!');
@@ -144,7 +170,6 @@ export const getFavoriteCourses = async (userId) => {
         console.error('Erro ao procurar cursos favoritos!');
         throw error;
     }
-
 }
 
 export const getCourseForYou = async () => {
