@@ -1,4 +1,4 @@
-// ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, prefer_typing_uninitialized_variables, unused_field
+// ignore_for_file: unnecessary_brace_in_string_interps, avoid_print, prefer_typing_uninitialized_variables, unused_field, use_build_context_synchronously
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +9,7 @@ import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import '../../../../API/utilizadores_api.dart';
 import '../../../core/shared/export.dart';
+import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class ForumPage extends StatefulWidget {
@@ -31,7 +32,7 @@ class _ForumPageState extends State<ForumPage> {
 
   late var forumInfo;
   late List users = [];
-  final List<File> _attachedFiles = [];
+  final List<File> files = [];
   late Map<String, dynamic>? forumPost;
   late List<dynamic> posts = [];
   late String forumID = widget.forumID;
@@ -132,6 +133,7 @@ class _ForumPageState extends State<ForumPage> {
                                 ...List.generate(posts.length, (index) {
                                   final post = posts[index];
                                   final user = post['id_utilizador_utilizador'];
+                                  print('====== Post: $post'); // Debugging line
                                   return Padding(
                                     padding: const EdgeInsets.only(
                                       bottom: 16.0,
@@ -178,7 +180,7 @@ class _ForumPageState extends State<ForumPage> {
             labelText: 'Descrição do Post',
           ),
         ),
-        if (_attachedFiles.isNotEmpty) ...[
+        if (files.isNotEmpty) ...[
           SizedBox(height: 12),
           Text(
             "Ficheiros anexados:",
@@ -186,7 +188,7 @@ class _ForumPageState extends State<ForumPage> {
           ),
           Column(
             children:
-                _attachedFiles.map((file) {
+                files.map((file) {
                   final name = p.basename(file.path);
                   return ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -196,7 +198,7 @@ class _ForumPageState extends State<ForumPage> {
                       icon: Icon(Icons.close),
                       onPressed: () {
                         setState(() {
-                          _attachedFiles.remove(file);
+                          files.remove(file);
                         });
                       },
                     ),
@@ -218,12 +220,12 @@ class _ForumPageState extends State<ForumPage> {
                   setState(() {
                     final newOnes = files.where(
                       (f) =>
-                          !_attachedFiles.any((exist) => exist.path == f.path),
+                          !files.any((exist) => exist.path == f.path),
                     );
-                    _attachedFiles.addAll(newOnes);
+                    files.addAll(newOnes);
                   });
                   print(
-                    'Selected files: ${_attachedFiles.map((f) => f.path).toList()}',
+                    'Selected files: ${files.map((f) => f.path).toList()}',
                   );
                 }
               },
@@ -242,27 +244,37 @@ class _ForumPageState extends State<ForumPage> {
               onPressed: () async {
                 final description = textControllerPost.text;
                 if (description.isNotEmpty) {
-                  final List<String> caminhos =
-                      _attachedFiles.map((f) => f.path).toList();
                   try {
-                    final postData = {
-                      "id_utilizador": userId,
-                      "id_conteudos_partilhado": widget.forumID,
-                      "id_formato": 1,
-                      "texto_post": description,
-                      "caminho_ficheiro": caminhos,
-                    };
-                    await ForumAPI.createPost(postData);
+                    await ForumAPI.createPost(
+                      textoPost: description,
+                      userId: userId!,
+                      forumId: widget.forumID,
+                      ficheiros: files,
+                    );
+
                     setState(() {
                       textControllerPost.clear();
                       addPost = false;
                       paint = Colors.white;
-                      _attachedFiles.clear();
+                      files.clear();
                     });
 
                     await carregarDados();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Post criado com sucesso!'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
                   } catch (e) {
                     print('Erro ao criar post: $e');
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Erro ao criar post. Tente novamente.'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
                   }
                 }
               },

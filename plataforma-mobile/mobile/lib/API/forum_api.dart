@@ -1,20 +1,30 @@
 // ignore_for_file: constant_identifier_names
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:mobile/utils/verifica_internet.dart';
 import 'package:mobile/data/cache_database.dart';
+import 'package:path/path.dart' as p;
 
 class ForumAPI {
-  static const String API_URL = 'https://softskills-api.onrender.com/conteudos_partilhado';
-  static const String API_URL_POST = 'https://softskills-api.onrender.com/posts';
-  static const String API_URL_TIPO_DENUNCIA = 'https://softskills-api.onrender.com/tipo_denuncia';
-  static const String API_URL_DENUNCIA = 'https://softskills-api.onrender.com/denuncia';
+  static const String API_URL =
+      'https://softskills-api.onrender.com/conteudos_partilhado';
+  static const String API_URL_POST =
+      'https://softskills-api.onrender.com/posts';
+  static const String API_URL_TIPO_DENUNCIA =
+      'https://softskills-api.onrender.com/tipo_denuncia';
+  static const String API_URL_DENUNCIA =
+      'https://softskills-api.onrender.com/denuncia';
 
-  static Future<List<dynamic>> listConteudosPartilhado({String ordenar = "Mais Recentes", String search = "",}) async {
+  static Future<List<dynamic>> listConteudosPartilhado({
+    String ordenar = "Mais Recentes",
+    String search = "",
+  }) async {
     final cacheKey = 'forum_list';
     final hasConnection = await temInternet();
 
-    if(hasConnection) {
+    if (hasConnection) {
       try {
         var url = '$API_URL/list?ordenar=$ordenar';
         if (search.isNotEmpty) {
@@ -27,21 +37,21 @@ class ForumAPI {
           await ApiCache.guardarDados(cacheKey, lista);
           return lista;
         }
-          throw Exception('Erro ao procurar fóruns!');
-        } catch (apiError) {
-          print('Erro ao procurar fóruns! $apiError');
-        }
+        throw Exception('Erro ao procurar fóruns!');
+      } catch (apiError) {
+        print('Erro ao procurar fóruns! $apiError');
+      }
     }
-    try{
+    try {
       final cached = await ApiCache.lerDados(cacheKey);
-        if(cached != null) {
-          return List<dynamic>.from(cached);
-        } else {
-          throw Exception('Sem internet e sem dados guardados localmente');
-        }
-      } catch (cacheError) {
-        print('Erro ao ler cache: $cacheError');
-        throw Exception('Sem internet e não foi possivel acede à cache');
+      if (cached != null) {
+        return List<dynamic>.from(cached);
+      } else {
+        throw Exception('Sem internet e sem dados guardados localmente');
+      }
+    } catch (cacheError) {
+      print('Erro ao ler cache: $cacheError');
+      throw Exception('Sem internet e não foi possivel acede à cache');
     }
   }
 
@@ -149,7 +159,9 @@ class ForumAPI {
 
   static Future<List<dynamic>> listPost() async {
     try {
-      final response = await http.get(Uri.parse('https://softskills-api.onrender.com/posts/list'));
+      final response = await http.get(
+        Uri.parse('https://softskills-api.onrender.com/posts/list'),
+      );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -161,9 +173,13 @@ class ForumAPI {
     }
   }
 
-  static Future<dynamic> getPost(String id, {String ordenar = "Mais Recentes"}) async {
+  static Future<dynamic> getPost(
+    String id, {
+    String ordenar = "Mais Recentes",
+  }) async {
     try {
-      final url = 'https://softskills-api.onrender.com/posts/get/posts?id_conteudos_partilhado=$id&ordenar=$ordenar';
+      final url =
+          'https://softskills-api.onrender.com/posts/get/posts?id_conteudos_partilhado=$id&ordenar=$ordenar';
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -176,15 +192,46 @@ class ForumAPI {
     }
   }
 
-  static Future<dynamic> createPost(Map<String, dynamic> formData, {Map<String, String>? headers}) async {
+  static Future<dynamic> createPost({
+    required String textoPost,
+    required String userId,
+    required String forumId,
+    List<File>? ficheiros,
+  }) async {
+    final uri = Uri.parse('https://softskills-api.onrender.com/posts/create');
+
+    var request = http.MultipartRequest('POST', uri);
+
+    // Campos simples (enviados como form-data)
+    request.fields['texto_post'] = textoPost;
+    request.fields['id_utilizador'] = userId;
+    request.fields['id_conteudos_partilhado'] = forumId;
+    request.fields['id_formato'] = '1'; // fixo, como no frontend Web
+
+    // Enviar ficheiros (se houver)
+    if (ficheiros != null && ficheiros.isNotEmpty) {
+      for (var file in ficheiros) {
+        final fileName = p.basename(file.path);
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'ficheiro', // deve corresponder ao nome esperado pela API
+            file.path,
+            filename: fileName,
+          ),
+        );
+      }
+    }
+
     try {
-      final response = await http.post(
-        Uri.parse('https://softskills-api.onrender.com/posts/create'),
-        headers: headers ?? {'Content-Type': 'application/json'},
-        body: jsonEncode(formData),
-      );
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        return jsonDecode(response.body);
+      final streamedResponse = await request.send();
+      final responseBody = await streamedResponse.stream.bytesToString();
+
+      print('STATUS: ${streamedResponse.statusCode}');
+      print('BODY: $responseBody');
+
+      if (streamedResponse.statusCode == 200 ||
+          streamedResponse.statusCode == 201) {
+        return jsonDecode(responseBody);
       } else {
         throw Exception('Erro ao criar Post!');
       }
@@ -194,7 +241,10 @@ class ForumAPI {
     }
   }
 
-  static Future<dynamic> updatePost(String id, Map<String, dynamic> data) async {
+  static Future<dynamic> updatePost(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
     try {
       final response = await http.put(
         Uri.parse('https://softskills-api.onrender.com/posts/update/$id'),
@@ -214,9 +264,11 @@ class ForumAPI {
 
   Future<dynamic> deletePost(String id) async {
     try {
-      final response = await http.delete(Uri.parse('https://softskills-api.onrender.com/posts/delete/$id'));
+      final response = await http.delete(
+        Uri.parse('https://softskills-api.onrender.com/posts/delete/$id'),
+      );
       print('Status: ${response.statusCode}');
-    print('Body: ${response.body}');
+      print('Body: ${response.body}');
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
@@ -232,7 +284,9 @@ class ForumAPI {
 
   Future<dynamic> putLike(String idPost, int idUtilizador) async {
     try {
-      await http.put(Uri.parse('https://softskills-api.onrender.com/posts/addLike/$idPost'));
+      await http.put(
+        Uri.parse('https://softskills-api.onrender.com/posts/addLike/$idPost'),
+      );
       final response = await http.post(
         Uri.parse('https://softskills-api.onrender.com/likes-post/create'),
         headers: {'Content-Type': 'application/json'},
@@ -251,7 +305,11 @@ class ForumAPI {
 
   Future<dynamic> deleteLike(String idPost, int idUtilizador) async {
     try {
-      await http.put(Uri.parse('https://softskills-api.onrender.com/posts/deleteLike/$idPost'));
+      await http.put(
+        Uri.parse(
+          'https://softskills-api.onrender.com/posts/deleteLike/$idPost',
+        ),
+      );
       final response = await http.delete(
         Uri.parse('https://softskills-api.onrender.com/likes-post/delete'),
         headers: {'Content-Type': 'application/json'},
@@ -271,7 +329,9 @@ class ForumAPI {
   Future<dynamic> jaDeuLike(String idPost, int idUtilizador) async {
     try {
       final response = await http.get(
-        Uri.parse('https://softskills-api.onrender.com/likes-post/get/$idPost/$idUtilizador'),
+        Uri.parse(
+          'https://softskills-api.onrender.com/likes-post/get/$idPost/$idUtilizador',
+        ),
       );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
@@ -286,7 +346,7 @@ class ForumAPI {
     }
   }
 
-  Future<List<Map<String,dynamic>>> listDenuncias() async {
+  Future<List<Map<String, dynamic>>> listDenuncias() async {
     try {
       /* final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
@@ -294,7 +354,7 @@ class ForumAPI {
       if (token == null) {
         throw Exception('Sessão expirada: token inexistente');
       } */
-      
+
       final response = await http.get(
         Uri.parse('$API_URL_TIPO_DENUNCIA/list'),
         /* headers: {
@@ -316,7 +376,9 @@ class ForumAPI {
     }
   }
 
-  Future<Map<String, dynamic>> criarDenuncia(Map<String,dynamic> denuncia) async {
+  Future<Map<String, dynamic>> criarDenuncia(
+    Map<String, dynamic> denuncia,
+  ) async {
     try {
       /* final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('token');
