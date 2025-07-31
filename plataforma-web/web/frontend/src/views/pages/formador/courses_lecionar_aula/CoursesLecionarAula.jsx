@@ -37,6 +37,9 @@ const CursoLecionarAula = () => {
     const [notasEditadas, setNotasEditadas] = useState({});
     const [trabalhos, setTrabalhos] = useState([]);
 
+    //notas de trabalhos
+    const [alterarNotasTrabalhos, setAlterarNotasTrabalhos] = useState(false);
+
     const iconMapById = {
         1: <FaFilePdf className="text-danger" />,
         2: <FaFilePowerpoint className="text-warning" />,
@@ -954,7 +957,20 @@ const CursoLecionarAula = () => {
         if (expandedContent) {
             return (
                 <div className="m-0 bg-light border rounded">
-                    <h6 className='p-2'>Trabalhos Entregues</h6>
+                    <div className='d-flex align-items-center justify-content-between p-2'>
+                        <h6>Trabalhos Entregues</h6>
+                        {alterarNotasTrabalhos ? (
+                            <button className='btn btn-primary' onClick={() => setAlterarNotasTrabalhos(false)}>
+                                <i className='bi bi-plus-lg me-2'></i>
+                                Guardar
+                            </button>
+                        ) : (
+                            <button className='btn btn-primary' onClick={() => setAlterarNotasTrabalhos(true)}>
+                                <i className='bi bi-plus-lg me-2'></i>
+                                Editar
+                            </button>
+                        )}
+                    </div>
                     <div className='mx-2 my-1 border rounded'>
                         {entregas?.length > 0 ? (
                             entregas.map((entrega, index) => (
@@ -966,12 +982,21 @@ const CursoLecionarAula = () => {
                                         <div>
                                             <div><strong>Nome do Aluno:</strong> {entrega.id_formando_et_formando.id_formando_utilizador?.nome_util}</div>
                                         </div>
-                        
+
                                         <div>
-                                             <strong>Trabalho:</strong>
+                                            <strong>Trabalho:</strong>
                                             <a href={entrega.caminho_et} target="_blank" className="btn btn-outline-success ms-3 me-2">
                                                 <i className="bi bi-box-arrow-up-right"></i>
                                             </a>
+                                        </div>
+                                        <div className='d-flex align-items-center justify-content-center gap-1'>
+                                            <strong>Nota:</strong>
+                                            {alterarNotasTrabalhos ? (
+                                                <input placeholder="0-20" type="number" className="form-control form-control-sm text-end" min={0} max={20} step={0.1} style={{ maxWidth: '70px' }}
+                                                />
+                                            ) : (
+                                                <p className='mb-0'>18</p>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

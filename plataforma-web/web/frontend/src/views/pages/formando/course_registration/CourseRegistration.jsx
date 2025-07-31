@@ -92,7 +92,7 @@ const CourseRegistration = () => {
 
   useEffect(() => {
     if (course) {
-    setDataFimInsc(parseDateWithoutTimezone(course?.data_fim_inscricao));
+      setDataFimInsc(parseDateWithoutTimezone(course?.data_fim_inscricao));
     }
   }, [course]);
 
@@ -161,8 +161,7 @@ const CourseRegistration = () => {
         {/* Coluna Esquerda - conteúdo */}
         <div className="col-md-8 mt-4">
           <h2>Descrição</h2>
-          <p>{course.descricao_curso || "Sem descrição disponível para este curso."}</p>
-
+            <p className='text-break'>{course.descricao_curso || "Sem descrição disponível para este curso."}</p>
           {course.isassincrono && (
             <>
               <h2 className="mt-4">Aulas</h2>

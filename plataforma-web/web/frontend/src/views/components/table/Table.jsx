@@ -9,6 +9,7 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
   const startIndex = (currentPage - 1) * itemsPag;
   const currentData = data.slice(startIndex, startIndex + itemsPag);
 
+
   const goToPage = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);

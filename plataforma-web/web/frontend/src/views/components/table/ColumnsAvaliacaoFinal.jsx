@@ -11,7 +11,7 @@ export const getColumnsNotasFinais = (modoEdicao, notasEdit, setNotasEdit) => [
 
       if (modoEdicao) {
         return (
-          <input placeholder="0-20" type="number" className="form-control form-control-sm text-end" min={0} max={20} step={0.1} style={{ maxWidth: '60px' }}
+          <input placeholder="0-20" type="number" className="form-control form-control-sm text-end" min={0} max={20} step={0.1} style={{ maxWidth: '70px' }}
             value={notasEdit[id] ?? item.id_formando_formando.resultados?.[0]?.resul ?? ''}
             onChange={(e) =>
               setNotasEdit((prev) => ({ ...prev, [id]: e.target.value }))
