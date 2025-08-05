@@ -14,10 +14,10 @@ controllers.list = async (req, res) => {
 controllers.get = async (req, res) => {
     try {
         const { id_entrega_trabalho } = req.params;
-        const data = await model.findAll({
+        const data = await model.findOne({
             where: {id_entrega_trabalho_aet: id_entrega_trabalho}
         });
-        if (data) {
+        if (data.length > 0) {
             res.status(200).json(data);
         } else {
             res.status(404).json({ erro: 'Nota de trabalho nao encontrado/a!' });
