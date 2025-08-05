@@ -17,7 +17,7 @@ controllers.get = async (req, res) => {
         const data = await model.findOne({
             where: {id_entrega_trabalho_aet: id_entrega_trabalho}
         });
-        if (data.length > 0) {
+        if (data) {
             res.status(200).json(data);
         } else {
             res.status(404).json({ erro: 'Nota de trabalho nao encontrado/a!' });
