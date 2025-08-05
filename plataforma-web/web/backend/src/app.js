@@ -133,4 +133,7 @@ app.use('/pedidos-forum', pedidosForum)
 const pedidosUpgradeUser = require('./routes/pedidos_upgrade_cargo_route.js');
 app.use('/pedidos-upgrade-user', pedidosUpgradeUser)
 
+const avaliacoes_et = require('./routes/avaliacoes_et_route.js');
+app.use('/avaliacoes_et', avaliacoes_et)
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
