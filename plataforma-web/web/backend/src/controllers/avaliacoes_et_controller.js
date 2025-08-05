@@ -14,7 +14,7 @@ controllers.list = async (req, res) => {
 controllers.get = async (req, res) => {
     try {
         const { id_entrega_trabalho } = req.params;
-        const data = await model.findBy({
+        const data = await model.findByAll({
             where: {id_entrega_trabalho: id_entrega_trabalho}
         });
         if (data) {
