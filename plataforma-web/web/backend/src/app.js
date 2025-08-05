@@ -112,9 +112,6 @@ app.use('/tipo_formato', tipo_formatoRouter);
 const topicoRouter = require('./routes/topico_route.js');
 app.use('/topico', topicoRouter);
 
-const twofaRouter = require('./routes/twofa_route.js');
-app.use('/twofa', twofaRouter);
-
 const utilizadorRouter = require('./routes/utilizador_route.js');
 app.use('/utilizador', utilizadorRouter);
 
@@ -137,4 +134,3 @@ const pedidosUpgradeUser = require('./routes/pedidos_upgrade_cargo_route.js');
 app.use('/pedidos-upgrade-user', pedidosUpgradeUser)
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
