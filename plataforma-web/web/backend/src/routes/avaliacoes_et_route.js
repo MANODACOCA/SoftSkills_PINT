@@ -1,5 +1,5 @@
 const express = require('express');
-const controller = require('../controllers/twofa_controller.js')
+const controller = require('../controllers/avaliacoes_et_controller.js')
 const router = express.Router();
 
 router.get('/',(req, res) => {
@@ -17,9 +17,9 @@ router.get('/delete',(req, res) => {
 });
 
 router.get('/list',controller.list);
-router.get('/get/:id',controller.get);
+router.get('/get/:id_entrega_trabalho',controller.get);
 router.post('/create',controller.create);
-router.put('/update/:id',controller.update);
-router.delete('/delete/:id',controller.delete);
+router.put('/update/:id_entrega_trabalho',controller.update);
+router.delete('/delete/:id_entrega_trabalho',controller.delete);
 
 module.exports = router;

@@ -164,7 +164,7 @@ const FeaturedCourseCard = ({
     const endDate = new Date(course.data_fim_curso);
     const startDate = new Date(course.data_inicio_curso);
     endDate.setHours(23, 59, 59, 999);
-    startDate.setHours(23, 59, 59, 999);
+
 
     /*     CALCULO PARA FIM DE CURSO */
     const diffTimeEnd = endDate.getTime() - today.getTime();
