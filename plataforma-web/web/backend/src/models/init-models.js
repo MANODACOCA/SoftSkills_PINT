@@ -32,7 +32,6 @@ var _tipo_denuncia = require("./tipo_denuncia");
 var _tipo_formato = require("./tipo_formato");
 var _topico = require("./topico");
 var _trabalhos = require("./trabalhos");
-var _twofa = require("./twofa");
 var _utilizador = require("./utilizador");
 
 function initModels(sequelize) {
@@ -69,7 +68,6 @@ function initModels(sequelize) {
   var tipo_formato = _tipo_formato(sequelize, DataTypes);
   var topico = _topico(sequelize, DataTypes);
   var trabalhos = _trabalhos(sequelize, DataTypes);
-  var twofa = _twofa(sequelize, DataTypes);
   var utilizador = _utilizador(sequelize, DataTypes);
 
   topico.belongsTo(area, { as: "id_area_area", foreignKey: "id_area"});
@@ -176,8 +174,6 @@ function initModels(sequelize) {
   utilizador.hasMany(post, { as: "posts", foreignKey: "id_utilizador"});
   s_s_o.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
   utilizador.hasMany(s_s_o, { as: "s_s_os", foreignKey: "id_utilizador"});
-  twofa.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
-  utilizador.hasMany(twofa, { as: "twofas", foreignKey: "id_utilizador"});
 
   return {
     area,
@@ -213,7 +209,6 @@ function initModels(sequelize) {
     tipo_formato,
     topico,
     trabalhos,
-    twofa,
     utilizador,
   };
 }
