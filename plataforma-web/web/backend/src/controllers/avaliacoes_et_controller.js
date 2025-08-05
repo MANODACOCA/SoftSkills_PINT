@@ -15,7 +15,7 @@ controllers.get = async (req, res) => {
     try {
         const { id_entrega_trabalho } = req.params;
         const data = await model.findBy({
-            where: id_entrega_trabalho = id_entrega_trabalho
+            where: {id_entrega_trabalho: id_entrega_trabalho}
         });
         if (data) {
             res.status(200).json(data);
