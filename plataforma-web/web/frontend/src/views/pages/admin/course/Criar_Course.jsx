@@ -113,7 +113,7 @@ const CreateCourse = () => {
             return;
         }
 
-        if (dCursoIni < dInscFim) {
+        if (cursos.issincrono && dCursoIni < dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -142,6 +142,7 @@ const CreateCourse = () => {
                 const payload = {
                     cursoData: {
                         ...cursos,
+                        horas_curso: cursos.horas_curso === "" ? 0 : Number(cursos.horas_curso), 
                         data_inicio_inscricao: dInscIni.toISOString(),
                         data_fim_inscricao: dInscFim.toISOString(),
                         data_inicio_curso: dCursoIni.toISOString(),
@@ -167,7 +168,7 @@ const CreateCourse = () => {
             } catch (error) {
                 Swal.fire({
                     title: 'Erro',
-                    text: 'Erro ao cancelar operação',
+                    text: error?.response?.data?.desc || error.message || 'Erro ao criar curso',
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {

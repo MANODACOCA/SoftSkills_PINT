@@ -224,7 +224,7 @@ const EditCourse = () => {
             return;
         }
 
-        if(dCursoIni < dInscFim) {
+        if(cursos.issincrono && dCursoIni < dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -1189,7 +1189,7 @@ const EditCourse = () => {
 
                             <div className='mt-2'>
                                 <label className='form-label fw-bold'>Horas do Curso</label>
-                                <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso || ""} onChange={handleChange} required disabled={isViewMode}/>
+                                <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso || ""} onChange={handleChange} required disabled={isViewMode || cursos.isassincrono === true}/>
                             </div>
 
                             {/* Tipo */}
