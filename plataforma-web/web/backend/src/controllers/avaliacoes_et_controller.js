@@ -44,9 +44,9 @@ controllers.update = async (req, res) => {
     try {
         if (req.body) {
             const { id_entrega_trabalho } = req.params;
-            const updated = await model.update(req.body, { where: { id_entrega_trabalho: id_entrega_trabalho } });
+            const updated = await model.update(req.body, { where: { id_entrega_trabalho_aet: id_entrega_trabalho } });
             if (updated) {
-                const modelUpdated = await model.findByPk(id);
+                const modelUpdated = await model.findOne({ where: { id_entrega_trabalho_aet: id_entrega_trabalho } });
                 res.status(200).json(modelUpdated);
             } else {
                 res.status(404).json({ erro: 'Nota de trabalho nao foi atualizado/a!' });
@@ -62,7 +62,7 @@ controllers.update = async (req, res) => {
 controllers.delete = async (req, res) => {
     try {
         const { id_entrega_trabalho } = req.params;
-        const deleted = await model.destroy({ where: { id_entrega_trabalho: id_entrega_trabalho } });
+        const deleted = await model.destroy({ where: { id_entrega_trabalho_aet: id_entrega_trabalho } });
         if (deleted) {
             res.status(200).json({ msg: 'Nota de trabalho apagado/a com sucesso!' });
         } else {
