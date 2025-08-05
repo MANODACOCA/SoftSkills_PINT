@@ -44,8 +44,8 @@ controllers.update = async (req, res) => {
     try {
         if (req.body) {
             const { id_entrega_trabalho } = req.params;
-            const updated = await model.update(req.body, { where: { id_entrega_trabalho_aet: id_entrega_trabalho } });
-            if (updated.length > 0) {
+            const [updated] = await model.update(req.body, { where: { id_entrega_trabalho_aet: id_entrega_trabalho } });
+            if (updated > 0) {
                 const modelUpdated = await model.findOne({ where: { id_entrega_trabalho_aet: id_entrega_trabalho } });
                 res.status(200).json(modelUpdated);
             } else {
