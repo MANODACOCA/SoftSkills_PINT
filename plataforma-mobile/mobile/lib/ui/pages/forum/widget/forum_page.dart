@@ -247,14 +247,14 @@ class _ForumPageState extends State<ForumPage> {
                       ficheiro = null;
                     });
 
-                    await carregarDados();
-
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Post criado com sucesso!'),
                         backgroundColor: Colors.green,
                       ),
                     );
+
+                    await carregarDados();
                   } catch (e) {
                     print('Erro ao criar post: $e');
                     ScaffoldMessenger.of(context).showSnackBar(
