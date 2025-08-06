@@ -131,8 +131,11 @@ const CursoLecionarAula = () => {
             );
         }
         return (
-            <div>
-                <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
+            <div className="d-flex align-items-center justify-content-center">
+                {isExpanded
+                    ? <IoIosArrowDropup size={22} color="    #444444" />
+                    : <IoIosArrowDropdown size={22} color="    #444444" />
+                }
             </div>
         );
 
@@ -1093,7 +1096,7 @@ const CursoLecionarAula = () => {
                                                     }
                                                 />
                                             ) : (
-                                                <div  style={{ width: '35px' }}>{notas[entrega.id_entrega_trabalho]}</div>
+                                                <div style={{ width: '35px' }}>{notas[entrega.id_entrega_trabalho]}</div>
                                             )}
                                         </div>
                                     </div>
@@ -1107,14 +1110,14 @@ const CursoLecionarAula = () => {
             );
         }
 
-       return (
-                <div className="d-flex align-items-center justify-content-center">
-                    {isExpanded 
+        return (
+            <div className="d-flex align-items-center justify-content-center">
+                {isExpanded
                     ? <IoIosArrowDropup size={22} color="    #444444" />
                     : <IoIosArrowDropdown size={22} color="    #444444" />
-                    }
-                </div>
-            );
+                }
+            </div>
+        );
     };
     //mostrar trabalhos entregues
 
