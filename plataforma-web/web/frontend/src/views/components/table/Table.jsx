@@ -92,7 +92,7 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
             ) : (
             currentData.map((item, rowIndex) => (
               <React.Fragment key={rowIndex}>
-              <tr key={rowIndex}>
+              <tr key={rowIndex}  onClick={() => toggleRow(startIndex + rowIndex)} style={{ cursor: 'pointer' }}>
                 {columns.map((col, colIndex) => (
                   <td key={colIndex} className={rowIndex % 2 == 0 ? 'bg-white' : 'line-bg'}>
                     {col.render ? col.render(item) : item[col.key]}
@@ -104,7 +104,7 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
                   </td>
                 )}
                 {conteudos && (
-                 <td className={`${rowIndex % 2 === 0 ? 'bg-white' : 'line-bg'}`} onClick={() => toggleRow(startIndex + rowIndex)} style={{ cursor: 'pointer' }}>
+                 <td className={`${rowIndex % 2 === 0 ? 'bg-white' : 'line-bg'} `} onClick={() => toggleRow(startIndex + rowIndex)} style={{ cursor: 'pointer', verticalAlign: 'middle'}}>
                     {conteudos(item, expandedRows.includes(startIndex + rowIndex))}
                   </td>
                 )}
