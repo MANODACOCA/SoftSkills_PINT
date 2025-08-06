@@ -6,6 +6,8 @@ import 'dart:convert';
 import 'package:mobile/utils/verifica_internet.dart';
 import 'package:mobile/data/cache_database.dart';
 import 'package:path/path.dart' as p;
+import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ForumAPI {
   static const String API_URL =
@@ -198,45 +200,70 @@ class ForumAPI {
     required String forumId,
     File? ficheiro, // Apenas um ficheiro
   }) async {
-    final uri = Uri.parse('https://softskills-api.onrender.com/posts/create');
-    var request = http.MultipartRequest('POST', uri);
+    final dio = Dio();
+    final url = 'https://softskills-api.onrender.com/posts/create';
 
-    // Campos simples (form-data)
-    request.fields['texto_post'] = textoPost;
-    request.fields['id_utilizador'] = userId;
-    request.fields['id_conteudos_partilhado'] = forumId;
-    request.fields['id_formato'] = '1'; // valor fixo como no frontend web
-
-    // Enviar apenas 1 ficheiro (se fornecido)
-    if (ficheiro != null) {
-      final fileName = p.basename(ficheiro.path);
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'ficheiro', // nome do campo esperado pela API
+    FormData formData = FormData.fromMap({
+      'texto_post': textoPost,
+      'id_utilizador': userId,
+      'id_conteudos_partilhado': forumId,
+      'id_formato': '1', // Como já tens no backend fixo
+      if (ficheiro != null)
+        'ficheiro': await MultipartFile.fromFile(
           ficheiro.path,
-          filename: fileName,
+          filename: p.basename(ficheiro.path),
+          contentType: _getMimeTypeFromExtension(ficheiro.path),
         ),
-      );
-    }
+    });
 
     try {
-      final streamedResponse = await request.send();
-      final responseBody = await streamedResponse.stream.bytesToString();
+      final response = await dio.post(
+        url,
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+      );
 
-      print('STATUS: ${streamedResponse.statusCode}');
-      print('BODY: $responseBody');
+      print('STATUS: ${response.statusCode}');
+      print('BODY: ${response.data}');
 
-      if (streamedResponse.statusCode == 200 ||
-          streamedResponse.statusCode == 201) {
-        return jsonDecode(responseBody);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.data;
       } else {
-        throw Exception(
-          'Erro ao criar Post! Código ${streamedResponse.statusCode}',
-        );
+        throw Exception('Erro ao criar Post! Código ${response.statusCode}');
       }
     } catch (e) {
       print('Erro ao criar Post! $e');
       rethrow;
+    }
+  }
+
+  // Deteta o MIME type correto
+  static MediaType _getMimeTypeFromExtension(String filePath) {
+    final ext = p.extension(filePath).toLowerCase();
+    switch (ext) {
+      case '.pdf':
+        return MediaType('application', 'pdf');
+      case '.jpg':
+      case '.jpeg':
+        return MediaType('image', 'jpeg');
+      case '.png':
+        return MediaType('image', 'png');
+      case '.doc':
+        return MediaType('application', 'msword');
+      case '.docx':
+        return MediaType(
+          'application',
+          'vnd.openxmlformats-officedocument.wordprocessingml.document',
+        );
+      case '.xls':
+        return MediaType('application', 'vnd.ms-excel');
+      case '.xlsx':
+        return MediaType(
+          'application',
+          'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        );
+      default:
+        return MediaType('application', 'octet-stream');
     }
   }
 

@@ -5,6 +5,7 @@ import { getCourseAdminCursoTodoUm, getCourseAdminLista, update_cursos } from ".
 import { useNavigate, useLocation } from "react-router-dom";
 import Swal from 'sweetalert2';
 import { debounce } from 'lodash';
+import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
 
 const CourseTable = () => {
     const [cursos, setcursos] = useState([]);
@@ -142,16 +143,22 @@ const CourseTable = () => {
     };
 
     const renderActions = (item) => {
+        const data_atual = new Date();
+        const dataFimCurso = new Date(item.data_fim_curso);
+
         return(
             <div className="d-flex">
-                <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(item.id_curso)}>
-                    <i className="bi bi-pencil"></i>
-                </button>
+                {dataFimCurso > data_atual &&
+                    <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(item.id_curso)}>
+                        <i className="bi bi-pencil"></i>
+                    </button>   
+                }
+                
                 <button className="btn btn-outline-danger me-2" onClick={() =>  HandleUpdate(item.id_curso, item.estado)}>
                     <i className={`bi ${item.estado ? "bi-eye" : "bi-eye-slash"}`}></i>
                 </button>
-                {item.estado === false && (
-                    <button className="btn btn-outline-primary me-2" onClick={() => HandleCriarNovaOcorrencia(item.id_curso)}>
+                {dataFimCurso < data_atual && (
+                    <button className="btn btn-outline-success me-2" onClick={() => HandleCriarNovaOcorrencia(item.id_curso)}>
                         <i className="bi bi-plus-circle"></i>
                     </button>
                 )}
@@ -198,16 +205,18 @@ const CourseTable = () => {
 
         if (ocorrencias.length > 0) {
             return (
-                <div>
-                    <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
+                <div className="d-flex align-items-center justify-content-center">
+                    {isExpanded 
+                    ? <IoIosArrowDropup size={22} color="	#444444" />
+                    : <IoIosArrowDropdown size={22} color="	#444444" />
+                    }
                 </div>
             );
         }
-        return null;
     };
 
     useEffect(() => {
-        FetchCursos();
+        FetchCursos()
     }, [searchTerm])
 
     return(

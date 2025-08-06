@@ -7,15 +7,6 @@ export const columnsCursos = [
       if(item.issincrono) return 'Sincrono';
       if(item.isassincrono) return 'Assincrono';
     }
-  },
-  { label: 'Datas Curso', render: (item) => {
-      const data_curso = [];
-      const data_curso_i = formatDayMonthYear(item.data_inicio_curso);
-      const data_curso_f = formatDayMonthYear(item.data_fim_curso);
-      data_curso.push(data_curso_i);
-      data_curso.push(data_curso_f);
-      return data_curso.join('-');
-    }
   },  
   { label: 'Datas Inscrição', render: (item) => {
       const data_inscricao = [];
@@ -25,6 +16,15 @@ export const columnsCursos = [
       data_inscricao.push(data_inscricao_f);
       return data_inscricao.join('-');
     } 
+  },
+  { label: 'Datas Curso', render: (item) => {
+      const data_curso = [];
+      const data_curso_i = formatDayMonthYear(item.data_inicio_curso);
+      const data_curso_f = formatDayMonthYear(item.data_fim_curso);
+      data_curso.push(data_curso_i);
+      data_curso.push(data_curso_f);
+      return data_curso.join('-');
+    }
   },
   { label: 'Criador/Formador', render: (item) => {
     if(item.issincrono) return item.sincrono.id_formador_formadore.id_formador_utilizador.nome_util;
@@ -51,8 +51,17 @@ export const columnsCursos = [
     } 
   },
   { label: 'Estado',   render: (item) => {
-    if (item.estado) return <span className="badge bg-success">em curso</span>;
-    return <span className=" badge bg-danger">concluído</span>;
+    const data_atual = new Date();
+    const dataInicioCurso = new Date(item.data_inicio_curso);
+    const dataFimCurso = new Date(item.data_fim_curso);
+
+    if(dataFimCurso < data_atual) return <span className=" badge bg-danger">Concluído</span>;
+
+    if(!item.estado) return <span className="badge bg-secondary" style={{backgroundColor: '#ff8400ff'}}>Oculto</span>
+
+    if(dataInicioCurso > data_atual) return <span className="badge"  style={{ backgroundColor: '#ecb100ff'}}>Por iniciar</span>;
+
+    if (dataInicioCurso < data_atual && dataFimCurso > data_atual) return <span className="badge bg-success">Em curso</span>;
     }
   },
   {
