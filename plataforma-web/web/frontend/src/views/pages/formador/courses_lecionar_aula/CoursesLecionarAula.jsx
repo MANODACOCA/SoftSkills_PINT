@@ -21,6 +21,8 @@ import { FaVideo, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWor
 import { create_trabalhos, delete_trabalhos, update_trabalhos, get_trabalhos_curso } from '../../../../api/trabalhos_axios';
 import { list_entrega_trabalhos } from '../../../../api/entrega_trabalhos_axios';
 import { columnsTrabalhos } from '../../../components/table/ColumnsTrabalho';
+import { get_avaliacoes_et, create_avaliacoes_et, update_avaliacoes_et, delete_avaliacoes_et } from '../../../../api/avaliacoes_et_axios';
+import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
 
 const CursoLecionarAula = () => {
     const { id } = useParams();
@@ -36,9 +38,6 @@ const CursoLecionarAula = () => {
     const [modoEditNotas, setModoEditNotas] = useState(false);
     const [notasEditadas, setNotasEditadas] = useState({});
     const [trabalhos, setTrabalhos] = useState([]);
-
-    //notas de trabalhos
-    const [alterarNotasTrabalhos, setAlterarNotasTrabalhos] = useState(false);
 
     const iconMapById = {
         1: <FaFilePdf className="text-danger" />,
@@ -928,11 +927,15 @@ const CursoLecionarAula = () => {
 
         setModoEditNotas(!modoEditNotas);
     };
+    //#endregion
 
 
 
+    //#region Trabalhos
     //mostrar trabalhos entregues
     const [entregaTrabalhos, setEntregaTrabalhos] = useState({});
+    const [alterarNotasTrabalhos, setAlterarNotasTrabalhos] = useState(false);
+    const [notas, setNotas] = useState({});
 
     const fetchEntregaTrabalhos = async (id_trabalho) => {
         try {
@@ -945,6 +948,87 @@ const CursoLecionarAula = () => {
             console.error("Erro ao buscar trabalhos entregues:", err)
         }
     }
+
+    const fetchNotasTrabalhos = async (id_trabalho) => {
+        const entregas = entregaTrabalhos[id_trabalho];
+        const novasNotas = { ...notas };
+        for (const entrega of entregas) {
+            try {
+                const avaliacao = await get_avaliacoes_et(entrega.id_entrega_trabalho);
+                novasNotas[entrega.id_entrega_trabalho] = avaliacao?.avaliacao;
+            } catch (error) {
+                //ainda não tem nota atribuida
+            }
+        }
+        setNotas(novasNotas);
+    }
+
+    const salvarNotas = async () => {
+        try {
+
+            for (const [id_entrega_trabalho, nota] of Object.entries(notas)) {
+                if (nota === '' || nota === null) return;
+
+                if (nota < 0 || nota > 20) {
+                    Swal.fire({
+                        title: "Nota(s) inválida(s)!",
+                        text: "Todas as notas devem estar entre 0 e 20.",
+                        icon: "error",
+                        draggable: true,
+                        showConfirmButton: false,
+                        timer: 3000,
+                    });
+                    return;
+                }
+            }
+
+            const promessas = Object.entries(notas).map(async ([id_entrega_trabalho, nota]) => {
+                if (nota === '' || nota === null) return;
+
+                const data = {
+                    id_entrega_trabalho_aet: id_entrega_trabalho,
+                    avaliacao: parseFloat(nota),
+                };
+
+                try {
+                    const existente = await get_avaliacoes_et(id_entrega_trabalho);
+                    if (existente) {
+                        await update_avaliacoes_et(id_entrega_trabalho, data);
+                    }
+                } catch {
+                    await create_avaliacoes_et(data);
+                }
+            });
+
+            await Promise.all(promessas);
+            Swal.fire({
+                title: "Notas dos trabalhos guardadas com sucesso!",
+                icon: "success",
+                draggable: true,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+
+            setAlterarNotasTrabalhos(false);
+        } catch (error) {
+            console.error("Erro ao salvar notas:", error);
+            Swal.fire({
+                title: "Erro ao salvar notas de trabalhos.",
+                icon: "error",
+                draggable: true,
+                showConfirmButton: false,
+                timer: 3000,
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (entregaTrabalhos || alterarNotasTrabalhos) {
+            Object.keys(entregaTrabalhos).forEach(id_trabalho => {
+                fetchNotasTrabalhos(id_trabalho);
+            });
+        }
+    }, [entregaTrabalhos, alterarNotasTrabalhos])
 
     const renderTrabalhos = (item, isExpanded, expandedContent = false) => {
         const entregas = entregaTrabalhos[item.id_trabalho];
@@ -960,7 +1044,7 @@ const CursoLecionarAula = () => {
                     <div className='d-flex align-items-center justify-content-between p-2'>
                         <h6>Trabalhos Entregues</h6>
                         {alterarNotasTrabalhos ? (
-                            <button className='btn btn-primary' onClick={() => setAlterarNotasTrabalhos(false)}>
+                            <button className='btn btn-primary' onClick={() => salvarNotas()}>
                                 <i className='bi bi-plus-lg me-2'></i>
                                 Guardar
                             </button>
@@ -976,26 +1060,40 @@ const CursoLecionarAula = () => {
                             entregas.map((entrega, index) => (
                                 <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
                                     <div className='d-flex align-items-center justify-content-between'>
-                                        <div>
+                                        <div className='w-25'>
                                             <div><strong>ID Aluno:</strong> {entrega.id_formando_et}</div>
                                         </div>
-                                        <div>
+                                        <div className='w-25'>
                                             <div><strong>Nome do Aluno:</strong> {entrega.id_formando_et_formando.id_formando_utilizador?.nome_util}</div>
                                         </div>
 
-                                        <div>
+                                        <div className='d-flex align-items-center justify-content-center w-25'>
                                             <strong>Trabalho:</strong>
                                             <a href={entrega.caminho_et} target="_blank" className="btn btn-outline-success ms-3 me-2">
                                                 <i className="bi bi-box-arrow-up-right"></i>
                                             </a>
                                         </div>
-                                        <div className='d-flex align-items-center justify-content-center gap-1'>
+                                        <div className='d-flex align-items-center justify-content-end gap-1 w-25'>
                                             <strong>Nota:</strong>
                                             {alterarNotasTrabalhos ? (
-                                                <input placeholder="0-20" type="number" className="form-control form-control-sm text-end" min={0} max={20} step={0.1} style={{ maxWidth: '70px' }}
+                                                <input
+                                                    placeholder="0-20"
+                                                    type="number"
+                                                    className="form-control form-control-sm text-end"
+                                                    min={0}
+                                                    max={20}
+                                                    step={0.1}
+                                                    style={{ maxWidth: '70px' }}
+                                                    value={notas[entrega.id_entrega_trabalho] || ''}
+                                                    onChange={(e) =>
+                                                        setNotas({
+                                                            ...notas,
+                                                            [entrega.id_entrega_trabalho]: e.target.value
+                                                        })
+                                                    }
                                                 />
                                             ) : (
-                                                <p className='mb-0'>18</p>
+                                                <div  style={{ width: '35px' }}>{notas[entrega.id_entrega_trabalho]}</div>
                                             )}
                                         </div>
                                     </div>
@@ -1009,15 +1107,17 @@ const CursoLecionarAula = () => {
             );
         }
 
-        return <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>;
+       return (
+                <div className="d-flex align-items-center justify-content-center">
+                    {isExpanded 
+                    ? <IoIosArrowDropup size={22} color="    #444444" />
+                    : <IoIosArrowDropdown size={22} color="    #444444" />
+                    }
+                </div>
+            );
     };
-
     //mostrar trabalhos entregues
-    //#endregion
 
-
-
-    //#region Trabalhos
 
     const handleEditarTrabalho = async (trabalho) => {
         const result = await Swal.fire({
