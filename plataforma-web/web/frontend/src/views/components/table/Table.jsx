@@ -111,9 +111,11 @@ const Table = ({ columns, data, actions, onAddClick, conteudos, pesquisa, ordena
               </tr>
               {expandedRows.includes(startIndex + rowIndex) && (
                 <tr>
-                  <td colSpan={columns.length + (actions ? 1 : 0) + (conteudos ? 1 : 0)}>
-                    {conteudos(item, expandedRows.includes(startIndex + rowIndex), true)}
-                  </td>
+                  {conteudos && 
+                    <td colSpan={columns.length + (actions ? 1 : 0) + (conteudos ? 1 : 0)}>
+                      {conteudos(item, expandedRows.includes(startIndex + rowIndex), true)}
+                    </td>
+                  }
                 </tr>
               )}
               </React.Fragment>
