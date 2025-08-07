@@ -33,14 +33,14 @@ controllers.gerarCertificado = async (req, res) => {
       }
     }
 
-    if (!curso.issincrono && new Date() < new Date(curso.data_final)) {
+    if (!curso.issincrono && new Date() < new Date(curso.data_fim_curso)) {
       return res.status(403).json({ erro: 'Curso ainda não terminou.' });
     }
 
     const html = gerarCertificado({
       nomeFormando: formando.nome_util,
       nomeCurso: curso.nome_curso,
-      dataConclusao: curso.data_final,
+      dataConclusao: curso.data_fim_curso,
       notaFinal: notaFinal
     });
 
