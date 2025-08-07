@@ -5,13 +5,11 @@ const initModels = require("../models/init-models");
 const model = initModels(sequelize).certificados;
 const controllers = {};
 const { gerarHtmlCertificado } = require('../utils/gerarCertificado');
-const puppeteer = require('puppeteer');
-const { cursos, utilizador, inscricoes, resultados } = require('../models/init-models')(sequelize);
+const { cursos, utilizador, resultados } = require('../models/init-models')(sequelize);
 
 controllers.gerarCertificado = async (req, res) => {
   try {
     const { cursoId, formandoId } = req.params;
-    console.log('Recebido no endpoint:', { cursoId, formandoId });
     let notaFinal = null;
 
     const formando = await utilizador.findByPk(formandoId);
@@ -45,14 +43,7 @@ controllers.gerarCertificado = async (req, res) => {
       notaFinal: notaFinal
     });
 
-    const browser = await puppeteer.launch({ 
-      headless: "new",
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-     });
-    const page = await browser.newPage();
-    await page.setContent(html);
-    const pdfBuffer = await page.pdf({ format: 'A4' });
-    await browser.close();
+    const file = { content: html };
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
     if (certificado) {
