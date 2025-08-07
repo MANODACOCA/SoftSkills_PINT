@@ -17,26 +17,34 @@ const UsersTables = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
+    const [loadingUsers, setLoadingUsers] = useState(true);
+    const [loadingPedidos, setLoadingPedidos] = useState(true);
 
     const handleChangeOpcao = (a) => {
         setOpcao(a);
     };
 
-    const FetchUtilizadores = async() => {
+    const FetchUtilizadores = async () => {
         try {
+            setLoadingUsers(true);
             const response = await list_utilizador(searchTerm || "");
             setuser(response.data);
-        } catch(error) {
+        } catch (error) {
             console.log('Erro ao aceder a tabela de utilizador');
+        } finally {
+            setLoadingUsers(false);
         }
     }
 
     const FetchPedidos = async () => {
         try {
+            setLoadingPedidos(true);
             const response = await list_pedidos_upgrade();
             setPedidos(response);
         } catch (error) {
             console.log('Erro ao encontrar pedido de update formador');
+        } finally {
+            setLoadingPedidos(false);
         }
     }
 
@@ -70,9 +78,9 @@ const UsersTables = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed){
-            try{
-                await update_utilizador(id, {estado_utilizador: !estado});
+        if (result.isConfirmed) {
+            try {
+                await update_utilizador(id, { estado_utilizador: !estado });
                 await FetchUtilizadores();
                 console.log(estado);
                 Swal.fire({
@@ -81,11 +89,11 @@ const UsersTables = () => {
                     icon: 'success',
                     timer: 1500,
                     showConfirmButton: false
-                }); 
-            } catch(error){
+                });
+            } catch (error) {
                 Swal.fire({
-                    title: 'Erro', 
-                    text: 'Ocorreu um erro ao atualizar o utilizador', 
+                    title: 'Erro',
+                    text: 'Ocorreu um erro ao atualizar o utilizador',
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {
@@ -111,7 +119,7 @@ const UsersTables = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
             try {
                 navigate(`/admin/utilizadores/historico/${id}`);
             } catch (error) {
@@ -141,7 +149,7 @@ const UsersTables = () => {
             },
             buttonsStyling: false,
         });
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
             const adicionarUtilizador = await Swal.fire({
                 title: 'Adicionar Utilizador',
                 html: ` 
@@ -184,13 +192,13 @@ const UsersTables = () => {
                     const email = document.getElementById('email').value;
                     const formador = document.getElementById('formadorSwitch').checked;
                     const descricao = document.getElementById('descricao')?.value || '';
-                    
+
                     if (!nome || !email) {
                         Swal.showValidationMessage('Todos os campos são obrigatórios!');
                         return;
                     }
 
-                    return{
+                    return {
                         nome_utilizador: nome,
                         email,
                         isformador: formador,
@@ -212,10 +220,10 @@ const UsersTables = () => {
                     const email = adicionarUtilizador.value.email;
                     const descricao_formador = adicionarUtilizador.value.descricao;
                     const data = await create_utilizador(nome_utilizador, email);
-                    await update_utilizador(data.data.id_utilizador, {isformador: formador});
+                    await update_utilizador(data.data.id_utilizador, { isformador: formador });
                     if (formador) {
                         const id_formador = data.data.id_utilizador;
-                        await create_formadores({id_formador, descricao_formador});
+                        await create_formadores({ id_formador, descricao_formador });
                     }
                     FetchUtilizadores();
                     Swal.fire({
@@ -232,8 +240,8 @@ const UsersTables = () => {
                         timer: 2000,
                         showConfirmButton: false,
                     });
-                }    
-            }         
+                }
+            }
         }
     }
 
@@ -251,7 +259,7 @@ const UsersTables = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
             const adicionarFormador = await Swal.fire({
                 title: 'Adicionar Formador',
                 html: ` 
@@ -262,13 +270,13 @@ const UsersTables = () => {
                 `,
                 preConfirm: () => {
                     const descricaoformador = document.getElementById('descricaoFormador').value.trim();
-   
+
                     if (!descricaoformador) {
                         Swal.showValidationMessage('Todos os campos são obrigatórios!');
                         return;
                     }
 
-                    return{
+                    return {
                         descricao_formador: descricaoformador,
                     };
                 },
@@ -283,8 +291,8 @@ const UsersTables = () => {
             if (adicionarFormador.isConfirmed && adicionarFormador.value) {
                 try {
                     const formador = adicionarFormador.value.descricao_formador;
-                    await update_utilizador(id, {isformador: true});
-                    await create_formadores({id_formador: id, descricao_formador: formador});
+                    await update_utilizador(id, { isformador: true });
+                    await create_formadores({ id_formador: id, descricao_formador: formador });
                     FetchPedidos();
                     FetchUtilizadores();
                     Swal.fire({
@@ -301,8 +309,8 @@ const UsersTables = () => {
                         timer: 2000,
                         showConfirmButton: false,
                     });
-                }    
-            }     
+                }
+            }
         }
     }
 
@@ -321,8 +329,8 @@ const UsersTables = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed){
-            try{
+        if (result.isConfirmed) {
+            try {
                 await delete_pedidos_upgrade(id_pedido);
                 await FetchPedidos();
                 Swal.fire({
@@ -331,11 +339,11 @@ const UsersTables = () => {
                     icon: 'success',
                     timer: 1500,
                     showConfirmButton: false
-                }); 
-            } catch(error){
+                });
+            } catch (error) {
                 Swal.fire({
-                    title: 'Erro', 
-                    text: 'Ocorreu um erro ao eliminar predido', 
+                    title: 'Erro',
+                    text: 'Ocorreu um erro ao eliminar predido',
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {
@@ -347,7 +355,7 @@ const UsersTables = () => {
     }
 
     const renderActions = (item) => {
-        return(
+        return (
             <div className="d-flex">
                 <button className='btn btn-outline-primary me-2'
                     disabled={item.isformador}
@@ -358,21 +366,21 @@ const UsersTables = () => {
                     <i className="bi bi-person-lines-fill fs-5"></i>
                 </button>
                 <button className="btn btn-outline-danger" onClick={() => HandleBlock(item.id_utilizador, item.estado_utilizador)}>
-                    <i className={`bi ${item.estado_utilizador ? 'bi-unlock' :  'bi-lock'}`}></i>
+                    <i className={`bi ${item.estado_utilizador ? 'bi-unlock' : 'bi-lock'}`}></i>
                 </button>
             </div>
         );
     }
 
     const renderActionsPedidos = (item) => {
-        return(
+        return (
             <div className="d-flex">
                 <button className='btn btn-outline-primary me-2'
                     disabled={item.id_formando_formando.id_formando_utilizador.isformador}
-                    onClick={() => HandleType( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
+                    onClick={() => HandleType(item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
                     <i className='bi bi-person-fill-up fs-5'></i>
                 </button>
-                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser( item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
+                <button className="btn btn-outline-success me-2" onClick={() => HistoryUser(item.id_formando_formando.id_formando_utilizador.id_util, item.id_formando_formando.id_formando_utilizador.nome_util)}>
                     <i className="bi bi-person-lines-fill fs-5"></i>
                 </button>
                 <button className="btn btn-outline-danger me-2" onClick={() => HandleDeletePedidos(item.id_pedidos_upgrade_cargo)}>
@@ -388,49 +396,50 @@ const UsersTables = () => {
 
     useEffect(() => {
         FetchPedidos();
-    },[])
+    }, [])
 
-    return(
+    return (
         <div>
             <div className="mb-3 d-flex justify-content-between">
                 <div>
                     {opcao === 'Utilizadores' && (
-                    <h3>Lista utilizadores</h3>
+                        <h3>Lista utilizadores</h3>
                     )}
                     {opcao === 'Pedidos' && (
-                    <h3>Pedidos de upgrade formador</h3>
+                        <h3>Pedidos de upgrade formador</h3>
                     )}
                 </div>
                 <div className="btn-group w-25">
                     {opcoes.map((o, index) => (
-                    <button
-                        key={index}
-                        className={`btn ${opcao === o ? 'btn-active' : 'btn-outline-custom'}`}
-                        onClick={() => handleChangeOpcao(o)}
-                    >
-                        {o.charAt(0).toUpperCase() + o.slice(1)}
-                    </button>
+                        <button
+                            key={index}
+                            className={`btn ${opcao === o ? 'btn-active' : 'btn-outline-custom'}`}
+                            onClick={() => handleChangeOpcao(o)}
+                        >
+                            {o.charAt(0).toUpperCase() + o.slice(1)}
+                        </button>
                     ))}
-                </div>    
+                </div>
             </div>
-            { opcao === 'Utilizadores' && (
-                <Table 
-                    columns={columnsUtilizadores} 
-                    data={user ?? []} 
-                    actions={renderActions} 
-                    onAddClick={{callback: HandleCreate, label: 'Utilizadores'}}
+            {opcao === 'Utilizadores' && (
+                <Table
+                    columns={columnsUtilizadores}
+                    data={user ?? []}
+                    actions={renderActions}
+                    onAddClick={{ callback: HandleCreate, label: 'Utilizadores' }}
                     pesquisa={true}
                     searchTerm={searchTerm}
                     onSearchChange={(value) => {
                         setSearchTerm(value);
                         debouncedNavigate(value);
-                    }} 
-                />    
+                    }}
+                    loading={loadingUsers}
+                />
             )}
-            { opcao === 'Pedidos' && (
-                <Table columns={ColumnsUpgradeUser} data={pedidos} actions={renderActionsPedidos} />
+            {opcao === 'Pedidos' && (
+                <Table columns={ColumnsUpgradeUser} data={pedidos} actions={renderActionsPedidos} loading={loadingPedidos} />
             )}
-            
+
         </div>
     );
 }

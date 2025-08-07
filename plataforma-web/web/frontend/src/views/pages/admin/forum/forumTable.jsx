@@ -15,6 +15,8 @@ const ForumTable = () => {
     const [opcao, setOpcao] = useState("Fóruns");
     const [catAreaTop, setCatAreaTop] = useState([]);
     const navigate = useNavigate();
+    const [loadingForum, setLoadingForum] = useState(true);
+    const [loadingPedidos, setLoadingPedidos] = useState(true);
 
     const handleChangeOpcao = (a) => {
         setOpcao(a);
@@ -22,11 +24,14 @@ const ForumTable = () => {
 
     const FetchForum = async () => {
         try {
+            setLoadingForum(true);
             const response = await list_conteudos_partilhado();
             setforum(response);
             console.log(response);
-        } catch(error) {
+        } catch (error) {
             console.log('Erro ao carregar os dados dos Foruns');
+        } finally {
+            setLoadingForum(false);
         }
     }
 
@@ -42,10 +47,13 @@ const ForumTable = () => {
 
     const FetchPedidos = async () => {
         try {
+            setLoadingPedidos(true);
             const response = await list_pedidos_forum();
             setPedidos(response);
         } catch (error) {
             console.log('Erro ao encontrar Pedidos de forum');
+        } finally {
+            setLoadingPedidos(false);
         }
     }
 
@@ -65,8 +73,8 @@ const ForumTable = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed){
-            try{
+        if (result.isConfirmed) {
+            try {
                 await delete_pedido_forum(id_pedido);
                 await FetchPedidos();
                 Swal.fire({
@@ -75,11 +83,11 @@ const ForumTable = () => {
                     icon: 'success',
                     timer: 1500,
                     showConfirmButton: false
-                }); 
-            } catch(error){
+                });
+            } catch (error) {
                 Swal.fire({
-                    title: 'Erro', 
-                    text: 'Ocorreu um erro eliminar pedido', 
+                    title: 'Erro',
+                    text: 'Ocorreu um erro eliminar pedido',
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {
@@ -89,7 +97,7 @@ const ForumTable = () => {
             }
         }
     }
-    
+
     const HandleCreateTopico = async (id_pedido, topicoSugerido) => {
         console.log(id_pedido);
         const result = await Swal.fire({
@@ -151,14 +159,14 @@ const ForumTable = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed){
-            try{
-                const {area, nome, descricao } = result.value;
+        if (result.isConfirmed) {
+            try {
+                const { area, nome, descricao } = result.value;
                 console.log(result.value);
-                const data = await create_topico({id_area: area, nome_topico: nome, descricao_top: descricao});
+                const data = await create_topico({ id_area: area, nome_topico: nome, descricao_top: descricao });
                 const id_topico = data.id_topico;
                 const data_criacao_cp = new Date();
-                await create_conteudos_partilhado({id_topico, data_criacao_cp, id_pedido});
+                await create_conteudos_partilhado({ id_topico, data_criacao_cp, id_pedido });
                 await FetchPedidos();
                 Swal.fire({
                     title: 'Sucesso',
@@ -166,11 +174,11 @@ const ForumTable = () => {
                     icon: 'success',
                     timer: 1500,
                     showConfirmButton: false
-                }); 
-            } catch(error){
+                });
+            } catch (error) {
                 Swal.fire({
-                    title: 'Erro', 
-                    text: 'Ocorreu um erro a criar um novo tópico', 
+                    title: 'Erro',
+                    text: 'Ocorreu um erro a criar um novo tópico',
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {
@@ -183,7 +191,7 @@ const ForumTable = () => {
     }
 
     const renderActions = (item) => {
-        return(
+        return (
             <div className="d-flex">
                 <button className='btn btn-outline-primary me-2'
                     onClick={() => HandleCreateTopico(item.id_pedidos_novos_foruns, item.novo_forum)}>
@@ -201,37 +209,37 @@ const ForumTable = () => {
         FetchForum();
         FetchPedidos();
         FetchCategoriaAreaTopico();
-    },[])
+    }, [])
 
-    return(
+    return (
         <div>
             <div className="mb-3 d-flex justify-content-between">
                 <div>
                     {opcao === 'Fóruns' && (
-                    <h3>Lista tópicos fórum</h3>
+                        <h3>Lista tópicos fórum</h3>
                     )}
                     {opcao === 'Pedidos' && (
-                    <h3>Pedidos de tópicos fórum</h3>
+                        <h3>Pedidos de tópicos fórum</h3>
                     )}
                 </div>
                 <div className="btn-group w-25">
                     {opcoes.map((o, index) => (
-                    <button
-                        key={index}
-                        className={`btn ${opcao === o ? 'btn-active' : 'btn-outline-custom'}`}
-                        onClick={() => handleChangeOpcao(o)}
-                    >
-                        {o.charAt(0).toUpperCase() + o.slice(1)}
-                    </button>
+                        <button
+                            key={index}
+                            className={`btn ${opcao === o ? 'btn-active' : 'btn-outline-custom'}`}
+                            onClick={() => handleChangeOpcao(o)}
+                        >
+                            {o.charAt(0).toUpperCase() + o.slice(1)}
+                        </button>
                     ))}
-                </div>    
+                </div>
             </div>
-            
+
             {opcao === 'Fóruns' && (
-               <Table columns={columnsForum} data={forum} /> 
+                <Table columns={columnsForum} data={forum} loading={loadingForum} />
             )}
             {opcao === 'Pedidos' && (
-               <Table columns={columnsPedidosForum} data={pedidos} actions={renderActions}/>
+                <Table columns={columnsPedidosForum} data={pedidos} actions={renderActions} loading={loadingPedidos} />
             )}
         </div>
     );

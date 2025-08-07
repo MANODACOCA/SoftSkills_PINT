@@ -1059,16 +1059,20 @@ const CursoLecionarAula = () => {
                 <div className="m-0 bg-light border rounded">
                     <div className='d-flex align-items-center justify-content-between p-2'>
                         <h6>Trabalhos Entregues</h6>
-                        {alterarNotasTrabalhos ? (
-                            <button className='btn btn-primary' onClick={() => salvarNotas()}>
-                                <i className='bi bi-plus-lg me-2'></i>
-                                Guardar
-                            </button>
-                        ) : (
-                            <button className='btn btn-primary' onClick={() => setAlterarNotasTrabalhos(true)}>
-                                <i className='bi bi-plus-lg me-2'></i>
-                                Editar
-                            </button>
+                        {entregas?.length > 0 && (
+                            <>
+                                {alterarNotasTrabalhos ? (
+                                    <button className='btn btn-primary' onClick={() => salvarNotas()}>
+                                        <i className='bi bi-plus-lg me-2'></i>
+                                        Guardar
+                                    </button>
+                                ) : (
+                                    <button className='btn btn-primary' onClick={() => setAlterarNotasTrabalhos(true)}>
+                                        <i className='bi bi-plus-lg me-2'></i>
+                                        Editar
+                                    </button>
+                                )}
+                            </>
                         )}
                     </div>
                     <div className='mx-2 my-1 border rounded'>
@@ -1581,12 +1585,12 @@ const CursoLecionarAula = () => {
                 <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
                     <div className="mt-4">
                         <Table columns={colunasNotasFinais} data={resultados} actions={null} loading={loadingNotas}
-                            onAddClick={{
+                            onAddClick={resultados.length > 0 ? {
                                 callback: handleEditarGuardarResultados,
                                 label: modoEditNotas ? 'Guardar' : 'Editar',
                                 icon: modoEditNotas ? 'bi-check-lg' : 'bi-pencil',
                                 variant: modoEditNotas ? 'success' : 'primary',
-                            }} />
+                            } : null} />
                     </div>
                 </Tab>
             </Tabs>

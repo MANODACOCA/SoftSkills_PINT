@@ -14,20 +14,25 @@ const CategoriaAreaTopicoTable = () => {
         id_categoria: null,
         nome_cat: ''
     });
+    const [loading, setLoading] = useState(true);
+
 
     const fetchCatAreaTop = async () => {
         try {
+            setLoading(true);
             const response = await getCategoriaAreaTopico();
             const area = response.find((a) => a.id_categoria.toString() == categoriaAtual.id_categoria.toString())?.areas ?? [];
             setAreas(area);
         } catch (error) {
             console.log('Erro na lista de categoria area e topico!');
+        } finally {
+            setLoading(false);
         }
     }
 
 
     const renderActions = (item) => {
-        return(
+        return (
             <div>
                 <button className="btn btn-outline-primary me-2" onClick={() => handleEditArea(item)}>
                     <i className="bi bi-pencil"></i>
@@ -42,42 +47,42 @@ const CategoriaAreaTopicoTable = () => {
 
     // #region topico
 
-    const renderTopicos = (item, isExpanded, expandedContent = false ) => {
+    const renderTopicos = (item, isExpanded, expandedContent = false) => {
         if (expandedContent) {
             return (
-            <div className="m-0 bg-light border rounded">
-                <h6 className='p-2'>Topicos</h6>
-                <div className='mx-2 my-1 border rounded'>
-                {item.topicos?.length > 0 ? 
-                    (item.topicos?.map((t, index) => (    
-                        <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
-                            <div className='d-flex align-items-center justify-content-between'>
-                                <div>
-                                    {t.nome_topico}   
+                <div className="m-0 bg-light border rounded">
+                    <h6 className='p-2'>Topicos</h6>
+                    <div className='mx-2 my-1 border rounded'>
+                        {item.topicos?.length > 0 ?
+                            (item.topicos?.map((t, index) => (
+                                <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
+                                    <div className='d-flex align-items-center justify-content-between'>
+                                        <div>
+                                            {t.nome_topico}
+                                        </div>
+                                        <div>
+                                            <button className="btn btn-outline-primary" onClick={() => handleEditTopico(t)}>
+                                                <i className="bi bi-pencil"></i>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <button className="btn btn-outline-primary" onClick={()=> handleEditTopico(t)}>
-                                        <i className="bi bi-pencil"></i>
-                                    </button>
+                            ))
+                            ) : (
+                                <div className='p-2'>
+                                    Área sem tópicos disponíveis
                                 </div>
-                            </div>
-                        </div>
-                    ))
-                    ) : (
-                        <div className='p-2'>
-                            Área sem tópicos disponíveis
-                        </div>
-                    )
-                }
+                            )
+                        }
+                    </div>
                 </div>
-            </div>
             );
         }
-        return(
+        return (
             <div>
                 <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
-            </div>            
-        );   
+            </div>
+        );
     }
 
     const handleAddTopico = async (idArea) => {
@@ -111,7 +116,7 @@ const CategoriaAreaTopicoTable = () => {
                         return;
                     }
 
-                    return{
+                    return {
                         nome_topico: nome,
                         descricao_top: descricao,
                     };
@@ -129,10 +134,10 @@ const CategoriaAreaTopicoTable = () => {
                     const id_area = idArea;
                     const nome_topico = adicionarTopico.value.nome_topico;
                     const descricao_top = adicionarTopico.value.descricao_top;
-                    const data = await create_topico({id_area, nome_topico, descricao_top});
+                    const data = await create_topico({ id_area, nome_topico, descricao_top });
                     const id_topico = data.id_topico;
                     const data_criacao_cp = new Date();
-                    await create_conteudos_partilhado({id_topico, data_criacao_cp})
+                    await create_conteudos_partilhado({ id_topico, data_criacao_cp })
                     fetchCatAreaTop();
                     Swal.fire({
                         title: 'Sucesso',
@@ -182,13 +187,13 @@ const CategoriaAreaTopicoTable = () => {
                 `,
                 preConfirm: () => {
                     const nome = document.getElementById('nome').value.trim();
-                    const descricao = document.getElementById('descricao').value.trim();  
-                    
-                    if(!nome || !descricao) {
+                    const descricao = document.getElementById('descricao').value.trim();
+
+                    if (!nome || !descricao) {
                         Swal.showValidationMessage('Todos os campos são obrigatórios!');
                         return;
                     }
-                    
+
                     return {
                         nome_topico: nome,
                         descricao_top: descricao
@@ -209,7 +214,7 @@ const CategoriaAreaTopicoTable = () => {
                     const id_topico = topicos.id_topico;
                     await update_topico(id_topico, { nome_topico, descricao_top });
                     await fetchCatAreaTop();
-                Swal.fire({
+                    Swal.fire({
                         title: 'Sucesso',
                         text: `Alterado com sucesso`,
                         icon: 'success',
@@ -234,7 +239,7 @@ const CategoriaAreaTopicoTable = () => {
     }
 
     // #endregion 
-    
+
 
     // #region area
 
@@ -266,7 +271,7 @@ const CategoriaAreaTopicoTable = () => {
                         return;
                     }
 
-                    return{
+                    return {
                         nome_area: nome,
                     };
                 },
@@ -282,7 +287,7 @@ const CategoriaAreaTopicoTable = () => {
                 try {
                     const id_categoria = categoriaAtual.id_categoria;
                     const nome_area = adicionarArea.value.nome_area;
-                    await create_area({id_categoria, nome_area});
+                    await create_area({ id_categoria, nome_area });
                     fetchCatAreaTop();
                     Swal.fire({
                         title: 'Sucesso',
@@ -335,7 +340,7 @@ const CategoriaAreaTopicoTable = () => {
                         return;
                     }
 
-                    return{
+                    return {
                         nome_area: nome,
                     };
                 },
@@ -351,7 +356,7 @@ const CategoriaAreaTopicoTable = () => {
                 try {
                     const id_area = areas.id_area;
                     const nome_area = editarArea.value.nome_area;
-                    await update_area(id_area, { nome_area});
+                    await update_area(id_area, { nome_area });
                     fetchCatAreaTop();
                     Swal.fire({
                         title: 'Sucesso',
@@ -373,7 +378,7 @@ const CategoriaAreaTopicoTable = () => {
                     console.error("Erro ao editar área", error);
                 }
             }
-        } 
+        }
     }
 
     // #endregion
@@ -403,8 +408,8 @@ const CategoriaAreaTopicoTable = () => {
             },
             buttonsStyling: false
         });
-        
-        if (result.isConfirmed){
+
+        if (result.isConfirmed) {
             const editarCategoria = await Swal.fire({
                 title: 'Editar Categoria',
                 html: ` 
@@ -419,7 +424,7 @@ const CategoriaAreaTopicoTable = () => {
                         return;
                     }
 
-                    return{
+                    return {
                         nome_cat: nome,
                     };
                 },
@@ -431,12 +436,12 @@ const CategoriaAreaTopicoTable = () => {
                     cancelButton: 'btn btn-danger'
                 },
             });
-            if(editarCategoria.isConfirmed && editarCategoria.value){
+            if (editarCategoria.isConfirmed && editarCategoria.value) {
                 try {
                     const nome = editarCategoria.value.nome_cat;
                     await update_categoria(categoriaAtual.id_categoria, { nome_cat: nome });
                     fetchCategoria();
-                    setCategoriaAtual(categoriaAtual => ({...categoriaAtual, nome_cat: nome}));
+                    setCategoriaAtual(categoriaAtual => ({ ...categoriaAtual, nome_cat: nome }));
                     Swal.fire({
                         icon: "success",
                         title: "Categoria alterada com sucesso!",
@@ -470,7 +475,7 @@ const CategoriaAreaTopicoTable = () => {
             },
             buttonsStyling: false
         });
-        if(result.isConfirmed){
+        if (result.isConfirmed) {
             const adicionarCategoria = await Swal.fire({
                 title: 'Adicionar categoria',
                 html: ` 
@@ -479,13 +484,13 @@ const CategoriaAreaTopicoTable = () => {
                 `,
                 preConfirm: () => {
                     const nome = document.getElementById('nome').value;
-                    
+
                     if (!nome) {
                         Swal.showValidationMessage('Todos os campos são obrigatórios!');
                         return;
                     }
 
-                    return{
+                    return {
                         nome_cat: nome,
                     };
                 },
@@ -500,9 +505,9 @@ const CategoriaAreaTopicoTable = () => {
             if (adicionarCategoria.isConfirmed && adicionarCategoria.value) {
                 try {
                     const nome_cat = adicionarCategoria.value.nome_cat;
-                    const data = await create_categoria({nome_cat: nome_cat});
+                    const data = await create_categoria({ nome_cat: nome_cat });
                     fetchCategoria();
-                    setCategoriaAtual({id_categoria: data.id_categoria,nome_cat: data.nome_cat});
+                    setCategoriaAtual({ id_categoria: data.id_categoria, nome_cat: data.nome_cat });
                     Swal.fire({
                         icon: "success",
                         title: "Categoria adicionada com sucesso!",
@@ -517,13 +522,13 @@ const CategoriaAreaTopicoTable = () => {
                         timer: 2000,
                         showConfirmButton: false,
                     });
-                }    
+                }
             }
         }
     }
 
     // #endregion
-     
+
 
     useEffect(() => {
         fetchCategoria();
@@ -542,11 +547,11 @@ const CategoriaAreaTopicoTable = () => {
                         <i className="bi bi-plus-lg"></i>
                         <span className="ps-2 d-none d-md-block">Categoria</span>
                     </button>
-                </div>    
+                </div>
                 <select className="form-select" value={categoriaAtual.id_categoria} onChange={(e) => {
                     const idSelected = e.target.value;
                     const cat = categoria.find((c) => c.id_categoria.toString() == idSelected);
-                    if(!idSelected || !cat) {
+                    if (!idSelected || !cat) {
                         setCategoriaAtual({
                             id_categoria: null,
                             nome_cat: '',
@@ -556,12 +561,12 @@ const CategoriaAreaTopicoTable = () => {
                         setCategoriaAtual({
                             id_categoria: cat.id_categoria,
                             nome_cat: cat.nome_cat,
-                        });    
+                        });
                     }
                 }}>
                     <option value="">-- Selecione a Categoria --</option>
                     {categoria.map((c) => {
-                        return(
+                        return (
                             <option key={c.id_categoria} value={c.id_categoria}>{c.nome_cat}</option>
                         );
                     })}
@@ -571,20 +576,20 @@ const CategoriaAreaTopicoTable = () => {
                         <button className="btn btn-success me-2" onClick={() => handleCategoria(categoriaAtual)}>
                             Alterar Nome Categoria
                         </button>
-                    </div>      
+                    </div>
                 }
             </div>
             {categoriaAtual.id_categoria &&
                 <div>
-                    <Table columns={areaColumns} data={areas ?? []} actions={renderActions} onAddClick={{callback: handleAddArea, label:'Área'}} conteudos={renderTopicos} />
-                </div>    
+                    <Table columns={areaColumns} data={areas ?? []} actions={renderActions} onAddClick={{ callback: handleAddArea, label: 'Área' }} conteudos={renderTopicos} loading={loading} />
+                </div>
             }
             {!categoriaAtual.id_categoria &&
                 <div className="d-flex justify-content-center p-5">
                     <span className="text-secondary">Selecione a Categoria para poder alterar as áreas e os tópicos</span>
-                </div>    
+                </div>
             }
-            
+
         </div>
     )
 }

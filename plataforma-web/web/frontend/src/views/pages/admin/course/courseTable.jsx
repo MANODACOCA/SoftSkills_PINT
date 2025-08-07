@@ -12,9 +12,11 @@ const CourseTable = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(true);
  
     const FetchCursos = async () => {
         try {
+            setLoading(true);
             const response = await getCourseAdminLista(searchTerm || "");
     
             const cursosPorRaiz = {};
@@ -47,6 +49,8 @@ const CourseTable = () => {
             setcursos(cursosFinais);
         } catch(error) {
             console.log('Erro ao listar Cursos')
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -233,6 +237,7 @@ const CourseTable = () => {
                     setSearchTerm(value);
                     debouncedNavigate(value);
                 }}
+                loading={loading}
             />
         </div>
     );
