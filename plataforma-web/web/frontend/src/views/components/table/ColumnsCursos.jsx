@@ -55,13 +55,13 @@ export const columnsCursos = [
     const dataInicioCurso = new Date(item.data_inicio_curso);
     const dataFimCurso = new Date(item.data_fim_curso);
 
-    if(dataFimCurso < data_atual) return <span className=" badge bg-danger">Concluído</span>;
+    if(dataFimCurso < data_atual) return <span className=" badge bg-danger" style={{width: '75px'}}>Concluído</span>;
 
-    if(!item.estado) return <span className="badge bg-secondary" style={{backgroundColor: '#ff8400ff'}}>Oculto</span>
+    if(!item.estado) return <span className="badge bg-secondary" style={{backgroundColor: '#ff8400ff', width: '75px'}}>Oculto</span>
 
-    if(dataInicioCurso > data_atual) return <span className="badge"  style={{ backgroundColor: '#ecb100ff'}}>Por iniciar</span>;
+    if(dataInicioCurso > data_atual) return <span className="badge"  style={{ backgroundColor: '#ecb100ff', width: '75px'}}>Por iniciar</span>;
 
-    if (dataInicioCurso < data_atual && dataFimCurso > data_atual) return <span className="badge bg-success">Em curso</span>;
+    if (dataInicioCurso < data_atual && dataFimCurso > data_atual) return <span className="badge bg-success" style={{width: '75px'}}>Em curso</span>;
     }
   },
   {
