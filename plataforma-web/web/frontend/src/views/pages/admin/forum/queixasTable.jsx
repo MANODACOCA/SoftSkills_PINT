@@ -7,6 +7,7 @@ import { delete_comentario } from "../../../../api/comentario_axios";
 import { delete_post } from "../../../../api/post_axios";
 import Swal from "sweetalert2";
 import { FaFile } from "react-icons/fa";
+import { IoIosArrowDropdown, IoIosArrowDropup } from "react-icons/io";
 
 const QueixasTables = () => {
     const [queixas, setqueixas] = useState([]);
@@ -254,7 +255,10 @@ const QueixasTables = () => {
 
         return (
             <div>
-                <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
+                {isExpanded 
+                ? <IoIosArrowDropup size={22} color="	#444444" />
+                : <IoIosArrowDropdown size={22} color="	#444444" />
+                }
             </div>
         );
     }
