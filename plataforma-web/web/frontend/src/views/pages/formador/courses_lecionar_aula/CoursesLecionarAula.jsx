@@ -38,6 +38,10 @@ const CursoLecionarAula = () => {
     const [modoEditNotas, setModoEditNotas] = useState(false);
     const [notasEditadas, setNotasEditadas] = useState({});
     const [trabalhos, setTrabalhos] = useState([]);
+    const [loadingAulas, setLoadingAulas] = useState(true);
+    const [loadingMaterialApoio, setLoadingMaterialApoio] = useState(true);
+    const [loadingTrabalhos, setLoadingTrabalhos] = useState(true);
+    const [loadingNotas, setLoadingNotas] = useState(true);
 
     const iconMapById = {
         1: <FaFilePdf className="text-danger" />,
@@ -76,10 +80,13 @@ const CursoLecionarAula = () => {
 
     const fetchResultados = async (id) => {
         try {
+            setLoadingNotas(true);
             const response = await get_resultados(id);
             setResultados(response);
         } catch (error) {
             console.log('Erro ao encontrar a lista de resultados dos formandos', error);
+        } finally {
+            setLoadingNotas(false);
         }
     }
     //#endregion
@@ -88,11 +95,14 @@ const CursoLecionarAula = () => {
     //#region Aula
     const fetchAulas = async (id) => {
         try {
+            setLoadingAulas(true);
             const response = await getAulas_Curso(id);
             console.log('Aulas recebidas:', response);
             setAulas(response);
         } catch (error) {
             console.log('Erro encontrar as Aulas', error);
+        } finally {
+            setLoadingAulas(false);
         }
     }
 
@@ -568,11 +578,14 @@ const CursoLecionarAula = () => {
 
     const fetchMaterialApoio = async (id) => {
         try {
+            setLoadingMaterialApoio(true);
             const response = await get_material_apoio_curso(id);
             setMateriais(response);
             console.log(response);
         } catch (error) {
             console.log('Erro ao listar Material de Apoio', error);
+        } finally {
+            setLoadingMaterialApoio(false);
         }
     }
 
@@ -1465,10 +1478,14 @@ const CursoLecionarAula = () => {
 
     const fetchTrabalhos = async (id_curso) => {
         try {
+            setLoadingTrabalhos(true);
             const response = await get_trabalhos_curso(id_curso);
+            console.log("Trabalhos atualizados:", response);
             setTrabalhos(response);
         } catch (err) {
             console.error("Erro ao buscar trabalhos", err);
+        } finally {
+            setLoadingTrabalhos(false);
         }
     };
 
@@ -1540,7 +1557,7 @@ const CursoLecionarAula = () => {
                     <div className="mt-4">
                         {/* Aulas */}
                         <div className='mt-4'>
-                            <Table columns={columnsAulas} data={aulas || []} actions={renderActionsAula} onAddClick={{ callback: HandleEditCreateAula, label: 'Aula' }} conteudos={renderConteudos} />
+                            <Table columns={columnsAulas} data={aulas || []} actions={renderActionsAula} onAddClick={{ callback: HandleEditCreateAula, label: 'Aula' }} conteudos={renderConteudos} loading={loadingAulas} />
                         </div>
                     </div>
                 </Tab>
@@ -1549,7 +1566,7 @@ const CursoLecionarAula = () => {
                     <div className="mt-4">
                         {/* Material de Apoio */}
                         <div className='mt-4'>
-                            <Table columns={ColumnsMaterialApoio} data={materiais || []} actions={renderActionsMaterialApoio} onAddClick={{ callback: handleEditCreateMaterialApoio, label: 'Material Apoio' }} />
+                            <Table columns={ColumnsMaterialApoio} data={materiais || []} actions={renderActionsMaterialApoio} onAddClick={{ callback: handleEditCreateMaterialApoio, label: 'Material Apoio' }} loading={loadingMaterialApoio} />
                         </div>
                     </div>
                 </Tab>
@@ -1558,18 +1575,18 @@ const CursoLecionarAula = () => {
                 <Tab eventKey="trabalhos" title={<span className="fw-bold">Trabalhos</span>}>
                     <div className="mt-4">
                         {/* Trabalhos */}
-                        <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{ callback: handleCreateTrabalho, label: 'Trabalhos' }} conteudos={renderTrabalhos} />
+                        <Table columns={columnsTrabalhos} data={trabalhos || []} actions={renderActionsTrabalhos} onAddClick={{ callback: handleCreateTrabalho, label: 'Trabalhos' }} conteudos={renderTrabalhos} loading={loadingTrabalhos} />
                     </div>
                 </Tab>
 
                 <Tab eventKey="avaliacaoFinal" title={<span className='fw-bold'>Avaliação final</span>}>
                     <div className="mt-4">
-                        <Table columns={colunasNotasFinais} data={resultados} actions={null}
+                        <Table columns={colunasNotasFinais} data={resultados} actions={null} loading={loadingNotas}
                             onAddClick={{
                                 callback: handleEditarGuardarResultados,
                                 label: modoEditNotas ? 'Guardar' : 'Editar',
                                 icon: modoEditNotas ? 'bi-check-lg' : 'bi-pencil',
-                                variant: modoEditNotas ? 'success' : 'primary'
+                                variant: modoEditNotas ? 'success' : 'primary',
                             }} />
                     </div>
                 </Tab>
