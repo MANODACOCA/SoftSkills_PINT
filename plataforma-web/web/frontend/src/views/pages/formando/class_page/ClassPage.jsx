@@ -344,6 +344,29 @@ const ClassPage = () => {
                                             <p className="mt-4">Informações não disponíveis para este curso.</p>
                                         )}
                                     </Tab>
+                                    
+                                    {/* {cursoTerminado() && (
+                                    <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
+                                        <div className="mt-4">
+                                            <h4>Parabéns por concluir o curso!</h4>
+                                            <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
+                                            <h2 className="fw-bold mt-4">Certificado</h2>
+                                            <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3" style={{ maxWidth: 700 }}>
+                                                <div className="me-3">
+                                                    <FaFilePdf size={48} color="#e63946" />
+                                                </div>
+                                                <div className="flex-grow-1">
+                                                    <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
+                                                    <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
+                                                </div>
+                                                <button className="btn btn-primary" onClick={handleTransferirCertificado}>
+                                                    Transferir
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </Tab>
+                                    )} */}
+
                                 </Tabs>
                             </>
                         )}

@@ -52,3 +52,16 @@ export const delete_certificados = async (id) => {
         throw error;
     }
 };
+
+export const gerar_certificado = async (cursoId, formandoId) => {
+    try{
+        const response = await axios.get(`${API_URL}/certificados/gerar/${cursoId}/${formandoId}`,
+            {
+                responseType: 'blob'
+            }
+        );
+        return response.data;
+    } catch(error) {
+        console.error('Erro ao gerar certificado!');
+    }
+}
