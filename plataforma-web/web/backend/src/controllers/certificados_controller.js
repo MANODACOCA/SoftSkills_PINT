@@ -5,8 +5,9 @@ const initModels = require("../models/init-models");
 const model = initModels(sequelize).certificados;
 const controllers = {};
 const { gerarHtmlCertificado } = require('../utils/gerarCertificado');
-const puppeteer = require('puppeteer');
-const { cursos, utilizador, inscricoes, resultados } = require('../models/init-models')(sequelize);
+//const puppeteer = require('puppeteer');
+const { cursos, utilizador, resultados } = require('../models/init-models')(sequelize);
+const html_to_pdf = require('html-pdf-node');
 
 controllers.gerarCertificado = async (req, res) => {
   try {
@@ -45,14 +46,8 @@ controllers.gerarCertificado = async (req, res) => {
       notaFinal: notaFinal
     });
 
-    const browser = await puppeteer.launch({ 
-      headless: "new",
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-     });
-    const page = await browser.newPage();
-    await page.setContent(html);
-    const pdfBuffer = await page.pdf({ format: 'A4' });
-    await browser.close();
+    const file = { content: html };
+    const pdfBuffer = await html_to_pdf.generatePdf(file, { format: 'A4' });
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
     if (certificado) {
@@ -67,6 +62,29 @@ controllers.gerarCertificado = async (req, res) => {
         certificado_final: 'transferido'
       });
     }
+
+    // const browser = await puppeteer.launch({ 
+    //   headless: "new",
+    //   args: ['--no-sandbox', '--disable-setuid-sandbox']
+    //  });
+    // const page = await browser.newPage();
+    // await page.setContent(html);
+    // const pdfBuffer = await page.pdf({ format: 'A4' });
+    // await browser.close();
+
+    // const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
+    // if (certificado) {
+    //   await model.update(
+    //     { certificado_final: 'transferido' },
+    //     { where: { id_formando: formandoId, id_curso: cursoId } }
+    //   );
+    // } else {
+    //   await model.create({
+    //     id_formando: formandoId,
+    //     id_curso: cursoId,
+    //     certificado_final: 'transferido'
+    //   });
+    // }
 
     res.set({
       'Content-Type': 'application/pdf',
