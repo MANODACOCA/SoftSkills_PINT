@@ -33,7 +33,7 @@ async function getDenunciasAll() {
                 
                 if (postInfo) {
                     const postData = postInfo.toJSON();
-                    denunciaData.post_info = { texto_post: postData.texto_post };
+                    denunciaData.post_info = { texto_post: postData.texto_post, caminho_ficheiro: postData.caminho_ficheiro };
                     
                     if (postData.id_conteudos_partilhado) {
                         const cpInfo = await conteudos_partilhado.findByPk(postData.id_conteudos_partilhado, {
@@ -80,7 +80,7 @@ async function getDenunciasAll() {
                 
                 if (comentarioInfo) {
                     const comentarioData = comentarioInfo.toJSON();
-                    denunciaData.comentario_info = { texto_comentario: comentarioData.texto_comentario };
+                    denunciaData.comentario_info = { texto_comentario: comentarioData.texto_comentario, caminho_ficheiro: comentarioData.caminho_ficheiro};
                     
                     if (comentarioData.id_post) {
                         const postInfo = await post.findByPk(comentarioData.id_post, {
