@@ -43,8 +43,6 @@ controllers.gerarCertificado = async (req, res) => {
       notaFinal: notaFinal
     });
 
-    const file = { content: html };
-
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
     if (certificado) {
       await model.update(
