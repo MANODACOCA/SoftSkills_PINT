@@ -36,7 +36,11 @@ const FeaturedCourseCard = ({
         navigate(`/formador/cursos/${course.id_curso}`);
       }
     } else {
-      navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
+      if (location.pathname.startsWith('/formador/cursos')) {
+        navigate(`/formador/cursos/${course.id_curso}`);
+      } else {
+        navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
+      }
     }
   };
 
