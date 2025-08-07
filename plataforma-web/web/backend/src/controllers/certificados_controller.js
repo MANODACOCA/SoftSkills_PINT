@@ -38,7 +38,7 @@ controllers.gerarCertificado = async (req, res) => {
     }
 
     const html = gerarHtmlCertificado({
-      nomeFormando: formando.nome_util,
+      nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
       dataConclusao: curso.data_fim_curso,
       notaFinal: notaFinal
