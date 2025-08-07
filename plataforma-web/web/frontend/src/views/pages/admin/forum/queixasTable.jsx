@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { delete_comentario } from "../../../../api/comentario_axios";
 import { delete_post } from "../../../../api/post_axios";
 import Swal from "sweetalert2";
+import { FaFile } from "react-icons/fa";
 
 const QueixasTables = () => {
     const [queixas, setqueixas] = useState([]);
@@ -196,10 +197,36 @@ const QueixasTables = () => {
                     </div>
                     {isPost
                         ? <div style={{ textAlign: 'justify' }}>
-                            {postComent?.texto_post}
+                            <div style={{ textAlign: 'justify', overflowWrap: 'anywhere' }}>
+                                {postComent?.texto_post}
+                            </div>
+                            {postComent?.caminho_ficheiro && (
+                                <a href={postComent?.caminho_ficheiro} target='blank' className="text-decoration-none text-primary">
+                                <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light" >
+                                    <div className="d-flex align-items-center gap-2">
+                                    <FaFile className="text-secondary" />
+                                    FICHEIRO
+                                    </div>
+                                    <i className="bi bi-download"></i>
+                                </div>
+                                </a>
+                            )}
                         </div>
                         : <div style={{ textAlign: 'justify' }}>
-                            {postComent?.texto_comentario}
+                            <div style={{ textAlign: 'justify', overflowWrap: 'anywhere' }}>
+                                {postComent?.texto_comentario}
+                            </div>
+                            {postComent?.caminho_ficheiro && (
+                                <a href={postComent?.caminho_ficheiro} target='blank' className="text-decoration-none text-primary">
+                                <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light" >
+                                    <div className="d-flex align-items-center gap-2">
+                                    <FaFile className="text-secondary" />
+                                    FICHEIRO
+                                    </div>
+                                    <i className="bi bi-download"></i>
+                                </div>
+                                </a>
+                            )}
                         </div>
                     }
                 </div>
