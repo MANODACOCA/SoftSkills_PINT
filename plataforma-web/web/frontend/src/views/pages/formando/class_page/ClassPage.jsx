@@ -21,6 +21,7 @@ import {
     FaFile
 } from 'react-icons/fa';
 import { BsFiletypeTxt } from "react-icons/bs";
+import { gerar_certificado } from '../../../../api/certificados_axios';
 
 const ClassPage = () => {
     const API_URL = 'https://softskills-api.onrender.com/';
@@ -122,6 +123,29 @@ const ClassPage = () => {
     const renderIconoFormato = (id) => {
         return iconMapById[id] || <FaFile className="text-secondary" />;
     };
+
+    const cursoTerminado = () => {
+        if(curso.issincrono) {
+
+        } else {
+            return new Date() > new Date(curso.data_fim_curso);
+        }
+    }
+
+    const handleTransferirCertificado = async () => {
+        try{
+            const response = await gerar_certificado(curso.id_curso, user.id_utilizador);
+            const url = window.URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Certificado - ${curso.nome_curso}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            alert('Erro ao transferir certificado!');
+        }
+    }
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -345,15 +369,15 @@ const ClassPage = () => {
                                         )}
                                     </Tab>
                                     
-                                    {/* {cursoTerminado() && (
+                                    {cursoTerminado() && (
                                     <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
                                         <div className="mt-4">
-                                            <h4>Parabéns por concluir o curso!</h4>
+                                            <h3>Parabéns por concluir o curso!</h3>
                                             <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
-                                            <h2 className="fw-bold mt-4">Certificado</h2>
+                                            <h5 className="fw-bold mt-4">Certificado</h5>
                                             <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3" style={{ maxWidth: 700 }}>
                                                 <div className="me-3">
-                                                    <FaFilePdf size={48} color="#e63946" />
+                                                    <FaFilePdf size={32} color="#e63946" />
                                                 </div>
                                                 <div className="flex-grow-1">
                                                     <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
@@ -365,7 +389,7 @@ const ClassPage = () => {
                                             </div>
                                         </div>
                                     </Tab>
-                                    )} */}
+                                    )}
 
                                 </Tabs>
                             </>
