@@ -14,6 +14,7 @@ controllers.gerarCertificado = async (req, res) => {
 
     const formando = await utilizador.findByPk(formandoId);
     const curso = await cursos.findByPk(cursoId);
+    //const formador = await 
 
     if (!formando || !curso) {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
@@ -39,8 +40,10 @@ controllers.gerarCertificado = async (req, res) => {
     const html = gerarHtmlCertificado({
       nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
+      dataInicio: curso.data_inicio_curso,
       dataConclusao: curso.data_fim_curso,
-      notaFinal: notaFinal
+      notaFinal: notaFinal,
+      //nomeFormador: 
     });
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
