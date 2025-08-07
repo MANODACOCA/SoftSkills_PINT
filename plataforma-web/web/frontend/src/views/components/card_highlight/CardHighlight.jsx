@@ -27,20 +27,16 @@ const FeaturedCourseCard = ({
     const now = new Date();
     const dataInicioCurso = parseDateWithoutTimezone(course.data_inicio_curso)
 
-    if (now >= dataInicioCurso) {
+    if (location.pathname.startsWith('/formador/cursos')) {
+      navigate(`/formador/cursos/${course.id_curso}`);
+    } else if (now >= dataInicioCurso) {
       if (location.pathname.startsWith('/my/cursos/inscritos')) {
         navigate(`/my/cursos/inscritos/curso/${course.id_curso}?tab=aulas`);
       } else if (location.pathname.startsWith('/my/cursos/terminados')) {
         navigate(`/my/cursos/terminados/curso/${course.id_curso}?tab=aulas`);
-      } else if (location.pathname.startsWith('/formador/cursos')) {
-        navigate(`/formador/cursos/${course.id_curso}`);
       }
     } else {
-      if (location.pathname.startsWith('/formador/cursos')) {
-        navigate(`/formador/cursos/${course.id_curso}`);
-      } else {
-        navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
-      }
+      navigate(`/cursos/${course.id_curso}`);// Caso esteja inscrito no curso mas o curso ainda nao tenha comecado
     }
   };
 
