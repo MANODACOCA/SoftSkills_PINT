@@ -88,5 +88,26 @@ controllers.delete = async (req, res) => {
   }
 };
 
+controllers.getNotaFinal = async (req, res) => {
+  try {
+    const { formandoId, cursoSincronoId } = req.params;
+
+    const resultado = await model.findOne({
+      where: {
+        id_formando: formandoId,
+        id_curso_sincrono: cursoSincronoId
+      }
+    });
+
+    if (!resultado) {
+      res.status(404).json({ nota_final: null, msg: 'Resultado não encontrado.' });
+    } else {
+      res.status(200).json({ nota_final: resultado.resul });
+    }
+
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao obter nota final!', desc: err.message });
+  }
+};
 
 module.exports = controllers;

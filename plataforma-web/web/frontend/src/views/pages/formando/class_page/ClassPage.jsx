@@ -22,6 +22,7 @@ import {
 } from 'react-icons/fa';
 import { BsFiletypeTxt } from "react-icons/bs";
 import { gerar_certificado } from '../../../../api/certificados_axios';
+import { get_nota_final } from '../../../../api/resultados_axios';
 
 const ClassPage = () => {
     const API_URL = 'https://softskills-api.onrender.com/';
@@ -44,6 +45,8 @@ const ClassPage = () => {
 
     const trabalhoIdSelecionado = searchParams.get('trabalho');
     const trabalhoSelecionado = trabalhos.find(t => t.id_trabalho.toString() === trabalhoIdSelecionado);
+
+    const [notaFinal, setNotaFinal] = useState(null);
 
     const carregarAulasEMaterialApoio = async () => {
         try {
@@ -124,9 +127,19 @@ const ClassPage = () => {
         return iconMapById[id] || <FaFile className="text-secondary" />;
     };
 
+    const fetchNotaFinal = async (formandoId, cursoSincronoId) => {
+        try {
+            const res = await get_nota_final(formandoId, cursoSincronoId);
+            return res?.nota_final ?? null;
+        } catch (error) {
+            console.error('Erro ao buscar nota final:', error);
+            return null;
+        }
+    };
+
     const cursoTerminado = () => {
         if(curso.issincrono) {
-
+            return notaFinal !== null && notaFinal >= 10;
         } else {
             return new Date() > new Date(curso.data_fim_curso);
         }
@@ -159,6 +172,12 @@ const ClassPage = () => {
             console.log(aulaAtual);
         }
     }, [aulaAtual]);
+
+    useEffect(() => {
+        if (curso?.issincrono) {
+            fetchNotaFinal(user.id_utilizador, curso.id_curso).then(setNotaFinal);
+        }
+    }, [curso, user?.id_utilizador]);
 
     return (
         <>
