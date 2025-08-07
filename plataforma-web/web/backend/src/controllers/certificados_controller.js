@@ -4,13 +4,14 @@ const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).certificados;
 const controllers = {};
-const {gerarCertificado} = require('../utils/gerarCertificado');
+const { gerarHtmlCertificado } = require('../utils/gerarCertificado');
 const puppeteer = require('puppeteer');
 const { cursos, utilizador, inscricoes, resultados } = require('../models/init-models')(sequelize);
 
 controllers.gerarCertificado = async (req, res) => {
   try {
     const { cursoId, formandoId } = req.params;
+    console.log('Recebido no endpoint:', { cursoId, formandoId });
     let notaFinal = null;
 
     const formando = await utilizador.findByPk(formandoId);
@@ -37,8 +38,8 @@ controllers.gerarCertificado = async (req, res) => {
       return res.status(403).json({ erro: 'Curso ainda não terminou.' });
     }
 
-    const html = gerarCertificado({
-      nomeFormando: formando.nome_util,
+    const html = gerarHtmlCertificado({
+      nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
       dataConclusao: curso.data_fim_curso,
       notaFinal: notaFinal
@@ -50,10 +51,19 @@ controllers.gerarCertificado = async (req, res) => {
     const pdfBuffer = await page.pdf({ format: 'A4' });
     await browser.close();
 
-    await model.update(
-      { certificado_final: 'transferido' },
-      { where: { id_formando: formandoId, id_curso: cursoId } }
-    );
+    const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
+    if (certificado) {
+      await model.update(
+        { certificado_final: 'transferido' },
+        { where: { id_formando: formandoId, id_curso: cursoId } }
+      );
+    } else {
+      await model.create({
+        id_formando: formandoId,
+        id_curso: cursoId,
+        certificado_final: 'transferido'
+      });
+    }
 
     res.set({
       'Content-Type': 'application/pdf',
