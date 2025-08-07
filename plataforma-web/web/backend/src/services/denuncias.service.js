@@ -31,7 +31,7 @@ async function getDenunciasAll() {
             if (denunciaData.id_post) {
                 // Buscar post
                 const postInfo = await post.findByPk(denunciaData.id_post, {
-                    attributes: ['texto_post', 'id_conteudos_partilhado']
+                    attributes: ['texto_post', 'caminho_ficheiro', 'id_conteudos_partilhado']
                 });
                 
                 if (postInfo) {
@@ -95,7 +95,7 @@ async function getDenunciasAll() {
                     if (comentarioData.id_post) {
                         // Mesmo processo do post acima, mas para o post do comentário
                         const postInfo = await post.findByPk(comentarioData.id_post, {
-                            attributes: ['texto_post', 'id_conteudos_partilhado']
+                            attributes: ['texto_post', 'caminho_ficheiro', 'id_conteudos_partilhado']
                         });
                         
                         if (postInfo) {
