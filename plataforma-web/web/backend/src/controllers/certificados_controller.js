@@ -11,6 +11,7 @@ const { cursos, utilizador, inscricoes, resultados } = require('../models/init-m
 controllers.gerarCertificado = async (req, res) => {
   try {
     const { cursoId, formandoId } = req.params;
+    console.log('Recebido no endpoint:', { cursoId, formandoId });
     let notaFinal = null;
 
     const formando = await utilizador.findByPk(formandoId);
