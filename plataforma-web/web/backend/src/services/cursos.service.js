@@ -268,7 +268,7 @@ async function getEnrolledCoursesForUser(userId, tipologia = null, search, data_
 
     let cursoWhere = {
       data_fim_curso: {
-        [Op.lte]: literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+        [Op.gte]: literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
       }
     };
 
