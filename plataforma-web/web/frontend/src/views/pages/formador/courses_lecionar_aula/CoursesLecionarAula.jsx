@@ -1480,7 +1480,6 @@ const CursoLecionarAula = () => {
         try {
             setLoadingTrabalhos(true);
             const response = await get_trabalhos_curso(id_curso);
-            console.log("Trabalhos atualizados:", response);
             setTrabalhos(response);
         } catch (err) {
             console.error("Erro ao buscar trabalhos", err);
