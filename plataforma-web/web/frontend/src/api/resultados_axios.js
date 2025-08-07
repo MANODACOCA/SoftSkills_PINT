@@ -55,7 +55,7 @@ export const delete_resultados = async (id) => {
 
 export const get_nota_final = async (formandoId, cursoSincronoId) => {
     try{
-        const response = await axios.get(`${API_URL}/resultados/nota-final/${formandoId}/${cursoSincronoId}`);
+        const response = await axios.get(`${API_URL}/nota-final/${formandoId}/${cursoSincronoId}`);
         return response.data;
     } catch(error) {
         console.error(`Erro ao obter nota final do ${formandoId} no curso ${cursoSincronoId}`);
