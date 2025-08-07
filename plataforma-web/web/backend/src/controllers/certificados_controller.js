@@ -1,4 +1,4 @@
-//const model = require('../models/certificados');;
+/* //const model = require('../models/certificados');;
 
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
@@ -162,3 +162,4 @@ controllers.delete = async (req,res)=>{
 };
 
 module.exports = controllers;
+ */
