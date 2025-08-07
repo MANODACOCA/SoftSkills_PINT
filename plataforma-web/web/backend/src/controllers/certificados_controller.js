@@ -1,4 +1,4 @@
-/* //const model = require('../models/certificados');;
+//const model = require('../models/certificados');;
 
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
@@ -7,7 +7,7 @@ const controllers = {};
 const { gerarHtmlCertificado } = require('../utils/gerarCertificado');
 //const puppeteer = require('puppeteer');
 const { cursos, utilizador, resultados } = require('../models/init-models')(sequelize);
-const html_to_pdf = require('html-pdf-node');
+//const html_to_pdf = require('html-pdf-node');
 
 controllers.gerarCertificado = async (req, res) => {
   try {
@@ -47,7 +47,7 @@ controllers.gerarCertificado = async (req, res) => {
     });
 
     const file = { content: html };
-    const pdfBuffer = await html_to_pdf.generatePdf(file, { format: 'A4' });
+    //const pdfBuffer = await html_to_pdf.generatePdf(file, { format: 'A4' });
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
     if (certificado) {
@@ -162,4 +162,3 @@ controllers.delete = async (req,res)=>{
 };
 
 module.exports = controllers;
- */
