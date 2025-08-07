@@ -74,20 +74,6 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                 <Link to="/formador/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
 
-            <input
-                className="input-group d-none d-md-flex form-control form-control-md"
-                type="search"
-                placeholder="Pesquisar curso"
-                aria-label="Pesquisar"
-                value={searchTerm}
-                onChange={(e) => {
-                    const value = e.target.value;
-                    setSearchTerm(value);
-                    debouncedNavigate(value);
-                }}
-                onFocus={handleFocus}
-            />
-
             {user && (
                 <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>
                     <button onClick={toggleProfileMenu} className="btn p-0 border-0 bg-transparent d-flex align-items-center gap-2">
