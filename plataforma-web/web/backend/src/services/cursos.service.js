@@ -792,7 +792,24 @@ async function verifyInscription(userId, cursoId) {
 
     const curso = await cursos.findOne({
       where: {
-        id: cursoId
+        id: cursoId,
+        [Op.or]: [
+          {
+            data_inicio_curso: {
+              [Op.lte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            },
+            data_fim_curso: {
+              [Op.gte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            }
+          },
+          // Caso o curso já tenha terminado, mas seja síncrono
+          {
+            data_fim_curso: {
+              [Op.lt]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            },
+            issincrono: true
+          }
+        ]
       }
     });
 
@@ -800,26 +817,14 @@ async function verifyInscription(userId, cursoId) {
       return { inscrito: false };
     }
 
-    const hoje = new Date();
-
-    const inicio = new Date(curso.data_inicio_curso);
-    const fim = new Date(curso.data_fim_curso);
-
-    if (hoje >= inicio && hoje <= fim) {
-      return { inscrito: true };
-    }
-
-    if (hoje > fim && curso.issincrono) {
-      return { inscrito: true };
-    }
-
-    return { inscrito: false };
+    return { inscrito: true };
 
   } catch (error) {
     console.error("Erro ao verificar inscrição", error);
     throw error;
   }
 }
+
 
 
 async function getCursosLecionadosTerminadosService(userId, search, data_inicio_curso, data_fim_curso) {
