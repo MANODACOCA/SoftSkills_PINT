@@ -157,7 +157,7 @@ const ClassPage = () => {
             printWindow.document.write(certificadoHtml);
             printWindow.document.close();
             printWindow.focus();
-            printWindow.print();
+           // printWindow.print();
         } catch (error) {
             alert('Erro ao transferir certificado!');
         }
@@ -237,6 +237,29 @@ const ClassPage = () => {
                                     activeKey={activeTab}
                                     onSelect={(tab) => setSearchParams({ tab: tab })}
                                 >
+                                    
+                                    {cursoTerminado() && (
+                                        <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
+                                            <div className="mt-4">
+                                                <h3>Parabéns por concluir o curso!</h3>
+                                                <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
+                                                <h5 className="fw-bold mt-4">Certificado</h5>
+                                                <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3" style={{ maxWidth: 700 }}>
+                                                    <div className="me-3">
+                                                        <FaFilePdf size={32} color="#e63946" />
+                                                    </div>
+                                                    <div className="flex-grow-1">
+                                                        <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
+                                                        <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
+                                                    </div>
+                                                    <button className="btn btn-primary" onClick={handleTransferirCertificado}>
+                                                        Gerar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </Tab>
+                                    )}
+
                                     <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
 
                                         <div className="mt-4">
@@ -390,29 +413,6 @@ const ClassPage = () => {
                                             <p className="mt-4">Informações não disponíveis para este curso.</p>
                                         )}
                                     </Tab>
-
-                                    {cursoTerminado() && (
-                                        <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
-                                            <div className="mt-4">
-                                                <h3>Parabéns por concluir o curso!</h3>
-                                                <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
-                                                <h5 className="fw-bold mt-4">Certificado</h5>
-                                                <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3" style={{ maxWidth: 700 }}>
-                                                    <div className="me-3">
-                                                        <FaFilePdf size={32} color="#e63946" />
-                                                    </div>
-                                                    <div className="flex-grow-1">
-                                                        <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
-                                                        <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
-                                                    </div>
-                                                    <button className="btn btn-primary" onClick={handleTransferirCertificado}>
-                                                        Transferir
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </Tab>
-                                    )}
-
                                 </Tabs>
                             </>
                         )}
