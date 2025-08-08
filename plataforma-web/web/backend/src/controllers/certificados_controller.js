@@ -91,7 +91,11 @@ controllers.gerarCertificado = async (req, res) => {
     }
 
     res.set('Content-Type', 'text/html');
-    res.send(html);
+   // res.send(html);
+    res.json({
+  nomeFormador: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador,
+  raw: curso?.sincrono?.id_formador_formadore
+});
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao gerar certificado.', desc: err.message });
   }
