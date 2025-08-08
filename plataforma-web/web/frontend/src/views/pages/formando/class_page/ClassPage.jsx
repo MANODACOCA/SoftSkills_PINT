@@ -148,13 +148,12 @@ const ClassPage = () => {
     const handleTransferirCertificado = async () => {
         try{
             const response = await gerar_certificado(curso.id_curso, user.id_utilizador);
-            const url = window.URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `Certificado - ${curso.nome_curso}.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+            const certificadoHtml = await response.data;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(certificadoHtml);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
         } catch (error) {
             alert('Erro ao transferir certificado!');
         }

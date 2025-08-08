@@ -5,16 +5,16 @@ const initModels = require("../models/init-models");
 const model = initModels(sequelize).certificados;
 const controllers = {};
 const { gerarHtmlCertificado } = require('../utils/gerarCertificado');
-const { cursos, utilizador, resultados } = require('../models/init-models')(sequelize);
+const { cursos, utilizador, resultados, formadores, sincrono } = require('../models/init-models')(sequelize);
 
 controllers.gerarCertificado = async (req, res) => {
   try {
     const { cursoId, formandoId } = req.params;
     let notaFinal = null;
+    let nomeFormador = '';
 
     const formando = await utilizador.findByPk(formandoId);
     const curso = await cursos.findByPk(cursoId);
-    //const formador = await 
 
     if (!formando || !curso) {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
@@ -37,13 +37,23 @@ controllers.gerarCertificado = async (req, res) => {
       return res.status(403).json({ erro: 'Curso ainda não terminou.' });
     }
 
+    if (curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore) {
+        const formador = await formadores.findByPk(curso.sincrono.id_formador_formadore, {
+            include: [{
+                model: utilizador,
+                as: 'id_formador_utilizador'
+            }]
+        });
+        nomeFormador = formador?.id_formador_utilizador?.nome_utilizador || '';
+    }
+    
     const html = gerarHtmlCertificado({
       nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
       dataInicio: curso.data_inicio_curso,
       dataConclusao: curso.data_fim_curso,
       notaFinal: notaFinal,
-      //nomeFormador: 
+      nomeFormador
     });
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
@@ -60,11 +70,8 @@ controllers.gerarCertificado = async (req, res) => {
       });
     }
 
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="certificado_${cursoId}_${formandoId}.pdf"`
-    });
-    res.send(pdfBuffer);
+    res.set('Content-Type', 'text/html');
+    res.send(html);
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao gerar certificado.', desc: err.message });
   }
