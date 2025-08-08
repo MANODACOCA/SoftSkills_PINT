@@ -199,6 +199,7 @@ const ClassPage = () => {
                                 onPrevious={handlePrevious}
                                 onNext={handleNext}
                                 cursoTipo={curso?.issincrono ? 'sincrono' : 'assincrono'}
+                                disableNavigation={curso?.isassincrono && cursoTerminado()}
                             />
                         </div>
                     </div>
@@ -237,7 +238,6 @@ const ClassPage = () => {
                                     activeKey={activeTab}
                                     onSelect={(tab) => setSearchParams({ tab: tab })}
                                 >
-                                    
                                     {cursoTerminado() && (
                                         <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
                                             <div className="mt-4">
@@ -260,7 +260,7 @@ const ClassPage = () => {
                                         </Tab>
                                     )}
 
-                                    <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
+                                    <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>} disabled={curso?.isassincrono && cursoTerminado()} tabClassName={curso?.isassincrono && cursoTerminado() ? 'tab-disabled' : ''}>
 
                                         <div className="mt-4">
                                             <h3 className='mb-4'>Conteúdos</h3>
@@ -297,7 +297,7 @@ const ClassPage = () => {
                                         </div>
                                     </Tab>
 
-                                    <Tab eventKey="material" title={<span className='fw-bold'>MATERIAL DE APOIO</span>}>
+                                    <Tab eventKey="material" title={<span className='fw-bold'>MATERIAL DE APOIO</span>} disabled={curso?.isassincrono && cursoTerminado()} tabClassName={curso?.isassincrono && cursoTerminado() ? 'tab-disabled' : ''}>
                                         {materialApoio && materialApoio.length > 0 ? (
                                             <div className="mt-4">
                                                 <h3>Material de Apoio</h3>
@@ -337,7 +337,7 @@ const ClassPage = () => {
                                     </Tab>
 
                                     {curso?.issincrono && (
-                                        <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>}>
+                                        <Tab eventKey="eventos" title={<span className='fw-bold'>TRABALHOS</span>} disabled={curso?.isassincrono && cursoTerminado()} tabClassName={curso?.isassincrono && cursoTerminado() ? 'tab-disabled' : ''}>
                                             <div className="mt-4">
                                                 {trabalhoIdSelecionado ? (
                                                     <TrabalhosEntrega
@@ -362,7 +362,7 @@ const ClassPage = () => {
                                         </Tab>
                                     )}
 
-                                    <Tab eventKey="sobre" title={<span className='fw-bold'>SOBRE</span>}>
+                                    <Tab eventKey="sobre" title={<span className='fw-bold'>SOBRE</span>} disabled={curso?.isassincrono && cursoTerminado()} tabClassName={curso?.isassincrono && cursoTerminado() ? 'tab-disabled' : ''}>
                                         {curso ? (
                                             <div className="bg-white p-4 rounded-4 shadow-sm mt-4 border-bottom">
                                                 <h3 className='mb-4'>Sobre o Curso</h3>

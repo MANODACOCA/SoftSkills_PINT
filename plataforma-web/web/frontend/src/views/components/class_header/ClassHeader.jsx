@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaClock } from 'react-icons/fa';
 import { Button } from 'react-bootstrap';
 
-const ClassHeader = ({ nomeCurso, tipo, totalAulas, tempoTotal, onPrevious, onNext, cursoTipo }) => {
+const ClassHeader = ({ nomeCurso, tipo, totalAulas, tempoTotal, onPrevious, onNext, cursoTipo, disableNavigation = false }) => {
 
     const [horasCursoFormato, setHorasCursoFormato] = useState();
 
@@ -29,10 +29,10 @@ const ClassHeader = ({ nomeCurso, tipo, totalAulas, tempoTotal, onPrevious, onNe
             </div>
             {cursoTipo === 'assincrono' && (
                 <div className="mt-3 mt-md-0 d-flex gap-3">
-                    <Button variant="outline-secondary" size="ls" onClick={onPrevious}>
+                    <Button variant="outline-secondary" size="ls" onClick={onPrevious} disabled={disableNavigation}>
                         <FaChevronLeft className="me-1" /> Aula anterior
                     </Button>
-                    <Button variant="primary" size="ls" onClick={onNext}>
+                    <Button variant="primary" size="ls" onClick={onNext} disabled={disableNavigation}>
                         Próxima aula <FaChevronRight className="ms-1" />
                     </Button>
                 </div>

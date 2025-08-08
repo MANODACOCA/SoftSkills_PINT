@@ -7,3 +7,8 @@
   color: white;
   border-color: #3b5b84 #fff;
 }
+
+.tab-disabled {
+  opacity: 0.5 !important;
+  pointer-events: none;
+}
