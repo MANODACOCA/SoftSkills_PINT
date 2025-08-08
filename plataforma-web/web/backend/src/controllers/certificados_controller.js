@@ -29,7 +29,7 @@ controllers.gerarCertificado = async (req, res) => {
                           {
                               model: utilizador,
                               as: 'id_formador_utilizador',
-                              attributes: ['nome_util','nome_utilizador']
+                              attributes: ['nome_utilizador']
                           }
                       ]
                   }
