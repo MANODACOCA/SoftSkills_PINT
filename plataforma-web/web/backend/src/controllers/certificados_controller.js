@@ -29,7 +29,7 @@ controllers.gerarCertificado = async (req, res) => {
                           {
                               model: utilizador,
                               as: 'id_formador_utilizador',
-                              attributes: ['nome_utilizador']
+                              [sequelize.col('nome_utilizador'), 'nome_util'],
                           }
                       ]
                   }
@@ -61,16 +61,6 @@ controllers.gerarCertificado = async (req, res) => {
       return res.status(403).json({ erro: 'Curso ainda não terminou.' });
     }
 
-    // if (curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore) {
-    //     const formador = await formadores.findByPk(curso.sincrono.id_formador_formadore, {
-    //         include: [{
-    //             model: utilizador,
-    //             as: 'id_formador_utilizador'
-    //         }]
-    //     });
-    //     nomeFormador = formador?.id_formador_utilizador?.nome_utilizador || formador?.id_formador_utilizador?.nome_util || '';
-    // }
-    
     const html = gerarHtmlCertificado({
       nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
