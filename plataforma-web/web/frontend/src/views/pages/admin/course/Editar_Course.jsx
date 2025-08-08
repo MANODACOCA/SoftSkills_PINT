@@ -1155,7 +1155,7 @@ const EditCourse = () => {
                             <div className='row mt-2'>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Início da Inscrição</label>
-                                    <input type="date" name="data_inicio_inscricao" min={todayStr} className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required disabled={isViewMode}/>
+                                    <input type="date" name="data_inicio_inscricao" className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required disabled={isViewMode}/>
                                 </div>
                                 <div className='col'>
                                     <label className='form-label fw-bold'>Fim da Inscrição</label>

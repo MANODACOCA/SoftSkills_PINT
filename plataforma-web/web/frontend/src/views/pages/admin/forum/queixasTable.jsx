@@ -221,8 +221,8 @@ const QueixasTables = () => {
                                 <a href={postComent?.caminho_ficheiro} target='blank' className="text-decoration-none text-primary">
                                 <div className="d-flex justify-content-between align-items-center border rounded p-3 bg-light" >
                                     <div className="d-flex align-items-center gap-2">
-                                    <FaFile className="text-secondary" />
-                                    FICHEIRO
+                                        <FaFile className="text-secondary" />
+                                        FICHEIRO
                                     </div>
                                     <i className="bi bi-download"></i>
                                 </div>
