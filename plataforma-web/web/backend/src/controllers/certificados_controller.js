@@ -12,8 +12,7 @@ controllers.gerarCertificado = async (req, res) => {
   try {
     const { cursoId, formandoId } = req.params;
     let notaFinal = null;
-    let nomeFormador = '';
-
+    
     const formando = await utilizador.findByPk(formandoId);
 
     const curso = await cursos.findByPk(cursoId, {
