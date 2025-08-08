@@ -37,7 +37,8 @@ controllers.gerarCertificado = async (req, res) => {
           }
       ]
   });
-  const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador || '';
+  //const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador || '';
+  const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || '';
 
     if (!formando || !curso) {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
