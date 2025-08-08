@@ -152,7 +152,7 @@ const ClassPage = () => {
 
     const handleTransferirCertificado = async () => {
         try {
-            const response = await gerar_certificado(curso.id_curso, user.id_utilizador);
+            const certificadoHtml = await gerar_certificado(curso.id_curso, user.id_utilizador);
             const printWindow = window.open('', '_blank');
             printWindow.document.write(certificadoHtml);
             printWindow.document.close();
