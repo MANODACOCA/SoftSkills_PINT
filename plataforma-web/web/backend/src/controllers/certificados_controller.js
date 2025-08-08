@@ -45,7 +45,7 @@ controllers.gerarCertificado = async (req, res) => {
                 as: 'id_formador_utilizador'
             }]
         });
-        nomeFormador = formador?.id_formador_utilizador?.nome_util  || '';
+        nomeFormador = formador?.id_formador_utilizador?.nome_utilizador || formador?.id_formador_utilizador?.nome_util || '';
     }
     
     const html = gerarHtmlCertificado({
