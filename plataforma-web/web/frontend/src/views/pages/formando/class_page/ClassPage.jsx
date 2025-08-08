@@ -244,7 +244,7 @@ const ClassPage = () => {
                                                 <h3>Parabéns por concluir o curso!</h3>
                                                 <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
                                                 <h5 className="fw-bold mt-4">Certificado</h5>
-                                                <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3" style={{ maxWidth: 700 }}>
+                                                <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
                                                     <div className="me-3">
                                                         <FaFilePdf size={32} color="#e63946" />
                                                     </div>
