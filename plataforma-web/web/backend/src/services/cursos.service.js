@@ -775,8 +775,6 @@ async function updateCursoCompleto(reqBody) {
   }
 }
 
-//Aqui vamos verificar se o utilizador esta inscrito
-const { Op, Sequelize } = require("sequelize");
 
 async function verifyInscription(userId, cursoId) {
   try {
