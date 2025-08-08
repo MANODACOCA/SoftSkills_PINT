@@ -15,13 +15,13 @@ controllers.gerarCertificado = async (req, res) => {
     let nomeFormador = '';
 
     const formando = await utilizador.findByPk(formandoId);
-    //const curso = await cursos.findByPk(cursoId);
 
     const curso = await cursos.findByPk(cursoId, {
       include: [
           {
               model: sincrono,
               as: 'sincrono',
+              attributes: ['id_formador'],
               include: [
                   {
                       model: formadores,
@@ -30,6 +30,7 @@ controllers.gerarCertificado = async (req, res) => {
                           {
                               model: utilizador,
                               as: 'id_formador_utilizador'
+                              attributes: ['nome_util']
                           }
                       ]
                   }
@@ -37,7 +38,7 @@ controllers.gerarCertificado = async (req, res) => {
           }
       ]
   });
-  //const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador || '';
+
   const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || '';
 
     if (!formando || !curso) {
