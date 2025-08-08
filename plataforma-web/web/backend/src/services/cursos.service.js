@@ -792,7 +792,7 @@ async function verifyInscription(userId, cursoId) {
 
     const curso = await cursos.findOne({
       where: {
-        id: cursoId,
+        id_curso: cursoId,
         [Op.or]: [
           {
             data_inicio_curso: {
