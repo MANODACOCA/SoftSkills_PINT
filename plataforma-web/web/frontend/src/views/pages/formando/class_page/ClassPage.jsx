@@ -254,25 +254,41 @@ const ClassPage = () => {
                                                         </>
                                                     )}
                                                 <h5 className="fw-bold mt-4">Certificado</h5>
-                                                <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
-                                                    <div className="me-3">
-                                                        <FaFilePdf size={32} color="#e63946" />
-                                                    </div>
-                                                    <div className="flex-grow-1">
-                                                        <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
-                                                        <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
-                                                    </div>
-                                                    {(curso.issincrono ? notaFinal >= 10 : true) ? (
-                                                        <button className="btn btn-primary" onClick={handleTransferirCertificado}>
-                                                        Gerar
-                                                        </button>
-                                                    ) : (
-                                                        curso.issincrono && notaFinal !== null && (
-                                                        <span className="text-danger fw-bold ms-3">Sem aproveitamento</span>
+                                                    {curso.issincrono ? (
+                                                        notaFinal === null ? (
+                                                            <span className="">À espera da avaliação...</span>
+                                                        ) : notaFinal >= 10 ? (
+                                                            <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
+                                                            <div className="me-3">
+                                                                <FaFilePdf size={32} color="#e63946" />
+                                                            </div>
+                                                            <div className="flex-grow-1">
+                                                                <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
+                                                                <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
+                                                            </div>
+                                                            <button className="btn btn-primary" onClick={handleTransferirCertificado}>
+                                                                Gerar
+                                                            </button>
+                                                            </div>
+                                                        ) : (
+                                                            <span className="text-danger fw-bold ms-3">Sem aproveitamento</span>
                                                         )
-                                                    )}
-                                                </div>
-                                            </div>
+                                                        ) : (
+                                                        
+                                                        <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
+                                                            <div className="me-3">
+                                                            <FaFilePdf size={32} color="#e63946" />
+                                                            </div>
+                                                            <div className="flex-grow-1">
+                                                            <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
+                                                            <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
+                                                            </div>
+                                                            <button className="btn btn-primary" onClick={handleTransferirCertificado}>
+                                                            Gerar
+                                                            </button>
+                                                        </div>
+                                                        )}
+                                                            </div>
                                         </Tab>
                                     )}
 
