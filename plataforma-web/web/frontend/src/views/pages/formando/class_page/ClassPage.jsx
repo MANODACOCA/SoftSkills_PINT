@@ -143,11 +143,7 @@ const ClassPage = () => {
     };
 
     const cursoTerminado = () => {
-        if (curso.issincrono) {
-            return notaFinal !== null && notaFinal >= 10;
-        } else {
-            return new Date() > new Date(curso.data_fim_curso);
-        }
+        return new Date() > new Date(curso.data_fim_curso);
     }
 
     const handleTransferirCertificado = async () => {
