@@ -15,7 +15,29 @@ controllers.gerarCertificado = async (req, res) => {
     let nomeFormador = '';
 
     const formando = await utilizador.findByPk(formandoId);
-    const curso = await cursos.findByPk(cursoId);
+    //const curso = await cursos.findByPk(cursoId);
+
+    const curso = await cursos.findByPk(cursoId, {
+      include: [
+          {
+              model: sincrono,
+              as: 'sincrono',
+              include: [
+                  {
+                      model: formadores,
+                      as: 'id_formador_formadore',
+                      include: [
+                          {
+                              model: utilizador,
+                              as: 'id_formador_utilizador'
+                          }
+                      ]
+                  }
+              ]
+          }
+      ]
+  });
+  const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador || '';
 
     if (!formando || !curso) {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
@@ -38,15 +60,15 @@ controllers.gerarCertificado = async (req, res) => {
       return res.status(403).json({ erro: 'Curso ainda não terminou.' });
     }
 
-    if (curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore) {
-        const formador = await formadores.findByPk(curso.sincrono.id_formador_formadore, {
-            include: [{
-                model: utilizador,
-                as: 'id_formador_utilizador'
-            }]
-        });
-        nomeFormador = formador?.id_formador_utilizador?.nome_utilizador || formador?.id_formador_utilizador?.nome_util || '';
-    }
+    // if (curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore) {
+    //     const formador = await formadores.findByPk(curso.sincrono.id_formador_formadore, {
+    //         include: [{
+    //             model: utilizador,
+    //             as: 'id_formador_utilizador'
+    //         }]
+    //     });
+    //     nomeFormador = formador?.id_formador_utilizador?.nome_utilizador || formador?.id_formador_utilizador?.nome_util || '';
+    // }
     
     const html = gerarHtmlCertificado({
       nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
