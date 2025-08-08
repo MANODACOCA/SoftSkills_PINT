@@ -78,7 +78,7 @@ controllers.gerarCertificado = async (req, res) => {
       dataInicio: formatarData(curso.data_inicio_curso),
       dataConclusao: formatarData(curso.data_fim_curso),
       notaFinal: notaFinal,
-      nomeFormador
+      nomeFormador: nomeFormador
     });
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
