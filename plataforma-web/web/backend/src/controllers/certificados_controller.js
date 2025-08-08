@@ -5,7 +5,8 @@ const initModels = require("../models/init-models");
 const model = initModels(sequelize).certificados;
 const controllers = {};
 const { gerarHtmlCertificado } = require('../utils/gerarCertificado');
-const { cursos, utilizador, resultados } = require('../models/init-models')(sequelize);
+const { cursos, utilizador, resultados, formadores, sincrono } = require('../models/init-models')(sequelize);
+const { formatarData } = require('../utils/functionsAux');
 
 controllers.gerarCertificado = async (req, res) => {
   try {
@@ -13,7 +14,33 @@ controllers.gerarCertificado = async (req, res) => {
     let notaFinal = null;
 
     const formando = await utilizador.findByPk(formandoId);
-    const curso = await cursos.findByPk(cursoId);
+
+    const curso = await cursos.findOne({
+      where: {id_curso: cursoId},
+      include: [
+          {
+              model: sincrono,
+              as: 'sincrono',
+              attributes: ['id_curso_sincrono', 'id_formador'],
+              include: [
+                  {
+                      model: formadores,
+                      as: 'id_formador_formadore',
+                      attributes: ['id_formador'],
+                      include: [
+                          {
+                              model: utilizador,
+                              as: 'id_formador_utilizador',
+                              attributes: ['nome_utilizador'],
+                          }
+                      ]
+                  }
+              ]
+          }
+      ]
+  });
+
+  const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador || 'Teste Formador';
 
     if (!formando || !curso) {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
@@ -39,11 +66,11 @@ controllers.gerarCertificado = async (req, res) => {
     const html = gerarHtmlCertificado({
       nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
-      dataConclusao: curso.data_fim_curso,
-      notaFinal: notaFinal
+      dataInicio: formatarData(curso.data_inicio_curso),
+      dataConclusao: formatarData(curso.data_fim_curso),
+      notaFinal: notaFinal,
+      nomeFormador: nomeFormador
     });
-
-    const file = { content: html };
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
     if (certificado) {
@@ -59,11 +86,8 @@ controllers.gerarCertificado = async (req, res) => {
       });
     }
 
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="certificado_${cursoId}_${formandoId}.pdf"`
-    });
-    res.send(pdfBuffer);
+    res.set('Content-Type', 'text/html');
+    res.send(html);
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao gerar certificado.', desc: err.message });
   }

@@ -5,7 +5,7 @@ const ocorrenciaService = require('./ocorrencias.service');
 const { getVideoDuration } = require('../utils/youtube_aulas');
 const isYoutubeLink = (url) => {
   return /^https:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]{11}(?:&.*)?$/i.test(url)
-      || /^https:\/\/youtu\.be\/[\w-]{11}(?:\?.*)?$/i.test(url);
+    || /^https:\/\/youtu\.be\/[\w-]{11}(?:\?.*)?$/i.test(url);
 };
 
 //esta funcao vai buscar todos os cursos que etsao disponiveis para inscricao
@@ -499,7 +499,7 @@ async function updateFormandosCounter() {
 
 async function getAllCoursesWithAllInfo(search = "") {
   try {
-    const today = new Date().toISOString().slice(0, 10); 
+    const today = new Date().toISOString().slice(0, 10);
 
     await cursos.update(
       { estado: false },
@@ -510,7 +510,7 @@ async function getAllCoursesWithAllInfo(search = "") {
         }
       }
     );
-    
+
     const whereClause = {};
 
     if (search) {
@@ -716,7 +716,7 @@ async function createCursoCompleto(reqBody) {
     const { cursoData, sincrono: sincronoBody, id_curso_anterior } = reqBody;
 
     const curso = await cursos.create(cursoData);
-    
+
     if (curso) {
       await ocorrenciaService.createNovaOcorrencia({
         idCursoNovo: curso.id_curso,
@@ -775,10 +775,9 @@ async function updateCursoCompleto(reqBody) {
   }
 }
 
-//Aqui vamos verificar se o utilizador esta inscrito
+
 async function verifyInscription(userId, cursoId) {
   try {
-
     const inscricaoUser = await inscricoes.findOne({
       where: {
         id_formando: userId,
@@ -791,16 +790,49 @@ async function verifyInscription(userId, cursoId) {
       return { inscrito: false };
     }
 
+    const curso = await cursos.findOne({
+      where: {
+        id_curso: cursoId,
+        [Op.or]: [
+          {
+            data_inicio_curso: {
+              [Op.lte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            },
+            data_fim_curso: {
+              [Op.gte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            }
+          },
+          // Caso o curso já tenha terminado, mas seja síncrono
+          {
+            data_fim_curso: {
+              [Op.lt]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            },
+            issincrono: true
+          },
+          // Caso o curso já tenha terminado, mas seja assíncrono
+          {
+            data_fim_curso: {
+              [Op.lt]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            },
+            isassincrono: true
+          }
+        ]
+      }
+    });
 
-    return {
-      inscrito: true,
-    };
+    if (!curso) {
+      return { inscrito: false };
+    }
+
+    return { inscrito: true };
 
   } catch (error) {
-    console.error('Erro ao verificar inscricao', error);
+    console.error("Erro ao verificar inscrição", error);
     throw error;
   }
 }
+
+
 
 async function getCursosLecionadosTerminadosService(userId, search, data_inicio_curso, data_fim_curso) {
   try {
@@ -921,132 +953,132 @@ async function getCursosLecionadosAtualmenteService(userId, search, data_inicio_
 }
 
 async function getCursoCompletoComAulasEMaterial(id) {
-    try {
-        const curso = await cursos.findOne({
-            where: { id_curso: id },
-            attributes: [
-                'id_curso',
-                'nome_curso',
-                'data_inicio_curso',
-                'data_fim_curso',
-                'data_inicio_inscricao',
-                'data_fim_inscricao',
-                'issincrono',
-                'isassincrono',
-                'horas_curso',
-                'contador_formandos',
-                'estado',
-                'id_gestor_administrador',
-                'imagem',
-                'idioma',
-                'descricao_curso',
-            ],
-            include: [
+  try {
+    const curso = await cursos.findOne({
+      where: { id_curso: id },
+      attributes: [
+        'id_curso',
+        'nome_curso',
+        'data_inicio_curso',
+        'data_fim_curso',
+        'data_inicio_inscricao',
+        'data_fim_inscricao',
+        'issincrono',
+        'isassincrono',
+        'horas_curso',
+        'contador_formandos',
+        'estado',
+        'id_gestor_administrador',
+        'imagem',
+        'idioma',
+        'descricao_curso',
+      ],
+      include: [
+        {
+          model: ocorrencias_edicoes,
+          as: 'ocorrencias_edicos',
+        },
+        {
+          model: sincrono,
+          as: 'sincrono',
+          attributes: ['numero_vagas'],
+          include: [
+            {
+              model: formadores,
+              as: 'id_formador_formadore',
+              attributes: ['id_formador', 'descricao_formador'],
+              include: [
                 {
-                    model: ocorrencias_edicoes,
-                    as: 'ocorrencias_edicos',
-                },
-                {
-                    model: sincrono,
-                    as: 'sincrono',
-                    attributes: ['numero_vagas'],
-                    include: [
-                        {
-                            model: formadores,
-                            as: 'id_formador_formadore',
-                            attributes: ['id_formador', 'descricao_formador'],
-                            include: [
-                                {
-                                    model: utilizador,
-                                    as: 'id_formador_utilizador',
-                                    attributes: [
-                                        [sequelize.col('id_utilizador'), 'id_util'],
-                                        [sequelize.col('nome_utilizador'), 'nome_util']
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    model: gestor_administrador,
-                    as: 'id_gestor_administrador_gestor_administrador',
-                    include: [
-                        {
-                            model: utilizador,
-                            as: 'id_gestor_administrador_utilizador',
-                            attributes: ['nome_utilizador'],
-                        }
-                    ]
-                },
-                {
-                    model: topico,
-                    as: 'id_topico_topico',
-                    attributes: ['id_topico', 'nome_topico'],
-                    include: [
-                        {
-                            model: area,
-                            as: 'id_area_area',
-                            attributes: ['id_area', 'nome_area'],
-                            include: [
-                                {
-                                    model: categoria,
-                                    as: 'id_categoria_categorium',
-                                    attributes: [
-                                        [sequelize.col('id_categoria'), 'id_catego'],
-                                        'nome_cat'
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                  model: utilizador,
+                  as: 'id_formador_utilizador',
+                  attributes: [
+                    [sequelize.col('id_utilizador'), 'id_util'],
+                    [sequelize.col('nome_utilizador'), 'nome_util']
+                  ]
                 }
-            ]
-        });
-
-        if (!curso) {
-            throw new Error("Curso não encontrado");
+              ]
+            }
+          ]
+        },
+        {
+          model: gestor_administrador,
+          as: 'id_gestor_administrador_gestor_administrador',
+          include: [
+            {
+              model: utilizador,
+              as: 'id_gestor_administrador_utilizador',
+              attributes: ['nome_utilizador'],
+            }
+          ]
+        },
+        {
+          model: topico,
+          as: 'id_topico_topico',
+          attributes: ['id_topico', 'nome_topico'],
+          include: [
+            {
+              model: area,
+              as: 'id_area_area',
+              attributes: ['id_area', 'nome_area'],
+              include: [
+                {
+                  model: categoria,
+                  as: 'id_categoria_categorium',
+                  attributes: [
+                    [sequelize.col('id_categoria'), 'id_catego'],
+                    'nome_cat'
+                  ]
+                }
+              ]
+            }
+          ]
         }
+      ]
+    });
 
-        const aulasCurso = await aulas.findAll({
-            where: { id_curso: id },
-            include: [
-                {
-                    model: conteudos,
-                    as: 'conteudos',
-                    include: [
-                        {
-                            model: tipo_formato,
-                            as: 'id_formato_tipo_formato',
-                            attributes: ['id_formato', 'formato']
-                        }
-                    ],
-                }
-            ],
-            order: [[sequelize.literal('"data_aula" IS NULL'), 'ASC'], ['data_aula', 'ASC'], ['id_aula', 'ASC']]
-        });
-
-        const materiaisApoio = await material_apoio.findAll({
-            where: { id_curso: id },
-            include: [
-                {
-                    model: tipo_formato,
-                    as: 'id_formato_tipo_formato',
-                    attributes: ['id_formato', 'formato']
-                }
-            ]
-        });
-
-        return {
-            ...curso.toJSON(), 
-            aulas: aulasCurso,
-            material_apoio: materiaisApoio
-        };
-
-    } catch (error) {
-        console.error('Erro ao obter curso completo:', error);
-        throw error;
+    if (!curso) {
+      throw new Error("Curso não encontrado");
     }
+
+    const aulasCurso = await aulas.findAll({
+      where: { id_curso: id },
+      include: [
+        {
+          model: conteudos,
+          as: 'conteudos',
+          include: [
+            {
+              model: tipo_formato,
+              as: 'id_formato_tipo_formato',
+              attributes: ['id_formato', 'formato']
+            }
+          ],
+        }
+      ],
+      order: [[sequelize.literal('"data_aula" IS NULL'), 'ASC'], ['data_aula', 'ASC'], ['id_aula', 'ASC']]
+    });
+
+    const materiaisApoio = await material_apoio.findAll({
+      where: { id_curso: id },
+      include: [
+        {
+          model: tipo_formato,
+          as: 'id_formato_tipo_formato',
+          attributes: ['id_formato', 'formato']
+        }
+      ]
+    });
+
+    return {
+      ...curso.toJSON(),
+      aulas: aulasCurso,
+      material_apoio: materiaisApoio
+    };
+
+  } catch (error) {
+    console.error('Erro ao obter curso completo:', error);
+    throw error;
+  }
 }
 
 async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo, ignorarAulas = false }) {
@@ -1063,7 +1095,7 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo, ignorarAula
       });
 
       for (const aula of aulasAnteriores) {
-      
+
         let tempo_duracao_final = null;
 
         if (aula.caminho_url && isYoutubeLink(aula.caminho_url)) {
@@ -1096,7 +1128,7 @@ async function clonarConteudoDeCurso({ idCursoAnterior, idCursoNovo, ignorarAula
         }
       }
     }
-    
+
     const materiais = await material_apoio.findAll({
       where: { id_curso: idCursoAnterior },
     });

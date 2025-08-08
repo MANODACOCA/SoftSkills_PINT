@@ -62,7 +62,12 @@ const ClassPage = () => {
                 setMaterialApoio(dados.materialApoio || []);
                 setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
                 setTrabalhos(dados.dadosCurso.trabalhos || []);
+               
+                if (location.pathname.startsWith('/my/cursos/inscritos/curso') && (new Date() > new Date(dados.dadosCurso.data_fim_curso))) {
+                    setVerificacao(false);
+                }
             }
+
         } catch (error) {
             console.error("Erro ao carregar aula, conteudos e material de apoio:", error);
             setErro("Ocorreu um erro ao carregar a aula. Tente novamente mais tarde.");
@@ -138,7 +143,7 @@ const ClassPage = () => {
     };
 
     const cursoTerminado = () => {
-        if(curso.issincrono) {
+        if (curso.issincrono) {
             return notaFinal !== null && notaFinal >= 10;
         } else {
             return new Date() > new Date(curso.data_fim_curso);
@@ -146,15 +151,13 @@ const ClassPage = () => {
     }
 
     const handleTransferirCertificado = async () => {
-        try{
-            const response = await gerar_certificado(curso.id_curso, user.id_utilizador);
-            const url = window.URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `Certificado - ${curso.nome_curso}.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+        try {
+            const certificadoHtml = await gerar_certificado(curso.id_curso, user.id_utilizador);
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(certificadoHtml);
+            printWindow.document.close();
+            printWindow.focus();
+           // printWindow.print();
         } catch (error) {
             alert('Erro ao transferir certificado!');
         }
@@ -234,6 +237,29 @@ const ClassPage = () => {
                                     activeKey={activeTab}
                                     onSelect={(tab) => setSearchParams({ tab: tab })}
                                 >
+                                    
+                                    {cursoTerminado() && (
+                                        <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
+                                            <div className="mt-4">
+                                                <h3>Parabéns por concluir o curso!</h3>
+                                                <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
+                                                <h5 className="fw-bold mt-4">Certificado</h5>
+                                                <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
+                                                    <div className="me-3">
+                                                        <FaFilePdf size={32} color="#e63946" />
+                                                    </div>
+                                                    <div className="flex-grow-1">
+                                                        <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
+                                                        <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
+                                                    </div>
+                                                    <button className="btn btn-primary" onClick={handleTransferirCertificado}>
+                                                        Gerar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </Tab>
+                                    )}
+
                                     <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>}>
 
                                         <div className="mt-4">
@@ -283,7 +309,7 @@ const ClassPage = () => {
                                                                     <div className="d-flex align-items-center mb-3">
                                                                         {renderIconoFormato(material.id_formato)}
                                                                         <h5 className="mb-0 ms-2">
-                                                                            Material {index+1}
+                                                                            Material {index + 1}
                                                                         </h5>
                                                                     </div>
                                                                     <Card.Text>
@@ -387,29 +413,6 @@ const ClassPage = () => {
                                             <p className="mt-4">Informações não disponíveis para este curso.</p>
                                         )}
                                     </Tab>
-                                    
-                                    {cursoTerminado() && (
-                                    <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
-                                        <div className="mt-4">
-                                            <h3>Parabéns por concluir o curso!</h3>
-                                            <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
-                                            <h5 className="fw-bold mt-4">Certificado</h5>
-                                            <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3" style={{ maxWidth: 700 }}>
-                                                <div className="me-3">
-                                                    <FaFilePdf size={32} color="#e63946" />
-                                                </div>
-                                                <div className="flex-grow-1">
-                                                    <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
-                                                    <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
-                                                </div>
-                                                <button className="btn btn-primary" onClick={handleTransferirCertificado}>
-                                                    Transferir
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </Tab>
-                                    )}
-
                                 </Tabs>
                             </>
                         )}

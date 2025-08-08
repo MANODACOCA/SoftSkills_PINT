@@ -57,7 +57,7 @@ export const gerar_certificado = async (cursoId, formandoId) => {
     try{
         const response = await axios.get(`${API_URL}/gerar/${cursoId}/${formandoId}`,
             {
-                responseType: 'blob'
+                responseType: 'text'
             }
         );
         return response.data;
