@@ -220,7 +220,7 @@ function gerarHtmlCertificado({
 
       <div class="assinaturas">
         <div class="assinatura">
-          <div>${nomeFormador || ''}</div>
+          <div>>DEBUG: ${nomeFormador}</div>
           <hr />
           <div>Formador Responsável</div>
         </div>
