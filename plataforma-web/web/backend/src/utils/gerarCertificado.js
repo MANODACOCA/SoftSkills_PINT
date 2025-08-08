@@ -7,8 +7,8 @@ function gerarHtmlCertificado({
   dataConclusao,
   notaFinal,
   nomeFormador,
-  dataEmissao = new Date().toLocaleDateString('pt-PT'),
-  logoUrl
+  logoUrl,
+  dataEmissao = new Date().toLocaleDateString('pt-PT')
 }) {
   return `
 <!DOCTYPE html>
@@ -219,8 +219,8 @@ function gerarHtmlCertificado({
       </p>
 
       <div class="assinaturas">
-        <div class="assinatura">
-          <div>DEBUG: ${nomeFormador}</div>
+        <div class="assinatura" style="background:red;color:white;padding:20px;">
+          <div>DEBUG: TESTE</div>
           <hr />
           <div>Formador Responsável</div>
         </div>
