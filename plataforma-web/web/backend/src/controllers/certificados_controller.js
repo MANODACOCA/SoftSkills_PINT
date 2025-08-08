@@ -20,11 +20,12 @@ controllers.gerarCertificado = async (req, res) => {
           {
               model: sincrono,
               as: 'sincrono',
-              attributes: ['id_formador'],
+              attributes: ['id_curso_sincrono', 'id_formador'],
               include: [
                   {
                       model: formadores,
                       as: 'id_formador_formadore',
+                      attributes: ['id_formador'],
                       include: [
                           {
                               model: utilizador,
