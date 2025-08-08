@@ -7,6 +7,7 @@ function gerarHtmlCertificado({
   dataConclusao,
   notaFinal,
   nomeFormador,
+  isSincrono,
   logoUrl,
   dataEmissao = new Date().toLocaleDateString('pt-PT')
 }) {
@@ -213,11 +214,12 @@ function gerarHtmlCertificado({
 
       <p class="texto">
         concluiu, com aproveitamento, o curso <span class="curso">"${nomeCurso}"</span>, realizado no período de
-        <strong>${dataInicio || '-'}</strong> a <strong>${dataConclusao || '-'}</strong>, tendo obtido a classificação final de
-        <strong>${notaFinal ?? '-'}</strong>.<br><br>
+        <strong>${dataInicio || '-'}</strong> a <strong>${dataConclusao || '-'}</strong>
+        ${isSincrono && notaFinal !== null ? `, tendo obtido a classificação final de <strong>${notaFinal}</strong>.` : '.'}
+        <br><br>
         Este certificado é emitido como reconhecimento da conclusão e do cumprimento de todos os requisitos.
       </p>
-
+      ${isSincrono && nomeFormador ? `
       <div class="assinaturas">
         <div class="assinatura">
           <div>DEBUG: ${nomeFormador}</div>
@@ -225,7 +227,7 @@ function gerarHtmlCertificado({
           <div>Formador Responsável</div>
         </div>
       </div>
-
+      ` : ''}
       <div class="rodape">
         Emitido em ${dataEmissao} • https://softskills-three.vercel.app/
       </div>
