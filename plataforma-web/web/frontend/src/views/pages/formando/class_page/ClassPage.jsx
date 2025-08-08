@@ -243,6 +243,20 @@ const ClassPage = () => {
                                             <div className="mt-4">
                                                 <h3>Parabéns por concluir o curso!</h3>
                                                 <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
+                                                    {curso.issincrono && (
+                                                        <>
+                                                        <h5 className="fw-bold mt-4">Nota Final</h5>
+                                                        <div className="mb-3">
+                                                            {notaFinal === null ? (
+                                                            <span className="badge bg-warning text-dark">Por avaliar</span>
+                                                            ) : (
+                                                            <span className={`badge ${notaFinal >= 10 ? 'bg-success' : 'bg-danger'}`}>
+                                                                {notaFinal}
+                                                            </span>
+                                                            )}
+                                                        </div>
+                                                        </>
+                                                    )}
                                                 <h5 className="fw-bold mt-4">Certificado</h5>
                                                 <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
                                                     <div className="me-3">
@@ -252,9 +266,15 @@ const ClassPage = () => {
                                                         <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
                                                         <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
                                                     </div>
-                                                    <button className="btn btn-primary" onClick={handleTransferirCertificado}>
+                                                    {(curso.issincrono ? notaFinal >= 10 : true) ? (
+                                                        <button className="btn btn-primary" onClick={handleTransferirCertificado}>
                                                         Gerar
-                                                    </button>
+                                                        </button>
+                                                    ) : (
+                                                        curso.issincrono && notaFinal !== null && (
+                                                        <span className="text-danger fw-bold ms-3">Sem aproveitamento</span>
+                                                        )
+                                                    )}
                                                 </div>
                                             </div>
                                         </Tab>
