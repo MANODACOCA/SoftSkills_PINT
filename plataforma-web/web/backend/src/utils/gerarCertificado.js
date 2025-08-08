@@ -219,7 +219,7 @@ function gerarHtmlCertificado({
       </p>
 
       <div class="assinaturas">
-        <div class="assinatura" style="background:red;color:white;padding:20px;">
+        <div class="assinatura">
           <div>DEBUG: ${nomeFormador}</div>
           <hr />
           <div>Formador Responsável</div>
