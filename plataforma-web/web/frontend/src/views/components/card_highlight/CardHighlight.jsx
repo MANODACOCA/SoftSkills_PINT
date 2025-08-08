@@ -40,6 +40,23 @@ const FeaturedCourseCard = ({
     }
   };
 
+  const goToCertificado = () => {
+    const now = new Date();
+    const dataInicioCurso = parseDateWithoutTimezone(course.data_inicio_curso);
+
+    if (location.pathname.startsWith('/formador/cursos')) {
+      navigate(`/formador/cursos/${course.id_curso}?tab=certificado`);
+    } else if (now >= dataInicioCurso) {
+      if (location.pathname.startsWith('/my/cursos/inscritos')) {
+        navigate(`/my/cursos/inscritos/curso/${course.id_curso}?tab=certificado`);
+      } else if (location.pathname.startsWith('/my/cursos/terminados')) {
+        navigate(`/my/cursos/terminados/curso/${course.id_curso}?tab=certificado`);
+      }
+    } else {
+      navigate(`/cursos/${course.id_curso}`);
+    }
+  };
+
   const [img, setImg] = useState(course.imagem);
 
   const nameFormador = course.nome_formador || "Formador";
@@ -143,12 +160,24 @@ const FeaturedCourseCard = ({
 
           <div className="d-flex justify-content-between align-items-center mt-3">
             <span className="fw-medium text-success">{concluido}</span>
-            {course.tipo === 'sincrono' &&
-              <span className="fw-semibold">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
-            }
-            {course.tipo === 'sincrono' && verCurso === true && (
-              <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
-                Ver Curso
+            {course.tipo === 'sincrono' && (
+              <>
+                <span className="fw-semibold">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
+                <div className="d-flex gap-2">
+                  {verCurso === true && (
+                    <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
+                      Ver Curso
+                    </button>
+                  )}
+                  <button className="btn btn-success px-4 rounded-4" onClick={goToCertificado}>
+                    Certificado
+                  </button>
+                </div>
+              </>
+            )}
+            {course.tipo !== 'sincrono' && (
+              <button className="btn btn-success px-4 rounded-4" onClick={goToCertificado}>
+                Certificado
               </button>
             )}
           </div>
