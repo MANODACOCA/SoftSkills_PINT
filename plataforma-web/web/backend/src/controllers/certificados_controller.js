@@ -12,6 +12,7 @@ controllers.gerarCertificado = async (req, res) => {
   try {
     const { cursoId, formandoId } = req.params;
     let notaFinal = null;
+    let nomeFormador = null;
 
     const formando = await utilizador.findByPk(formandoId);
 
@@ -40,26 +41,28 @@ controllers.gerarCertificado = async (req, res) => {
       ]
   });
 
-  const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador || 'Teste Formador';
+  const isSincrono = curso?.issincrono;
 
     if (!formando || !curso) {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
     }
 
-    if (curso.issincrono) {
+
+   if (isSincrono) {
       const resultado = await resultados.findOne({
         where: {
           id_formando: formandoId,
-          id_curso_sincrono: curso.id_curso 
+          id_curso_sincrono: curso.id_curso
         }
       });
       notaFinal = resultado ? resultado.resul : null;
+      nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador || 'Formador';
       if (!notaFinal || notaFinal < 10) {
         return res.status(403).json({ erro: 'Nota insuficiente.' });
       }
     }
 
-    if (!curso.issincrono && new Date() < new Date(curso.data_fim_curso)) {
+    if (!isSincrono && new Date() < new Date(curso.data_fim_curso)) {
       return res.status(403).json({ erro: 'Curso ainda não terminou.' });
     }
 
@@ -68,8 +71,9 @@ controllers.gerarCertificado = async (req, res) => {
       nomeCurso: curso.nome_curso,
       dataInicio: formatarData(curso.data_inicio_curso),
       dataConclusao: formatarData(curso.data_fim_curso),
-      notaFinal: notaFinal,
-      nomeFormador: nomeFormador
+      notaFinal: isSincrono ? notaFinal : null,
+      nomeFormador: isSincrono ? nomeFormador : null,
+      isSincrono,
     });
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
