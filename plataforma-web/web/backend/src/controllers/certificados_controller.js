@@ -6,6 +6,7 @@ const model = initModels(sequelize).certificados;
 const controllers = {};
 const { gerarHtmlCertificado } = require('../utils/gerarCertificado');
 const { cursos, utilizador, resultados, formadores, sincrono } = require('../models/init-models')(sequelize);
+const { formatarData } = require('../utils/functionsAux');
 
 controllers.gerarCertificado = async (req, res) => {
   try {
@@ -50,8 +51,8 @@ controllers.gerarCertificado = async (req, res) => {
     const html = gerarHtmlCertificado({
       nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
-      dataInicio: curso.data_inicio_curso,
-      dataConclusao: curso.data_fim_curso,
+      dataInicio: formatarData(curso.data_inicio_curso),
+      dataConclusao: formatarData(curso.data_fim_curso),
       notaFinal: notaFinal,
       nomeFormador
     });

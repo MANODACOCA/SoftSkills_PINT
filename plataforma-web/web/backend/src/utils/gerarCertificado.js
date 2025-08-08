@@ -214,7 +214,7 @@ function gerarHtmlCertificado({
       <p class="texto">
         concluiu, com aproveitamento, o curso <span class="curso">"${nomeCurso}"</span>, realizado no período de
         <strong>${dataInicio || '-'}</strong> a <strong>${dataConclusao || '-'}</strong>, tendo obtido a classificação final de
-        <strong>[NOTA]</strong>.<br><br>
+        <strong>${notaFinal ?? '-'}</strong>.<br><br>
         Este certificado é emitido como reconhecimento da conclusão e do cumprimento de todos os requisitos.
       </p>
 
