@@ -6,7 +6,7 @@ function gerarHtmlCertificado({
   dataInicio,
   dataConclusao,
   notaFinal,
-  nomeFormador = '',
+  nomeFormador,
   dataEmissao = new Date().toLocaleDateString('pt-PT'),
   logoUrl
 }) {
