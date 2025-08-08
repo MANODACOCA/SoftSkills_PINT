@@ -29,7 +29,9 @@ controllers.gerarCertificado = async (req, res) => {
                           {
                               model: utilizador,
                               as: 'id_formador_utilizador',
-                              [sequelize.col('nome_utilizador'), 'nome_util'],
+                              attributes: [
+                                [sequelize.col('nome_utilizador'), 'nome_util']
+                              ],
                           }
                       ]
                   }
@@ -38,7 +40,10 @@ controllers.gerarCertificado = async (req, res) => {
       ]
   });
 
-  const nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || 'Teste Formador';
+  const nomeFormador =
+    curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util ||
+    curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador ||
+    'Teste Formador';
 
     if (!formando || !curso) {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
