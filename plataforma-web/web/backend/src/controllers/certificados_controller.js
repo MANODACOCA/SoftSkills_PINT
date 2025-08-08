@@ -70,11 +70,8 @@ controllers.gerarCertificado = async (req, res) => {
       });
     }
 
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': `attachment; filename="certificado_${cursoId}_${formandoId}.pdf"`
-    });
-    res.send(pdfBuffer);
+    res.set('Content-Type', 'text/html');
+    res.send(html);
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao gerar certificado.', desc: err.message });
   }
