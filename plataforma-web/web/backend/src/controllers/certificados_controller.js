@@ -15,7 +15,8 @@ controllers.gerarCertificado = async (req, res) => {
 
     const formando = await utilizador.findByPk(formandoId);
 
-    const curso = await cursos.findByPk(cursoId, {
+    const curso = await cursos.findOne({
+      where: {id_curso: cursoId},
       include: [
           {
               model: sincrono,
