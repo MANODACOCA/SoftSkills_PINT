@@ -8,7 +8,7 @@ function gerarHtmlCertificado({
   notaFinal,
   nomeFormador,
   isSincrono,
-  logoUrl,
+  //logoUrl,
   dataEmissao = new Date().toLocaleDateString('pt-PT')
 }) {
   return `
