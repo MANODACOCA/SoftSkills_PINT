@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDayMonthYear, parseDateWithoutTimezone } from '../../components/shared_functions/FunctionsUtils';
 import { FaCalendarAlt, FaExclamationTriangle, FaHourglassStart } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
+import { IoMdCheckmark, IoMdClose } from "react-icons/io";
 import './CardHighlight.css';
 
 const FeaturedCourseCard = ({
@@ -12,8 +13,8 @@ const FeaturedCourseCard = ({
   showFormador = true,
   customMessage = null,
   variant = '',
-  onRemoveFavorite = null, 
-  verCurso = true}) => {
+  onRemoveFavorite = null,
+  verCurso = true }) => {
   const navigate = useNavigate();
 
   if (!course) return null;
@@ -124,7 +125,6 @@ const FeaturedCourseCard = ({
   if (variant === 'evaluation') {
     const tipoBadge = course.tipo === 'sincrono' ? 'Síncrono' : 'Assíncrono';
     const notaFinal = course.nota_final ?? null;
-    const concluido = course.concluido ? 'Concluído' : 'Por concluir';
     const avaliado = typeof notaFinal === 'number';
 
     return (
@@ -159,25 +159,45 @@ const FeaturedCourseCard = ({
           </div>
 
           <div className="d-flex justify-content-between align-items-center mt-3">
-            <span className="fw-medium text-success">{concluido}</span>
+            {course.tipo === 'assincrono' && (
+              <div></div>
+            )}
             {course.tipo === 'sincrono' && (
               <>
-                <span className="fw-semibold">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
+                {notaFinal > 9.4 ? (
+                  <span className="fw-semibold text-success">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
+                ) : (
+                  <span className="fw-semibold text-danger">{notaFinal !== null ? `Nota final: ${notaFinal}` : 'Sem nota'}</span>
+                )}
                 <div className="d-flex gap-2">
                   {verCurso === true && (
                     <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
                       Ver Curso
                     </button>
                   )}
-                  <button className="btn btn-success px-4 rounded-4" onClick={goToCertificado}>
-                    Certificado
-                  </button>
+                  {notaFinal && (
+                    <>
+                      {notaFinal > 9.4 ? (
+                        <button className="btn btn-success px-3 rounded-4 d-flex align-items-center justufy-content-center gap-1" onClick={goToCertificado}>
+                          <span>Certificado </span>
+                          <IoMdCheckmark size={20} />
+                        </button>
+                      ) : (
+                        <button className="btn btn-danger px-3 rounded-4 d-flex align-items-center justify-content-center gap-1" onClick={goToCertificado}>
+                          <span>Certificado </span>
+                          <IoMdClose size={20} />
+                        </button>
+                      )}
+                    </>
+                  )}
+
                 </div>
               </>
             )}
             {course.tipo !== 'sincrono' && (
-              <button className="btn btn-success px-4 rounded-4" onClick={goToCertificado}>
-                Certificado
+              <button className="btn btn-success px-3 rounded-4 d-flex align-items-center justufy-content-center gap-1" onClick={goToCertificado}>
+                <span>Certificado </span>
+                <IoMdCheckmark size={20} />
               </button>
             )}
           </div>
@@ -266,12 +286,12 @@ const FeaturedCourseCard = ({
                 ' '
               )}
             </p>
-            { verCurso === true && (
+            {verCurso === true && (
               <button className="btn btn-primary px-4 rounded-4" onClick={goToCourse}>
                 Ver Curso
               </button>
             )}
-            
+
           </div>
         </div>
       </div>

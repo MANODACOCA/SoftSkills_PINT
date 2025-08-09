@@ -62,7 +62,7 @@ const ClassPage = () => {
                 setMaterialApoio(dados.materialApoio || []);
                 setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
                 setTrabalhos(dados.dadosCurso.trabalhos || []);
-               
+
                 if (location.pathname.startsWith('/my/cursos/inscritos/curso') && (new Date() > new Date(dados.dadosCurso.data_fim_curso))) {
                     setVerificacao(false);
                 }
@@ -153,7 +153,7 @@ const ClassPage = () => {
             printWindow.document.write(certificadoHtml);
             printWindow.document.close();
             printWindow.focus();
-           // printWindow.print();
+            // printWindow.print();
         } catch (error) {
             alert('Erro ao transferir certificado!');
         }
@@ -207,14 +207,14 @@ const ClassPage = () => {
                             </div>
                         ) : (
                             <>
-                                {tipoCurso === 'Assíncrono' && (
+                                {tipoCurso === 'Assíncrono' && !cursoTerminado() && (
                                     <VideoPlayer
                                         key={videoUrl}
                                         videoUrl={videoUrl}
                                         erro={erro}
                                     />
                                 )}
-                                {tipoCurso === 'Síncrono' && (
+                                {(tipoCurso === 'Síncrono' || cursoTerminado()) && (
                                     <img
                                         src={imagemCurso || `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCurso)}&background=random&bold=true`}
                                         onError={(e) => {
@@ -237,28 +237,37 @@ const ClassPage = () => {
                                     {cursoTerminado() && (
                                         <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
                                             <div className="mt-4">
-                                                <h3>Parabéns por concluir o curso!</h3>
-                                                <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
-                                                    {curso.issincrono && (
-                                                        <>
+                                                {notaFinal >= 9.5 ? (
+                                                    <>
+                                                        <h3>Parabéns por concluir o curso!</h3>
+                                                        <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <h3>Não desistas!</h3>
+                                                        <p>Apesar de não teres obtido a nota mínima desta vez, cada tentativa é uma oportunidade de aprender. Continua a praticar e vais conseguir!</p>
+                                                    </>
+                                                )}
+                                                {curso.issincrono && (
+                                                    <>
                                                         <h5 className="fw-bold mt-4">Nota Final</h5>
                                                         <div className="mb-3">
                                                             {notaFinal === null ? (
-                                                            <span className="badge bg-warning text-dark">Por avaliar</span>
+                                                                <span className="badge bg-warning text-dark">Por avaliar</span>
                                                             ) : (
-                                                            <span className={`badge ${notaFinal >= 10 ? 'bg-success' : 'bg-danger'}`}>
-                                                                {notaFinal}
-                                                            </span>
+                                                                <span className={`badge ${notaFinal >= 9.5 ? 'bg-success' : 'bg-danger'}`}>
+                                                                    {notaFinal}
+                                                                </span>
                                                             )}
                                                         </div>
-                                                        </>
-                                                    )}
+                                                    </>
+                                                )}
                                                 <h5 className="fw-bold mt-4">Certificado</h5>
-                                                    {curso.issincrono ? (
-                                                        notaFinal === null ? (
-                                                            <span className="">À espera da avaliação...</span>
-                                                        ) : notaFinal >= 10 ? (
-                                                            <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
+                                                {curso.issincrono ? (
+                                                    notaFinal === null ? (
+                                                        <span className="">À espera da avaliação...</span>
+                                                    ) : notaFinal >= 9.5 ? (
+                                                        <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
                                                             <div className="me-3">
                                                                 <FaFilePdf size={32} color="#e63946" />
                                                             </div>
@@ -269,26 +278,26 @@ const ClassPage = () => {
                                                             <button className="btn btn-primary" onClick={handleTransferirCertificado}>
                                                                 Gerar
                                                             </button>
-                                                            </div>
-                                                        ) : (
-                                                            <span className="text-danger fw-bold ms-3">Sem aproveitamento</span>
-                                                        )
-                                                        ) : (
-                                                        
-                                                        <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
-                                                            <div className="me-3">
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-danger fw-bold ms-3">Sem aproveitamento</span>
+                                                    )
+                                                ) : (
+
+                                                    <div className="d-flex align-items-center bg-light rounded-4 shadow-sm p-3 mt-3 w-100">
+                                                        <div className="me-3">
                                                             <FaFilePdf size={32} color="#e63946" />
-                                                            </div>
-                                                            <div className="flex-grow-1">
+                                                        </div>
+                                                        <div className="flex-grow-1">
                                                             <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
                                                             <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
-                                                            </div>
-                                                            <button className="btn btn-primary" onClick={handleTransferirCertificado}>
-                                                            Gerar
-                                                            </button>
                                                         </div>
-                                                        )}
-                                                            </div>
+                                                        <button className="btn btn-primary" onClick={handleTransferirCertificado}>
+                                                            Gerar
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
                                         </Tab>
                                     )}
 

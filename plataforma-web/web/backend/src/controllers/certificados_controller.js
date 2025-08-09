@@ -56,7 +56,7 @@ controllers.gerarCertificado = async (req, res) => {
       });
       notaFinal = resultado ? resultado.resul : null;
       nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || 'Formador';
-      if (!notaFinal || notaFinal < 10) {
+      if (!notaFinal || notaFinal < 9.5) {
         return res.status(403).json({ erro: 'Nota insuficiente.' });
       }
     }
