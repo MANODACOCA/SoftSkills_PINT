@@ -47,7 +47,6 @@ controllers.gerarCertificado = async (req, res) => {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
     }
 
-
    if (isSincrono) {
       const resultado = await resultados.findOne({
         where: {
@@ -66,15 +65,12 @@ controllers.gerarCertificado = async (req, res) => {
       return res.status(403).json({ erro: 'Curso ainda não terminou.' });
     }
 
-    const debugFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador;
-    
     const html = gerarHtmlCertificado({
       nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
       dataInicio: formatarData(curso.data_inicio_curso),
       dataConclusao: formatarData(curso.data_fim_curso),
       notaFinal: isSincrono ? notaFinal : null,
-      debugFormador: JSON.stringify(debugFormador),
       nomeFormador,
       isSincrono,
     });
@@ -95,13 +91,6 @@ controllers.gerarCertificado = async (req, res) => {
 
     res.set('Content-Type', 'text/html');
     res.send(html);
-
-  // res.json({
-  //   nome_util: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util,
-  //   nome_utilizador: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador,
-  //   raw: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador
-  // });
-
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao gerar certificado.', desc: err.message });
   }

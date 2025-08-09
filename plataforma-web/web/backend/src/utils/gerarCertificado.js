@@ -6,11 +6,10 @@ function gerarHtmlCertificado({
   dataInicio,
   dataConclusao,
   notaFinal,
-  nomeFormador = 'TESTE FORMADOR',
+  nomeFormador,
   isSincrono,
   logoUrl,
-  dataEmissao = new Date().toLocaleDateString('pt-PT'),
-  debugFormador
+  dataEmissao = new Date().toLocaleDateString('pt-PT')
 }) {
   return `
 <!DOCTYPE html>
@@ -230,8 +229,6 @@ function gerarHtmlCertificado({
       </div>
       ` : ''}
 
-      ${debugFormador ? `<pre>${debugFormador}</pre>` : ''}
-      
       <div class="rodape">
         Emitido em ${dataEmissao} • https://softskills-three.vercel.app/
       </div>
