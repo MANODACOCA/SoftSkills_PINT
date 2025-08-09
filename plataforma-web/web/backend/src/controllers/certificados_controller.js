@@ -75,7 +75,7 @@ controllers.gerarCertificado = async (req, res) => {
       dataConclusao: formatarData(curso.data_fim_curso),
       notaFinal: isSincrono ? notaFinal : null,
       debugFormador: JSON.stringify(debugFormador),
-      nomeFormador: isSincrono ? nomeFormador : null,
+      nomeFormador,
       isSincrono,
     });
 
