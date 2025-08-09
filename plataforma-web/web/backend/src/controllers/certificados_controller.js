@@ -56,7 +56,7 @@ controllers.gerarCertificado = async (req, res) => {
         }
       });
       notaFinal = resultado ? resultado.resul : null;
-      nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador || 'Formador';
+      nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || 'Formador';
       if (!notaFinal || notaFinal < 10) {
         return res.status(403).json({ erro: 'Nota insuficiente.' });
       }
@@ -91,13 +91,13 @@ controllers.gerarCertificado = async (req, res) => {
     }
 
     res.set('Content-Type', 'text/html');
-   // res.send(html);
+    res.send(html);
 
-  res.json({
-    nome_util: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util,
-    nome_utilizador: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador,
-    raw: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador
-  });
+  // res.json({
+  //   nome_util: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util,
+  //   nome_utilizador: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador,
+  //   raw: curso?.sincrono?.id_formador_formadore?.id_formador_utilizador
+  // });
 
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao gerar certificado.', desc: err.message });
