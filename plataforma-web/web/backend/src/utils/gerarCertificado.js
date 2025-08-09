@@ -222,7 +222,7 @@ function gerarHtmlCertificado({
       ${isSincrono && nomeFormador ? `
       <div class="assinaturas">
         <div class="assinatura">
-          <div>DEBUG: ${nomeFormador}</div>
+          <div>${nomeFormador}</div>
           <hr />
           <div>Formador Responsável</div>
         </div>
