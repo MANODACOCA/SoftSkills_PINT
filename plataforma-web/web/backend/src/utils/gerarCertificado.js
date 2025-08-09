@@ -9,7 +9,8 @@ function gerarHtmlCertificado({
   nomeFormador = 'TESTE FORMADOR',
   isSincrono,
   logoUrl,
-  dataEmissao = new Date().toLocaleDateString('pt-PT')
+  dataEmissao = new Date().toLocaleDateString('pt-PT'),
+  debugFormador
 }) {
   return `
 <!DOCTYPE html>
