@@ -66,12 +66,15 @@ controllers.gerarCertificado = async (req, res) => {
       return res.status(403).json({ erro: 'Curso ainda não terminou.' });
     }
 
+    const debugFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador;
+    
     const html = gerarHtmlCertificado({
       nomeFormando: formando.nome_util || formando.nome_utilizador || 'Problema aqui no nome',
       nomeCurso: curso.nome_curso,
       dataInicio: formatarData(curso.data_inicio_curso),
       dataConclusao: formatarData(curso.data_fim_curso),
       notaFinal: isSincrono ? notaFinal : null,
+      debugFormador: JSON.stringify(debugFormador),
       nomeFormador: isSincrono ? nomeFormador : null,
       isSincrono,
     });

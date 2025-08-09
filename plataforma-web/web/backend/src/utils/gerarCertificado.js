@@ -228,6 +228,9 @@ function gerarHtmlCertificado({
         </div>
       </div>
       ` : ''}
+
+      ${debugFormador ? `<pre>${debugFormador}</pre>` : ''}
+      
       <div class="rodape">
         Emitido em ${dataEmissao} • https://softskills-three.vercel.app/
       </div>
