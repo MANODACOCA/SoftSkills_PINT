@@ -17,35 +17,38 @@ controllers.gerarCertificado = async (req, res) => {
     const formando = await utilizador.findByPk(formandoId);
 
     const curso = await cursos.findOne({
-      where: {id_curso: cursoId},
+      where: { id_curso: cursoId },
       include: [
-          {
-              model: sincrono,
-              as: 'sincrono',
-              attributes: ['id_curso_sincrono', 'id_formador'],
+        {
+          model: sincrono,
+          as: 'sincrono',
+          attributes: ['id_curso_sincrono', 'id_formador'],
+          include: [
+            {
+              model: formadores,
+              as: 'id_formador_formadore',
               include: [
-                  {
-                      model: formadores,
-                      as: 'id_formador_formadore',
-                      include: [
-                          {
-                              model: utilizador,
-                              as: 'id_formador_utilizador',
-                          }
-                      ]
-                  }
+                {
+                  model: utilizador,
+                  as: 'id_formador_utilizador',
+                  attributes: [
+                    [sequelize.col('sincrono.id_formador_formadore.id_formador_utilizador.nome_util'), 'nome_utilizador']
+                  ]
+                }
               ]
-          }
+            }
+          ]
+        }
       ]
-  });
+    });
 
-  const isSincrono = curso?.issincrono;
+    const isSincrono = curso?.issincrono;
 
     if (!formando || !curso) {
       return res.status(404).json({ erro: 'Dados não encontrados.' });
     }
 
-   if (isSincrono) {
+    if (isSincrono) {
       const resultado = await resultados.findOne({
         where: {
           id_formando: formandoId,
@@ -57,6 +60,7 @@ controllers.gerarCertificado = async (req, res) => {
       console.log("çaçaça2", curso?.sincrono?.id_formador_formadore);
       console.log("çaçaça3", curso?.sincrono?.id_formador_formadore?.id_formador_utilizador);
       console.log("çaçaça4", [sequelize.col('curso?.sincrono.id_formador_formadore.id_formador_utilizador.nome_util'), 'nome_utilizador']);
+      console.log(curso.sincrono.id_formador_formadore.id_formador_utilizador.nome_utilizador);
       nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || 'Formador';
       if (!notaFinal || notaFinal < 9.5) {
         return res.status(403).json({ erro: 'Nota insuficiente.' });
@@ -98,68 +102,68 @@ controllers.gerarCertificado = async (req, res) => {
   }
 };
 
-controllers.list = async (req,res)=>{
+controllers.list = async (req, res) => {
   const data = await model.findAll();
   res.status(200).json(data);
 };
 
-controllers.get = async (req,res)=>{
-  try{
-    const {id} = req.params;
+controllers.get = async (req, res) => {
+  try {
+    const { id } = req.params;
     const data = await model.findByPk(id);
-    if(data){
+    if (data) {
       res.status(200).json(data);
-    }else{
-      res.status(404).json({erro: 'Certificados nao encontrado/a!'});
+    } else {
+      res.status(404).json({ erro: 'Certificados nao encontrado/a!' });
     }
-  }catch (err){
-    res.status(500).json({erro: 'Erro ao procurar Certificados!',desc: err.message});
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao procurar Certificados!', desc: err.message });
   }
 };
 
-controllers.create = async (req,res)=>{
-  try{
-    if(req.body){
+controllers.create = async (req, res) => {
+  try {
+    if (req.body) {
       const data = await model.create(req.body);
       res.status(201).json(data);
-    }else{
-      res.status(400).json({erro: 'Erro ao criar Certificados!',desc: 'Corpo do pedido esta vazio.'});
+    } else {
+      res.status(400).json({ erro: 'Erro ao criar Certificados!', desc: 'Corpo do pedido esta vazio.' });
     }
-  }catch(err){
-    res.status(500).json({erro: 'Erro ao criar Certificados!',desc: err.message});
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao criar Certificados!', desc: err.message });
   }
 };
 
-controllers.update = async (req,res)=>{
+controllers.update = async (req, res) => {
   try {
-    if(req.body){
-      const {id} = req.params;
-      const updated = await model.update(req.body,{where:{id_certificado :id}});
-      if(updated){
+    if (req.body) {
+      const { id } = req.params;
+      const updated = await model.update(req.body, { where: { id_certificado: id } });
+      if (updated) {
         const modelUpdated = await model.findByPk(id);
         res.status(200).json(modelUpdated);
-      }else{
-        res.status(404).json({erro:'Certificados nao foi atualizado/a!'});
+      } else {
+        res.status(404).json({ erro: 'Certificados nao foi atualizado/a!' });
       }
-    }else{
-      res.status(400).json({erro: 'Erro ao atualizar o/a Certificados!',desc: 'Corpo do pedido esta vazio.'});
+    } else {
+      res.status(400).json({ erro: 'Erro ao atualizar o/a Certificados!', desc: 'Corpo do pedido esta vazio.' });
     }
-  }catch(err){
-    res.status(500).json({erro: 'Erro ao atualizar o/a Certificados!',desc: err.message});
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao atualizar o/a Certificados!', desc: err.message });
   }
 };
 
-controllers.delete = async (req,res)=>{
+controllers.delete = async (req, res) => {
   try {
-    const {id} = req.params;
-    const deleted = await model.destroy({where:{id:id}});
-    if(deleted){
-      res.status(200).json({msg:'Certificados apagado/a com sucesso!'});
-    }else{
-      res.status(404).json({erro:'Certificados não foi apagado/a!'});
+    const { id } = req.params;
+    const deleted = await model.destroy({ where: { id: id } });
+    if (deleted) {
+      res.status(200).json({ msg: 'Certificados apagado/a com sucesso!' });
+    } else {
+      res.status(404).json({ erro: 'Certificados não foi apagado/a!' });
     }
-  }catch(err) {
-    res.status(500).json({erro:'Erro ao apagar o/a Certificados!',desc: err.message});
+  } catch (err) {
+    res.status(500).json({ erro: 'Erro ao apagar o/a Certificados!', desc: err.message });
   }
 };
 
