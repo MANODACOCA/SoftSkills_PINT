@@ -1,4 +1,4 @@
-const logoUrl = 'https://softskills-three.vercel.app/assets/images/logos/logoCertificado.png';
+const logoUrl = '../assets/images/logoCertificado.png';
 
 function gerarHtmlCertificado({
   nomeFormando,
@@ -8,7 +8,6 @@ function gerarHtmlCertificado({
   notaFinal,
   nomeFormador,
   isSincrono,
-  logoUrl,
   dataEmissao = new Date().toLocaleDateString('pt-PT')
 }) {
   return `
