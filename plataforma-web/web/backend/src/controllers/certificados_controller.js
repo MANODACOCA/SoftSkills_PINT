@@ -31,9 +31,6 @@ controllers.gerarCertificado = async (req, res) => {
                 {
                   model: utilizador,
                   as: 'id_formador_utilizador',
-                  attributes: [
-                    [sequelize.col('sincrono.id_formador_formadore.id_formador_utilizador.nome_util'), 'nome_utilizador']
-                  ]
                 }
               ]
             }
@@ -56,12 +53,7 @@ controllers.gerarCertificado = async (req, res) => {
         }
       });
       notaFinal = resultado ? resultado.resul : null;
-      console.log("çaçaça1", curso?.sincrono);
-      console.log("çaçaça2", curso?.sincrono?.id_formador_formadore);
-      console.log("çaçaça3", curso?.sincrono?.id_formador_formadore?.id_formador_utilizador);
-      console.log("çaçaça4", [sequelize.col('curso?.sincrono.id_formador_formadore.id_formador_utilizador.nome_util'), 'nome_utilizador']);
-      console.log(curso.sincrono.id_formador_formadore.id_formador_utilizador.nome_utilizador);
-      nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || 'Formador';
+      nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.get('nome_util') || 'Formador';
       if (!notaFinal || notaFinal < 9.5) {
         return res.status(403).json({ erro: 'Nota insuficiente.' });
       }
