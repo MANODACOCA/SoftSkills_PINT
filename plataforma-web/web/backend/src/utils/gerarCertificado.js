@@ -1,4 +1,4 @@
-const logoUrl = '../assets/images/logoCertificado.png';
+const logoUrl = 'https://softskills-api.onrender.com/assets/images/logoCertificado.png';
 
 function gerarHtmlCertificado({
   nomeFormando,

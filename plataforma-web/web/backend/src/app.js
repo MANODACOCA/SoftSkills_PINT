@@ -136,4 +136,6 @@ app.use('/pedidos-upgrade-user', pedidosUpgradeUser)
 const avaliacoes_et = require('./routes/avaliacoes_et_route.js');
 app.use('/avaliacoes_et', avaliacoes_et)
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));//uploads dos users (multer)
+
+app.use('/assets', express.static(path.join(__dirname, 'assets')));//pasta assets
