@@ -56,7 +56,7 @@ controllers.gerarCertificado = async (req, res) => {
       console.log("çaçaça1", curso?.sincrono);
       console.log("çaçaça2", curso?.sincrono?.id_formador_formadore);
       console.log("çaçaça3", curso?.sincrono?.id_formador_formadore?.id_formador_utilizador);
-      console.log("çaçaça4", curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util);
+      console.log("çaçaça4", curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_utilizador);
       nomeFormador = curso?.sincrono?.id_formador_formadore?.id_formador_utilizador?.nome_util || 'Formador';
       if (!notaFinal || notaFinal < 9.5) {
         return res.status(403).json({ erro: 'Nota insuficiente.' });
