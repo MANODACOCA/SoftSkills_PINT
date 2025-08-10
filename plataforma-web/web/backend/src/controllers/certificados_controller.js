@@ -71,6 +71,7 @@ controllers.gerarCertificado = async (req, res) => {
       notaFinal: isSincrono ? notaFinal : null,
       nomeFormador,
       isSincrono,
+      logoUrl: '../assets/images/logoCertificado.png',
     });
 
     const certificado = await model.findOne({ where: { id_formando: formandoId, id_curso: cursoId } });
