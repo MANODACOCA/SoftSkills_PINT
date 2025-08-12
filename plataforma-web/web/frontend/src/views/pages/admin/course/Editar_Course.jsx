@@ -15,8 +15,9 @@ import Swal from 'sweetalert2';
 import Table from '../../../components/table/Table';
 import { columnsAulas } from '../../../components/table/ColumnsAula';
 import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterialApoio';
-import {FaVideo,FaFileAlt, FaFilePowerpoint,FaFileImage,FaFilePdf,FaFileWord} from 'react-icons/fa';
+import { FaVideo, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWord } from 'react-icons/fa';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
+import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 
 const EditCourse = () => {
     //#region Variaveis
@@ -52,13 +53,14 @@ const EditCourse = () => {
         4: <FaFileAlt className="text-success" />,
         5: <FaFileAlt className="text-success" />,
         6: <FaFileImage className="text-pink-500" />,
-        7: <FaVideo className="text-primary" />, 
+        7: <FaVideo className="text-primary" />,
     };
     const [horasCursoFormato, setHorasCursoFormato] = useState();
     const location = useLocation();
     const isViewMode = new URLSearchParams(location.search).get('view') === 'true';
+    const [loading, setLoading] = useState(true);
     //#endregion
-    
+
     useEffect(() => {
         window.scrollTo(0, 0);
 
@@ -87,6 +89,7 @@ const EditCourse = () => {
     //#region curso
     const fetchCurso = async (id) => {
         try {
+            setLoading(true);
             const response = await get_cursos(id);
             setCategoria(response.id_topico_topico.id_area_area.id_categoria);
             setArea(response.id_topico_topico.id_area);
@@ -94,9 +97,11 @@ const EditCourse = () => {
             setIsSincrono(response.issincrono);
             if (response.sincrono != null) {
                 setFormadorSelecionado(response.sincrono.id_formador);
-                setSincrono(prev => ({...prev, 
+                setSincrono(prev => ({
+                    ...prev,
                     id_formador: response.sincrono.id_formador,
-                    numero_vagas: response.sincrono.numero_vagas,}));
+                    numero_vagas: response.sincrono.numero_vagas,
+                }));
             }
             console.log(sincrono.numero_vagas);
             setCursos(response);
@@ -109,6 +114,8 @@ const EditCourse = () => {
             return response;
         } catch (error) {
             console.log('Erro ao encontrar cursos');
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -179,16 +186,16 @@ const EditCourse = () => {
         }
     }
 
-     const handleSubmitCurso = async (e) => {
+    const handleSubmitCurso = async (e) => {
         e.preventDefault();
-        
+
         const dToday = new Date(`${todayStr}T00:00:00`);
         const dInscIni = new Date(`${cursos.data_inicio_inscricao}T00:00:00`);
         const dInscFim = new Date(`${cursos.data_fim_inscricao}T23:59:59`);
         const dCursoIni = new Date(`${cursos.data_inicio_curso}T00:00:00`);
         const dCursoFim = new Date(`${cursos.data_fim_curso}T23:59:59`);
-        
-        if(cursos.isassincrono === false && !sincrono.id_formador){
+
+        if (cursos.isassincrono === false && !sincrono.id_formador) {
             Swal.fire({
                 icon: "error",
                 title: "Erro",
@@ -197,7 +204,7 @@ const EditCourse = () => {
             return;
         }
 
-        if([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
+        if ([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -206,7 +213,7 @@ const EditCourse = () => {
             return;
         }
 
-        if(dInscIni > dInscFim) {
+        if (dInscIni > dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -215,7 +222,7 @@ const EditCourse = () => {
             return;
         }
 
-        if(dCursoIni > dCursoFim) {
+        if (dCursoIni > dCursoFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -224,7 +231,7 @@ const EditCourse = () => {
             return;
         }
 
-        if(cursos.issincrono && dCursoIni < dInscFim) {
+        if (cursos.issincrono && dCursoIni < dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -246,7 +253,7 @@ const EditCourse = () => {
             },
             buttonsStyling: false
         });
-        if (result.isConfirmed){
+        if (result.isConfirmed) {
             try {
                 await update_cursos(id, {
                     ...cursos,
@@ -254,11 +261,11 @@ const EditCourse = () => {
                 });
                 navigate('/admin/cursos')
                 Swal.fire({
-                icon: "success",
-                title: "Curso atualizado com sucesso!",
-                timer: 2000,
-                showConfirmButton: false
-            });
+                    icon: "success",
+                    title: "Curso atualizado com sucesso!",
+                    timer: 2000,
+                    showConfirmButton: false
+                });
             } catch (error) {
                 console.log("Erro ao atualizar o curso", error);
                 Swal.fire({
@@ -323,61 +330,61 @@ const EditCourse = () => {
         }
     }
 
-    const renderConteudos = (item, isExpanded, expandedContent = false ) => {
+    const renderConteudos = (item, isExpanded, expandedContent = false) => {
         if (expandedContent) {
             return (
-            <div className="m-0 bg-light border rounded">
-                <h6 className='p-2'>Conteudos</h6>
-                <div className='mx-2 my-1 border rounded'>
-                {item.conteudos?.length > 0 ? 
-                    (item.conteudos.map((conteudo, index) => (    
-                        <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
-                            <div className='d-flex align-items-center justify-content-between'>
-                                <div>
-                                    <span className='me-2'>{getIconById(conteudo.id_formato)}</span>
-                                    {conteudo.nome_conteudo}   
+                <div className="m-0 bg-light border rounded">
+                    <h6 className='p-2'>Conteudos</h6>
+                    <div className='mx-2 my-1 border rounded'>
+                        {item.conteudos?.length > 0 ?
+                            (item.conteudos.map((conteudo, index) => (
+                                <div key={index} className={`${index % 2 === 0 ? 'line-bg' : 'bg-light'} p-2`}>
+                                    <div className='d-flex align-items-center justify-content-between'>
+                                        <div>
+                                            <span className='me-2'>{getIconById(conteudo.id_formato)}</span>
+                                            {conteudo.nome_conteudo}
+                                        </div>
+                                        <div>
+                                            <a href={conteudo.conteudo} className="btn btn-outline-success me-2" target="_blank">
+                                                <i className='bi bi-box-arrow-up-right'></i></a>
+                                            {!isViewMode && (
+                                                <button className="btn btn-outline-danger" onClick={() => handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
+                                                    <i className="bi bi-trash"></i>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <a href={conteudo.conteudo}  className="btn btn-outline-success me-2" target="_blank">
-                                        <i className='bi bi-box-arrow-up-right'></i></a>
-                                    {!isViewMode && (
-                                        <button className="btn btn-outline-danger" onClick={()=> handleDeleteConteudo(conteudo.id_conteudo, item.id_aula)}>
-                                            <i className="bi bi-trash"></i>
-                                        </button>
-                                    )}
+                            ))
+                            ) : (
+                                <div className='p-2'>
+                                    Aula sem conteúdos disponíveis
                                 </div>
-                            </div>
-                        </div>
-                    ))
-                    ) : (
-                        <div className='p-2'>
-                            Aula sem conteúdos disponíveis
-                        </div>
-                    )
-                }
+                            )
+                        }
+                    </div>
                 </div>
-            </div>
             );
         }
-        return(
+        return (
             <div>
                 <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
-            </div>            
+            </div>
         );
-        
+
     }
 
     const renderActionsAula = (item) => {
-        if(isViewMode) return null;
-        return(
+        if (isViewMode) return null;
+        return (
             <div className="d-flex">
                 <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreateAula(item.id_aula, item)}>
                     <i className="bi bi-pencil"></i>
                 </button>
-                <button className="btn btn-outline-success me-2" onClick={()=> handleAddConteudoAula(item.id_aula)}>
+                <button className="btn btn-outline-success me-2" onClick={() => handleAddConteudoAula(item.id_aula)}>
                     <i className="bi bi-file-earmark-plus"></i>
                 </button>
-                <button className="btn btn-outline-danger" onClick={()=> handleDeleteAula(item.id_aula)}>
+                <button className="btn btn-outline-danger" onClick={() => handleDeleteAula(item.id_aula)}>
                     <i className="bi bi-trash"></i>
                 </button>
             </div>
@@ -398,9 +405,9 @@ const EditCourse = () => {
             buttonsStyling: false,
         });
 
-        if(result.isConfirmed) {
-            try{
-                if(id){
+        if (result.isConfirmed) {
+            try {
+                if (id) {
                     const editarAula = await Swal.fire({
                         title: 'Editar Aula',
                         html: `
@@ -413,7 +420,7 @@ const EditCourse = () => {
                         confirmButtonText: 'Editar',
                         cancelButtonText: 'Cancelar',
                         inputValidator: (value) => {
-                            if(!value) return 'O URL é obrigatório';
+                            if (!value) return 'O URL é obrigatório';
                             if (!/^https?:\/\/.+/.test(value)) return 'Insira um URL válido';
                             return null;
                         },
@@ -425,7 +432,7 @@ const EditCourse = () => {
                             const nome = document.getElementById('nomeAula').value;
                             const url = document.getElementById('urlAula').value;
 
-                            if(!nome || !url) {
+                            if (!nome || !url) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
                                 return;
                             }
@@ -434,17 +441,17 @@ const EditCourse = () => {
                                 Swal.showValidationMessage('Insira um URL válido!');
                                 return;
                             }
-                            
+
                             return {
                                 id_curso: cursos.id_curso,
                                 data_aula: materiais.data_aula,
-                                nome_aula: nome, 
+                                nome_aula: nome,
                                 caminho_url: url,
                                 tempo_duracao: 0,
                             };
                         }
                     });
-                    if(editarAula.isConfirmed && editarAula.value){
+                    if (editarAula.isConfirmed && editarAula.value) {
                         try {
                             await update_aulas(id, editarAula.value);
                             const aulasCarregadas = await fetchAulas(cursos.id_curso);
@@ -458,17 +465,17 @@ const EditCourse = () => {
                                 timer: 2000,
                                 showConfirmButton: false
                             });
-                        } catch(error) {
+                        } catch (error) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Erro",
                                 text: "Não foi possível editar a aula",
                                 timer: 2000,
                                 showConfirmButton: false,
-                            });                            
+                            });
                         }
                     }
-                }else{    
+                } else {
                     const adicionarAula = await Swal.fire({
                         title: 'Adicionar Aula',
                         html: `
@@ -504,16 +511,16 @@ const EditCourse = () => {
                                 return;
                             }
 
-                            return { 
+                            return {
                                 id_curso: cursos.id_curso,
                                 data_aula,
-                                nome_aula: nome, 
+                                nome_aula: nome,
                                 caminho_url: url,
                                 tempo_duracao: 0
                             };
                         }
                     });
-                    if(adicionarAula.isConfirmed && adicionarAula.value){
+                    if (adicionarAula.isConfirmed && adicionarAula.value) {
                         try {
                             await create_aulas(adicionarAula.value);
                             const aulasCarregadas = await fetchAulas(cursos.id_curso);
@@ -527,7 +534,7 @@ const EditCourse = () => {
                                 timer: 2000,
                                 showConfirmButton: false
                             });
-                        } catch(error) {
+                        } catch (error) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Erro",
@@ -538,7 +545,7 @@ const EditCourse = () => {
                         }
                     }
                 }
-            }catch(error) {
+            } catch (error) {
                 Swal.fire({
                     icon: "error",
                     title: "Erro",
@@ -547,10 +554,10 @@ const EditCourse = () => {
                     showConfirmButton: false,
                 });
             }
-        } 
+        }
     }
 
-    const handleAddConteudoAula =  async (id_aula) => {
+    const handleAddConteudoAula = async (id_aula) => {
         const result = await Swal.fire({
             title: "Tem certeza que deseja adicionar conteudo a esta aula?",
             icon: "warning",
@@ -564,7 +571,7 @@ const EditCourse = () => {
             buttonsStyling: false,
         });
 
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
             const formatos = await list_tipo_formato();
             const conteudos = await list_conteudos();
             const adicionarConteudo = await Swal.fire({
@@ -597,25 +604,25 @@ const EditCourse = () => {
                     const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                     select.addEventListener('change', () => {
-                    const selectedId = parseInt(select.value);
-                    if (isNaN(selectedId)) {
-                        file1Wrapper.classList.add('d-none');
-                        file2Wrapper.classList.add('d-none');
-                        return;
-                    }
-                    const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+                        const selectedId = parseInt(select.value);
+                        if (isNaN(selectedId)) {
+                            file1Wrapper.classList.add('d-none');
+                            file2Wrapper.classList.add('d-none');
+                            return;
+                        }
+                        const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
-                    if (formatosComFicheiro.includes(selectedId)) {
-                        file2Wrapper.classList.remove('d-none');
-                        file1Wrapper.classList.add('d-none');
-                        label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                        label1.textContent = 'Ficheiro';
-                    } else {
-                        file2Wrapper.classList.add('d-none');
-                        file1Wrapper.classList.remove('d-none');
-                        label2.textContent = 'Ficheiro';
-                        label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                    }
+                        if (formatosComFicheiro.includes(selectedId)) {
+                            file2Wrapper.classList.remove('d-none');
+                            file1Wrapper.classList.add('d-none');
+                            label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                            label1.textContent = 'Ficheiro';
+                        } else {
+                            file2Wrapper.classList.add('d-none');
+                            file1Wrapper.classList.remove('d-none');
+                            label2.textContent = 'Ficheiro';
+                            label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                        }
                     });
                 },
                 preConfirm: () => {
@@ -633,7 +640,7 @@ const EditCourse = () => {
                         Swal.showValidationMessage('Insira um URL válido!');
                         return;
                     }
-                    return{
+                    return {
                         id_aula,
                         id_curso: cursos.id_curso,
                         nome_conteudo: nome,
@@ -652,9 +659,9 @@ const EditCourse = () => {
             });
 
             if (adicionarConteudo.isConfirmed && adicionarConteudo.value) {
-                try{
+                try {
                     await create_conteudos(adicionarConteudo.value);
-                    await fetchAulas(cursos.id_curso); 
+                    await fetchAulas(cursos.id_curso);
                     Swal.fire({
                         icon: "success",
                         title: "Conteudo adicionado com sucesso!",
@@ -690,8 +697,8 @@ const EditCourse = () => {
             buttonsStyling: false,
         });
 
-        if(result.isConfirmed) {
-            try{
+        if (result.isConfirmed) {
+            try {
                 await delete_aulas(id);
                 const aulasCarregadas = await fetchAulas(cursos.id_curso);
                 if (aulasCarregadas && aulasCarregadas?.length > 0) {
@@ -731,8 +738,8 @@ const EditCourse = () => {
             },
             buttonsStyling: false,
         });
-        if(result.isConfirmed) {
-            try{
+        if (result.isConfirmed) {
+            try {
                 await delete_conteudos(idConteudo);
                 await fetchAulas(cursos.id_curso);
                 Swal.fire({
@@ -742,7 +749,7 @@ const EditCourse = () => {
                     showConfirmButton: false
                 });
 
-                await fetchAulas(); 
+                await fetchAulas();
 
             } catch (error) {
                 console.error("Erro ao excluir Conteúdo:", error);
@@ -761,7 +768,7 @@ const EditCourse = () => {
 
 
     //#region MateriaApoio
-    
+
     const fetchMaterialApoio = async (id) => {
         try {
             const response = await get_material_apoio_curso(id);
@@ -781,21 +788,21 @@ const EditCourse = () => {
     };
 
     const renderActionsMaterialApoio = (item) => {
-        if(isViewMode) return null;
-        return(
-        <div className="d-flex">
-                   <a href={item.conteudo}  className="btn btn-outline-success me-2" target="_blank">
-                <i className='bi bi-box-arrow-up-right'></i></a>
-            <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateMaterialApoio(item.id_material_apoio)}>
-                <i className="bi bi-pencil"></i>
-            </button> 
-            <button className="btn btn-outline-danger" onClick={()=> HandleDeleteMaterialApoio(item.id_material_apoio)}>
-                <i className="bi bi-trash"></i>
-            </button>
-        </div>
+        if (isViewMode) return null;
+        return (
+            <div className="d-flex">
+                <a href={item.conteudo} className="btn btn-outline-success me-2" target="_blank">
+                    <i className='bi bi-box-arrow-up-right'></i></a>
+                <button className="btn btn-outline-primary me-2" onClick={() => handleEditCreateMaterialApoio(item.id_material_apoio)}>
+                    <i className="bi bi-pencil"></i>
+                </button>
+                <button className="btn btn-outline-danger" onClick={() => HandleDeleteMaterialApoio(item.id_material_apoio)}>
+                    <i className="bi bi-trash"></i>
+                </button>
+            </div>
         );
     }
-    
+
     const handleEditCreateMaterialApoio = async (id) => {
         const result = await Swal.fire({
             title: id == null ? 'Tem a certeza que deseja adicionar Material de apoio?' : 'Tem a certeza que deseja editar Material de apoio?',
@@ -810,9 +817,9 @@ const EditCourse = () => {
             buttonsStyling: false,
         });
 
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
             try {
-                if(id != null) {
+                if (id != null) {
                     const material = await get_material_apoio(id);
                     const formatos = await list_tipo_formato();
                     const editarMaterialApoio = await Swal.fire({
@@ -845,25 +852,25 @@ const EditCourse = () => {
                             const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                             select.addEventListener('change', () => {
-                            const selectedId = parseInt(select.value);
-                            if (isNaN(selectedId)) {
-                                file1Wrapper.classList.add('d-none');
-                                file2Wrapper.classList.add('d-none');
-                                return;
-                            }
-                            const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+                                const selectedId = parseInt(select.value);
+                                if (isNaN(selectedId)) {
+                                    file1Wrapper.classList.add('d-none');
+                                    file2Wrapper.classList.add('d-none');
+                                    return;
+                                }
+                                const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
-                            if (formatosComFicheiro.includes(selectedId)) {
-                                file2Wrapper.classList.remove('d-none');
-                                file1Wrapper.classList.add('d-none');
-                                label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                                label1.textContent = 'Ficheiro';
-                            } else {
-                                file2Wrapper.classList.add('d-none');
-                                file1Wrapper.classList.remove('d-none');
-                                label2.textContent = 'Ficheiro';
-                                label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                            }
+                                if (formatosComFicheiro.includes(selectedId)) {
+                                    file2Wrapper.classList.remove('d-none');
+                                    file1Wrapper.classList.add('d-none');
+                                    label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                    label1.textContent = 'Ficheiro';
+                                } else {
+                                    file2Wrapper.classList.add('d-none');
+                                    file1Wrapper.classList.remove('d-none');
+                                    label2.textContent = 'Ficheiro';
+                                    label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                }
                             });
                         },
                         preConfirm: () => {
@@ -871,19 +878,19 @@ const EditCourse = () => {
                             const url = document.getElementById("urlConteudo").value;
                             const nome = document.getElementById("nome").value;
                             const ficheiro = document.getElementById('ficheiroConteudo').files[0];
-                            
-                            if(!id_formato || (!url && !ficheiro) || !nome) {
+
+                            if (!id_formato || (!url && !ficheiro) || !nome) {
                                 Swal.showValidationMessage("Todos os campos são obrigatórios!");
                                 return false;
                             }
                             return {
                                 id_curso: cursos.id_curso,
                                 id_formato: parseInt(id_formato),
-                                conteudo : url,
+                                conteudo: url,
                                 nome_material: nome,
                                 ficheiro: ficheiro || null
                             };
-                        },           
+                        },
                         showCancelButton: true,
                         confirmButtonText: 'Editar Material de Apoio',
                         cancelButtonText: 'Cancelar',
@@ -893,7 +900,7 @@ const EditCourse = () => {
                         },
                     });
 
-                    if(editarMaterialApoio.isConfirmed && editarMaterialApoio.value){
+                    if (editarMaterialApoio.isConfirmed && editarMaterialApoio.value) {
                         try {
                             console.log(editarMaterialApoio.value);
                             await update_material_apoio(id, editarMaterialApoio.value);
@@ -904,14 +911,14 @@ const EditCourse = () => {
                                 timer: 2000,
                                 showConfirmButton: false
                             });
-                        } catch(error) {
+                        } catch (error) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Erro",
                                 text: "Não foi possível editar a material de apoio",
                                 timer: 2000,
                                 showConfirmButton: false,
-                            });                            
+                            });
                         }
                     }
                 } else {
@@ -937,7 +944,7 @@ const EditCourse = () => {
                             <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
-                            didOpen: () => {
+                        didOpen: () => {
                             const select = document.getElementById('formato');
                             const file2Wrapper = document.getElementById('file2InputWrapper');
                             const file1Wrapper = document.getElementById('file1InputWrapper');
@@ -946,25 +953,25 @@ const EditCourse = () => {
                             const formatosComFicheiro = [1, 2, 3, 4, 5];
 
                             select.addEventListener('change', () => {
-                            const selectedId = parseInt(select.value);
-                            if (isNaN(selectedId)) {
-                                file1Wrapper.classList.add('d-none');
-                                file2Wrapper.classList.add('d-none');
-                                return;
-                            }
-                            const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
+                                const selectedId = parseInt(select.value);
+                                if (isNaN(selectedId)) {
+                                    file1Wrapper.classList.add('d-none');
+                                    file2Wrapper.classList.add('d-none');
+                                    return;
+                                }
+                                const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
-                            if (formatosComFicheiro.includes(selectedId)) {
-                                file2Wrapper.classList.remove('d-none');
-                                file1Wrapper.classList.add('d-none');
-                                label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                                label1.textContent = 'Ficheiro';
-                            } else {
-                                file2Wrapper.classList.add('d-none');
-                                file1Wrapper.classList.remove('d-none');
-                                label2.textContent = 'Ficheiro';
-                                label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                            }
+                                if (formatosComFicheiro.includes(selectedId)) {
+                                    file2Wrapper.classList.remove('d-none');
+                                    file1Wrapper.classList.add('d-none');
+                                    label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                    label1.textContent = 'Ficheiro';
+                                } else {
+                                    file2Wrapper.classList.add('d-none');
+                                    file1Wrapper.classList.remove('d-none');
+                                    label2.textContent = 'Ficheiro';
+                                    label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                }
                             });
                         },
                         preConfirm: () => {
@@ -972,28 +979,28 @@ const EditCourse = () => {
                             const url = document.getElementById("urlConteudo").value;
                             const nome = document.getElementById("nome").value;
                             const ficheiro = document.getElementById('ficheiroConteudo').files[0];
-                            
-                            if(!id_formato || (!url && !ficheiro) || !nome) {
+
+                            if (!id_formato || (!url && !ficheiro) || !nome) {
                                 Swal.showValidationMessage("Todos os campos são obrigatórios!");
                                 return false;
                             }
                             return {
                                 id_curso: cursos.id_curso,
                                 id_formato: parseInt(id_formato),
-                                conteudo : url,
+                                conteudo: url,
                                 nome_material: nome,
                                 ficheiro: ficheiro || null
                             };
-                        },  
-                            showCancelButton: true,
-                            confirmButtonText: 'Adicionar Material de Apoio',
-                            cancelButtonText: 'Cancelar',
-                            customClass: {
-                                confirmButton: 'btn btn-success me-2',
-                                cancelButton: 'btn btn-danger',
-                            },
+                        },
+                        showCancelButton: true,
+                        confirmButtonText: 'Adicionar Material de Apoio',
+                        cancelButtonText: 'Cancelar',
+                        customClass: {
+                            confirmButton: 'btn btn-success me-2',
+                            cancelButton: 'btn btn-danger',
+                        },
                     });
-                    if(adicionarMaterialApoio.isConfirmed && adicionarMaterialApoio.value){
+                    if (adicionarMaterialApoio.isConfirmed && adicionarMaterialApoio.value) {
                         try {
                             await create_material_apoio(adicionarMaterialApoio.value);
                             await fetchMaterialApoio(cursos.id_curso);
@@ -1003,7 +1010,7 @@ const EditCourse = () => {
                                 timer: 2000,
                                 showConfirmButton: false
                             });
-                        } catch(error) {
+                        } catch (error) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Erro",
@@ -1014,7 +1021,7 @@ const EditCourse = () => {
                         }
                     }
                 }
-            }catch(error) {
+            } catch (error) {
                 Swal.fire({
                     icon: "error",
                     title: "Erro",
@@ -1023,7 +1030,7 @@ const EditCourse = () => {
                     showConfirmButton: false,
                 });
             }
-        } 
+        }
     }
 
     const HandleDeleteMaterialApoio = async (id) => {
@@ -1040,7 +1047,7 @@ const EditCourse = () => {
             buttonsStyling: false,
         })
 
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
             try {
                 await delete_material_apoio(id);
                 fetchMaterialApoio(cursos.id_curso);
@@ -1050,7 +1057,7 @@ const EditCourse = () => {
                     timer: 2000,
                     showConfirmButton: false
                 });
-            } catch(error) {
+            } catch (error) {
                 Swal.fire({
                     icon: "error",
                     title: "Erro",
@@ -1064,7 +1071,7 @@ const EditCourse = () => {
     }
 
     //#endregion
-    
+
 
     //#region extra
     const languageOptions = ISO6391.getAllCodes().map(code => ({
@@ -1097,7 +1104,7 @@ const EditCourse = () => {
 
     const atualizarHorasCursoBD = async (id, horas_curso) => {
         try {
-            await update_cursos(id, {horas_curso: horas_curso});
+            await update_cursos(id, { horas_curso: horas_curso });
             const cursoAtualizado = await fetchCurso(id);
             let hora = Math.floor(cursoAtualizado.horas_curso);
             let minuto = Math.floor((cursoAtualizado.horas_curso - hora) * 60);
@@ -1131,202 +1138,209 @@ const EditCourse = () => {
         carregarDados();
     }, []);
 
-    
+
     return (
-        <div className='form-group'>
-            {error && <div className="alert alert-danger mt-2">{error}</div>}
-            {successMessage && <div className="alert alert-success mt-2">{successMessage}</div>}
+        <>
+            {loading ? (
+                <SpinnerBorder />
+            ) : (
+                <div className='form-group'>
+                    {error && <div className="alert alert-danger mt-2">{error}</div>}
+                    {successMessage && <div className="alert alert-success mt-2">{successMessage}</div>}
 
-            <div className='d-flex'>
-                <div className='col-md-9 pe-4 col-sm-10'>
-                    <form onSubmit={handleSubmitCurso}>
-                        <div className='mx-5'>
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Nome do Curso</label>
-                                <input type="text" name="nome_curso" className='form-control' value={cursos.nome_curso || ""} onChange={handleChange} required disabled={isViewMode}/>
-                            </div>
+                    <div className='d-flex'>
+                        <div className='col-md-9 pe-4 col-sm-10'>
+                            <form onSubmit={handleSubmitCurso}>
+                                <div className='mx-5'>
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Nome do Curso</label>
+                                        <input type="text" name="nome_curso" className='form-control' value={cursos.nome_curso || ""} onChange={handleChange} required disabled={isViewMode} />
+                                    </div>
 
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Descrição do Curso</label>
-                                <textarea name="descricao_curso" className='form-control' rows="4" value={cursos.descricao_curso || ""} onChange={handleChange} required disabled={isViewMode}/>
-                            </div>
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Descrição do Curso</label>
+                                        <textarea name="descricao_curso" className='form-control' rows="4" value={cursos.descricao_curso || ""} onChange={handleChange} required disabled={isViewMode} />
+                                    </div>
 
-                            {/* DATAS */}
-                            <div className='row mt-2'>
-                                <div className='col'>
-                                    <label className='form-label fw-bold'>Início da Inscrição</label>
-                                    <input type="date" name="data_inicio_inscricao" className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required disabled={isViewMode}/>
+                                    {/* DATAS */}
+                                    <div className='row mt-2'>
+                                        <div className='col'>
+                                            <label className='form-label fw-bold'>Início da Inscrição</label>
+                                            <input type="date" name="data_inicio_inscricao" className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required disabled={isViewMode} />
+                                        </div>
+                                        <div className='col'>
+                                            <label className='form-label fw-bold'>Fim da Inscrição</label>
+                                            <input type="date" name="data_fim_inscricao" min={cursos.data_inicio_inscricao || todayStr} className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required disabled={isViewMode} />
+                                        </div>
+                                    </div>
+
+                                    <div className='row mt-2'>
+                                        <div className='col'>
+                                            <label className='form-label fw-bold'>Início do Curso</label>
+                                            <input type="date" name="data_inicio_curso" min={cursos.data_fim_inscricao || todayStr} className='form-control' value={cursos.data_inicio_curso ? formatYearMonthDay(cursos.data_inicio_curso) : ""} onChange={handleChange} required disabled={isViewMode} />
+                                        </div>
+                                        <div className='col'>
+                                            <label className='form-label fw-bold'>Fim do Curso</label>
+                                            <input type="date" name="data_fim_curso" min={cursos.data_inicio_curso || todayStr} className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required disabled={isViewMode} />
+                                        </div>
+                                    </div>
+
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Idioma</label>
+                                        <Select
+                                            options={languageOptions}
+                                            value={selectedLanguage}
+                                            onChange={handleLanguageChange}
+                                            isClearable
+                                            placeholder="--Escolha o idioma--"
+                                            name="idioma"
+                                            isDisabled={isViewMode}
+                                        />
+                                    </div>
+
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Horas do Curso</label>
+                                        <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso || ""} onChange={handleChange} required disabled={isViewMode || cursos.isassincrono === true} />
+                                    </div>
+
+                                    {/* Tipo */}
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Tipologia</label>
+                                        <select name="issincrono" value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(valorBoolean); setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean })); handleChange(e) }} className='form-select' disabled={isViewMode}>
+                                            <option value="">-- Escolher Tipologia --</option>
+                                            <option value="true">Síncrono</option>
+                                            <option value="false">Assíncrono</option>
+                                        </select>
+                                    </div>
+
+                                    {/* Se for síncrono, mostra formador */}
+                                    {isSincrono == true && (
+                                        <div className='mt-2'>
+                                            <label className='mt-2 fw-bold'>Formador</label>
+                                            <select name="id_formador" value={formadorSelecionado} onChange={(e) => {
+                                                const valor = parseInt(e.target.value);
+
+                                                setSincrono(prev => ({ ...prev, id_formador: valor }));
+                                                setFormadorSelecionado(valor);
+                                                handleChange(e);
+                                            }}
+                                                className='form-select' disabled={isViewMode}>
+                                                <option value="">-- Selecionar Formador --</option>
+                                                {formadores.map((f) => {
+                                                    return (
+                                                        <option key={f.id_formador} value={f.id_formador}>{f.id_formador_utilizador.nome_utilizador}</option>
+                                                    );
+                                                })}
+                                            </select>
+                                            <label className='mt-2 fw-bold'>Descrição Formador</label>
+                                            <textarea name="descricao_formador" value={formadores?.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly disabled={isViewMode} />
+                                            <label className='mt-2 fw-bold'>Número Vagas</label>
+                                            <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} required
+                                                disabled={isViewMode || (cursos.data_fim_inscricao && new Date() > new Date(cursos.data_fim_inscricao))} />
+                                        </div>
+                                    )}
+
+                                    {/* CATEGORIA */}
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Categoria</label>
+                                        <select name="id_categoria" className='form-select' value={categoria} onChange={(e) => { setCategoria(e.target.value); handleChange(e) }} required disabled={isViewMode}>
+                                            <option value="">--Escolher categoria--</option>
+                                            {catAreaTopico?.map((c) => (
+                                                <option key={c.id_categoria} value={c.id_categoria}>{c.nome_cat}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* AREA */}
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Area</label>
+                                        <select name="id_area" className='form-select' value={area} onChange={(e) => { setArea(e.target.value); handleChange(e); }} required disabled={isViewMode}>
+                                            <option value="">--Escolher area--</option>
+                                            {catAreaTopico?.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.map((a) => (
+                                                <option key={a.id_area} value={a.id_area}>{a.nome_area}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+
+                                    {/* TOPICO */}
+                                    <div ref={stopRef} className='mt-2'>
+                                        <label className='form-label fw-bold'>Tópico</label>
+                                        <select name="id_topico" className='form-select' value={topico} onChange={(e) => { setTopico(e.target.value); handleChange(e) }} required disabled={isViewMode}>
+                                            <option value="">--Escolher tópico--</option>
+                                            {catAreaTopico?.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.find((ar) => ar.id_area.toString() == area)?.topicos?.map((t) => (
+                                                <option key={t.id_topico} value={t.id_topico}>{t.nome_topico}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className='d-flex justify-content-between'>
+                                        {!isViewMode && (
+                                            <>
+                                                <button type="submit" className='btn btn-success mt-3'>Submeter Alterações</button>
+                                                <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Alterações</button>
+                                            </>
+                                        )}
+                                    </div>
                                 </div>
-                                <div className='col'>
-                                    <label className='form-label fw-bold'>Fim da Inscrição</label>
-                                    <input type="date" name="data_fim_inscricao" min={cursos.data_inicio_inscricao || todayStr} className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required disabled={isViewMode}/>
-                                </div>
-                            </div>
-
-                            <div className='row mt-2'>
-                                <div className='col'>
-                                    <label className='form-label fw-bold'>Início do Curso</label>
-                                    <input type="date" name="data_inicio_curso" min={cursos.data_fim_inscricao || todayStr} className='form-control' value={cursos.data_inicio_curso ? formatYearMonthDay(cursos.data_inicio_curso) : ""} onChange={handleChange} required disabled={isViewMode}/>
-                                </div>
-                                <div className='col'>
-                                    <label className='form-label fw-bold'>Fim do Curso</label>
-                                    <input type="date" name="data_fim_curso" min={cursos.data_inicio_curso || todayStr} className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required disabled={isViewMode}/>
-                                </div>
-                            </div>
-
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Idioma</label>
-                                <Select
-                                    options={languageOptions}
-                                    value={selectedLanguage}
-                                    onChange={handleLanguageChange}
-                                    isClearable
-                                    placeholder="--Escolha o idioma--"
-                                    name="idioma"
-                                    isDisabled={isViewMode}
-                                />
-                            </div>
-
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Horas do Curso</label>
-                                <input type="number" step="0.5" name="horas_curso" className='form-control' value={cursos.horas_curso || ""} onChange={handleChange} required disabled={isViewMode || cursos.isassincrono === true}/>
-                            </div>
-
-                            {/* Tipo */}
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Tipologia</label>
-                                <select name="issincrono" value={isSincrono} onChange={(e) => {const valorBoolean = e.target.value === "true"; setIsSincrono(valorBoolean); setCursos(prev => ({...prev, issincrono: valorBoolean, isassincrono: !valorBoolean})); handleChange(e)}} className='form-select' disabled={isViewMode}>
-                                    <option value="">-- Escolher Tipologia --</option>
-                                    <option value="true">Síncrono</option>
-                                    <option value="false">Assíncrono</option>
-                                </select>
-                            </div>
-
-                            {/* Se for síncrono, mostra formador */}
-                            {isSincrono == true && (
-                                <div className='mt-2'>
-                                    <label className='mt-2 fw-bold'>Formador</label>
-                                    <select name="id_formador" value={formadorSelecionado} onChange={(e) => {
-                                            const valor = parseInt(e.target.value);
-                                            
-                                            setSincrono(prev => ({...prev, id_formador: valor})); 
-                                            setFormadorSelecionado(valor); 
-                                            handleChange(e);}} 
-                                        className='form-select' disabled={isViewMode}>
-                                        <option value="">-- Selecionar Formador --</option>
-                                        {formadores.map((f) => {
-                                            return(
-                                                <option key={f.id_formador} value={f.id_formador}>{f.id_formador_utilizador.nome_utilizador}</option>
-                                            );
-                                        })}
-                                    </select>
-                                    <label className='mt-2 fw-bold'>Descrição Formador</label>
-                                    <textarea name="descricao_formador" value={formadores?.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly disabled={isViewMode}/>
-                                    <label className='mt-2 fw-bold'>Número Vagas</label>
-                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} required 
-                                        disabled={isViewMode || (cursos.data_fim_inscricao && new Date() > new Date(cursos.data_fim_inscricao))}/>
-                                </div>
-                            )}
-
-                            {/* CATEGORIA */}
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Categoria</label>
-                                <select name="id_categoria" className='form-select' value={categoria} onChange={(e) => {setCategoria(e.target.value); handleChange(e)}} required disabled={isViewMode}>
-                                    <option value="">--Escolher categoria--</option>
-                                    {catAreaTopico?.map((c) => (
-                                        <option key={c.id_categoria} value={c.id_categoria}>{c.nome_cat}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* AREA */}
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Area</label>
-                                <select name="id_area" className='form-select' value={area} onChange={(e) => {setArea(e.target.value); handleChange(e); }} required disabled={isViewMode}>
-                                    <option value="">--Escolher area--</option>
-                                    {catAreaTopico?.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.map((a) => (
-                                        <option key={a.id_area} value={a.id_area}>{a.nome_area}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* TOPICO */}
-                            <div ref={stopRef} className='mt-2'>
-                                <label className='form-label fw-bold'>Tópico</label>
-                                <select name="id_topico" className='form-select' value={topico} onChange={(e) => {setTopico(e.target.value); handleChange(e)}} required disabled={isViewMode}>
-                                    <option value="">--Escolher tópico--</option>
-                                    {catAreaTopico?.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.find((ar) => ar.id_area.toString() == area)?.topicos?.map((t) => (
-                                        <option key={t.id_topico} value={t.id_topico}>{t.nome_topico}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className='d-flex justify-content-between'>
-                                {!isViewMode && (
-                                <>
-                                    <button type="submit" className='btn btn-success mt-3'>Submeter Alterações</button>
-                                    <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Alterações</button>
-                                </>
-                                )}
-                            </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
 
-                <div className='d-flex min-vh-100 flex-column mt-3'>
-                    <div className='sticky-card'>
-                        <div className='col-md-3 col-sm-2 bg-custom-light d-flex align-items-center flex-column h-100 w-100 p-3 rounded'>
-                            {cursos && (
-                                <img
-                                    src={cursos.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.imagem)}&background=random&bold=true`}
-                                    onError={(e) => {
-                                        e.target.onerror = null;
-                                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.imagem)}&background=random&bold=true`;
-                                    }}
-                                    alt="Imagem de perfil"
-                                    className='w-100 img-profile rounded-2 mb-2'
-                                />
-                            )}
+                        <div className='d-flex min-vh-100 flex-column mt-3'>
+                            <div className='sticky-card'>
+                                <div className='col-md-3 col-sm-2 bg-custom-light d-flex align-items-center flex-column h-100 w-100 p-3 rounded'>
+                                    {cursos && (
+                                        <img
+                                            src={cursos.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.imagem)}&background=random&bold=true`}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(cursos.imagem)}&background=random&bold=true`;
+                                            }}
+                                            alt="Imagem de perfil"
+                                            className='w-100 img-profile rounded-2 mb-2'
+                                        />
+                                    )}
 
-                            <div className='d-flex flex-column align-items-center'>
-                                <h5 className='m-1 mb-3'>{cursos.nome_curso || 'Nome'}</h5>
-                                <small>Número de inscritos: {cursos.contador_formandos}</small>
-                                <small>Horas de curso: {horasCursoFormato}</small>
+                                    <div className='d-flex flex-column align-items-center'>
+                                        <h5 className='m-1 mb-3'>{cursos.nome_curso || 'Nome'}</h5>
+                                        <small>Número de inscritos: {cursos.contador_formandos}</small>
+                                        <small>Horas de curso: {horasCursoFormato}</small>
+                                    </div>
+                                    {!isViewMode && (
+                                        <button onClick={handleSubmitCursoImg} type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
+                                    )}
+                                </div>
                             </div>
-                            {!isViewMode && (
-                                <button onClick={handleSubmitCursoImg} type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
-                            )}
                         </div>
                     </div>
-                </div>
-            </div>
-            
-            {cursos.isassincrono && 
-                <div className='mx-5'>
-                    <Tabs defaultActiveKey="aulas" className="my-4 nav-justified custom-tabs">
-                        <Tab eventKey="aulas" title="Aulas">
-                            <div className="mt-4">
-                                {/* Aulas */}
-                                {cursos.isassincrono === true && (
-                                    <div className='mt-4'>
-                                        <Table columns={columnsAulas} data={aulas} actions={renderActionsAula} onAddClick={!isViewMode ? {callback: HandleEditCreateAula, label: 'Aula'} : null} conteudos={renderConteudos} />
+
+                    {cursos.isassincrono &&
+                        <div className='mx-5'>
+                            <Tabs defaultActiveKey="aulas" className="my-4 nav-justified custom-tabs">
+                                <Tab eventKey="aulas" title="Aulas">
+                                    <div className="mt-4">
+                                        {/* Aulas */}
+                                        {cursos.isassincrono === true && (
+                                            <div className='mt-4'>
+                                                <Table columns={columnsAulas} data={aulas} actions={renderActionsAula} onAddClick={!isViewMode ? { callback: HandleEditCreateAula, label: 'Aula' } : null} conteudos={renderConteudos} />
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                        </Tab>
-                        <Tab eventKey="material_apoio" title="Material Apoio">
-                            <div className="mt-4">
-                                {/* Material de Apoio */}
-                                {cursos.isassincrono === true && (
-                                    <div className='mt-4'>
-                                        <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={!isViewMode ? {callback: handleEditCreateMaterialApoio, label: 'Material Apoio'} : null} />
+                                </Tab>
+                                <Tab eventKey="material_apoio" title="Material Apoio">
+                                    <div className="mt-4">
+                                        {/* Material de Apoio */}
+                                        {cursos.isassincrono === true && (
+                                            <div className='mt-4'>
+                                                <Table columns={ColumnsMaterialApoio} data={materiais} actions={renderActionsMaterialApoio} onAddClick={!isViewMode ? { callback: handleEditCreateMaterialApoio, label: 'Material Apoio' } : null} />
+                                            </div>
+                                        )}
                                     </div>
-                                )}
-                            </div>
-                        </Tab>
-                    </Tabs>
+                                </Tab>
+                            </Tabs>
+                        </div>
+                    }
                 </div>
-            }
-        </div>
+            )}
+        </>
     );
 }
 

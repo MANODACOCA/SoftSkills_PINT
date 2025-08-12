@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2'
 
 export function isTokenExpired(token) {
   try {
@@ -50,6 +51,11 @@ const TokenChecker = () => {
         if (token) {
           localStorage.removeItem("token");
           alert("Sessão expirada.  Por favor, efetue novamente o login.");
+          Swal.fire({
+            icon: "error",
+            title: "Oops... Sessão expirada!",
+            text: "Por favor, efetue novamente o login.",
+          });
           navigate("/login", { replace: true });
         } else {
           localStorage.removeItem("token");
