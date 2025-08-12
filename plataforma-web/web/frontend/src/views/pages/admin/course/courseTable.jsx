@@ -13,12 +13,12 @@ const CourseTable = () => {
     const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
- 
+
     const FetchCursos = async () => {
         try {
             setLoading(true);
             const response = await getCourseAdminLista(searchTerm || "");
-    
+
             const cursosPorRaiz = {};
 
             response.forEach((curso) => {
@@ -40,14 +40,14 @@ const CourseTable = () => {
             });
 
             cursosFinais.sort((a, b) => {
-            if (a.estado === b.estado) {
-                return a.id_curso - b.id_curso; 
-            }
-            return b.estado - a.estado; 
+                if (a.estado === b.estado) {
+                    return a.id_curso - b.id_curso;
+                }
+                return b.estado - a.estado;
             })
 
             setcursos(cursosFinais);
-        } catch(error) {
+        } catch (error) {
             console.log('Erro ao listar Cursos')
         } finally {
             setLoading(false);
@@ -68,7 +68,7 @@ const CourseTable = () => {
         const params = new URLSearchParams(location.search);
         setSearchTerm(params.get('search') || '');
     }, [location.search]);
-    
+
     const HandleUpdate = async (id, estado) => {
         const result = await Swal.fire({
             title: estado ? 'Deseja ocultar este curso?' : 'Deseja mostrar este curso?',
@@ -84,9 +84,9 @@ const CourseTable = () => {
             buttonsStyling: false
         });
 
-        if(result.isConfirmed){
-            try{
-                await update_cursos(id, {estado: !estado});
+        if (result.isConfirmed) {
+            try {
+                await update_cursos(id, { estado: !estado });
                 await FetchCursos();
                 console.log(estado);
                 Swal.fire({
@@ -95,11 +95,11 @@ const CourseTable = () => {
                     icon: 'success',
                     timer: 1500,
                     showConfirmButton: false
-                }); 
-            } catch(error){
+                });
+            } catch (error) {
                 Swal.fire({
-                    title: 'Erro', 
-                    text: 'Ocorreu um erro ao atualizar o curso', 
+                    title: 'Erro',
+                    text: 'Ocorreu um erro ao atualizar o curso',
                     icon: 'error',
                     confirmButtonText: 'Fechar',
                     customClass: {
@@ -137,10 +137,10 @@ const CourseTable = () => {
         });
 
         if (result.isConfirmed) {
-            try{
+            try {
                 const cursoCompleto = await getCourseAdminCursoTodoUm(id);
                 navigate(`/admin/cursos/criar`, { state: { cursoAnterior: cursoCompleto } });
-            } catch(error) {
+            } catch (error) {
                 Swal.fire("Erro", "Erro ao carregar dados do curso", "error");
             }
         }
@@ -150,19 +150,21 @@ const CourseTable = () => {
         const data_atual = new Date();
         const dataFimCurso = new Date(item.data_fim_curso);
 
-        return(
+        return (
             <div className="d-flex">
-                {dataFimCurso > data_atual &&
-                    <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreate(item.id_curso)}>
-                        <i className="bi bi-pencil"></i>
-                    </button>   
+                {dataFimCurso >= data_atual &&
+                    <>
+                        <button className="btn btn-outline-primary me-2" onClick={(e) => { e.stopPropagation(); HandleEditCreate(item.id_curso) }}>
+                            <i className="bi bi-pencil"></i>
+                        </button>
+                        <button className="btn btn-outline-danger me-2" onClick={(e) => { e.stopPropagation(); HandleUpdate(item.id_curso, item.estado) }}>
+                            <i className={`bi ${item.estado ? "bi-eye" : "bi-eye-slash"}`}></i>
+                        </button>
+                    </>
                 }
-                
-                <button className="btn btn-outline-danger me-2" onClick={() =>  HandleUpdate(item.id_curso, item.estado)}>
-                    <i className={`bi ${item.estado ? "bi-eye" : "bi-eye-slash"}`}></i>
-                </button>
+
                 {dataFimCurso < data_atual && (
-                    <button className="btn btn-outline-success me-2" onClick={() => HandleCriarNovaOcorrencia(item.id_curso)}>
+                    <button className="btn btn-outline-success me-2" onClick={(e) => { e.stopPropagation(); HandleCriarNovaOcorrencia(item.id_curso) }}>
                         <i className="bi bi-plus-circle"></i>
                     </button>
                 )}
@@ -210,9 +212,9 @@ const CourseTable = () => {
         if (ocorrencias.length > 0) {
             return (
                 <div className="d-flex align-items-center justify-content-center">
-                    {isExpanded 
-                    ? <IoIosArrowDropup size={22} color="	#444444" />
-                    : <IoIosArrowDropdown size={22} color="	#444444" />
+                    {isExpanded
+                        ? <IoIosArrowDropup size={22} color="	#444444" />
+                        : <IoIosArrowDropdown size={22} color="	#444444" />
                     }
                 </div>
             );
@@ -223,15 +225,15 @@ const CourseTable = () => {
         FetchCursos()
     }, [searchTerm])
 
-    return(
+    return (
         <div>
-            <Table 
-                columns={columnsCursos} 
-                data={cursos} 
-                actions={renderActions} 
-                onAddClick={{callback: HandleEditCreate, label: 'Curso'}} 
-                pesquisa={true} 
-                conteudos={renderOcorrencias} 
+            <Table
+                columns={columnsCursos}
+                data={cursos}
+                actions={renderActions}
+                onAddClick={{ callback: HandleEditCreate, label: 'Curso' }}
+                pesquisa={true}
+                conteudos={renderOcorrencias}
                 searchTerm={searchTerm}
                 onSearchChange={(value) => {
                     setSearchTerm(value);
