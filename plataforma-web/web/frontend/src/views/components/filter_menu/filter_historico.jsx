@@ -55,6 +55,7 @@ const FilterHistorico = ({ searchTerm, onSearchChange, onApply, dataInicio, data
                             type="date"
                             className="form-control"
                             value={localDataInicio}
+                            max={localDataFim}
                             onChange={(e) => setLocalDataInicio(e.target.value)}
                         />
                     </div>
@@ -68,6 +69,7 @@ const FilterHistorico = ({ searchTerm, onSearchChange, onApply, dataInicio, data
                             id="dataFimInput"
                             type="date"
                             className="form-control"
+                            min={localDataInicio}
                             value={localDataFim}
                             onChange={(e) => setLocalDataFim(e.target.value)}
                         />
