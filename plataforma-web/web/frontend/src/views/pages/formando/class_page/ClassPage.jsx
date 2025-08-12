@@ -10,7 +10,6 @@ import { Tabs, Tab, Card } from 'react-bootstrap';
 import { getAulasAndMateriaApoioForCurso } from '../../../../api/aulas_axios';
 import { verificar_acesso_curso } from '../../../../api/cursos_axios';
 import { useUser } from '../../../../utils/useUser';
-import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import {
     FaFileAlt,
     FaFilePowerpoint,
@@ -23,6 +22,7 @@ import {
 import { BsFiletypeTxt } from "react-icons/bs";
 import { gerar_certificado } from '../../../../api/certificados_axios';
 import { get_nota_final } from '../../../../api/resultados_axios';
+import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 
 const ClassPage = () => {
     const API_URL = 'https://softskills-api.onrender.com/';
@@ -34,6 +34,8 @@ const ClassPage = () => {
     const [trabalhos, setTrabalhos] = useState([]);
     const [carregar, setCarregar] = useState(true);
     const [erro, setErro] = useState(null);
+    const [loadingCertificado, setLoadingCertificado] = useState(false);
+    const [dotsCertificado, setDotsCertificado] = useState(".");
 
     const { cursoId } = useParams();
     const { user } = useUser();
@@ -148,6 +150,7 @@ const ClassPage = () => {
 
     const handleTransferirCertificado = async () => {
         try {
+            setLoadingCertificado(true);
             const certificadoHtml = await gerar_certificado(curso.id_curso, user.id_utilizador);
             const printWindow = window.open('', '_blank');
             printWindow.document.write(certificadoHtml);
@@ -156,8 +159,18 @@ const ClassPage = () => {
             // printWindow.print();
         } catch (error) {
             alert('Erro ao transferir certificado!');
+        } finally {
+            setLoadingCertificado(false);
         }
     }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setDotsCertificado(prev => (prev.length <= 3 ? prev + "." : ""));
+        },500);
+
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -208,27 +221,30 @@ const ClassPage = () => {
                         ) : (
                             <>
                                 {tipoCurso === 'Assíncrono' && !cursoTerminado() && (
-                                    <VideoPlayer
-                                        key={videoUrl}
-                                        videoUrl={videoUrl}
-                                        erro={erro}
-                                    />
+                                    <>
+                                        <VideoPlayer
+                                            key={videoUrl}
+                                            videoUrl={videoUrl}
+                                            erro={erro}
+                                        />
+                                        <h3 className="mb-3 mt-3">{tituloAula}</h3>
+                                    </>
                                 )}
                                 {(tipoCurso === 'Síncrono' || cursoTerminado()) && (
-                                    <img
-                                        src={imagemCurso || `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCurso)}&background=random&bold=true`}
-                                        onError={(e) => {
-                                            e.target.onerror = null;
-                                            e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCurso)}&background=random&bold=true`;
-                                        }}
-                                        alt="Foto do curso"
-                                        className='rounded-4'
-                                        style={{ width: "100%", height: "575px", objectFit: "cover" }}
-                                    />
+                                    <>
+                                        <img
+                                            src={imagemCurso || `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCurso)}&background=random&bold=true`}
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nomeCurso)}&background=random&bold=true`;
+                                            }}
+                                            alt="Foto do curso"
+                                            className='rounded-4'
+                                            style={{ width: "100%", height: "575px", objectFit: "cover" }}
+                                        />
+                                        <div className="mb-3 mt-3"></div>
+                                    </>
                                 )}
-
-                                <h3 className="mb-3 mt-3">{tituloAula}</h3>
-
                                 <Tabs defaultActiveKey="aulas"
                                     className="mb-4 nav-justified custom-tabs"
                                     activeKey={activeTab}
@@ -237,7 +253,7 @@ const ClassPage = () => {
                                     {cursoTerminado() && (
                                         <Tab eventKey="certificado" title={<span className='fw-bold'>CERTIFICADO</span>}>
                                             <div className="mt-4">
-                                                {notaFinal >= 9.5 ? (
+                                                {(notaFinal >= 9.5 || tipoCurso === 'Assíncrono') ? (
                                                     <>
                                                         <h3>Parabéns por concluir o curso!</h3>
                                                         <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
@@ -275,9 +291,15 @@ const ClassPage = () => {
                                                                 <div className="fw-bold">Certificado - {curso.nome_curso}.pdf</div>
                                                                 <div className="text-muted" style={{ fontSize: 14 }}>PDF</div>
                                                             </div>
-                                                            <button className="btn btn-primary" onClick={handleTransferirCertificado}>
-                                                                Gerar
-                                                            </button>
+                                                            {loadingCertificado ? (
+                                                                <button className='btn btn-primary' disabled>
+                                                                    A gerar{dotsCertificado}
+                                                                </button>
+                                                            ) : (
+                                                                <button className='btn btn-primary' onClick={handleTransferirCertificado}>
+                                                                    Gerar
+                                                                </button>
+                                                            )}
                                                         </div>
                                                     ) : (
                                                         <span className="text-danger fw-bold ms-3">Sem aproveitamento</span>

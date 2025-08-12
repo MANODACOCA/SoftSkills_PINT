@@ -80,11 +80,11 @@ const CreateCourse = () => {
             data_fim_curso,
         } = cursos;
 
-        const dToday = new Date(`${todayStr}T00:00:00`);
-        const dInscIni = new Date(`${data_inicio_inscricao}T00:00:00`);
-        const dInscFim = new Date(`${data_fim_inscricao}T23:59:59`);
-        const dCursoIni = new Date(`${data_inicio_curso}T00:00:00`);
-        const dCursoFim = new Date(`${data_fim_curso}T23:59:59`);
+        const dToday = new Date(`${todayStr}`);
+        const dInscIni = new Date(`${data_inicio_inscricao}`);
+        const dInscFim = new Date(`${data_fim_inscricao}`);
+        const dCursoIni = new Date(`${data_inicio_curso}`);
+        const dCursoFim = new Date(`${data_fim_curso}`);
 
         if ([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
             Swal.fire({
