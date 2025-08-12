@@ -52,8 +52,11 @@ export const columnsCursos = [
   },
   { label: 'Estado',   render: (item) => {
     const data_atual = new Date();
+    data_atual.setHours(0,0,0,0);
     const dataInicioCurso = new Date(item.data_inicio_curso);
+    dataInicioCurso.setHours(0,0,0,0);
     const dataFimCurso = new Date(item.data_fim_curso);
+    dataFimCurso.setHours(0,0,0,0);
 
     if(dataFimCurso < data_atual) return <span className=" badge bg-danger" style={{width: '75px'}}>Concluído</span>;
 
@@ -61,7 +64,7 @@ export const columnsCursos = [
 
     if(dataInicioCurso > data_atual) return <span className="badge"  style={{ backgroundColor: '#ecb100ff', width: '75px'}}>Por iniciar</span>;
 
-    if (dataInicioCurso < data_atual && dataFimCurso > data_atual) return <span className="badge bg-success" style={{width: '75px'}}>Em curso</span>;
+    if (dataInicioCurso <= data_atual && dataFimCurso >= data_atual) return <span className="badge bg-success" style={{width: '75px'}}>Em curso</span>;
     }
   },
   {

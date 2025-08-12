@@ -147,7 +147,9 @@ const CourseTable = () => {
 
     const renderActions = (item) => {
         const data_atual = new Date();
+        data_atual.setHours(0,0,0,0);
         const dataFimCurso = new Date(item.data_fim_curso);
+        dataFimCurso.setHours(0,0,0,0);
 
         return (
             <div className="d-flex">

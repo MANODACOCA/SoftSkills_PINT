@@ -18,6 +18,7 @@ import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterial
 import { FaVideo, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWord } from 'react-icons/fa';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
+import { IoIosArrowDropdown, IoIosArrowDropup } from 'react-icons/io';
 
 const EditCourse = () => {
     //#region Variaveis
@@ -358,24 +359,27 @@ const EditCourse = () => {
             );
         }
         return (
-            <div>
-                <i className={`bi ${isExpanded ? 'bi-arrow-up' : 'bi-arrow-down'}`}></i>
+            <div className="d-flex align-items-center justify-content-center">
+                {isExpanded
+                    ? <IoIosArrowDropup size={22} color="	#444444" />
+                    : <IoIosArrowDropdown size={22} color="	#444444" />
+                }
             </div>
         );
 
     }
 
     const renderActionsAula = (item) => {
-        if (isViewMode) return null;
+    if (isViewMode) return null;
         return (
             <div className="d-flex">
-                <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreateAula(item.id_aula, item)}>
+                <button className="btn btn-outline-primary me-2" onClick={(e) => { e.stopPropagation(); HandleEditCreateAula(item.id_aula, item)}}>
                     <i className="bi bi-pencil"></i>
                 </button>
-                <button className="btn btn-outline-success me-2" onClick={() => handleAddConteudoAula(item.id_aula)}>
+                <button className="btn btn-outline-success me-2" onClick={(e) =>{ e.stopPropagation(); handleAddConteudoAula(item.id_aula)}}>
                     <i className="bi bi-file-earmark-plus"></i>
                 </button>
-                <button className="btn btn-outline-danger" onClick={() => handleDeleteAula(item.id_aula)}>
+                <button className="btn btn-outline-danger" onClick={(e) =>{ e.stopPropagation(); handleDeleteAula(item.id_aula)}}>
                     <i className="bi bi-trash"></i>
                 </button>
             </div>
