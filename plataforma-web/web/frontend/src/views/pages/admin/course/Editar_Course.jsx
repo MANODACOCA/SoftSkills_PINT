@@ -188,27 +188,18 @@ const EditCourse = () => {
 
     const handleSubmitCurso = async (e) => {
         e.preventDefault();
-
-        const dToday = new Date(`${todayStr}T00:00:00`);
-        const dInscIni = new Date(`${cursos.data_inicio_inscricao}T00:00:00`);
-        const dInscFim = new Date(`${cursos.data_fim_inscricao}T23:59:59`);
-        const dCursoIni = new Date(`${cursos.data_inicio_curso}T00:00:00`);
-        const dCursoFim = new Date(`${cursos.data_fim_curso}T23:59:59`);
-
-        if (cursos.isassincrono === false && !sincrono.id_formador) {
+        
+        const dToday = new Date(`${todayStr}`);
+        const dInscIni = new Date(`${cursos.data_inicio_inscricao}`);
+        const dInscFim = new Date(`${cursos.data_fim_inscricao}`);
+        const dCursoIni = new Date(`${cursos.data_inicio_curso}`);
+        const dCursoFim = new Date(`${cursos.data_fim_curso}`);
+        
+        if(cursos.isassincrono === false && !sincrono.id_formador){
             Swal.fire({
                 icon: "error",
                 title: "Erro",
                 text: "Para cursos síncronos, é obrigatorio selecionar um formador"
-            });
-            return;
-        }
-
-        if ([dInscIni, dInscFim, dCursoIni, dCursoFim].some((d) => d && d < dToday)) {
-            Swal.fire({
-                icon: "error",
-                title: "Datas inválidas",
-                text: "Nenhuma data pode ser anterior a hoje",
             });
             return;
         }
