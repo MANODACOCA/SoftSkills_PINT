@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./filter_menu.css";
-import { getCategoriaAreaTopico } from '../../../api/topico_axios'
+import { getCategoriaAreaTopicoRequired } from '../../../api/topico_axios'
 
 
 const FilterMenu = ({ IdsTopicos, closeMenu }) => {
@@ -14,7 +14,7 @@ const FilterMenu = ({ IdsTopicos, closeMenu }) => {
 
   const fetchCategoriasAreasTopicos = async () => {
     try {
-      const data = await getCategoriaAreaTopico();
+      const data = await getCategoriaAreaTopicoRequired();
       setCategoriasAreasTopicos(data);
     } catch (error) {
       console.error('Erro ao encontrar Tópicos!');

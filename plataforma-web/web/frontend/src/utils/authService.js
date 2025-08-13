@@ -50,7 +50,6 @@ const TokenChecker = () => {
       if (!isLoginPage || !isMainPage) {
         if (token) {
           localStorage.removeItem("token");
-          alert("Sessão expirada.  Por favor, efetue novamente o login.");
           Swal.fire({
             icon: "error",
             title: "Oops... Sessão expirada!",

@@ -8,8 +8,11 @@ import { create_formadores } from "../../../../api/formadores_axios";
 import { debounce } from 'lodash';
 import { delete_pedidos_upgrade, list_pedidos_upgrade } from "../../../../api/pedidos_upgrade_cargo_axios";
 import { ColumnsUpgradeUser } from "../../../components/table/ColumnsUpgradeUser";
+import { useUser } from '../../../../utils/useUser';
 
 const UsersTables = () => {
+    const { User } = useUser();
+    console.log("TESTETETETE", User);
     const [user, setuser] = useState([]);
     const opcoes = ['Utilizadores', 'Pedidos'];
     const [opcao, setOpcao] = useState("Utilizadores");

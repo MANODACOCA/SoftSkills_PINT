@@ -22,6 +22,30 @@ async function getCategoriaAreaTopico() {
     })
 }
 
-module.exports ={
-    getCategoriaAreaTopico
+
+async function getCategoriaAreaTopicoRequired() {
+    let categoria_area_topico = [];
+
+    return categoria_area_topico = await categoria.findAll({
+        include: [
+            {
+                model: area,
+                as: "areas",
+                required: true,
+                include: [
+                    {
+                        model: topico,
+                        as: "topicos",
+                        required: true,
+                        attributes: ['id_topico', 'id_area', 'nome_topico', 'descricao_top'],
+                    }
+                ]
+            }
+        ]
+    })
+}
+
+module.exports = {
+    getCategoriaAreaTopico,
+    getCategoriaAreaTopicoRequired
 };

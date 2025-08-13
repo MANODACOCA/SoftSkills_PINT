@@ -58,7 +58,9 @@ const WorkCard = ({ trabalho, index }) => {
             </div>
 
             {loading ? (
-                <div></div>
+                <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm border-0' onClick={onClick} variant="primary" style={{ width: "200px" }} disabled>
+                    A carregar...
+                </Button>
             ) : isSubmitted ? (
                 <div>
                     <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm bg-success border-0' onClick={onClick} variant="primary" style={{ width: "200px" }}>

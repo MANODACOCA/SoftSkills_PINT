@@ -19,7 +19,7 @@ const HistoryUser = () => {
     const [dataInicio, setDataInicio] = useState('');
     const [dataFim, setDataFim] = useState('');
     const [loadingUser, setLoadingUser] = useState(true);
-    const [loadingDados, setLoadingDados] = useState(false);
+    const [loadingDados, setLoadingDados] = useState(true);
 
     const handleApply = (inicio, fim) => {
         setDataInicio(inicio);
@@ -33,6 +33,7 @@ const HistoryUser = () => {
 
     const fetchEnrolledCourses = async (userId, searchTerm = ' ', dataInicio = '', dataFim = '') => {
         try {
+            setLoadingDados(true);
             const data = await getEnrolledCourses(userId, 'todos', searchTerm || " ", dataFim || null, dataInicio || null);
 
             const formatted = data.map(item => {
@@ -74,7 +75,6 @@ const HistoryUser = () => {
 
     const fetchCursosLecionadosTerminados = async (userId, searchTerm = ' ', dataInicio = '', dataFim = '') => {
         try {
-            setLoadingDados(true);
             const data = await getCursosLecionadosTerminados(userId, searchTerm || " ", dataFim || null, dataInicio || null);
             setCursosLecionadosTerminados(data);
             console.log(data);
@@ -124,7 +124,6 @@ const HistoryUser = () => {
         fetchCursosLecionadosAtualmente(id, searchTerm, dataInicio, dataFim);
         fetchCursosLecionadosTerminados(id, searchTerm, dataInicio, dataFim);
     }, [id, searchTerm, dataInicio, dataFim])
-
 
     useEffect(() => {
         fetchUtilizador(id);
@@ -183,12 +182,12 @@ const HistoryUser = () => {
                                         onClean={handleClean}
                                     />
                                     <div className="mt-4">
-                                        {cursosInscrito.length === 0 ? (
+                                        {loadingDados ? (
+                                            <SpinnerBorder />
+                                        ) : cursosInscrito.length === 0 ? (
                                             <div className="d-flex justify-content-center p-5">
                                                 <span className="text-secondary">Este utilizador não se encontra inscrito em nenhum curso</span>
                                             </div>
-                                        ) : loadingDados ? (
-                                            <SpinnerBorder />
                                         ) : (
                                             cursosInscrito.map((cu, index) => {
                                                 return (
@@ -218,12 +217,12 @@ const HistoryUser = () => {
                                         onClean={handleClean}
                                     />
                                     <div className="mt-4">
-                                        {cursosTerminados.length === 0 ? (
+                                        {loadingDados ? (
+                                            <SpinnerBorder />
+                                        ) : cursosTerminados.length === 0? (
                                             <div className="d-flex justify-content-center p-5">
                                                 <span className="text-secondary">Este utilizador ainda não terminou nenhum curso</span>
                                             </div>
-                                        ) : loadingDados ? (
-                                            <SpinnerBorder />
                                         ) : (
                                             cursosTerminados.map((cu, index) => {
                                                 return (
