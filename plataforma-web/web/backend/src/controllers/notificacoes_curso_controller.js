@@ -1,4 +1,4 @@
-//const model = require('../models/notificacoes_curso');;
+
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).notificacoes_curso;

@@ -21,6 +21,10 @@ const SidebarFormando = ({ toggleSidebar, collapsed }) => {
     useEffect(() => {
         if (user) {
             getCountNotificationsUser();
+            const interval = setInterval(() => {
+                getCountNotificationsUser();
+            }, 5*60*1000);
+            return () => clearInterval(interval);
         }
     }, [user]);
 
@@ -121,7 +125,9 @@ const SidebarFormando = ({ toggleSidebar, collapsed }) => {
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-bell fs-4 px-2"></i>
                                 Notificações
-                                <span className="badge ms-2 rounded-5" style={{ background: '#e00000ff' }}>{totalNotificacoes > 9 ? '9+' : totalNotificacoes}</span>
+                                {totalNotificacoes > 0 && (
+                                    <span className="badge ms-2 rounded-5" style={{ background: '#e00000ff' }}>{totalNotificacoes > 9 ? '9+' : totalNotificacoes}</span>
+                                )}
                             </div>
                         }
                         {effectiveCollapsed &&
@@ -131,19 +137,20 @@ const SidebarFormando = ({ toggleSidebar, collapsed }) => {
                                         top: '-3px',
                                         right: '-6px',
                                     }}>
-                                    <span
-                                        className="badge ms-2 rounded-5 d-flex justify-content-center align-items-center"
-                                        style={{
-                                            background: '#e00000ff',
-                                            width: '24px',
-                                            height: '24px',
-                                            fontSize: '12px',
-                                            padding: '0'
-                                        }}
-                                    >
-                                        {totalNotificacoes > 9 ? '9+' : totalNotificacoes}
-                                    </span>
-
+                                    {totalNotificacoes > 0 && (
+                                        <span
+                                            className="badge ms-2 rounded-5 d-flex justify-content-center align-items-center"
+                                            style={{
+                                                background: '#e00000ff',
+                                                width: '24px',
+                                                height: '24px',
+                                                fontSize: '12px',
+                                                padding: '0'
+                                            }}
+                                        >
+                                            {totalNotificacoes > 9 ? '9+' : totalNotificacoes}
+                                        </span>
+                                    )}
                                 </div>
                                 <i className="bi bi-bell fs-4 px-2"></i>
                                 <small className='text-truncate d-inline-block text-ellipsis'>Notificações</small>
