@@ -16,7 +16,7 @@ async function getNotificationOfCourse(userID, order) {
             model: cursos,
             as: 'id_curso_curso',
           },
-          { 
+          {
             model: utilizador,
             as: 'id_utilizador_utilizador',
           }
@@ -33,6 +33,23 @@ async function getNotificationOfCourse(userID, order) {
   }
 }
 
+async function countNotificationOfUser(userID) {
+  try {
+    if (!userID) return res.status(400).json({ error: 'Falta o userId.' });
+
+    const total = await model.count({
+      where: { id_utilizador: userID },
+    });
+
+    return total || 0;
+
+  } catch (error) {
+    console.error('Erro ao obter count de notificaoes:', error);
+    throw error;
+  }
+}
+
 module.exports = {
-  getNotificationOfCourse
+  getNotificationOfCourse,
+  countNotificationOfUser
 };

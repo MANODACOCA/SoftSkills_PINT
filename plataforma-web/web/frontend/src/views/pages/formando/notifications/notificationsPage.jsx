@@ -20,7 +20,6 @@ const NotificationPage = () => {
             const id = user.id_utilizador;
             const cursos = await find_notificacao_curso(id, ord);
             setNotificacoes(cursos);
-            setTotalNotificacoes(cursos.length);
         } catch (error) {
             console.error('Erro ao carregar notificações:', error);
         } finally {

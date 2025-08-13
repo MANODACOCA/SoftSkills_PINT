@@ -82,4 +82,14 @@ controllers.getCursoNotificationsController = async (req,res)=>{
   }
 }
 
+controllers.getUtilizadorCountNotificationsController = async (req,res)=>{
+  try {
+    const {userID} = req.params;
+     const count = await countNotificationOfUser(userID);
+     res.status(200).json(count); 
+  } catch(error) {
+    res.status(500).json({erro:'Erro ao obter count de notificaoes'});
+  }
+}
+
 module.exports = controllers;

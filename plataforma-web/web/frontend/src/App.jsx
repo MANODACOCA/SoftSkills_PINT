@@ -65,9 +65,6 @@ import HistoryUser from './views/pages/admin/user/Historico_User.jsx';
 import CategoriaAreaTopicoTable from './views/pages/admin/categoria_area_topico/CategoriaAreaTopico';
 
 
-import { NotificationsProvider } from './views/pages/formando/notifications/notificationsProvider.jsx';
-
-
 function App() {
 
   return (
@@ -97,9 +94,9 @@ function App() {
         <Route
           element={
             <ProtectedRoute allowedRoles={['formando', 'formador', 'admin']}>
-               <NotificationsProvider>
-              <BaseLayout />
-               </NotificationsProvider>
+              <NotificationsProvider>
+                <BaseLayout />
+              </NotificationsProvider>
             </ProtectedRoute>
           }
         >
@@ -118,9 +115,7 @@ function App() {
         <Route
           element={
             <ProtectedRoute allowedRoles={['formando']}>
-              <NotificationsProvider>
                 <BaseLayout />
-              </NotificationsProvider>
             </ProtectedRoute>
           }
         >

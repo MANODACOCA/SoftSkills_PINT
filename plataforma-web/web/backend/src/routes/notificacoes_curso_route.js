@@ -24,5 +24,6 @@ router.delete('/delete/:id',controller.delete);
 
 //Nossas rotas:
 router.get('/find_notificacoes_curso/:userID', controller.getCursoNotificationsController);
+router.get('/user_notificacoes_count/:userID', controller.getUtilizadorCountNotificationsController);
 
 module.exports = router;

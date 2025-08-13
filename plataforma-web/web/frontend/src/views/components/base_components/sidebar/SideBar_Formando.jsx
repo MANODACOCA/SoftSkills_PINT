@@ -1,11 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import './Sidebar.css';
-import { NotificationsContext } from '../../../pages/formando/notifications/notificationsContext';
+import {} from '';
 
 const SidebarFormando = ({ toggleSidebar, collapsed }) => {
     const [isPequena, setIsPequena] = useState(window.innerWidth <= 768);
-    const { totalNotificacoes } = useContext(NotificationsContext);
+    const [totalNotificacoes, setTotalNotificacoes] = useState("");
+
+    
 
     useEffect(() => {
         const handleResize = () => {
@@ -104,7 +106,7 @@ const SidebarFormando = ({ toggleSidebar, collapsed }) => {
                             <div className='d-flex align-items-center'>
                                 <i className="bi bi-bell fs-4 px-2"></i>
                                 Notificações
-                                <span className="badge ms-2" style={{ background: '#e00000ff' }}>{totalNotificacoes > 9 ? '9+' : totalNotificacoes}</span>
+                                <span className="badge ms-2 rounded-5" style={{ background: '#e00000ff' }}>{totalNotificacoes > 9 ? '9+' : totalNotificacoes}</span>
                             </div>
                         }
                         {effectiveCollapsed &&
