@@ -20,6 +20,7 @@ import { MdDateRange } from "react-icons/md";
 import { useUser } from '../../../utils/useUser';
 import { parseDateWithoutTimezone } from '../shared_functions/FunctionsUtils';
 import { get_entrega_trabalhos, create_entrega_trabalhos, update_entrega_trabalhos, delete_entrega_trabalhos } from '../../../api/entrega_trabalhos_axios';
+import { get_avaliacoes_et } from '../../../api/avaliacoes_et_axios';
 import Swal from 'sweetalert2'
 
 
@@ -59,15 +60,18 @@ const WorkSubmit = ({ trabalho }) => {
     const [nameFile, setNameFile] = useState(null);
     const [submittedFile, setSubmittedFile] = useState(null);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [id_et, setid_et] = useState("");
+    const [notaFinal, setNotaFinal] = useState("");
     const [loading, setLoading] = useState(true);
+    const [loadingNota, setLoadingNota] = useState(true);
     const fileInputRef = useRef(null);
 
-    console.log(isSubmitted);
     //vai verificar se sumteu algum ficheiro
     const verifySubmitWork = async () => {
         try {
             const res = await get_entrega_trabalhos(trabalho.id_trabalho, user?.id_utilizador);
             if (res.jaEntregou) {
+                setid_et(res.data.id_entrega_trabalho);
                 setSubmittedFile(res.data.caminho_et);
                 setIsSubmitted(true);
 
@@ -81,7 +85,6 @@ const WorkSubmit = ({ trabalho }) => {
             setLoading(false);
         }
     };
-
 
     useEffect(() => {
         verifySubmitWork();
@@ -199,8 +202,29 @@ const WorkSubmit = ({ trabalho }) => {
     };
     //vai servir para eliminar trabalhos
 
+    //vai buscar a nota do formando
+    const procurarAvaliacaoETdeForm = async () => {
+        try {
+            setLoadingNota(true);
+            const nota = await get_avaliacoes_et(id_et);
+            setNotaFinal(nota.avaliacao);
+        } catch (error) {
+            console.error('Erro ao ir bucar nota de entrega de trabalho:', error);
+        } finally {
+            setLoadingNota(false);
+        }
+    }
 
-    if (loading) {
+    useEffect(() => {
+        if (id_et) {
+            procurarAvaliacaoETdeForm();
+        }
+    }, [id_et]);
+    //vai buscar a nota do formando
+
+
+
+    if (loading || loadingNota) {
         return <SpinnerBorder />;
     }
 
@@ -242,10 +266,23 @@ const WorkSubmit = ({ trabalho }) => {
                 {/* Descrição */}
 
                 <section className="mb-4">
-                    <h4 className="fw-semibold mb-3">Data e hora de entrega:</h4>
-                    <div className="d-flex align-items-center text-muted lh-base gap-2">
-                        <MdDateRange size={20} /><p className="text-muted mb-0">{trabalho.data_entrega_tr.split('T')[0]} | {trabalho.data_entrega_tr.split('T')[1].slice(0, 5)}</p>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <div>
+                            <h4 className="fw-semibold mb-3">Data e hora de entrega:</h4>
+                            <div className="d-flex align-items-center text-muted lh-base gap-2">
+                                <MdDateRange size={20} /><p className="text-muted mb-0">{trabalho.data_entrega_tr.split('T')[0]} | {trabalho.data_entrega_tr.split('T')[1].slice(0, 5)}</p>
+                            </div>
+                        </div>
+                        {notaFinal && (
+                            <div className='d-flex flex-column justify-content-center align-items-center'>
+                                <h4 className="fw-semibold mb-3">Nota:</h4>
+                                <span className={`badge ${notaFinal >= 9.5 ? 'bg-success' : 'bg-danger'}`}>
+                                    {notaFinal}
+                                </span>
+                            </div>
+                        )}
                     </div>
+
                 </section>
 
                 {/* Entrega */}
@@ -313,7 +350,7 @@ const WorkSubmit = ({ trabalho }) => {
                                 ><FaExternalLinkAlt />
                                 </Button>
                             )}
-                            {DataAtual <= DataEntrega && (
+                            {(DataAtual <= DataEntrega && !notaFinal) && (
                                 <Button
                                     variant="outline-danger"
                                     size="sm"

@@ -167,7 +167,7 @@ const ClassPage = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             setDotsCertificado(prev => (prev.length <= 3 ? prev + "." : ""));
-        },500);
+        }, 500);
 
         return () => clearInterval(interval);
     }, []);
@@ -190,7 +190,6 @@ const ClassPage = () => {
             fetchNotaFinal(user.id_utilizador, curso.id_curso).then(setNotaFinal);
         }
     }, [curso, user?.id_utilizador]);
-
     return (
         <>
             {carregar ? (
@@ -257,6 +256,14 @@ const ClassPage = () => {
                                                     <>
                                                         <h3>Parabéns por concluir o curso!</h3>
                                                         <p>O teu esforço e dedicação levaram-te a este marco importante. Continua a crescer e a conquistar novos objetivos!</p>
+                                                    </>
+                                                ) : !notaFinal ? (
+                                                    <>
+                                                        <h3>A tua avaliação está a caminho!</h3>
+                                                        <p>
+                                                            A tua nota ainda não foi atribuída, mas não te preocupes — o processo de
+                                                            correção está em andamento.
+                                                        </p>
                                                     </>
                                                 ) : (
                                                     <>
@@ -326,7 +333,7 @@ const ClassPage = () => {
                                     <Tab eventKey="aulas" title={<span className='fw-bold'>AULAS</span>} disabled={curso?.isassincrono && cursoTerminado()} tabClassName={curso?.isassincrono && cursoTerminado() ? 'tab-disabled' : ''}>
 
                                         <div className="mt-4">
-                                            <h3 className='mb-4'>Conteúdos</h3>
+                                            <h3 className='mb-4'>Aulas</h3>
                                             {aulas && aulas.length > 0 ? aulas.map((aula, index) => (
                                                 <CourseModule
                                                     key={aula.id_aula}
@@ -361,9 +368,9 @@ const ClassPage = () => {
                                     </Tab>
 
                                     <Tab eventKey="material" title={<span className='fw-bold'>MATERIAL DE APOIO</span>} disabled={curso?.isassincrono && cursoTerminado()} tabClassName={curso?.isassincrono && cursoTerminado() ? 'tab-disabled' : ''}>
+                                        <h3>Material de Apoio</h3>
                                         {materialApoio && materialApoio.length > 0 ? (
                                             <div className="mt-4">
-                                                <h3>Material de Apoio</h3>
                                                 <div className="row g-4 mt-1">
                                                     {materialApoio.map((material, index) => (
                                                         <div className="col-md-6 col-lg-4" key={material.id_material_apoio}>

@@ -24,5 +24,7 @@ router.delete('/delete/:id',controller.delete);
 
 //Nossas Rotas:
 router.get('/categoria_area_topico', controller.getCategoriaAreaTopico);
+router.get('/categoria_area_topico_required', controller.getCategoriaAreaTopicoRequired);
+
 
 module.exports = router;

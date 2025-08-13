@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDayMonthYear, parseDateWithoutTimezone } from '../../components/shared_functions/FunctionsUtils';
 import { FaCalendarAlt, FaExclamationTriangle, FaHourglassStart } from 'react-icons/fa';
 import { BiSolidHeart } from 'react-icons/bi';
-import { IoMdCheckmark, IoMdClose } from "react-icons/io";
+import { IoMdCheckmark, IoMdClose, IoIosTimer  } from "react-icons/io";
 import './CardHighlight.css';
 
 const FeaturedCourseCard = ({
@@ -175,20 +175,22 @@ const FeaturedCourseCard = ({
                       Ver Curso
                     </button>
                   )}
-                  {notaFinal && (
-                    <>
-                      {notaFinal > 9.4 ? (
-                        <button className="btn btn-success px-3 rounded-4 d-flex align-items-center justufy-content-center gap-1" onClick={goToCertificado}>
-                          <span>Certificado </span>
-                          <IoMdCheckmark size={20} />
-                        </button>
-                      ) : (
-                        <button className="btn btn-danger px-3 rounded-4 d-flex align-items-center justify-content-center gap-1" onClick={goToCertificado}>
-                          <span>Certificado </span>
-                          <IoMdClose size={20} />
-                        </button>
-                      )}
-                    </>
+
+                  {notaFinal > 9.4 ? (
+                    <button className="btn btn-success px-3 rounded-4 d-flex align-items-center justufy-content-center gap-1" onClick={goToCertificado}>
+                      <span>Certificado </span>
+                      <IoMdCheckmark size={20} />
+                    </button>
+                  ) : !notaFinal ? (
+                    <button className="btn btn-secondary px-3 rounded-4 d-flex align-items-center justify-content-center gap-1" onClick={goToCertificado}>
+                      <span>Certificado </span>
+                      <IoIosTimer size={20} />
+                    </button>
+                  ) : (
+                    <button className="btn btn-danger px-3 rounded-4 d-flex align-items-center justify-content-center gap-1" onClick={goToCertificado}>
+                      <span>Certificado </span>
+                      <IoMdClose size={20} />
+                    </button>
                   )}
 
                 </div>
@@ -215,7 +217,7 @@ const FeaturedCourseCard = ({
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 999);
 
-    
+
     /*     CALCULO PARA FIM DE CURSO */
     const diffTimeEnd = endDate.getTime() - today.getTime();
 

@@ -1,4 +1,4 @@
-const {initModels} = require('../models/init-models');
+const { initModels } = require('../models/init-models');
 
 module.exports.criarNotifacoesGenerica = async (
     tipo,
@@ -11,20 +11,29 @@ module.exports.criarNotifacoesGenerica = async (
         const { inscricoes, formandos, notificacoes_curso } = initModels(sequelize);
 
         const utilizadoresInscritos = await inscricoes.findAll({
-            where: {id_curso},
+            where: { id_curso },
             include: [
                 {
-                    model: formandos, 
+                    model: formandos,
                     as: 'id_formando_formando',
                 }
-            ]    
+            ]
         });
 
         if (utilizadoresInscritos.length === 0) {
             return;
         }
 
-        const mensagem = `Informamos que a ${versao} do(a) ${tipo.toLowerCase()} foi concluída com sucesso. O conteúdo já está disponível para consulta.`;
+        let mensagem;
+        const artigo1 = tipo.toLowerCase() === 'aula' ? 'A' : 'O';
+        const artigo2 = tipo.toLowerCase() === 'aula' ? 'da' : 'do';
+
+        if (versao === 'criação') {
+            mensagem = `🎉 ${artigo1} ${tipo.toLowerCase()} foi criad${artigo1.toLowerCase()} com sucesso! O conteúdo já está disponível para consulta.`;
+        } else {
+            mensagem = `🔄 A atualização ${artigo2} ${tipo.toLowerCase()} foi concluída com sucesso! O conteúdo já se encontra disponível para consulta.`;
+        }
+
         const data_hora_notificacaocurso = new Date();
 
         const notificacao = utilizadoresInscritos.map((ui) => ({
