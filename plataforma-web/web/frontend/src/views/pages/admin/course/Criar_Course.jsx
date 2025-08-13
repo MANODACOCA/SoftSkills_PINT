@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { list_formadores } from "../../../../api/formadores_axios";
 import { getCategoriaAreaTopico } from "../../../../api/topico_axios";
-import { create_cursos } from "../../../../api/cursos_axios";
+import { create_cursos, getCourseAdminCursoTodoUm } from "../../../../api/cursos_axios";
 import ISO6391 from 'iso-639-1';
 import Select from 'react-select';
 import { useUser } from '../../../../utils/useUser';
 import { useLocation, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import SpinnerBorder from "../../../components/spinner-border/spinner-border";
 
 const CreateCourse = () => {
     const navigate = useNavigate();
@@ -24,13 +25,16 @@ const CreateCourse = () => {
     });
     const { user } = useUser();
 
-    const {state} = useLocation();
-    const cursoAnterior = state?.cursoAnterior || null;
+    const { state } = useLocation();
+    const cursoAnteriorState = state?.cursoAnterior || null;
+    const [cursoAnterior, setCursoAnterior] = useState({});
     const isNovaOcorrencia = !!cursoAnterior;
     const textareaRef = useRef(null);
 
     const todayStr = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" });
     const [cursoDataTouched, setCursoDataTouched] = useState(false);
+
+    const [loading, setLoading] = useState(cursoAnteriorState);
 
     const [cursos, setCursos] = useState({
         nome_curso: "",
@@ -67,6 +71,18 @@ const CreateCourse = () => {
             setCatAreaTop(response);
         } catch (error) {
             console.log('Erro ao ir buscar os categoria, área e tópico');
+        }
+    }
+
+    const fetchCursosOcorrencias = async () => {
+        try {
+            setLoading(true);
+            const cursos = await getCourseAdminCursoTodoUm(cursoAnteriorState);
+            setCursoAnterior(cursos);
+        } catch (error) {
+            console.log('Erro ao carregar dados do curso', error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -142,12 +158,12 @@ const CreateCourse = () => {
                 const payload = {
                     cursoData: {
                         ...cursos,
-                        horas_curso: cursos.horas_curso === "" ? 0 : Number(cursos.horas_curso), 
+                        horas_curso: cursos.horas_curso === "" ? 0 : Number(cursos.horas_curso),
                         data_inicio_inscricao: dInscIni.toISOString(),
                         data_fim_inscricao: dInscFim.toISOString(),
                         data_inicio_curso: dCursoIni.toISOString(),
                         data_fim_curso: dCursoFim.toISOString(),
-                    } ,
+                    },
                     sincrono: cursos.issincrono ? sincrono : null,
                 };
 
@@ -284,7 +300,7 @@ const CreateCourse = () => {
 
     const autoResize = () => {
         const el = textareaRef.current;
-        if(el) {
+        if (el) {
             el.style.height = 'auto';
             el.style.height = `${el.scrollHeight}px`;
         }
@@ -292,7 +308,7 @@ const CreateCourse = () => {
 
     const handleChange = (e) => {
         const value = e.target.value;
-        setCursos(prev => ({ ...prev, descricao_curso: value}));
+        setCursos(prev => ({ ...prev, descricao_curso: value }));
         autoResize();
     }
 
@@ -351,189 +367,205 @@ const CreateCourse = () => {
     }, [user])
 
     useEffect(() => {
-        if(cursoAnterior && user && catAreaTop.length > 0){
-            //console.log(cursoAnterior);
-            prepararCursoAnterior();
-            console.log(cursoAnterior);
+        if (cursoAnteriorState && user && catAreaTop.length > 0) {
+            fetchCursosOcorrencias();
         }
-    }, [cursoAnterior, user, catAreaTop]);
+    }, [cursoAnteriorState, user, catAreaTop]);
+
+    useEffect(() => {
+        if (cursoAnterior && Object.keys(cursoAnterior).length > 0 && user) {
+            prepararCursoAnterior();
+        }
+    }, [cursoAnterior, user]);
+
 
     return (
-        <div className='form-group'>
-            <div className='d-flex'>
-                <div className='col-md-9 pe-4 col-sm-10'>
-                    <form onSubmit={handleSubmit}>
-                        <div className='mx-5'>
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Nome do Curso</label>
-                                <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." value={cursos.nome_curso} onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required disabled={isNovaOcorrencia}/>
-                            </div>
+        <>
+            {loading ? (
+                <SpinnerBorder />
+            ) : (
+                <div className='form-group'>
+                    <div className='d-flex'>
+                        <div className='col-md-9 pe-4 col-sm-10'>
+                            <form onSubmit={handleSubmit}>
+                                <div className='mx-5'>
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Nome do Curso</label>
+                                        <input type="text" name="nome_curso" className='form-control' placeholder="Nome do curso..." value={cursos.nome_curso} onChange={(e) => setCursos(prev => ({ ...prev, nome_curso: e.target.value }))} required disabled={isNovaOcorrencia} />
+                                    </div>
 
-                            <div className='mt-2 position-relative'>
-                                <label className='form-label fw-bold'>Descrição do Curso</label>
-                                <textarea ref={textareaRef} name="descricao_curso" className='form-control pe-2' rows="4" placeholder="Descrição do curso..." value={cursos.descricao_curso} onChange={handleChange} maxLength={2000} required style={{ resize: 'none' }}/>
-                                <div className="position-absolute" style={{bottom: '5px', right: '10px', fontSize: '0.8rem', color: '#6c757d'}}>{cursos.descricao_curso.length}/2000</div>
-                            </div>
+                                    <div className='mt-2 position-relative'>
+                                        <label className='form-label fw-bold'>Descrição do Curso</label>
+                                        <textarea ref={textareaRef} name="descricao_curso" className='form-control pe-2' rows="4" placeholder="Descrição do curso..." value={cursos.descricao_curso} onChange={handleChange} maxLength={2000} required style={{ resize: 'none' }} />
+                                        <div className="position-absolute" style={{ bottom: '5px', right: '10px', fontSize: '0.8rem', color: '#6c757d' }}>{cursos.descricao_curso.length}/2000</div>
+                                    </div>
 
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold' >Tipologia</label>
-                                <select className='form-select' value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value); 
-                                    setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean, 
-                                    data_inicio_inscricao: "", data_fim_inscricao: "", data_inicio_curso: "", data_fim_curso: "" })); }} disabled={isNovaOcorrencia}>
-                                    <option value="">-- Escolher Tipologia --</option>
-                                    <option value="true">Síncrono</option>
-                                    <option value="false">Assíncrono</option>
-                                </select>
-                            </div>
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold' >Tipologia</label>
+                                        <select className='form-select' value={isSincrono} onChange={(e) => {
+                                            const valorBoolean = e.target.value === "true"; setIsSincrono(e.target.value);
+                                            setCursos(prev => ({
+                                                ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean,
+                                                data_inicio_inscricao: "", data_fim_inscricao: "", data_inicio_curso: "", data_fim_curso: ""
+                                            }));
+                                        }} disabled={isNovaOcorrencia}>
+                                            <option value="">-- Escolher Tipologia --</option>
+                                            <option value="true">Síncrono</option>
+                                            <option value="false">Assíncrono</option>
+                                        </select>
+                                    </div>
 
-                            {isSincrono !== "" && ( 
-                            <>
-                            <div className='row mt-2'>
-                                <div className='col'>
-                                    <label className='form-label fw-bold'>Início da Inscrição</label>
-                                    <input type="date" name="data_insc_ini" className='form-control' min={todayStr} value={cursos.data_inicio_inscricao} onChange={(e) => {
-                                        const value = e.target.value; 
-                                        setCursos(prev => ({ ...prev, data_inicio_inscricao: value, ...(cursos.isassincrono && { data_inicio_curso: value }) }));
-                                        setCursoDataTouched(true) }} required />
+                                    {isSincrono !== "" && (
+                                        <>
+                                            <div className='row mt-2'>
+                                                <div className='col'>
+                                                    <label className='form-label fw-bold'>Início da Inscrição</label>
+                                                    <input type="date" name="data_insc_ini" className='form-control' min={todayStr} value={cursos.data_inicio_inscricao} onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        setCursos(prev => ({ ...prev, data_inicio_inscricao: value, ...(cursos.isassincrono && { data_inicio_curso: value }) }));
+                                                        setCursoDataTouched(true)
+                                                    }} required />
+                                                </div>
+                                                <div className='col'>
+                                                    <label className='form-label fw-bold'>Fim da Inscrição</label>
+                                                    <input type="date" name="data_insc_fim" className='form-control' min={cursos.data_inicio_inscricao || todayStr} value={cursos.data_fim_inscricao} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_inscricao: e.target.value }))} required />
+                                                </div>
+                                            </div>
+
+                                            <div className='row mt-2'>
+                                                <div className='col'>
+                                                    <label className='form-label fw-bold'>Início do Curso</label>
+                                                    <input type="date" name="data_curso_ini" className={`form-control ${cursos.isassincrono ? 'bg-light text-muted' : ''}`} min={cursos.issincrono ? cursos.data_fim_inscricao || todayStr : cursos.data_inicio_inscricao || todayStr} value={cursos.data_inicio_curso}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+                                                            if (cursos.isassincrono && !cursos.data_inicio_inscricao) {
+                                                                setCursoDataTouched(true);
+                                                            } else {
+                                                                setCursos(prev => ({ ...prev, data_inicio_curso: value }));
+                                                                setCursoDataTouched(false);
+                                                            }
+                                                        }}
+                                                        required readOnly={cursos.isassincrono} />
+                                                    {cursos.isassincrono && cursoDataTouched && !cursos.data_inicio_inscricao && (
+                                                        <small className="text-danger">
+                                                            Primeiro selecione a <strong>data de início da inscrição</strong>. Essa data será usada automaticamente como início do curso.
+                                                        </small>
+                                                    )}
+                                                </div>
+
+                                                <div className='col'>
+                                                    <label className='form-label fw-bold'>Fim do Curso</label>
+                                                    <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} value={cursos.data_fim_curso} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_curso: e.target.value }))} required />
+                                                </div>
+                                            </div>
+                                        </>)}
+
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Idioma</label>
+                                        <Select
+                                            options={languageOptions}
+                                            value={selectedLanguage}
+                                            onChange={handleLanguageChange}
+                                            isClearable
+                                            placeholder="--Escolha o idioma--"
+                                            name="idioma"
+                                        />
+                                    </div>
+
+                                    {!cursos.isassincrono && (
+                                        <div className='mt-2'>
+                                            <label className='form-label fw-bold'>Horas do Curso</label>
+                                            <input type="number" step="0.5" min="0.5" name="horas_curso" className='form-control' placeholder="Horas do curso..." value={cursos.horas_curso || ""} onChange={(e) => setCursos(prev => ({ ...prev, horas_curso: parseInt(e.target.value) }))} required />
+                                        </div>
+                                    )}
+
+                                    {cursos.isassincrono == false && (
+                                        <div className='mt-2'>
+                                            <label className='mt-2 fw-bold'>Formador</label>
+                                            <select name="id_formador" className='form-select' value={formadorSelecionado} onChange={(e) => { setFormadorSelecionado(parseInt(e.target.value)); setSincrono(prev => ({ ...prev, id_formador: parseInt(e.target.value) })) }}>
+                                                <option value="">-- Selecionar Formador --</option>
+                                                {formadores.map((f) => {
+                                                    return (
+                                                        <option key={f.id_formador} value={f.id_formador}>{f.id_formador_utilizador.nome_utilizador}</option>
+                                                    );
+                                                })}
+                                            </select>
+                                            <label className='mt-2 fw-bold'>Descrição Formador</label>
+                                            <textarea name="descricao_formador" value={formadores.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly />
+                                            <label className='mt-2 fw-bold'>Número Vagas</label>
+                                            <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas ?? ''} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} />
+                                        </div>
+                                    )}
+
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Categoria</label>
+                                        <select className="form-select" value={categoria.toString()} onChange={(e) => setCategoria(e.target.value)} disabled={isNovaOcorrencia}>
+                                            <option value="">--Escolher Categoria--</option>
+                                            {catAreaTop.map((c) => {
+                                                return (
+                                                    <option key={c?.id_categoria} value={c?.id_categoria}>{c?.nome_cat}</option>
+                                                );
+                                            })}
+                                        </select>
+                                    </div>
+
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Área</label>
+                                        <select className="form-select" value={area.toString()} onChange={(e) => setArea(e.target.value)} disabled={isNovaOcorrencia}>
+                                            <option value="">--Escolher Área--</option>
+                                            {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.map((a) => {
+                                                return (
+                                                    <option key={a?.id_area} value={a?.id_area}>{a?.nome_area}</option>
+                                                );
+                                            })}
+                                        </select>
+                                    </div>
+
+                                    <div className='mt-2'>
+                                        <label className='form-label fw-bold'>Tópico</label>
+                                        <select className="form-select" value={topico.toString()}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setTopico(value);
+                                                setCursos(prev => ({ ...prev, id_topico: value ? parseInt(value) : "" }));
+                                            }}
+                                            disabled={isNovaOcorrencia}
+                                        >
+                                            {/*  onChange={(e) => { setTopico(parseInt(e.target.value)); setCursos(prev => ({ ...prev, id_topico: parseInt(e.target.value) })); }}> */}
+                                            <option value="">--Escolher Tópico--</option>
+                                            {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.find((ar) => ar.id_area.toString() == area)?.topicos?.map((t) => {
+                                                return (
+                                                    <option key={t?.id_topico} value={t?.id_topico}>{t?.nome_topico}</option>
+                                                );
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="d-flex justify-content-between">
+                                        <button type="submit" className='btn btn-success mt-3'>{cursoAnterior ? 'Criar Ocorrência' : 'Criar Curso'}</button>
+                                        <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Curso</button>
+                                    </div>
                                 </div>
-                                <div className='col'>
-                                    <label className='form-label fw-bold'>Fim da Inscrição</label>
-                                    <input type="date" name="data_insc_fim" className='form-control' min={cursos.data_inicio_inscricao || todayStr} value={cursos.data_fim_inscricao} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_inscricao: e.target.value }))} required />
-                                </div>
-                            </div>
-
-                            <div className='row mt-2'>
-                                <div className='col'>
-                                    <label className='form-label fw-bold'>Início do Curso</label>
-                                    <input type="date" name="data_curso_ini" className={`form-control ${cursos.isassincrono ? 'bg-light text-muted' : ''}`} min={cursos.issincrono ? cursos.data_fim_inscricao || todayStr : cursos.data_inicio_inscricao || todayStr} value={cursos.data_inicio_curso} 
-                                    onChange={(e) => { 
-                                        const value = e.target.value;
-                                        if(cursos.isassincrono && !cursos.data_inicio_inscricao) {
-                                            setCursoDataTouched(true);
-                                        } else {
-                                            setCursos(prev => ({ ...prev, data_inicio_curso: value }));
-                                            setCursoDataTouched(false); 
-                                        } 
-                                        }}
-                                        required readOnly={cursos.isassincrono}/>
-                                        {cursos.isassincrono && cursoDataTouched && !cursos.data_inicio_inscricao && (
-                                            <small className="text-danger">
-                                                Primeiro selecione a <strong>data de início da inscrição</strong>. Essa data será usada automaticamente como início do curso.
-                                            </small>
-                                        )}
-                                </div>
-                                
-                                <div className='col'>
-                                    <label className='form-label fw-bold'>Fim do Curso</label>
-                                    <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} value={cursos.data_fim_curso} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_curso: e.target.value }))} required />
-                                </div>
-                            </div>
-                            </> )}
-
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Idioma</label>
-                                <Select
-                                    options={languageOptions}
-                                    value={selectedLanguage}
-                                    onChange={handleLanguageChange}
-                                    isClearable
-                                    placeholder="--Escolha o idioma--"
-                                    name="idioma"
-                                />
-                            </div>
-                                        
-                            {!cursos.isassincrono && (
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Horas do Curso</label>
-                                <input type="number" step="0.5" min="0.5" name="horas_curso" className='form-control' placeholder="Horas do curso..." value={cursos.horas_curso || ""} onChange={(e) => setCursos(prev => ({ ...prev, horas_curso: parseInt(e.target.value) }))} required />
-                            </div>
-                            )}
-
-                            {cursos.isassincrono == false && (
-                                <div className='mt-2'>
-                                    <label className='mt-2 fw-bold'>Formador</label>
-                                    <select name="id_formador" className='form-select' value={formadorSelecionado} onChange={(e) => { setFormadorSelecionado(parseInt(e.target.value)); setSincrono(prev => ({ ...prev, id_formador: parseInt(e.target.value) })) }}>
-                                        <option value="">-- Selecionar Formador --</option>
-                                        {formadores.map((f) => {
-                                            return (
-                                                <option key={f.id_formador} value={f.id_formador}>{f.id_formador_utilizador.nome_utilizador}</option>
-                                            );
-                                        })}
-                                    </select>
-                                    <label className='mt-2 fw-bold'>Descrição Formador</label>
-                                    <textarea name="descricao_formador" value={formadores.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly />
-                                    <label className='mt-2 fw-bold'>Número Vagas</label>
-                                    <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas ?? ''} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} />
-                                </div>
-                            )}
-
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Categoria</label>
-                                <select className="form-select" value={categoria.toString()} onChange={(e) => setCategoria(e.target.value)} disabled={isNovaOcorrencia}>
-                                    <option value="">--Escolher Categoria--</option>
-                                    {catAreaTop.map((c) => {
-                                        return (
-                                            <option key={c?.id_categoria} value={c?.id_categoria}>{c?.nome_cat}</option>
-                                        );
-                                    })}
-                                </select>
-                            </div>
-
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Área</label>
-                                <select className="form-select" value={area.toString()} onChange={(e) => setArea(e.target.value)} disabled={isNovaOcorrencia}>
-                                    <option value="">--Escolher Área--</option>
-                                    {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.map((a) => {
-                                        return (
-                                            <option key={a?.id_area} value={a?.id_area}>{a?.nome_area}</option>
-                                        );
-                                    })}
-                                </select>
-                            </div>
-
-                            <div className='mt-2'>
-                                <label className='form-label fw-bold'>Tópico</label>
-                                <select className="form-select" value={topico.toString()}
-                                 onChange={(e) => {
-                                    const value = e.target.value;
-                                    setTopico(value);
-                                    setCursos(prev => ({ ...prev, id_topico: value ? parseInt(value) : "" }));
-                                }}
-                                disabled={isNovaOcorrencia}
-                                >
-                                {/*  onChange={(e) => { setTopico(parseInt(e.target.value)); setCursos(prev => ({ ...prev, id_topico: parseInt(e.target.value) })); }}> */}
-                                    <option value="">--Escolher Tópico--</option>
-                                    {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.find((ar) => ar.id_area.toString() == area)?.topicos?.map((t) => {
-                                        return (
-                                            <option key={t?.id_topico} value={t?.id_topico}>{t?.nome_topico}</option>
-                                        );
-                                    })}
-                                </select>
-                            </div>
-                            <div className="d-flex justify-content-between">
-                                <button type="submit" className='btn btn-success mt-3'>{cursoAnterior ? 'Criar Ocorrência' : 'Criar Curso'}</button>
-                                <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Curso</button>
-                            </div>
+                            </form>
                         </div>
-                    </form>
-                </div>
-                <div className='d-flex min-vh-100 flex-column mt-3'>
-                    <div className='sticky-card'>
-                        <div className='col-md-3 col-sm-2 bg-custom-light d-flex align-items-center flex-column h-100 w-100 p-3 rounded'>
-                            <img
-                                src={cursos?.imagem || "https://ui-avatars.com/api/?name=Novo+Curso&background=random&bold=true"}
-                                alt="Imagem de perfil"
-                                className='w-100 img-profile rounded-2 mb-2'
-                            />
-                            <div className='d-flex flex-column align-items-center'>
-                                <h5 className='m-1 mb-3'>{cursos?.nome_curso || 'Novo Curso'}</h5>
+                        <div className='d-flex min-vh-100 flex-column mt-3'>
+                            <div className='sticky-card'>
+                                <div className='col-md-3 col-sm-2 bg-custom-light d-flex align-items-center flex-column h-100 w-100 p-3 rounded'>
+                                    <img
+                                        src={cursos?.imagem || "https://ui-avatars.com/api/?name=Novo+Curso&background=random&bold=true"}
+                                        alt="Imagem de perfil"
+                                        className='w-100 img-profile rounded-2 mb-2'
+                                    />
+                                    <div className='d-flex flex-column align-items-center'>
+                                        <h5 className='m-1 mb-3'>{cursos?.nome_curso || 'Novo Curso'}</h5>
+                                    </div>
+                                    <button type="button" onClick={handleSubmitCursoImg} className='btn btn-color text-white w-100 mt-4'>{cursoAnterior ? 'Alterar Imagem' : 'Adicionar Imagem'}</button>
+                                </div>
                             </div>
-                            <button type="button" onClick={handleSubmitCursoImg} className='btn btn-color text-white w-100 mt-4'>{cursoAnterior ? 'Alterar Imagem' : 'Adicionar Imagem'}</button>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            )}
+        </>
     );
 }
 
