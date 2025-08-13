@@ -29,7 +29,7 @@ module.exports.criarNotifacoesGenerica = async (
         const artigo2 = tipo.toLowerCase() === 'aula' ? 'da' : 'do';
 
         if (versao === 'criação') {
-            mensagem = `🎉 ${artigo1} ${tipo.toLowerCase()} foi criad${artigo1.toLowerCase()} com sucesso! O conteúdo já está disponível para consulta.`;
+            mensagem = `✅ ${artigo1} ${tipo.toLowerCase()} foi criad${artigo1.toLowerCase()} com sucesso! O conteúdo já está disponível para consulta.`;
         } else {
             mensagem = `🔄 A atualização ${artigo2} ${tipo.toLowerCase()} foi concluída com sucesso! O conteúdo já se encontra disponível para consulta.`;
         }

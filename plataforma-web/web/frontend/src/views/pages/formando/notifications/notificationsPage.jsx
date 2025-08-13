@@ -1,13 +1,15 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import NotificationRow from "../../../components/notification_row/notification_row";
 import { delete_notificacoes_curso, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
 import { useUser } from '../../../../utils/useUser';
 import { Spinner } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { use } from 'react';
+import { NotificationsContext } from './notificationsContext';
 
 const NotificationPage = () => {
     const { user } = useUser();
+    const { setTotalNotificacoes } = useContext(NotificationsContext);
     const [notificacoes, setNotificacoes] = useState([]);
     const [ordenacao, setOrdenacao] = useState('recente');
     const [loading, setLoading] = useState(false);
@@ -18,6 +20,7 @@ const NotificationPage = () => {
             const id = user.id_utilizador;
             const cursos = await find_notificacao_curso(id, ord);
             setNotificacoes(cursos);
+            setTotalNotificacoes(cursos.length);
         } catch (error) {
             console.error('Erro ao carregar notificações:', error);
         } finally {
