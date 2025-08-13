@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/API/cursos_api.dart';
 import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import 'package:mobile/ui/core/shared/cursos/cursos_comp/tabbar_cursos_inscrito.dart';
+import 'package:mobile/utils/verifica_internet.dart';
 import '../../core/shared/export.dart';
 
 
@@ -54,22 +55,49 @@ class _CourseInscritoState extends State<CourseInscrito> {
                       width: MediaQuery.of(context).size.width,
                       height: 200,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(
-                          curso['imagem'],
-                          height: 135,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            final fallbackImg = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['nome_curso'])}&background=random&bold=true';
-                            return Image.network(
-                              fallbackImg,
-                              height: 135,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            );
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                        child: FutureBuilder<bool>(
+                          future: temInternet(),
+                          builder: (context, snapshot) {
+                            final online = snapshot.data ?? true;
+                            final nome = curso['nome_curso'];
+                            final imageUrl = Uri.https(
+                              'ui-avatars.com',
+                              '/api/',
+                              {
+                                'name': nome,
+                                'background': 'random',
+                                'bold': 'true',
+                              },
+                            ).toString();
+                            if (online) {
+                              return Image.network(
+                                curso['imagem'],
+                                width: double.infinity,
+                                height: 135,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.network(
+                                    imageUrl,
+                                    width: double.infinity,
+                                    height: 135,
+                                    fit: BoxFit.cover,
+                                  );
+                                },
+                              );
+                            } else {
+                              return Image.asset(
+                                'assets/course-horizontal.png',
+                                width: double.infinity,
+                                height: 135,
+                                fit: BoxFit.cover,
+                              );
+                            }
                           },
-                        )
+                        ),
                       ),
                     ),
                     SizedBox(height: 5,),

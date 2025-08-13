@@ -1,10 +1,11 @@
 import 'package:go_router/go_router.dart';
-import 'package:mobile/API/cursos_api.dart';
+import 'package:mobile/API/inscricao_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/utils/verifica_internet.dart';
 import 'package:provider/provider.dart';
 import '../../../../../utils/uteis.dart';
 import '../../export.dart';
+import 'package:http/http.dart' as http;
 
 class CardCourse extends StatefulWidget {
   const CardCourse({
@@ -33,8 +34,9 @@ class CardCourse extends StatefulWidget {
 }
 
 class _CardCourseState extends State<CardCourse> {
-  final CursosApi _api = CursosApi();
+  final InscricaoApi _api = InscricaoApi();
   bool inscrito = false;
+  int ? idUser;
 
   @override
   void initState() {
@@ -43,28 +45,42 @@ class _CardCourseState extends State<CardCourse> {
       final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
       if (userId != null) {
         print('ID do utilizador: $userId');
-        verificaInscrito(int.parse(userId), widget.id);
+        setState(() {
+          idUser = int.parse(userId);
+        });
       }
     });
   }
 
-  Future<void> verificaInscrito (int userId, int cursoId) async {
+  Future<bool> verificaInscrito (int userId, int cursoId) async {
     try {
-      final estaInscrito = await _api.verificarInscricao(userId, cursoId);
+      await _api.getInscricao(userId, cursoId);
       setState(() {
-        inscrito = estaInscrito;
+        inscrito = true;
       });
+      print('$inscrito');
+      return true;
     } catch (e) {
+      if(e is http.Response && e.statusCode == 404) {
+        setState(() {
+          inscrito = false;
+        });
+        print('$inscrito');
+        return false;
+      }
       print('Erro ao verificar inscrição: $e');
+      return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-          if(inscrito){
-              context.go('/cursos-inscritos', extra: widget.id);            
+      onTap: () async {
+          final estaInscrito =  await verificaInscrito( idUser!, widget.id);
+          if(!context.mounted) return;
+          if(estaInscrito){
+            context.go('/cursos-inscritos', extra: widget.id);            
           } else {
             context.go('/inscrever', extra: widget.id);
           }
@@ -86,7 +102,16 @@ class _CardCourseState extends State<CardCourse> {
                 future: temInternet(),
                 builder: (context, snapshot) {
                   final online = snapshot.data ?? true;
-                  final imageUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(widget.title)}&background=random&bold=true';
+                  final nome = widget.title;
+                  final imageUrl = Uri.https(
+                    'ui-avatars.com',
+                    '/api/',
+                    {
+                      'name': nome,
+                      'background': 'random',
+                      'bold': 'true',
+                    },
+                  ).toString();
                   if (online) {
                     return Image.network(
                       widget.img,
