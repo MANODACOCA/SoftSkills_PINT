@@ -148,7 +148,16 @@ class _InscreverState extends State<Inscrever> {
                         future: temInternet(),
                         builder: (context, snapshot) {
                           final online = snapshot.data ?? true;
-                          final imageUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['nome_curso'])}&background=random&bold=true';
+                          final nome = curso['nome_curso'];
+                          final imageUrl = Uri.https(
+                            'ui-avatars.com',
+                            '/api/',
+                            {
+                              'name': nome,
+                              'background': 'random',
+                              'bold': 'true',
+                            },
+                          ).toString();
                           if (online) {
                             return Image.network(
                               curso['imagem'],

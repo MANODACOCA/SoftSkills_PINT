@@ -36,7 +36,16 @@ class CardCourseEnrolled extends StatelessWidget {
                 future: temInternet(),
                 builder: (context, snapshot) {
                   final online = snapshot.data ?? true;
-                  final imageUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(curso['id_curso_curso']?['imagem'])}&background=random&bold=true';
+                  final nome = curso['id_curso_curso']?['nome_curso'];
+                  final imageUrl = Uri.https(
+                    'ui-avatars.com',
+                    '/api/',
+                    {
+                      'name': nome,
+                      'background': 'random',
+                      'bold': 'true',
+                    },
+                  ).toString();
                   if (online) {
                     return Image.network(
                       curso['id_curso_curso']?['imagem'],

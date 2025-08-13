@@ -4,8 +4,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile/API/cursos_api.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile/API/inscricao_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class MyCarousel extends StatefulWidget {
   const MyCarousel({super.key});
@@ -16,6 +18,7 @@ class MyCarousel extends StatefulWidget {
 
 class _MyCarouselState extends State<MyCarousel> {
   final CursosApi _api = CursosApi();
+  final InscricaoApi _apiInsc = InscricaoApi();
   Map<String, dynamic> slidecurso = {};
   bool inscrito = false;
 
@@ -45,11 +48,18 @@ class _MyCarouselState extends State<MyCarousel> {
 
   Future<void> verificaInscrito (int userId, int cursoId) async {
     try {
-      final estaInscrito = await _api.verificarInscricao(userId, cursoId);
+      _apiInsc.getInscricao(userId, cursoId);
       setState(() {
-        inscrito = estaInscrito;
+        inscrito = true;
       });
+      print('$inscrito');
     } catch (e) {
+      if(e is http.Response && e.statusCode == 404) {
+        setState(() {
+          inscrito = false;
+        });
+        print('$inscrito');
+      }
       print('Erro ao verificar inscrição: $e');
     }
   }
