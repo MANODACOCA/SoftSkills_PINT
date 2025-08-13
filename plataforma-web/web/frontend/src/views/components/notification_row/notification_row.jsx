@@ -1,9 +1,11 @@
 import React from 'react';
-import { daysMonthsYears, formatDayMonthYear } from '../shared_functions/FunctionsUtils';
+import { useNavigate } from 'react-router-dom';
+import { daysMonthsYears } from '../shared_functions/FunctionsUtils';
 import './notification_row.css'
 
 const NotificationRow = ({notification, onDelete}) => {
     console.log(notification);
+    const navigate = useNavigate();
     return(
         <div className="d-flex align-items-center justify-content-between">
             <div className='d-flex gap-4 align-items-center'>
@@ -19,9 +21,12 @@ const NotificationRow = ({notification, onDelete}) => {
                     <p>{notification.conteudo_notif_curso}</p>
                 </div>
             </div>
-            <div>
+            <div className='d-flex flex-column align-items-end gap-2'>
                 {daysMonthsYears(notification.data_hora_notificacaocurso)}
-                <div className="d-flex justify-content-end p-2">
+                <div className="d-flex justify-content-end gap-2">
+                    <button className='btn btn-outline-success' onClick={() => navigate(`/cursos/${notification.id_curso_curso.id_curso}`)}>
+                        <i className='bi bi-box-arrow-up-right'></i>
+                    </button>
                     <button className='btn btn-outline-danger' onClick={onDelete}>
                         <i className='bi bi-trash fs-5'></i>
                     </button>
