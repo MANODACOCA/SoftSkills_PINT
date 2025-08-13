@@ -37,7 +37,7 @@ async function countNotificationOfUser(userID) {
   try {
     if (!userID) return res.status(400).json({ error: 'Falta o userId.' });
 
-    const total = await model.count({
+    const total = await notificacoes_curso.count({
       where: { id_utilizador: userID },
     });
 
