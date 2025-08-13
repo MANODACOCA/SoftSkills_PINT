@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import './Sidebar.css';
-import {} from '';
+import { user_notificacao_count } from '../../../../api/notificacoes_curso_axios';
+import { useUser } from '../../../../utils/useUser';
 
 const SidebarFormando = ({ toggleSidebar, collapsed }) => {
+    const { user } = useUser();
     const [isPequena, setIsPequena] = useState(window.innerWidth <= 768);
     const [totalNotificacoes, setTotalNotificacoes] = useState("");
 
-    
+    const getCountNotificationsUser = async () => {
+        try {
+            const count = await user_notificacao_count(user.id_utilizador);
+            setTotalNotificacoes(count);
+        } catch (error) {
+            console.log("Erro ao ir buscar o count de notificacoes do utilizador:", error);
+        }
+    }
+
+    useEffect(() => {
+        if (user) {
+            getCountNotificationsUser();
+        }
+    }, [user]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -110,11 +125,11 @@ const SidebarFormando = ({ toggleSidebar, collapsed }) => {
                             </div>
                         }
                         {effectiveCollapsed &&
-                           <div className='d-flex flex-column align-items-center m-0 position-relative'>
+                            <div className='d-flex flex-column align-items-center m-0 position-relative'>
                                 <div className='position-absolute'
                                     style={{
                                         top: '-3px',
-                                        right: '-6px', 
+                                        right: '-6px',
                                     }}>
                                     <span
                                         className="badge ms-2 rounded-5 d-flex justify-content-center align-items-center"

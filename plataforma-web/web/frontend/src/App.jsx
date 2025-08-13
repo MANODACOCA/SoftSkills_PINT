@@ -94,9 +94,7 @@ function App() {
         <Route
           element={
             <ProtectedRoute allowedRoles={['formando', 'formador', 'admin']}>
-              <NotificationsProvider>
                 <BaseLayout />
-              </NotificationsProvider>
             </ProtectedRoute>
           }
         >

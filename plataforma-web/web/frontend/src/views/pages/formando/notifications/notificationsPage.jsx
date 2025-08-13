@@ -5,11 +5,8 @@ import { useUser } from '../../../../utils/useUser';
 import { Spinner } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { use } from 'react';
-import { NotificationsContext } from './notificationsContext';
-
 const NotificationPage = () => {
     const { user } = useUser();
-    const { setTotalNotificacoes } = useContext(NotificationsContext);
     const [notificacoes, setNotificacoes] = useState([]);
     const [ordenacao, setOrdenacao] = useState('recente');
     const [loading, setLoading] = useState(false);

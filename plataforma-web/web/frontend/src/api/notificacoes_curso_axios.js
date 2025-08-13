@@ -66,3 +66,14 @@ export const find_notificacao_curso = async (id, order) => {
         throw error;
     }
 }
+
+//count de botificacoes por id de utilizador 
+export const user_notificacao_count = async (id) => {
+    try {
+        const response = await axios.get(`${API_URL}/user_notificacoes_count/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao encontrar contagem de Notificacao por id de utilizador!');
+        throw error;
+    }
+}
