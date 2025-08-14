@@ -120,9 +120,7 @@ class _Register extends State<Register> {
                                   ],
                                 ),
                               );
-                              context.go('/firstlogin',
-                                extra: {'email': _emailController.text},
-                              );
+                              context.go('/login');
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(

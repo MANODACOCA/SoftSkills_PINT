@@ -205,7 +205,7 @@ class _LoginPage extends State<LoginPage> {
                           _emailController.text,
                           _passwordController.text,
                         );
-                        print('Response: $response');
+                        print('=============== Response: $response');
                         if (response['success'] == true) {
                           final token = response['token'];
                           final prefs = await SharedPreferences.getInstance();
@@ -223,7 +223,8 @@ class _LoginPage extends State<LoginPage> {
                             return;
                           }
 
-                          if (response['twoFa'] == true) {
+                          if (response['twoFa'] == true &&
+                              response['jaAtivou'] != null) {
                             print(
                               '====== Two-Factor Authentication is enabled ======',
                             );
@@ -235,7 +236,9 @@ class _LoginPage extends State<LoginPage> {
                             );
                             if (!mounted) return;
                             context.go('/twofauten', extra: userId.toString());
-                          } else {
+                          } else if ((response['twoFa'] == false ||
+                                  response['twoFa'] == null) &&
+                              response['jaAtivou'] != null) {
                             // Login normal, porque 2FA está desativado
                             await prefs.setString(
                               'token',
@@ -250,6 +253,11 @@ class _LoginPage extends State<LoginPage> {
                             authProvider.setUser(user, token: token);
                             await authService.login(token, isSwitched);
                             context.go('/homepage');
+                          } else if (response['jaAtivou'] == null) {
+                            context.go(
+                              '/firstlogin',
+                              extra: {'email': _emailController.text},
+                            );
                           }
                         }
                       } catch (error) {
