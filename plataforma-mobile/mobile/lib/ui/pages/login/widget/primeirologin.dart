@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import '../../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../API/utilizadores_api.dart';
@@ -32,35 +34,39 @@ class _FirstLogin extends State<FirstLogin> {
   void analisar() async {
     if (newpass.text == pass.text) {
       if (email == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Email não encontrado!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Email não encontrado!')));
         return;
       }
       final result = await api.alterarPassword(email!, pass.text);
-      if(!mounted) return;
+      
+      if (!mounted) return;
       if (result['success'] == true) {
         await showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Sucesso'),
-            content: const Text('Password alterada com sucesso!'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
+          builder:
+              (context) => AlertDialog(
+                title: const Text('Sucesso'),
+                content: const Text('Password alterada com sucesso!'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
               ),
-            ],
-          ),
         );
         if (mounted) {
           context.go("/login");
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao alterar password: \\${result['message']}')),
+          SnackBar(
+            content: Text('Erro ao alterar password: \\${result['message']}'),
+          ),
         );
       }
     } else {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import '../../../core/shared/export.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +17,11 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
   final codeController = TextEditingController();
   final UtilizadoresApi api = UtilizadoresApi();
   String? email;
+  bool errouCodigo = false;
+  Color colorPIN = AppColors.primary;
+  int tempoRestante = 60;
+  bool codigo_valido = true;
+  Timer? _timer;
 
   @override
   void didChangeDependencies() {
@@ -23,13 +30,43 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
     if (extra is Map && extra['email'] != null) {
       email = extra['email'] as String;
     }
+    iniciarTimer();
+  }
+
+  void iniciarTimer() {
+    _timer?.cancel();
+    setState(() {
+      tempoRestante = 60;
+      codigo_valido = true;
+    });
+
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (tempoRestante > 0) {
+        setState(() {
+          tempoRestante--;
+        });
+      } else {
+        timer.cancel();
+        setState(() {
+          codigo_valido = false;
+        });
+        api.resendCodigo(email!);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    codeController.dispose();
+    super.dispose();
   }
 
   Future<void> validar() async {
     if (email == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email não encontrado!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Email não encontrado!')));
       return;
     }
     final codigo = codeController.text.trim();
@@ -45,32 +82,41 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
       if (result['success'] == true) {
         await showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Sucesso'),
-            content: const Text('Código verificado com sucesso!'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('OK'),
+          builder:
+              (context) => AlertDialog(
+                title: const Text('Sucesso'),
+                content: const Text('Código verificado com sucesso!'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
               ),
-            ],
-          ),
         );
-        if(mounted){
+        if (mounted) {
           context.go("/changeforgotpass", extra: {'email': email});
         }
       } else {
+        setState(() {
+          errouCodigo = true;
+          colorPIN = Colors.red;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(result['message'] ?? 'Código incorreto!')),
         );
       }
     } catch (e) {
+      setState(() {
+        errouCodigo = true;
+        colorPIN = Colors.red;
+      });
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Erro ao validar código!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Erro ao validar código!')));
     }
   }
 
@@ -104,14 +150,12 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(height: 90),
-                  //Dependencia para o envio de email ja foram feitas
                   Text(
                     'Foi-lhe enviado um código de verificação para o seu email',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 45),
-                  //Aqui vem o local para inserir o código de verificação
                   PinCodeTextField(
                     keyboardType: TextInputType.number,
                     appContext: context,
@@ -127,8 +171,8 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
                     pinTheme: PinTheme(
                       shape: PinCodeFieldShape.box,
                       fieldHeight: 50,
-                      inactiveColor: Colors.grey,
-                      selectedColor: Colors.blueAccent,
+                      inactiveColor: colorPIN,
+                      selectedColor: colorPIN,
                       activeFillColor: Colors.white,
                       inactiveFillColor: Colors.white,
                       borderWidth: 1,
@@ -136,23 +180,92 @@ class _ConfirmAccountScreen extends State<ConfirmAccountScreen> {
                     ),
                     onChanged: ((value) {}),
                   ),
-                  SizedBox(height: 150),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                  if (errouCodigo)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        "Código incorreto ou inválido. Tente novamente.",
+                        style: TextStyle(color: Colors.red, fontSize: 14),
                       ),
-                      fixedSize: const Size(310, 46),
                     ),
-                    onPressed: () {
-                      validar();
-                    },
-                    child: const Text(
-                      'Confirmar',
-                      style: TextStyle(color: Colors.white),
+                  SizedBox(height: 10),
+                  Container(
+                    padding: EdgeInsets.only(right: 25),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            "Tempo restante: ",
+                            style: TextStyle(
+                              color: AppColors.secondary,
+                              fontSize: 12,
+                            ),
+                          ),
+                          Text(
+                            "$tempoRestante",
+                            style: TextStyle(
+                              color: AppColors.secondary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            " s",
+                            style: TextStyle(
+                              color: AppColors.secondary,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  SizedBox(height: 20),
+                  if (codigo_valido)
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: validar,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          fixedSize: const Size(310, 46),
+                        ),
+                        child: const Text(
+                          'Confirmar',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  else
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          api.resendCodigo(email!);
+                          iniciarTimer();
+                          setState(() {
+                            errouCodigo = false;
+                            colorPIN = AppColors.primary;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          fixedSize: const Size(310, 46),
+                        ),
+                        child: const Text(
+                          "Reenviar Código",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

@@ -34,10 +34,10 @@ const CategoriaAreaTopicoTable = () => {
     const renderActions = (item) => {
         return (
             <div>
-                <button className="btn btn-outline-primary me-2" onClick={() => handleEditArea(item)}>
+                <button className="btn btn-outline-primary me-2" onClick={(e) => { e.stopPropagation(); handleEditArea(item);}}>
                     <i className="bi bi-pencil"></i>
                 </button>
-                <button className="btn btn-outline-success me-2" onClick={() => handleAddTopico(item.id_area)}>
+                <button className="btn btn-outline-success me-2" onClick={(e) => { e.stopPropagation(); handleAddTopico(item.id_area);}}>
                     <i className="bi bi-plus-circle"></i>
                 </button>
             </div>

@@ -27,7 +27,7 @@ const CreateCourse = () => {
 
     const { state } = useLocation();
     const cursoAnteriorState = state?.cursoAnterior || null;
-    const [cursoAnterior, setCursoAnterior] = useState({});
+    const [cursoAnterior, setCursoAnterior] = useState(null);
     const isNovaOcorrencia = !!cursoAnterior;
     const textareaRef = useRef(null);
 
@@ -542,7 +542,7 @@ const CreateCourse = () => {
                                     </div>
                                     <div className="d-flex justify-content-between">
                                         <button type="submit" className='btn btn-success mt-3'>{cursoAnterior ? 'Criar Ocorrência' : 'Criar Curso'}</button>
-                                        <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>Cancelar Curso</button>
+                                        <button type="button" className='btn btn-danger mt-3' onClick={handleCancel}>{cursoAnterior ? 'Cancelar Ocorrência' : 'Cancelar Curso'}</button>
                                     </div>
                                 </div>
                             </form>

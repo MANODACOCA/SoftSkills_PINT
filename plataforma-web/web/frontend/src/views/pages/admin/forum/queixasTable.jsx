@@ -241,7 +241,7 @@ const QueixasTables = () => {
                 {/* <button className="btn btn-outline-primary me-2" onClick={() => HandleEdit(item.id_denuncia)}>
                     <i className="bi bi-pencil"></i>
                 </button> */}
-                <button className="btn btn-outline-danger" onClick={() => HandleDelete(item.id_denuncia)}>
+                <button className="btn btn-outline-danger" onClick={(e) => {e.stopPropagation(); HandleDelete(item.id_denuncia)}}>
                     <i className="bi bi-x-circle"></i>
                 </button>
             </div>
