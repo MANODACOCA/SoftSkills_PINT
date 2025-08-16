@@ -21,7 +21,7 @@ const Foruns = () => {
   const searchTerm = searchParams.get('search') || '';
 
   const { user } = useUser();
-
+  console.log("TESTE", foruns);
   const navigate = useNavigate();
 
   const fetchForuns = useCallback(async () => {
