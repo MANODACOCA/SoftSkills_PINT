@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Spinner } from 'react-bootstrap';
 import { LuCircleFadingPlus } from "react-icons/lu";
 import {
@@ -15,7 +15,11 @@ const Foruns = () => {
   const [ordenar, setOrdenar] = useState('Mais Recentes');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [pesquisa, setPesquisa] = useState('');
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchTerm = searchParams.get('search') || '';
+
   const { user } = useUser();
 
   const navigate = useNavigate();
@@ -24,7 +28,7 @@ const Foruns = () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await list_conteudos_partilhado(ordenar, pesquisa);
+      const data = await list_conteudos_partilhado(ordenar, searchTerm);
 
       setForuns(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -33,7 +37,7 @@ const Foruns = () => {
     } finally {
       setLoading(false);
     }
-  }, [ordenar, pesquisa]);
+  }, [ordenar, searchTerm]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -154,13 +158,6 @@ const Foruns = () => {
               Pedir novo forúm
             </button>
           )}
-          <input
-            type="text"
-            className="form-control w-50"
-            placeholder="Pesquisar por forúm"
-            value={pesquisa}
-            onChange={(e) => setPesquisa(e.target.value)}
-          />
         </div>
 
 

@@ -14,11 +14,17 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
     const { user, activeRole } = useUser();
     const [showProfileMenu, setShowProfileMenu] = useState(false);
     const profileRef = useRef(null);
-
-
+    const location = useLocation();
+    const placeholders = {
+        "/cursos": "Pesquisar por cursos",
+        "/my/cursos/inscritos": "Pesquisar por cursos inscritos",
+        "/my/cursos/terminados": "Pesquisar por curso terminados",
+        "/forum": "Pesquisar por fórum",
+    };
+    const placeholder = placeholders[location.pathname];
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();
-    const location = useLocation();
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -40,12 +46,6 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
 
     const toggleProfileMenu = () => {
         setShowProfileMenu(!showProfileMenu);
-    };
-
-    const handleFocus = () => {
-        if (location.pathname !== '/cursos') {
-            navigate('/cursos');
-        }
     };
 
     const debouncedNavigate = debounce((value) => {
@@ -71,8 +71,23 @@ const HeaderFormando = ({ toggleSidebar, collapsed }) => {
                 <button className="btn btn-outline-secondary mx-2 hide" onClick={toggleSidebar}>
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
                 </button>
-                <Link to="/formador/home"><img src={logo} alt="logo softskills" height={45} /></Link>
+                <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
+
+            {placeholder && (
+                <input
+                    className="input-group d-none d-md-flex form-control form-control-md"
+                    type="search"
+                    placeholder={placeholder}
+                    aria-label="Pesquisar"
+                    value={searchTerm}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setSearchTerm(value);
+                        debouncedNavigate(value);
+                    }}
+                />
+            )}
 
             {user && (
                 <div className="d-flex align-items-center me-5 gap-3 position-relative" ref={profileRef}>

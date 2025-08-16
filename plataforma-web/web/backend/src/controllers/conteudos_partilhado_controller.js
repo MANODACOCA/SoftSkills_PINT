@@ -16,8 +16,6 @@ controllers.list = async (req, res) => {
 
     if (data && data.length > 0) {
       res.status(200).json(data);
-    } else {
-      res.status(404), json({ erro: 'Nenhum conteudo partilhado encontrado.' });
     }
 
   } catch (error) {
