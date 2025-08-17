@@ -218,7 +218,7 @@ controllers.getUserEnrolledCourses = async (req, res) => {
     if (!userId) {
       return res.status(400).json({ erro: 'ID do usuário não fornecido' });
     }
-    const tipologia = req.query.tipologia || null;
+    const tipologia = req.params.tipologia || null;
 
     console.log(`Buscando cursos para usuário ${userId} com tipologia: ${tipologia}`);
 
@@ -236,7 +236,7 @@ controllers.getCompleteCourses = async (req, res) => {
     const search = req.query.search;
     const data_inicio = req.query.data_inicio;
     const data_fim = req.query.data_fim;
-    const tipologia = req.query.tipologia || null;
+    const tipologia = req.params.tipologia || null;
 
     const completedCourses = await cursosService.getCompleteCoursesFromUser(userId, tipologia, search, data_inicio, data_fim);
 

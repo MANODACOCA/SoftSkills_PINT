@@ -3,6 +3,7 @@ import FeaturedCourseCard from '../../../components/card_highlight/CardHighlight
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { getEnrolledCourses } from '../../../../api/cursos_axios';
 import { useUser } from '../../../../utils/useUser';
+import { useLocation } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 
 const EnrolledCourses = () => {
@@ -11,10 +12,14 @@ const EnrolledCourses = () => {
   const [tipologia, setTipologia] = useState('todos');
   const [loading, setLoading] = useState(true);
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const searchTerm = searchParams.get('search') || '';
+
   const fetchEnrolledCourses = async (userId) => {
     try {
       setLoading(true);
-      const data = await getEnrolledCourses(userId, tipologia);
+      const data = await getEnrolledCourses(userId, tipologia, searchTerm);
 
       const formatted = data.map(item => {
         const curso = item.id_curso_curso || {};
@@ -41,16 +46,7 @@ const EnrolledCourses = () => {
       window.scrollTo(0, 0);
       fetchEnrolledCourses(user.id_utilizador);
     }
-  }, [tipologia, user]);
-
-  const filteredCourses = courses.filter(course => {
-    const c = course.id_curso_curso;
-    if (!c) return false;
-    if (tipologia === 'todos') return true;
-    if (tipologia === 'sincrono') return c.issincrono;
-    if (tipologia === 'assincrono') return c.isassincrono;
-    return false;
-  });
+  }, [searchTerm, tipologia, user]);
 
   if (!user || loading) {
     return <SpinnerBorder />;
@@ -68,11 +64,13 @@ const EnrolledCourses = () => {
         </select>
       </div>
 
-      {filteredCourses.length === 0 ? (
+      {(!searchTerm && courses.length === 0) ? (
         <p>Você não está inscrito em nenhum curso atualmente.</p>
+      ) : (searchTerm && courses.length === 0) ? (
+        <p>Não foi encontrado nenhum curso inscrito através da sua pesquisa.</p>
       ) : (
         <div className="course-list">
-          {filteredCourses.map((course) => (
+          {courses.map((course) => (
             <FeaturedCourseCard
               key={`${course.id_inscricao}-${course.id_curso_curso.id_curso}`}
               course={course.id_curso_curso}
@@ -84,8 +82,9 @@ const EnrolledCourses = () => {
             />
           ))}
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 

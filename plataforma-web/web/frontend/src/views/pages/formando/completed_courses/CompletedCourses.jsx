@@ -3,6 +3,7 @@ import FeaturedCourseCard from '../../../components/card_highlight/CardHighlight
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { getCompletedCourses } from '../../../../api/cursos_axios';
 import { useUser } from '../../../../utils/useUser';
+import { useLocation } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 
 const CompletedCourses = () => {
@@ -11,10 +12,14 @@ const CompletedCourses = () => {
     const [tipologia, setTipologia] = useState('todos');
     const [loading, setLoading] = useState(true);
 
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const searchTerm = searchParams.get('search') || '';
+
     const fetchCompletedCourses = async (userId) => {
         try {
             setLoading(true);
-            const data = await getCompletedCourses(userId);
+            const data = await getCompletedCourses(userId, tipologia, searchTerm);
             setCourses(data);
         } catch (error) {
             console.error('Erro ao encontrar cursos terminados:', error);
@@ -29,14 +34,8 @@ const CompletedCourses = () => {
             window.scrollTo(0, 0);
             fetchCompletedCourses(user.id_utilizador);
         }
-    }, [tipologia, user]);
+    }, [searchTerm, tipologia, user]);
 
-    const filteredCourses = courses.filter(curso => {
-        if (tipologia === 'todos') return true;
-        if (tipologia === 'sincrono') return curso.tipo === 'sincrono';
-        if (tipologia === 'assincrono') return curso.tipo === 'assincrono';
-        return false;
-    });
 
     if (!user || loading) {
         return <SpinnerBorder />;
@@ -54,11 +53,13 @@ const CompletedCourses = () => {
                 </select>
             </div>
 
-            {filteredCourses.length === 0 ? (
+            {(!searchTerm && courses.length === 0) ? (
                 <p>Você ainda não terminou nenhum curso.</p>
+            ) : (searchTerm && courses.length === 0) ? (
+                <p>Não foi encontrado nenhum curso terminado através da sua pesquisa.</p>
             ) : (
                 <div className="course-list">
-                    {filteredCourses.map(course => (
+                    {courses.map(course => (
                         <FeaturedCourseCard
                             key={`${user.id_utilizador}-${course.id_curso}`}
                             course={course}

@@ -32,8 +32,12 @@ const Foruns = () => {
 
       setForuns(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error("Erro ao carregar fóruns:", err);
-      setError("Erro ao carregar fóruns. Tente novamente mais tarde.");
+      if (err.response && err.response.status === 404) {
+        setForuns([]);
+      } else {
+        console.error("Erro ao carregar fóruns:", err);
+        setError("Erro ao carregar fóruns. Tente novamente mais tarde.");
+      }
     } finally {
       setLoading(false);
     }
