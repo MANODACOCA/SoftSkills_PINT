@@ -17,7 +17,7 @@ class _ChangePassword extends State<ChangePassword> {
     color: AppColors.primary,
   );
 
-  /*Ir buscar na base de dados a password anterior e compará-la com a nova password*/
+  /*Ir buscar password anterior e compará-la com a nova password*/
 
   Future<void> analisar() async {
     if (newpass.text == pass.text) {
