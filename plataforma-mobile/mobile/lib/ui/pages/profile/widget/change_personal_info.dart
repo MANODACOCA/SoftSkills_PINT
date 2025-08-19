@@ -48,11 +48,13 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
       setState(() {
         utilizador = esteUtilizador;
         _nomeController.text = esteUtilizador['nome_utilizador'] ?? '';
-        _telemovelController.text = esteUtilizador['telemovel']?.toString() ?? '';
+        _telemovelController.text =
+            esteUtilizador['telemovel']?.toString() ?? '';
         _moradaController.text = esteUtilizador['morada'] ?? '';
         _dataNascController.text = esteUtilizador['data_nasc'] ?? '';
         _selectedPais = esteUtilizador['pais']?.toString();
-        _selectedGenero = (esteUtilizador['genero'] == 1) ? 'Masculino' : 'Feminino';
+        _selectedGenero =
+            (esteUtilizador['genero'] == 1) ? 'Masculino' : 'Feminino';
         isLoadingFoto = false;
       });
     } catch (e) {
@@ -61,47 +63,51 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
   }
 
   Future<void> _enviar(ImageSource source) async {
-    try{
+    try {
       final res = await _api.alterarImgPerfil(userIdd, source);
-      
+
       setState(() {
         utilizador['img_perfil'] = res['img_perfil'];
         isLoadingFoto = true;
         fetchUtilizador(int.parse(userIdd));
       });
-
-    } catch(e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Falha ao enviar imagem')),
-      );
-    } 
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Falha ao enviar imagem')));
+    }
   }
 
   void choosePhoto() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Escolher foto'),
-        content: const Text('Seleciona a origem da imagem'),
-        actions: [
-          TextButton(
-            style: TextButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text('Galeria', style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              context.pop();
-              Future.microtask(() => _enviar(ImageSource.gallery));
-            },
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Escolher foto'),
+            content: const Text('Seleciona a origem da imagem'),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.green),
+                child: const Text(
+                  'Galeria',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () async {
+                  await Future.microtask(() => _enviar(ImageSource.gallery));
+                },
+              ),
+              TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.red),
+                child: const Text(
+                  'Câmara',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: () async {
+                  await Future.microtask(() => _enviar(ImageSource.camera));
+                },
+              ),
+            ],
           ),
-          TextButton(
-            style: TextButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Câmara', style: TextStyle(color: Colors.white)),
-            onPressed: () {
-              context.pop();
-              Future.microtask(() => _enviar(ImageSource.camera));
-            },
-          ),
-        ],
-      ),
     );
   }
 
@@ -115,7 +121,10 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
     final double borderRadius = 20;
     return AppScaffold(
       appBar: AppBar(
-        title: Text('Alterar Dados Pessoais', style: TextStyle(color: Colors.white)),
+        title: Text(
+          'Alterar Dados Pessoais',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: AppColors.primary,
       ),
@@ -134,51 +143,59 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          isLoadingFoto ?     
-                            Padding(
+                          isLoadingFoto
+                              ? Padding(
                                 padding: EdgeInsets.all(8),
-                                child: Center(child: CircularProgressIndicator()),
-                              ) :
-                          Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: NetworkImage(
-                                  (utilizador['img_perfil'] != null &&
-                                          utilizador['img_perfil']
-                                              .toString()
-                                              .isNotEmpty)
-                                      ? 'https://softskills-api.onrender.com/${utilizador['img_perfil']}'
-                                      : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'] ?? 'User')}&background=random&bold=true',
+                                child: Center(
+                                  child: CircularProgressIndicator(),
                                 ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            child:
-                                (utilizador['img_perfil'] == null ||
-                                        utilizador['img_perfil'].toString().isEmpty)
-                                    ? null
-                                    : ClipOval(
-                                      child: Image.network(
-                                        'https://softskills-api.onrender.com/${utilizador['img_perfil']}',
-                                        width: 100,
-                                        height: 100,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          final fallbackImg =
-                                              'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
-                                          return Image.network(
-                                            fallbackImg,
+                              )
+                              : Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      (utilizador['img_perfil'] != null &&
+                                              utilizador['img_perfil']
+                                                  .toString()
+                                                  .isNotEmpty)
+                                          ? 'https://softskills-api.onrender.com/${utilizador['img_perfil']}'
+                                          : 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'] ?? 'User')}&background=random&bold=true',
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                child:
+                                    (utilizador['img_perfil'] == null ||
+                                            utilizador['img_perfil']
+                                                .toString()
+                                                .isEmpty)
+                                        ? null
+                                        : ClipOval(
+                                          child: Image.network(
+                                            'https://softskills-api.onrender.com/${utilizador['img_perfil']}',
                                             width: 100,
                                             height: 100,
                                             fit: BoxFit.cover,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                          ),
+                                            errorBuilder: (
+                                              context,
+                                              error,
+                                              stackTrace,
+                                            ) {
+                                              final fallbackImg =
+                                                  'https://ui-avatars.com/api/?name=${Uri.encodeComponent(utilizador['nome_utilizador'])}&background=random&bold=true';
+                                              return Image.network(
+                                                fallbackImg,
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                          ),
+                                        ),
+                              ),
                           SizedBox(height: 10),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -229,8 +246,12 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                     decoration: InputDecoration(
                                       labelText: 'Nome do user',
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(borderRadius),
-                                        borderSide: BorderSide(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(
+                                          borderRadius,
+                                        ),
+                                        borderSide: BorderSide(
+                                          color: Colors.black,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -263,7 +284,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               decoration: InputDecoration(
                                 labelText: '+351',
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(borderRadius),
+                                  borderRadius: BorderRadius.circular(
+                                    borderRadius,
+                                  ),
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
                               ),
@@ -294,7 +317,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               decoration: InputDecoration(
                                 labelText: 'dd/mm/aaaa',
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(borderRadius),
+                                  borderRadius: BorderRadius.circular(
+                                    borderRadius,
+                                  ),
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
                               ),
@@ -325,7 +350,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               decoration: InputDecoration(
                                 labelText: 'Rua, nº, andar, código postal',
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(borderRadius),
+                                  borderRadius: BorderRadius.circular(
+                                    borderRadius,
+                                  ),
                                   borderSide: BorderSide(color: Colors.black),
                                 ),
                               ),
@@ -350,17 +377,34 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                 SizedBox(
                                   height: fieldHeight,
                                   child: DropdownSearch<String>(
-                                    items: CountryService().getAll().map((c) => c.displayNameNoCountryCode).toList(),
+                                    items:
+                                        CountryService()
+                                            .getAll()
+                                            .map(
+                                              (c) => c.displayNameNoCountryCode,
+                                            )
+                                            .toList(),
                                     selectedItem: _selectedPais,
-                                    dropdownDecoratorProps: DropDownDecoratorProps(
-                                      dropdownSearchDecoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(borderRadius),
-                                          borderSide: BorderSide(color: Colors.black),
+                                    dropdownDecoratorProps:
+                                        DropDownDecoratorProps(
+                                          dropdownSearchDecoration:
+                                              InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 0,
+                                                    ),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        borderRadius,
+                                                      ),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
                                         ),
-                                      ),
-                                    ),
                                     popupProps: PopupProps.menu(
                                       showSearchBox: true,
                                       fit: FlexFit.loose,
@@ -369,14 +413,21 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                         maxWidth: fieldWidth,
                                       ),
                                       menuProps: MenuProps(
-                                        borderRadius: BorderRadius.circular(borderRadius),
+                                        borderRadius: BorderRadius.circular(
+                                          borderRadius,
+                                        ),
                                       ),
                                       searchFieldProps: TextFieldProps(
                                         decoration: InputDecoration(
                                           hintText: 'Pesquisar país',
-                                          contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8), // aumenta altura visual
+                                          contentPadding: EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 8,
+                                          ), // aumenta altura visual
                                           border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(borderRadius),
+                                            borderRadius: BorderRadius.circular(
+                                              borderRadius,
+                                            ),
                                           ),
                                         ),
                                         style: TextStyle(fontSize: 16),
@@ -395,9 +446,13 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                         height: fieldHeight,
                                         alignment: Alignment.centerLeft,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(borderRadius),
+                                          borderRadius: BorderRadius.circular(
+                                            borderRadius,
+                                          ),
                                         ),
-                                        child: Text(selectedItem ?? 'Selecionar país'),
+                                        child: Text(
+                                          selectedItem ?? 'Selecionar país',
+                                        ),
                                       );
                                     },
                                   ),
@@ -426,15 +481,26 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                   child: DropdownSearch<String>(
                                     items: ['Masculino', 'Feminino'],
                                     selectedItem: _selectedGenero,
-                                    dropdownDecoratorProps: DropDownDecoratorProps(
-                                      dropdownSearchDecoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(borderRadius),
-                                          borderSide: BorderSide(color: Colors.black),
+                                    dropdownDecoratorProps:
+                                        DropDownDecoratorProps(
+                                          dropdownSearchDecoration:
+                                              InputDecoration(
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 0,
+                                                    ),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        borderRadius,
+                                                      ),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
                                         ),
-                                      ),
-                                    ),
                                     popupProps: PopupProps.menu(
                                       fit: FlexFit.loose,
                                       constraints: BoxConstraints(
@@ -442,7 +508,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                         maxWidth: fieldWidth,
                                       ),
                                       menuProps: MenuProps(
-                                        borderRadius: BorderRadius.circular(borderRadius),
+                                        borderRadius: BorderRadius.circular(
+                                          borderRadius,
+                                        ),
                                       ),
                                     ),
                                     onChanged: (String? value) {
@@ -458,9 +526,13 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                                         height: fieldHeight,
                                         alignment: Alignment.centerLeft,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(borderRadius),
+                                          borderRadius: BorderRadius.circular(
+                                            borderRadius,
+                                          ),
                                         ),
-                                        child: Text(selectedItem ?? 'Selecionar género'),
+                                        child: Text(
+                                          selectedItem ?? 'Selecionar género',
+                                        ),
                                       );
                                     },
                                   ),
@@ -476,7 +548,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(borderRadius),
+                                  borderRadius: BorderRadius.circular(
+                                    borderRadius,
+                                  ),
                                 ),
                               ),
                               onPressed: () {
@@ -520,8 +594,9 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         };
         if (_dataNascController.text.isNotEmpty) {
           try {
-            final nasc = DateFormat('dd/MM/yyyy')
-                .parseStrict(_dataNascController.text);
+            final nasc = DateFormat(
+              'dd/MM/yyyy',
+            ).parseStrict(_dataNascController.text);
             body['data_nasc'] = DateFormat('yyyy-MM-dd').format(nasc);
           } catch (_) {}
         }
@@ -540,7 +615,10 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
         context.go('/profile');
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao atualizar dados'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Erro ao atualizar dados'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }

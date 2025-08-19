@@ -96,18 +96,21 @@ class _ForgetPassword extends State<ForgetPassword> {
                         print(resposta);
                         await showDialog(
                           context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Sucesso'),
-                            content: const Text('Email enviado com sucesso!'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('OK'),
+                          builder:
+                              (context) => AlertDialog(
+                                title: const Text('Sucesso'),
+                                content: const Text(
+                                  'Email enviado com sucesso!',
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      context.pop();
+                                    },
+                                    child: const Text('OK'),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
                         );
                         context.go("/confirmacao", extra: {'email': email});
                       } catch (e) {
