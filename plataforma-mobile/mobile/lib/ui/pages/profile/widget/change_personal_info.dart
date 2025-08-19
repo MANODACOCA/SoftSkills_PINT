@@ -92,9 +92,8 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                   'Galeria',
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () {
-                  context.pop();
-                  Future.microtask(() => _enviar(ImageSource.gallery));
+                onPressed: () async {
+                  await Future.microtask(() => _enviar(ImageSource.gallery));
                 },
               ),
               TextButton(
@@ -103,9 +102,8 @@ class _ChangePersonalInfoState extends State<ChangePersonalInfo> {
                   'Câmara',
                   style: TextStyle(color: Colors.white),
                 ),
-                onPressed: () {
-                  context.pop();
-                  Future.microtask(() => _enviar(ImageSource.camera));
+                onPressed: () async {
+                  await Future.microtask(() => _enviar(ImageSource.camera));
                 },
               ),
             ],
