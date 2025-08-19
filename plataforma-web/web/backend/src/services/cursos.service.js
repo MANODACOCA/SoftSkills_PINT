@@ -796,10 +796,10 @@ async function verifyInscription(userId, cursoId) {
         [Op.or]: [
           {
             data_inicio_curso: {
-              [Op.lte]: Sequelize.literal("data_inicio_curso::date <= (NOW() AT TIME ZONE 'Europe/Lisbon')::date")
+              [Op.lte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
             },
             data_fim_curso: {
-              [Op.gte]: Sequelize.literal("data_fim_curso::date >= (NOW() AT TIME ZONE 'Europe/Lisbon')::date")
+              [Op.gte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon') + 1")
             }
           },
           // Caso o curso já tenha terminado, mas seja síncrono
