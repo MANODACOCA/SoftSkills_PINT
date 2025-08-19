@@ -129,6 +129,15 @@ const CreateCourse = () => {
             return;
         }
 
+        if (dCursoFim <= dInscFim) {
+            Swal.fire({
+                icon: "error",
+                title: "Datas inválidas",
+                text: "A data de fim da inscrição tem de ser anterior à data de fim do curso.",
+            });
+            return;
+        }
+
         if (cursos.issincrono && dCursoIni < dInscFim) {
             Swal.fire({
                 icon: "error",
