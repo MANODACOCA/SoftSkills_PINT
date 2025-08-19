@@ -1,32 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from "react-router-dom";
 import './Sidebar.css';
-import { user_notificacao_count } from '../../../../api/notificacoes_curso_axios';
-import { useUser } from '../../../../utils/useUser';
+import { useNotification } from '../../notification_row/notification_context';
 
 const SidebarFormando = ({ toggleSidebar, collapsed }) => {
-    const { user } = useUser();
     const [isPequena, setIsPequena] = useState(window.innerWidth <= 768);
-    const [totalNotificacoes, setTotalNotificacoes] = useState("");
-
-    const getCountNotificationsUser = async () => {
-        try {
-            const count = await user_notificacao_count(user.id_utilizador);
-            setTotalNotificacoes(count);
-        } catch (error) {
-            console.log("Erro ao ir buscar o count de notificacoes do utilizador:", error);
-        }
-    }
+    const { totalNotificacoes, fetchCount } = useNotification();
 
     useEffect(() => {
-        if (user) {
-            getCountNotificationsUser();
-            const interval = setInterval(() => {
-                getCountNotificationsUser();
-            }, 5*60*1000);
-            return () => clearInterval(interval);
-        }
-    }, [user]);
+        fetchCount();
+    }, [fetchCount]);
 
     useEffect(() => {
         const handleResize = () => {

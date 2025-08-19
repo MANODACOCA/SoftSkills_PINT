@@ -2,11 +2,13 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import NotificationRow from "../../../components/notification_row/notification_row";
 import { delete_notificacoes_curso, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
 import { useUser } from '../../../../utils/useUser';
+import { useNotification } from '../../../components/notification_row/notification_context';
 import { Spinner } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import { use } from 'react';
 const NotificationPage = () => {
     const { user } = useUser();
+    const { fetchCount } = useNotification();
     const [notificacoes, setNotificacoes] = useState([]);
     const [ordenacao, setOrdenacao] = useState('recente');
     const [loading, setLoading] = useState(false);
@@ -28,12 +30,15 @@ const NotificationPage = () => {
         try {
             await delete_notificacoes_curso(id);
             fetchAllNotifications();
+            fetchCount();
+
             Swal.fire({
                 icon: "success",
                 title: "Notificação apagada com sucesso!",
                 timer: 1500,
                 showConfirmButton: false
             });
+
         } catch (error) {
             Swal.fire({
                 icon: "error",
