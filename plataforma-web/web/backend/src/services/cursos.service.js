@@ -794,31 +794,51 @@ async function verifyInscription(userId, cursoId) {
       where: {
         id_curso: cursoId,
         [Op.or]: [
+          // Curso em andamento hoje
           {
-            data_inicio_curso: {
-              [Op.lte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
-            },
-            data_fim_curso: {
-              [Op.gte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon') + 1")
-            }
+            [Op.and]: [
+              Sequelize.where(
+                Sequelize.fn('DATE', Sequelize.col('data_inicio_curso')),
+                {
+                  [Op.lte]: Sequelize.literal(`CURRENT_DATE AT TIME ZONE 'Europe/Lisbon'`)
+                }
+              ),
+              Sequelize.where(
+                Sequelize.fn('DATE', Sequelize.col('data_fim_curso')),
+                {
+                  [Op.gte]: Sequelize.literal(`CURRENT_DATE AT TIME ZONE 'Europe/Lisbon'`)
+                }
+              )
+            ]
           },
-          // Caso o curso já tenha terminado, mas seja síncrono
+          // Curso já terminou, mas é síncrono
           {
-            data_fim_curso: {
-              [Op.lt]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
-            },
-            issincrono: true
+            [Op.and]: [
+              Sequelize.where(
+                Sequelize.fn('DATE', Sequelize.col('data_fim_curso')),
+                {
+                  [Op.lt]: Sequelize.literal(`CURRENT_DATE AT TIME ZONE 'Europe/Lisbon'`)
+                }
+              ),
+              { issincrono: true }
+            ]
           },
-          // Caso o curso já tenha terminado, mas seja assíncrono
+          // Curso já terminou, mas é assíncrono
           {
-            data_fim_curso: {
-              [Op.lt]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
-            },
-            isassincrono: true
+            [Op.and]: [
+              Sequelize.where(
+                Sequelize.fn('DATE', Sequelize.col('data_fim_curso')),
+                {
+                  [Op.lt]: Sequelize.literal(`CURRENT_DATE AT TIME ZONE 'Europe/Lisbon'`)
+                }
+              ),
+              { isassincrono: true }
+            ]
           }
         ]
       }
     });
+
 
     if (!curso) {
       return { inscrito: false };
