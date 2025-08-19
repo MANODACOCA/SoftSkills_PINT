@@ -35,6 +35,8 @@ const CursoLecionarAula = () => {
     const [resultados, setResultados] = useState([]);
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
+    const data_fim_curso = new Date(cursos.data_fim_curso);
+    const data_fim_cursoStr = data_fim_curso.toISOString().split('T')[0];
     const [modoEditNotas, setModoEditNotas] = useState(false);
     const [notasEditadas, setNotasEditadas] = useState({});
     const [trabalhos, setTrabalhos] = useState([]);
@@ -185,14 +187,13 @@ const CursoLecionarAula = () => {
             try {
                 if (id) {
                     const tempoMinutos = durationToMinutes(aulaData?.tempo_duracao);
-                    console.log(tempoMinutos);
                     const editarAula = await Swal.fire({
                         title: 'Editar Aula',
                         html: `
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" min="${todayStr}" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
+                            <input id="dataAula" type="date" min="${todayStr}" max="${data_fim_cursoStr}" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0, 5) || ''}">
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
@@ -277,7 +278,7 @@ const CursoLecionarAula = () => {
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}">
+                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}" max="${data_fim_cursoStr}">
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3">
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
