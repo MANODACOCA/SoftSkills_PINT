@@ -1,34 +1,39 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { daysMonthsYears } from '../shared_functions/FunctionsUtils';
+import { delete_notificacoes_curso } from '../../../api/notificacoes_curso_axios';
+import { useNotification } from '../notification_row/notification_context';
 import './notification_row.css'
 
+
 const TAB_RULES = [
-  { re: /(material|apoio)/i, tab: 'material' },
-  { re: /(aula)/i, tab: 'aulas' },
-  { re: /(trabalho)/i, tab: 'eventos' },
-  { re: /(atualiza(c|ç)ão|descri(c|ç)ao|curso)/i, tab: 'sobre' },
+    { re: /(material|apoio)/i, tab: 'material' },
+    { re: /(aula)/i, tab: 'aulas' },
+    { re: /(trabalho)/i, tab: 'eventos' },
+    { re: /(atualiza(c|ç)ão|descri(c|ç)ao|curso)/i, tab: 'sobre' },
 ];
 
 const tabPageCurso = (notificacoes) => {
-  const txt = (notificacoes?.conteudo_notif_curso || '')
-    .normalize('NFD').replace(/\p{Diacritic}/gu, '') 
-    .toLowerCase();
-  const rule = TAB_RULES.find(r => r.re.test(txt));
-  return rule ? rule.tab : 'sobre';
+    const txt = (notificacoes?.conteudo_notif_curso || '')
+        .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+        .toLowerCase();
+    const rule = TAB_RULES.find(r => r.re.test(txt));
+    return rule ? rule.tab : 'sobre';
 };
 
-const NotificationRow = ({notification, onDelete}) => {
-    console.log(notification);
+const NotificationRow = ({ notification, onDelete, setShow }) => {
     const navigate = useNavigate();
+    const { fetchCount } = useNotification();
 
-    const handleOpen = () => {
-        try{
+    const handleOpen = async () => {
+        try {
             const tab = tabPageCurso(notification);
             const data_atual = new Date();
-            data_atual.setHours(0,0,0,0);
+            data_atual.setHours(0, 0, 0, 0);
             const inicio_curso = new Date(notification.id_curso_curso.data_inicio_curso);
-            inicio_curso.setHours(0,0,0,0);
+            inicio_curso.setHours(0, 0, 0, 0);
+            await delete_notificacoes_curso(notification.id_notificacao_cursos);
+            fetchCount();
             if (inicio_curso <= data_atual) {
                 navigate(`/my/cursos/inscritos/curso/${notification.id_curso_curso.id_curso}?tab=${tab}`)
             } else {
@@ -39,15 +44,15 @@ const NotificationRow = ({notification, onDelete}) => {
         }
     }
 
-    return(
+    return (
         <div className="d-flex align-items-center justify-content-between">
             <div className='d-flex gap-4 align-items-center'>
-                <img src={notification.id_curso_curso?.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(notification.id_curso_curso.nome_curso)}&background=random&bold=true`} 
-                onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(notification.id_curso_curso.nome_curso)}&background=random&bold=true`;
-                }}
-                alt="imagem notificação" width={80} height={80} className='img-not' 
+                <img src={notification.id_curso_curso?.imagem || `https://ui-avatars.com/api/?name=${encodeURIComponent(notification.id_curso_curso.nome_curso)}&background=random&bold=true`}
+                    onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(notification.id_curso_curso.nome_curso)}&background=random&bold=true`;
+                    }}
+                    alt="imagem notificação" width={80} height={80} className='img-not'
                 />
                 <div className='d-flex align-items-start flex-column justify-content-center'>
                     <h5>{notification.id_curso_curso?.nome_curso}</h5>

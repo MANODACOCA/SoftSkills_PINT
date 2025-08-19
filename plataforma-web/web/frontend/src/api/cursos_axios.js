@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import {getAuthHeader} from '../utils/getToken';
+import { getAuthHeader } from '../utils/getToken';
 
 const API_URL = 'https://softskills-api.onrender.com/cursos';
 
@@ -113,7 +113,7 @@ export const getCousesWithMoreFormandos = async () => {
 };
 
 
-export const getCompletedCourses = async (userId, tipologia = 'todos', search = ' ', data_fim = null, data_inicio = null) => {
+export const getCompletedCourses = async (userId, tipologia, search = ' ', data_fim = null, data_inicio = null) => {
     try {
         let url = `${API_URL}/users/${userId}/completed-courses`;
 
@@ -129,7 +129,10 @@ export const getCompletedCourses = async (userId, tipologia = 'todos', search = 
             url += `&data_inicio=${data_inicio}`;
         }
         const params = tipologia !== 'todos' ? { tipologia } : {};
-        const response = await axios.get(url, getAuthHeader({ params }));
+        const response = await axios.get(url, {
+            ...getAuthHeader(),
+            params,
+        });
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos terminados!');
@@ -137,7 +140,7 @@ export const getCompletedCourses = async (userId, tipologia = 'todos', search = 
     }
 };
 
-export const getEnrolledCourses = async (userId, tipologia = 'todos', search = ' ', data_fim = null, data_inicio = null) => {
+export const getEnrolledCourses = async (userId, tipologia, search = ' ', data_fim = null, data_inicio = null) => {
     try {
         let url = `${API_URL}/users/${userId}/enrolled-courses`;
 
@@ -153,7 +156,11 @@ export const getEnrolledCourses = async (userId, tipologia = 'todos', search = '
             url += `&data_inicio=${data_inicio}`;
         }
         const params = tipologia !== 'todos' ? { tipologia } : {};
-        const response = await axios.get(url, getAuthHeader({ params }));
+
+        const response = await axios.get(url, {
+            ...getAuthHeader(),
+            params,
+        });
         return response.data;
     } catch (error) {
         console.error('Erro ao procurar cursos inscritos!');
@@ -214,19 +221,19 @@ export const getCoursePopular = async () => {
 } */
 
 export const getCourseAdminLista = async (search = "") => {
-  try {
-    let url = `${API_URL}/all-info`;
+    try {
+        let url = `${API_URL}/all-info`;
 
-    if (search) {
-      url += `?search=${encodeURIComponent(search)}`;
+        if (search) {
+            url += `?search=${encodeURIComponent(search)}`;
+        }
+
+        const response = await axios.get(url, getAuthHeader());
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao carregar cursos para lista Admin!');
+        throw error;
     }
-
-    const response = await axios.get(url, getAuthHeader());
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao carregar cursos para lista Admin!');
-    throw error;
-  }
 };
 
 export const verificar_acesso_curso = async (userId, cursoId) => {
@@ -240,10 +247,10 @@ export const verificar_acesso_curso = async (userId, cursoId) => {
 }
 
 export const cursos_contagem = async () => {
-    try{
+    try {
         const response = await axios.get(`${API_URL}/count`);
         return response.data;
-    } catch(error) {
+    } catch (error) {
         console.error('Erro ao contar o numero de cursos', error);
         throw error;
     }
@@ -297,7 +304,7 @@ export const getCursosLecionadosAtualmente = async (userId, search = ' ', data_f
 }
 
 export const getCourseAdminCursoTodoUm = async (id) => {
-    try{
+    try {
         const response = await axios.get(`${API_URL}/one-curso-all-info/${id}`, getAuthHeader());
         return response.data;
     } catch (error) {

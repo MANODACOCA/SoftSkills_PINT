@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 import { UserProvider } from './utils/userContext.jsx';
+import { NotificationProvider } from './views/components/notification_row/notification_context';
 import './app.css';
 
 //css
@@ -13,7 +14,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <UserProvider>
-        <App />
+        <NotificationProvider>
+          <App />
+        </NotificationProvider>
       </UserProvider>
     </BrowserRouter>
   </StrictMode>

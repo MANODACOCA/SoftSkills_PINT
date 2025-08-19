@@ -4,7 +4,6 @@ export function getAuthHeader (params = {}){
     headers: {
       Authorization: `Bearer ${token}`
     },
-    params
   };
 };
 
