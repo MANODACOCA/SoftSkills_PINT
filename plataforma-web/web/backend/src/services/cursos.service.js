@@ -789,47 +789,33 @@ async function verifyInscription(userId, cursoId) {
     if (!inscricaoUser) {
       return { inscrito: false };
     }
-      
-    const todayLisbon = Sequelize.literal("(NOW() AT TIME ZONE 'Europe/Lisbon')::date");
 
     const curso = await cursos.findOne({
       where: {
         id_curso: cursoId,
         [Op.or]: [
           {
-            [Op.and]: [
-              // data_inicio_curso::date <= today
-              Sequelize.where(
-                Sequelize.cast(Sequelize.col("data_inicio_curso"), "date"),
-                { [Op.lte]: todayLisbon }
-              ),
-              // data_fim_curso::date >= today
-              Sequelize.where(
-                Sequelize.cast(Sequelize.col("data_fim_curso"), "date"),
-                { [Op.gte]: todayLisbon }
-              ),
-            ]
+            data_inicio_curso: {
+              [Op.lte]: Sequelize.literal("data_inicio_curso::date <= (NOW() AT TIME ZONE 'Europe/Lisbon')::date")
+            },
+            data_fim_curso: {
+              [Op.gte]: Sequelize.literal("data_fim_curso::date >= (NOW() AT TIME ZONE 'Europe/Lisbon')::date")
+            }
           },
           // Caso o curso já tenha terminado, mas seja síncrono
           {
-            [Op.and]: [
-              Sequelize.where(
-                Sequelize.cast(Sequelize.col("data_fim_curso"), "date"),
-                { [Op.lt]: todayLisbon }
-              ),
-              { issincrono: true },
-            ]
+            data_fim_curso: {
+              [Op.lt]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            },
+            issincrono: true
           },
+          // Caso o curso já tenha terminado, mas seja assíncrono
           {
-            [Op.and]: [
-              Sequelize.where(
-                Sequelize.cast(Sequelize.col("data_fim_curso"), "date"),
-                { [Op.lt]: todayLisbon }
-              ),
-              { isassincrono: true },
-            ]
+            data_fim_curso: {
+              [Op.lt]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon')")
+            },
+            isassincrono: true
           }
-
         ]
       }
     });
