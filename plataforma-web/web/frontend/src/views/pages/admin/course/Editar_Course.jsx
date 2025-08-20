@@ -838,12 +838,23 @@ const EditCourse = () => {
                             </select>
                             <label for="nome" class="form-label">Nome</label>
                             <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" value="${material.nome_material || ''}" />
+                            ${material.conteudo ? `
+                            <div class="mb-3">
+                                <label class="form-label">Ficheiro atual</label>
+                                <p>
+                                    <a href="${material.conteudo}" target="_blank">${material.conteudo.split('/').pop()}</a>
+                                </p>
+                            ` : `
+                            <div class="mb-3 text-muted">
+                                <em>Nenhum ficheiro/URL associado atualmente</em>
+                            </div>
+                            `}
                             <div id="file1InputWrapper" class="d-none">
                             <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
                             </div>
                             <div id="file2InputWrapper" class="d-none">
-                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
+                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Novo Ficheiro</label>
                             <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
@@ -855,27 +866,29 @@ const EditCourse = () => {
                             const label1 = document.getElementById('ficheiro1Label');
                             const formatosComFicheiro = [1, 2, 3, 4, 5];
 
-                            select.addEventListener('change', () => {
+                            const atualizarCampos = () => {
                                 const selectedId = parseInt(select.value);
                                 if (isNaN(selectedId)) {
                                     file1Wrapper.classList.add('d-none');
                                     file2Wrapper.classList.add('d-none');
                                     return;
                                 }
+
                                 const formatoSelecionado = formatos.find(f => f.id_formato === selectedId);
 
                                 if (formatosComFicheiro.includes(selectedId)) {
                                     file2Wrapper.classList.remove('d-none');
                                     file1Wrapper.classList.add('d-none');
-                                    label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                                    label1.textContent = 'Ficheiro';
+                                    label2.textContent = `Novo ficheiro (${formatoSelecionado.formato})`;
                                 } else {
                                     file2Wrapper.classList.add('d-none');
                                     file1Wrapper.classList.remove('d-none');
-                                    label2.textContent = 'Ficheiro';
-                                    label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                    label1.textContent = `Novo URL (${formatoSelecionado.formato})`;
                                 }
-                            });
+                            };
+                        
+                            select.addEventListener('change', atualizarCampos);
+                            select.addEventListener('click', atualizarCampos);
                         },
                         preConfirm: () => {
                             const id_formato = document.getElementById("formato").value;
@@ -883,14 +896,14 @@ const EditCourse = () => {
                             const nome = document.getElementById("nome").value;
                             const ficheiro = document.getElementById('ficheiroConteudo').files[0];
 
-                            if (!id_formato || (!url && !ficheiro) || !nome) {
-                                Swal.showValidationMessage("Todos os campos são obrigatórios!");
+                            if (!id_formato || !nome) {
+                                Swal.showValidationMessage("Tipo de formato e nome são obrigatórios!");
                                 return false;
                             }
                             return {
                                 id_curso: cursos.id_curso,
                                 id_formato: parseInt(id_formato),
-                                conteudo: url,
+                                conteudo: url || material.conteudo,
                                 nome_material: nome,
                                 ficheiro: ficheiro || null
                             };
