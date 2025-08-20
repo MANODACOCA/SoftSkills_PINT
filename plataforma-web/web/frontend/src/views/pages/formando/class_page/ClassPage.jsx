@@ -50,14 +50,19 @@ const ClassPage = () => {
 
     const [notaFinal, setNotaFinal] = useState(null);
 
+    const dataFim = new Date(curso?.data_fim_curso);
+    dataFim.setHours(23, 59, 59, 999);
+
     const carregarAulasEMaterialApoio = async () => {
         try {
             setCarregar(true);
 
             const acesso = await verificar_acesso_curso(user?.id_utilizador, cursoId);//verifica se o formando tem acesso ao curso
+            console.log(acesso.inscrito);
             setVerificacao(acesso.inscrito);
 
             if (acesso.inscrito) {
+                
                 const dados = await getAulasAndMateriaApoioForCurso(cursoId);
                 setCurso(dados.dadosCurso || []);
                 setAulas(dados.todasAulas || []);
@@ -65,7 +70,7 @@ const ClassPage = () => {
                 setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
                 setTrabalhos(dados.dadosCurso.trabalhos || []);
 
-                if (location.pathname.startsWith('/my/cursos/inscritos/curso') && (new Date() > new Date(dados.dadosCurso.data_fim_curso))) {
+                if (location.pathname.startsWith('/my/cursos/inscritos/curso') && (new Date() > dataFim)) {
                     setVerificacao(false);
                 }
             }
@@ -145,7 +150,7 @@ const ClassPage = () => {
     };
 
     const cursoTerminado = () => {
-        return new Date() > new Date(curso.data_fim_curso);
+        return new Date() > dataFim;
     }
 
     const handleTransferirCertificado = async () => {
