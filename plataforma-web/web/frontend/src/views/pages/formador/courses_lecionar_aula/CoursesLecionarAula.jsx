@@ -35,8 +35,7 @@ const CursoLecionarAula = () => {
     const [resultados, setResultados] = useState([]);
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
-    const data_fim_curso = new Date(cursos.data_fim_curso);
-    const data_fim_cursoStr = data_fim_curso.toISOString().split('T')[0];
+
     const [modoEditNotas, setModoEditNotas] = useState(false);
     const [notasEditadas, setNotasEditadas] = useState({});
     const [trabalhos, setTrabalhos] = useState([]);
