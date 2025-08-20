@@ -192,7 +192,7 @@ const CursoLecionarAula = () => {
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" min="${todayStr}" max="${data_fim_cursoStr}" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
+                            <input id="dataAula" type="date" min="${todayStr}" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0, 5) || ''}">
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
@@ -277,7 +277,7 @@ const CursoLecionarAula = () => {
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}" max="${data_fim_cursoStr}">
+                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}">
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3">
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
