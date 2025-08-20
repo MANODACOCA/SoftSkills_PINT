@@ -1,4 +1,5 @@
 
+const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).notificacoes_curso;
@@ -89,6 +90,16 @@ controllers.getUtilizadorCountNotificationsController = async (req,res)=>{
      res.status(200).json(count); 
   } catch(error) {
     res.status(500).json({erro:'Erro ao obter count de notificaoes'});
+  }
+}
+
+controllers.deleteNorificacaoByUser = async (req, res) => {
+  try {
+    const {userID} = req.params;
+    await model.destroy({where: {id_utilizador: userID}});
+    res.status(200).json({success: 'Sucesso ao apagar as notificações do utilizador'});
+  } catch (error) {
+    res.status(500).json({erro:'Erro ao apagar as notificaçoes de determinado utilizador'});
   }
 }
 

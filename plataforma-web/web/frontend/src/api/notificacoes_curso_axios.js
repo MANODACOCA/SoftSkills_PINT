@@ -77,3 +77,13 @@ export const user_notificacao_count = async (id) => {
         throw error;
     }
 }
+
+export const delete_notifications_by_user = async (id) => {
+    try {
+        const response = await axios.delete(`${API_URL}/delete_notification/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Erro ao apagar notificação!");
+        throw error;
+    }
+}

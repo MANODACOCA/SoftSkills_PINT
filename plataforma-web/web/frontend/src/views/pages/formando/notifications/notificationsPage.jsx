@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import NotificationRow from "../../../components/notification_row/notification_row";
-import { delete_notificacoes_curso, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
+import { delete_notificacoes_curso, delete_notifications_by_user, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
 import { useUser } from '../../../../utils/useUser';
 import { useNotification } from '../../../components/notification_row/notification_context';
 import { Spinner } from 'react-bootstrap';
@@ -31,15 +31,36 @@ const NotificationPage = () => {
             await delete_notificacoes_curso(id);
             fetchAllNotifications();
             fetchCount();
-
             Swal.fire({
                 icon: "success",
                 title: "Notificação apagada com sucesso!",
                 timer: 1500,
                 showConfirmButton: false
             });
-
         } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Erro",
+                text: "Não foi possível apagar notificação",
+                timer: 1500,
+                showConfirmButton: false,
+            });
+        }
+    }
+
+    const HandleDeleteAll = async () => {
+        try {
+            await delete_notifications_by_user(user.id_utilizador);
+            fetchAllNotifications();
+            fetchCount();
+            Swal.fire({
+                icon: "success",
+                title: "As notificações foram apagadas com sucesso!",
+                timer: 1500,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            console.log('Erro ao apagar as notificações!');
             Swal.fire({
                 icon: "error",
                 title: "Erro",
@@ -66,9 +87,17 @@ const NotificationPage = () => {
 
 
     return (
-        <div className='m-2'>
-            <div className='d-flex justify-content-between mb-2'>
-                <h1>Notificações</h1>
+        <div>
+            <div className='d-flex justify-content-between mb-4'>
+                <div className='d-flex gap-4'>
+                    <h1 className='mb-0'>Notificações</h1>
+                    {notificacoes.length > 0 &&
+                        <button className='btn btn-danger d-flex align-items-center gap-2' onClick={() => HandleDeleteAll()}>
+                            <i className='bi bi-trash'></i>
+                            <span className="d-none d-md-inline">Apagar todas</span> 
+                        </button>     
+                    }  
+                </div>
                 <div className="d-flex align-items-center gap-1 filtro">
                     <label htmlFor="">Ordenar:</label>
                     <select name="ordena" id="ordena" className="form-select w-100" value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)}>
@@ -77,17 +106,19 @@ const NotificationPage = () => {
                     </select>
                 </div>
             </div>
-            {
-                notificacoes.length === 0 && (
-                    <div className="text-center mt-5">Não existem notificações neste momento.</div>
-                )
-            }
-            {notificacoes.map((notification, index) => (
-                <div key={index}>
-                    <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id_notificacao_cursos)} />
-                    <hr />
-                </div>
-            ))}
+            <div>
+                {
+                    notificacoes.length === 0 && (
+                        <div className="text-center mt-5">Não existem notificações neste momento.</div>
+                    )
+                }
+                {notificacoes.map((notification, index) => (
+                    <div key={index}>
+                        <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id_notificacao_cursos)} />
+                        <hr />
+                    </div>
+                ))}    
+            </div>
         </div>
     );
 }
