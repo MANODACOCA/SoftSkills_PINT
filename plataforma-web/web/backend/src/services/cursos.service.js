@@ -793,16 +793,9 @@ async function verifyInscription(userId, cursoId) {
     const curso = await cursos.findOne({
       where: {
         id_curso: cursoId,
-        [Op.or]: [
-          {
-            data_inicio_curso: {
-              [Op.lte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon') ")
-            },
-            data_fim_curso: {
-              [Op.gte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon') ")
-            }
-          }
-        ]
+        data_inicio_curso: {
+          [Op.lte]: Sequelize.literal("DATE(NOW() AT TIME ZONE 'Europe/Lisbon') ")
+        },
       }
     });
 
