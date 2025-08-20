@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useContext } from 'react';
 import NotificationRow from "../../../components/notification_row/notification_row";
-import { delete_notificacoes_curso, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
+import { delete_notificacoes_curso, delete_notifications_by_user, find_notificacao_curso } from '../../../../api/notificacoes_curso_axios';
 import { useUser } from '../../../../utils/useUser';
 import { useNotification } from '../../../components/notification_row/notification_context';
 import { Spinner } from 'react-bootstrap';
@@ -31,14 +31,12 @@ const NotificationPage = () => {
             await delete_notificacoes_curso(id);
             fetchAllNotifications();
             fetchCount();
-
             Swal.fire({
                 icon: "success",
                 title: "Notificação apagada com sucesso!",
                 timer: 1500,
                 showConfirmButton: false
             });
-
         } catch (error) {
             Swal.fire({
                 icon: "error",
@@ -50,12 +48,26 @@ const NotificationPage = () => {
         }
     }
 
-    const HandleDeleteAll = async (id) => {
+    const HandleDeleteAll = async () => {
         try {
-            
-
+            await delete_notifications_by_user(user.id_utilizador);
+            fetchAllNotifications();
+            fetchCount();
+            Swal.fire({
+                icon: "success",
+                title: "As notificações foram apagadas com sucesso!",
+                timer: 1500,
+                showConfirmButton: false
+            });
         } catch (error) {
             console.log('Erro ao apagar as notificações!');
+            Swal.fire({
+                icon: "error",
+                title: "Erro",
+                text: "Não foi possível apagar notificação",
+                timer: 1500,
+                showConfirmButton: false,
+            });
         }
     }
 
@@ -79,10 +91,12 @@ const NotificationPage = () => {
             <div className='d-flex justify-content-between mb-4'>
                 <div className='d-flex gap-4'>
                     <h1 className='mb-0'>Notificações</h1>
-                    <button className='btn btn-danger d-flex align-items-center gap-2'>
-                        <i className='bi bi-trash'></i>
-                        <span className="d-none d-md-inline">Apagar todas</span> 
-                    </button>    
+                    {notificacoes.length > 0 &&
+                        <button className='btn btn-danger d-flex align-items-center gap-2' onClick={() => HandleDeleteAll()}>
+                            <i className='bi bi-trash'></i>
+                            <span className="d-none d-md-inline">Apagar todas</span> 
+                        </button>     
+                    }  
                 </div>
                 <div className="d-flex align-items-center gap-1 filtro">
                     <label htmlFor="">Ordenar:</label>
