@@ -50,6 +50,15 @@ const NotificationPage = () => {
         }
     }
 
+    const HandleDeleteAll = async (id) => {
+        try {
+            
+
+        } catch (error) {
+            console.log('Erro ao apagar as notificações!');
+        }
+    }
+
     useEffect(() => {
         window.scrollTo(0, 0);
         if (user && user.id_utilizador) {
@@ -66,9 +75,15 @@ const NotificationPage = () => {
 
 
     return (
-        <div className='m-2'>
-            <div className='d-flex justify-content-between mb-2'>
-                <h1>Notificações</h1>
+        <div>
+            <div className='d-flex justify-content-between mb-4'>
+                <div className='d-flex gap-4'>
+                    <h1 className='mb-0'>Notificações</h1>
+                    <button className='btn btn-danger d-flex align-items-center gap-2'>
+                        <i className='bi bi-trash'></i>
+                        <span className="d-none d-md-inline">Apagar todas</span> 
+                    </button>    
+                </div>
                 <div className="d-flex align-items-center gap-1 filtro">
                     <label htmlFor="">Ordenar:</label>
                     <select name="ordena" id="ordena" className="form-select w-100" value={ordenacao} onChange={(e) => setOrdenacao(e.target.value)}>
@@ -77,17 +92,19 @@ const NotificationPage = () => {
                     </select>
                 </div>
             </div>
-            {
-                notificacoes.length === 0 && (
-                    <div className="text-center mt-5">Não existem notificações neste momento.</div>
-                )
-            }
-            {notificacoes.map((notification, index) => (
-                <div key={index}>
-                    <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id_notificacao_cursos)} />
-                    <hr />
-                </div>
-            ))}
+            <div>
+                {
+                    notificacoes.length === 0 && (
+                        <div className="text-center mt-5">Não existem notificações neste momento.</div>
+                    )
+                }
+                {notificacoes.map((notification, index) => (
+                    <div key={index}>
+                        <NotificationRow notification={notification} onDelete={() => HandleDelete(notification.id_notificacao_cursos)} />
+                        <hr />
+                    </div>
+                ))}    
+            </div>
         </div>
     );
 }
