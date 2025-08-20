@@ -790,7 +790,7 @@ async function verifyInscription(userId, cursoId) {
       return { inscrito: false };
     }
 
-    const curso = await cursos.findOne({
+ /*    const curso = await cursos.findOne({
       where: {
         id_curso: cursoId,
         data_inicio_curso: {
@@ -801,7 +801,7 @@ async function verifyInscription(userId, cursoId) {
 
     if (!curso) {
       return { inscrito: false };
-    }
+    } */
 
     return { inscrito: true };
 
