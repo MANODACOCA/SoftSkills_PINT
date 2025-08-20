@@ -436,7 +436,7 @@ const ClassPage = () => {
                                         {curso ? (
                                             <div className="bg-white p-4 rounded-4 shadow-sm mt-4 border-bottom">
                                                 <h3 className='mb-4'>Sobre o Curso</h3>
-                                                <p className="mt-3">{curso.descricao_curso}</p>
+                                                <p className="mt-3 text-break">{curso.descricao_curso}</p>
 
                                                 {curso.issincrono && curso.sincrono && curso.sincrono.id_formador_formadore && (
                                                     <div className="mt-4">

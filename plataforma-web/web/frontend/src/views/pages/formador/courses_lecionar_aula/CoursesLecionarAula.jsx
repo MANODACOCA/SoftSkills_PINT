@@ -33,8 +33,10 @@ const CursoLecionarAula = () => {
     const [formadores, setFormadores] = useState([]);
     const [formato, setFormato] = useState([]);
     const [resultados, setResultados] = useState([]);
+
     const today = new Date();
     const todayStr = today.toISOString().split('T')[0];
+    const fim_de_cursoStr = cursos.data_fim_curso ? cursos.data_fim_curso.split('T')[0] : null;
 
     const [modoEditNotas, setModoEditNotas] = useState(false);
     const [notasEditadas, setNotasEditadas] = useState({});
@@ -193,10 +195,10 @@ const CursoLecionarAula = () => {
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
                             <label for="dataAula" class="form-label">Data da Aula</label>
                             <input id="dataAula" type="date" min="${todayStr}" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
-                            <label for="horaAula" class="form-label">Hora da Aula</label>
-                            <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0, 5) || ''}">
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
                             <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${tempoMinutos}">
+                            <label for="horaAula" class="form-label">Hora da Aula</label>
+                            <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0, 5) || ''}">
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -278,10 +280,10 @@ const CursoLecionarAula = () => {
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
                             <label for="dataAula" class="form-label">Data da Aula</label>
                             <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}">
-                            <label for="horaAula" class="form-label">Hora da Aula</label>
-                            <input id="horaAula" type="time" class="form-control mb-3">
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
                             <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="0">
+                            <label for="horaAula" class="form-label">Hora da Aula</label>
+                            <input id="horaAula" type="time" class="form-control mb-3">
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
