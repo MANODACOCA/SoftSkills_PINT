@@ -36,6 +36,7 @@ const ClassPage = () => {
     const [erro, setErro] = useState(null);
     const [loadingCertificado, setLoadingCertificado] = useState(false);
     const [dotsCertificado, setDotsCertificado] = useState(".");
+    const [dataFim, setDataFim] = useState(null);
 
     const { cursoId } = useParams();
     const { user } = useUser();
@@ -50,19 +51,17 @@ const ClassPage = () => {
 
     const [notaFinal, setNotaFinal] = useState(null);
 
-    const dataFim = new Date(curso?.data_fim_curso);
-    dataFim.setHours(23, 59, 59, 999);
+
 
     const carregarAulasEMaterialApoio = async () => {
         try {
             setCarregar(true);
 
             const acesso = await verificar_acesso_curso(user?.id_utilizador, cursoId);//verifica se o formando tem acesso ao curso
-            console.log(acesso.inscrito);
             setVerificacao(acesso.inscrito);
 
             if (acesso.inscrito) {
-                
+
                 const dados = await getAulasAndMateriaApoioForCurso(cursoId);
                 setCurso(dados.dadosCurso || []);
                 setAulas(dados.todasAulas || []);
@@ -70,7 +69,16 @@ const ClassPage = () => {
                 setAulaAtual((dados.todasAulas && dados.todasAulas.length > 0) ? dados.todasAulas[0] : null);
                 setTrabalhos(dados.dadosCurso.trabalhos || []);
 
-                if (location.pathname.startsWith('/my/cursos/inscritos/curso') && (new Date() > dataFim)) {
+
+                const dfim = new Date(dados.dadosCurso.data_fim_curso);
+                dfim.setHours(23, 59, 59, 999);
+                setDataFim(dfim);
+
+                if (location.pathname.startsWith('/my/cursos/inscritos/curso') && (new Date() > dfim)) {
+                    setVerificacao(false);
+                }
+
+                if (location.pathname.includes('/my/cursos/terminados/curso') && activeTab !== "certificado" && dados.dadosCurso.isassincrono) {
                     setVerificacao(false);
                 }
             }

@@ -189,14 +189,14 @@ const EditCourse = () => {
 
     const handleSubmitCurso = async (e) => {
         e.preventDefault();
-        
+
         const dToday = new Date(`${todayStr}`);
         const dInscIni = new Date(`${cursos.data_inicio_inscricao}`);
         const dInscFim = new Date(`${cursos.data_fim_inscricao}`);
         const dCursoIni = new Date(`${cursos.data_inicio_curso}`);
         const dCursoFim = new Date(`${cursos.data_fim_curso}`);
-        
-        if(cursos.isassincrono === false && !sincrono.id_formador){
+
+        if (cursos.isassincrono === false && !sincrono.id_formador) {
             Swal.fire({
                 icon: "error",
                 title: "Erro",
@@ -379,16 +379,16 @@ const EditCourse = () => {
     }
 
     const renderActionsAula = (item) => {
-    if (isViewMode) return null;
+        if (isViewMode) return null;
         return (
             <div className="d-flex">
-                <button className="btn btn-outline-primary me-2" onClick={(e) => { e.stopPropagation(); HandleEditCreateAula(item.id_aula, item)}}>
+                <button className="btn btn-outline-primary me-2" onClick={(e) => { e.stopPropagation(); HandleEditCreateAula(item.id_aula, item) }}>
                     <i className="bi bi-pencil"></i>
                 </button>
-                <button className="btn btn-outline-success me-2" onClick={(e) =>{ e.stopPropagation(); handleAddConteudoAula(item.id_aula)}}>
+                <button className="btn btn-outline-success me-2" onClick={(e) => { e.stopPropagation(); handleAddConteudoAula(item.id_aula) }}>
                     <i className="bi bi-file-earmark-plus"></i>
                 </button>
-                <button className="btn btn-outline-danger" onClick={(e) =>{ e.stopPropagation(); handleDeleteAula(item.id_aula)}}>
+                <button className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteAula(item.id_aula) }}>
                     <i className="bi bi-trash"></i>
                 </button>
             </div>
@@ -841,9 +841,11 @@ const EditCourse = () => {
                             ${material.conteudo ? `
                             <div class="mb-3">
                                 <label class="form-label">Ficheiro atual</label>
-                                <p>
-                                    <a href="${material.conteudo}" target="_blank">${material.conteudo.split('/').pop()}</a>
-                                </p>
+                                <div class="border rounded px-1 py-2 d-flex align-items-center justify-content-between">
+                                    <p class="mb-0">${material.conteudo.split('/').pop()}</p>
+                                    <a class="btn btn-outline-success" href="${material.conteudo}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+                                </div>
+                               
                             ` : `
                             <div class="mb-3 text-muted">
                                 <em>Nenhum ficheiro/URL associado atualmente</em>
@@ -854,7 +856,7 @@ const EditCourse = () => {
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
                             </div>
                             <div id="file2InputWrapper" class="d-none">
-                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Novo Ficheiro</label>
+                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label mt-3">Novo Ficheiro</label>
                             <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
@@ -886,7 +888,7 @@ const EditCourse = () => {
                                     label1.textContent = `Novo URL (${formatoSelecionado.formato})`;
                                 }
                             };
-                        
+
                             select.addEventListener('change', atualizarCampos);
                             select.addEventListener('click', atualizarCampos);
                         },

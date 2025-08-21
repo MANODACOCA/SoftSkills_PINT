@@ -33,11 +33,6 @@ const CursoLecionarAula = () => {
     const [formadores, setFormadores] = useState([]);
     const [formato, setFormato] = useState([]);
     const [resultados, setResultados] = useState([]);
-
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-    const fim_de_cursoStr = cursos.data_fim_curso ? cursos.data_fim_curso.split('T')[0] : null;
-
     const [modoEditNotas, setModoEditNotas] = useState(false);
     const [notasEditadas, setNotasEditadas] = useState({});
     const [trabalhos, setTrabalhos] = useState([]);
@@ -45,6 +40,10 @@ const CursoLecionarAula = () => {
     const [loadingMaterialApoio, setLoadingMaterialApoio] = useState(true);
     const [loadingTrabalhos, setLoadingTrabalhos] = useState(true);
     const [loadingNotas, setLoadingNotas] = useState(true);
+
+    const today = new Date();
+    const todayStr = today.toISOString().split('T')[0];
+    const fim_de_cursoStr = cursos.data_fim_curso ? cursos.data_fim_curso.split('T')[0] : null;
 
     const iconMapById = {
         1: <FaFilePdf className="text-danger" />,
@@ -194,11 +193,11 @@ const CursoLecionarAula = () => {
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" min="${todayStr}" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[0] || ''}">
-                            <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
-                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${tempoMinutos}">
+                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}" max="${fim_de_cursoStr}" value="${aulaData?.data_aula?.split('T')[0] || ''}">
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0, 5) || ''}">
+                            <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${tempoMinutos}">
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -216,9 +215,9 @@ const CursoLecionarAula = () => {
                         },
                         preConfirm: () => {
                             const nome = document.getElementById('nomeAula').value.trim();
+                            const tempoM = parseInt(document.getElementById('tempoDuracao').value, 10);
                             const data = document.getElementById('dataAula').value;
                             const hora = document.getElementById('horaAula').value;
-                            const tempoM = parseInt(document.getElementById('tempoDuracao').value, 10);
                             const url = document.getElementById('urlAula').value.trim();
 
                             if (!nome || !data || !hora || !url || isNaN(tempoM)) {
@@ -231,6 +230,18 @@ const CursoLecionarAula = () => {
                                 return;
                             }
 
+                            const horasAulaMin = (parseInt(hora.split(':')[0]) * 60) + parseInt(hora.split(':')[1]);
+                            const finalDaAula = horasAulaMin + parseInt(tempoM);
+
+                            if (fim_de_cursoStr < data || data < todayStr) {
+                                Swal.showValidationMessage('A aula que está a tentar editar não está entre as datas do curso!');
+                                return;
+                            } else if (data === fim_de_cursoStr) {
+                                if (finalDaAula >= 1440) {
+                                    Swal.showValidationMessage('A aula que está a tentar editar ultrapassa o horário do curso!');
+                                    return;
+                                }
+                            }
 
                             const selectedDateTime = new Date(`${data}T${hora}:00`);
                             const now = new Date();
@@ -279,11 +290,11 @@ const CursoLecionarAula = () => {
                             <label for="nomeAula" class="form-label">Aula</label>
                             <input id="nomeAula" class="form-control mb-3" placeholder="Nome da aula" value="${aulaData?.nome_aula || ''}">
                             <label for="dataAula" class="form-label">Data da Aula</label>
-                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}">
-                            <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
-                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="0">
+                            <input id="dataAula" type="date" class="form-control mb-3" min="${todayStr}" max="${fim_de_cursoStr}">
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3">
+                            <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="0">
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -306,6 +317,7 @@ const CursoLecionarAula = () => {
                             const tempoM = parseInt(document.getElementById('tempoDuracao').value, 10);
                             const url = document.getElementById('urlAula').value.trim();
 
+
                             if (!nome || !data || !hora || !url || isNaN(tempoM)) {
                                 Swal.showValidationMessage('Todos os campos são obrigatórios!');
                                 return;
@@ -314,6 +326,19 @@ const CursoLecionarAula = () => {
                             if (!isValidMeetingLink(url)) {
                                 Swal.showValidationMessage('Link inválido! Aceitamos Zoom, Google Meet ou Teams.');
                                 return;
+                            }
+
+                            const horasAulaMin = (parseInt(hora.split(':')[0]) * 60) + parseInt(hora.split(':')[1]);
+                            const finalDaAula = horasAulaMin + parseInt(tempoM);
+
+                            if (fim_de_cursoStr < data || data < todayStr) {
+                                Swal.showValidationMessage('A aula que está a tentar editar não está entre as datas do curso!');
+                                return;
+                            } else if (data === fim_de_cursoStr) {
+                                if (finalDaAula >= 1440) {
+                                    Swal.showValidationMessage('A aula que está a tentar editar ultrapassa o horário do curso!');
+                                    return;
+                                }
                             }
 
                             const selectedDateTime = new Date(`${data}T${hora}:00`);
