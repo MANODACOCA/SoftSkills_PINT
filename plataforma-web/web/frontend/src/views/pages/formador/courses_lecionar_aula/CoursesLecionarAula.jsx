@@ -156,13 +156,13 @@ const CursoLecionarAula = () => {
     const renderActionsAula = (item) => {
         return (
             <div className="d-flex">
-                <button className="btn btn-outline-primary me-2" onClick={() => HandleEditCreateAula(item.id_aula, item)}>
+                <button className="btn btn-outline-primary me-2" onClick={(e) => { e.stopPropagation(); HandleEditCreateAula(item.id_aula, item) }}>
                     <i className="bi bi-pencil"></i>
                 </button>
-                <button className="btn btn-outline-success me-2" onClick={() => handleAddConteudoAula(item.id_aula)}>
+                <button className="btn btn-outline-success me-2" onClick={(e) => { e.stopPropagation(); handleAddConteudoAula(item.id_aula) }}>
                     <i className="bi bi-file-earmark-plus"></i>
                 </button>
-                <button className="btn btn-outline-danger" onClick={() => handleDeleteAula(item.id_aula)}>
+                <button className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteAula(item.id_aula) }}>
                     <i className="bi bi-trash"></i>
                 </button>
             </div>
@@ -672,6 +672,18 @@ const CursoLecionarAula = () => {
                             </select>
                             <label for="nome" class="form-label">Nome</label>
                             <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" value="${material.nome_material || ''}" />
+                            ${material.conteudo ? `
+                            <div class="mb-3">
+                                <label class="form-label">Ficheiro atual</label>
+                                <div class="border rounded px-1 py-2 d-flex align-items-center justify-content-between">
+                                    <p class="mb-0">${material.conteudo.split('/').pop()}</p>
+                                    <a class="btn btn-outline-success" href="${material.conteudo}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+                                </div>
+                            ` : `
+                            <div class="mb-3 text-muted">
+                                <em>Nenhum ficheiro/URL associado atualmente</em>
+                            </div>
+                            `}
                             <div id="file1InputWrapper" class="d-none">
                             <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
