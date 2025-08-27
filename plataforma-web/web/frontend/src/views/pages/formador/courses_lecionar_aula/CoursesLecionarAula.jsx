@@ -1464,7 +1464,8 @@ const CursoLecionarAula = () => {
                             descricao_tr: descricao,
                             data_entrega_tr,
                             id_formato_tr: id_formato,
-                            ficheiro: ficheiro ? ficheiro : url,
+                            ficheiro: ficheiro || null,
+                            caminho_tr: url,
                             id_curso_tr: cursos.id_curso
                         };
                     },
