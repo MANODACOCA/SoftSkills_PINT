@@ -17,7 +17,7 @@ import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../
 import { useUser } from '../../../../utils/useUser';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { isValidMeetingLink, minutesToInterval, toIsoTimestamp, durationToMinutes } from '../../../components/shared_functions/FunctionsUtils';
-import { FaVideo, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWord } from 'react-icons/fa';
+import { FaExternalLinkSquareAlt, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWord } from 'react-icons/fa';
 import { create_trabalhos, delete_trabalhos, update_trabalhos, get_trabalhos_curso } from '../../../../api/trabalhos_axios';
 import { list_entrega_trabalhos } from '../../../../api/entrega_trabalhos_axios';
 import { columnsTrabalhos } from '../../../components/table/ColumnsTrabalho';
@@ -52,7 +52,7 @@ const CursoLecionarAula = () => {
         4: <FaFileAlt className="text-success" />,
         5: <FaFileAlt className="text-success" />,
         6: <FaFileImage className="text-pink-500" />,
-        7: <FaVideo className="text-primary" />,
+        7: <FaExternalLinkSquareAlt className="text-primary" />,
     };
     const getIconById = (id) => {
         return iconMapById[id] || <FaFile className="text-secondary" />;
@@ -197,7 +197,7 @@ const CursoLecionarAula = () => {
                             <label for="horaAula" class="form-label">Hora da Aula</label>
                             <input id="horaAula" type="time" class="form-control mb-3" value="${aulaData?.data_aula?.split('T')[1]?.slice(0, 5) || ''}">
                             <label for="tempoDuracao" class="form-label">Tempo de Duração (min)</label>
-                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="0" value="${tempoMinutos}">
+                            <input id="tempoDuracao" type="number" class="form-control mb-3" min="1" value="${tempoMinutos}">
                             <label for="urlAula" class="form-label">URL</label>
                             <input id="urlAula" class="form-control" placeholder="https://exemplo.com/aula" value="${aulaData?.caminho_url || ''}">
                         `,
@@ -227,6 +227,11 @@ const CursoLecionarAula = () => {
 
                             if (!isValidMeetingLink(url)) {
                                 Swal.showValidationMessage('Link inválido! Aceitamos Zoom, Google Meet ou Teams.');
+                                return;
+                            }
+
+                            if (tempoM < 1) {
+                                Swal.showValidationMessage('A duração da aula deve ser de pelo menos 1 minuto.');
                                 return;
                             }
 
@@ -328,6 +333,11 @@ const CursoLecionarAula = () => {
                                 return;
                             }
 
+                            if (tempoM < 1) {
+                                Swal.showValidationMessage('A duração da aula deve ser de pelo menos 1 minuto.');
+                                return;
+                            }
+
                             const horasAulaMin = (parseInt(hora.split(':')[0]) * 60) + parseInt(hora.split(':')[1]);
                             const finalDaAula = horasAulaMin + parseInt(tempoM);
 
@@ -425,12 +435,12 @@ const CursoLecionarAula = () => {
                     <label for="nomeConteudo" class="form-label">Nome do Conteúdo</label>
                     <input id="nomeConteudo" class="form-control mb-3" placeholder= "Ex: Slides React">
                     <div id="file1InputWrapper" class="d-none">
-                    <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
-                    <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
+                    <label for="urlConteudo" id="ficheiro1Label" class="form-label">URL do Conteúdo</label>
+                    <input id="urlConteudo" class="form-control" placeholder="https://exemplo.com/conteudo.pdf">
                     </div>
                     <div id="file2InputWrapper" class="d-none">
                     <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+                    <input type="file" id="ficheiroConteudo" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                     </div>
                 `,
                 didOpen: () => {
@@ -439,7 +449,7 @@ const CursoLecionarAula = () => {
                     const file1Wrapper = document.getElementById('file1InputWrapper');
                     const label2 = document.getElementById('ficheiro2Label');
                     const label1 = document.getElementById('ficheiro1Label');
-                    const formatosComFicheiro = [1, 2, 3, 4, 5];
+                    const formatosComFicheiro = [1, 2, 3, 4, 5, 6];
 
                     select.addEventListener('change', () => {
                         const selectedId = parseInt(select.value);
@@ -675,8 +685,8 @@ const CursoLecionarAula = () => {
                             ${material.conteudo ? `
                             <div class="mb-3">
                                 <label class="form-label">Ficheiro atual</label>
-                                <div class="border rounded px-1 py-2 d-flex align-items-center justify-content-between">
-                                    <p class="mb-0">${material.conteudo.split('/').pop()}</p>
+                                <div class="border rounded px-1 py-2 d-flex align-items-center justify-content-between mb-3">
+                                    <p class="mb-0 text-truncate">${material.conteudo}</p>
                                     <a class="btn btn-outline-success" href="${material.conteudo}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
                                 </div>
                             ` : `
@@ -684,14 +694,14 @@ const CursoLecionarAula = () => {
                                 <em>Nenhum ficheiro/URL associado atualmente</em>
                             </div>
                             `}
-                            <div id="file1InputWrapper" class="d-none">
-                            <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
+                           <div id="file1InputWrapper" class="d-none">
+                            <label for="urlConteudo" id="ficheiro1Label" class="form-label">URL do Conteúdo</label>
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
                             </div>
                             <div id="file2InputWrapper" class="d-none">
                             <p id="ficheiroAtual" class="small mb-2"></p>
-                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                            <input type="file" id="ficheiroConteudo"class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Novo Ficheiro(*opcional)</label>
+                            <input type="file" id="ficheiroConteudo" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
                         didOpen: () => {
@@ -701,11 +711,12 @@ const CursoLecionarAula = () => {
                             const urlInput = document.getElementById('urlConteudo');
                             const label2 = document.getElementById('ficheiro2Label');
                             const label1 = document.getElementById('ficheiro1Label');
-                            const formatosComFicheiro = [1, 2, 3, 4, 5];
+                            const formatosComFicheiro = [1, 2, 3, 4, 5, 6];
 
                             const ficheiroAtual = document.getElementById('ficheiroAtual');
-                            function atualizarCampos() {
-                                //select.addEventListener('change', () => {
+
+                            const atualizarCampos = () => {
+
                                 const selectedId = parseInt(select.value);
                                 if (isNaN(selectedId)) {
                                     file1Wrapper.classList.add('d-none');
@@ -717,36 +728,31 @@ const CursoLecionarAula = () => {
                                 if (formatosComFicheiro.includes(selectedId)) {
                                     file2Wrapper.classList.remove('d-none');
                                     file1Wrapper.classList.add('d-none');
-                                    ficheiroAtual.textContent = material.conteudo
-                                        ? `Ficheiro atual: ${material.conteudo.split('/').pop()}`
-                                        : 'Nenhum ficheiro carregado.';
-                                    label2.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                                    label1.textContent = 'Ficheiro';
+                                    label2.textContent = `Novo Ficheiro(*opcional) - (${formatoSelecionado.formato})`;
                                 } else {
                                     file2Wrapper.classList.add('d-none');
                                     file1Wrapper.classList.remove('d-none');
-                                    label2.textContent = 'Ficheiro';
-                                    label1.textContent = `Ficheiro (${formatoSelecionado.formato})`;
-                                    urlInput.value = material.conteudo || '';
+                                    label1.textContent = `Novo Ficheiro(*opcional) - (${formatoSelecionado.formato})`;
+
                                 }
                             }
-                            atualizarCampos();
-                            select.addEventListener('change', atualizarCampos);
+                            select.addEventListener('click', atualizarCampos);
                         },
+
                         preConfirm: () => {
                             const id_formato = document.getElementById("formato").value;
                             const url = document.getElementById("urlConteudo").value;
                             const nome = document.getElementById("nome").value;
                             const ficheiro = document.getElementById('ficheiroConteudo').files[0];
 
-                            if (!id_formato || (!url && !ficheiro) || !nome) {
-                                Swal.showValidationMessage("Todos os campos são obrigatórios!");
+                            if (!id_formato || !nome) {
+                                Swal.showValidationMessage("Tipo de formato e nome são obrigatórios!");
                                 return false;
                             }
                             return {
                                 id_curso: cursos.id_curso,
                                 id_formato: parseInt(id_formato),
-                                conteudo: url,
+                                conteudo: url || material.conteudo,
                                 nome_material: nome,
                                 ficheiro: ficheiro || null
                             };
@@ -796,12 +802,12 @@ const CursoLecionarAula = () => {
                             <label for="nome" class="form-label">Nome</label>
                             <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio"/>
                             <div id="file1InputWrapper" class="d-none">
-                            <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
-                            <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
+                            <label for="urlConteudo" id="ficheiro1Label" class="form-label">URL do Conteúdo</label>
+                            <input id="urlConteudo" class="form-control" placeholder="https://exemplo.com/conteudo.pdf">
                             </div>
                             <div id="file2InputWrapper" class="d-none">
                             <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                            <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+                            <input type="file" id="ficheiroConteudo" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
                         didOpen: () => {
@@ -810,7 +816,7 @@ const CursoLecionarAula = () => {
                             const file1Wrapper = document.getElementById('file1InputWrapper');
                             const label2 = document.getElementById('ficheiro2Label');
                             const label1 = document.getElementById('ficheiro1Label');
-                            const formatosComFicheiro = [1, 2, 3, 4, 5];
+                            const formatosComFicheiro = [1, 2, 3, 4, 5, 6];
 
                             select.addEventListener('change', () => {
                                 const selectedId = parseInt(select.value);
@@ -1196,7 +1202,7 @@ const CursoLecionarAula = () => {
             try {
                 if (id != null) {
                     const formatos = await list_tipo_formato();
-                    const formatosComFicheiro = [1, 2, 3, 4, 5];
+                    const formatosComFicheiro = [1, 2, 3, 4, 5, 6];
                     const editarTrabalho = await Swal.fire({
                         title: 'Editar trabalho',
                         html: `
@@ -1207,7 +1213,7 @@ const CursoLecionarAula = () => {
                         <textarea id="descTr" class="form-control mb-3" placeholder="Descrição...">${trabalho?.descricao_tr || ''}</textarea>
 
                         <label class="form-label">Data de Entrega</label>
-                        <input id="dataTr" type="date" class="form-control mb-3" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
+                        <input id="dataTr" type="date" class="form-control mb-3" min="${todayStr}" max="${fim_de_cursoStr}" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
 
                         <label class="form-label">Hora de Entrega</label>
                         <input id="horaTr" type="time" class="form-control mb-3" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0, 5) || ''}" />
@@ -1281,6 +1287,14 @@ const CursoLecionarAula = () => {
                                 return false;
                             }
 
+                            const selectedDateTime = new Date(`${data}T${hora}:00`);
+                            const now = new Date();
+
+                            if (selectedDateTime <= now) {
+                                Swal.showValidationMessage('A data e a hora têm de ser futuras!');
+                                return;
+                            }
+
                             const data_entrega_tr = `${data}T${hora}:00`;
 
                             return {
@@ -1349,7 +1363,7 @@ const CursoLecionarAula = () => {
         if (result.isConfirmed) {
             try {
                 const formatos = await list_tipo_formato();
-                const formatosComFicheiro = [1, 2, 3, 4, 5];
+                const formatosComFicheiro = [1, 2, 3, 4, 5, 6];
                 const adicionarTrabalho = await Swal.fire({
                     title: 'Adicionar Trabalho',
                     html: `
@@ -1360,7 +1374,7 @@ const CursoLecionarAula = () => {
                     <textarea id="descTr" class="form-control mb-2" placeholder="Descrição...">${trabalho?.descricao_tr || ''}</textarea>
 
                     <label class="form-label">Data de Entrega</label>
-                    <input id="dataTr" type="date" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
+                    <input id="dataTr" type="date" class="form-control mb-2" min="${todayStr}" max="${fim_de_cursoStr}" value="${trabalho?.data_entrega_tr?.split('T')[0] || ''}" />
 
                     <label class="form-label">Hora de Entrega</label>
                     <input id="horaTr" type="time" class="form-control mb-2" value="${trabalho?.data_entrega_tr?.split('T')[1]?.slice(0, 5) || ''}" />
@@ -1391,7 +1405,6 @@ const CursoLecionarAula = () => {
                         const ficheiroAtual = document.getElementById('ficheiroAtual');
                         const fileLabel = document.getElementById('ficheiroLabel');
                         const urlLabel = document.getElementById('urlLabel');
-                        const urlInput = document.getElementById('urlTr');
 
                         function atualizarCampos() {
                             const selectedId = parseInt(formatoEl.value);
@@ -1428,10 +1441,21 @@ const CursoLecionarAula = () => {
                         const hora = document.getElementById('horaTr').value;
                         const id_formato = parseInt(document.getElementById('formatoTr').value);
                         const ficheiro = document.getElementById('ficheiroTr').files[0];
+                        const url = document.getElementById("urlTr").value;
 
-                        if (!nome || !descricao || !data || !hora || !id_formato || !ficheiro) {
+                        if (!nome || !descricao || !data || !hora || !id_formato || (!ficheiro && !url)) {
                             Swal.showValidationMessage("Todos os campos são obrigatórios!");
                             return false;
+                        }
+
+                        const selectedDateTime = new Date(`${data}T${hora}:00`);
+                        const fimCurso = new Date(cursos.data_fim_curso);
+                        fimCurso.setHours(23, 59, 59, 999);
+                        const now = new Date();
+
+                        if (selectedDateTime <= now || selectedDateTime >= fimCurso) {
+                            Swal.showValidationMessage('A data e a hora têm de ser futuras!');
+                            return;
                         }
 
                         const data_entrega_tr = `${data}T${hora}:00`;
@@ -1441,7 +1465,8 @@ const CursoLecionarAula = () => {
                             descricao_tr: descricao,
                             data_entrega_tr,
                             id_formato_tr: id_formato,
-                            ficheiro: ficheiro,
+                            ficheiro: ficheiro || null,
+                            conteudo: url,
                             id_curso_tr: cursos.id_curso
                         };
                     },
@@ -1534,6 +1559,9 @@ const CursoLecionarAula = () => {
     const renderActionsTrabalhos = (item) => {
         return (
             <div className="d-flex">
+                <a href={item.caminho_tr} className="btn btn-outline-success me-2" target="_blank">
+                    <i className='bi bi-box-arrow-up-right'></i>
+                </a>
                 <button className="btn btn-outline-primary me-2" onClick={() => handleEditarTrabalho(item)}>
                     <i className="bi bi-pencil"></i>
                 </button>

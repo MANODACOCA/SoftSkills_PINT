@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const sequelize = require('../models/database');
 const { utilizador, formandos, resultados, inscricoes } = require('../models/init-models')(sequelize);
 
@@ -14,7 +15,8 @@ async function getResultadosFormandosInscritos(cursoId) {
                         {
                             model: resultados,
                             as: 'resultados',
-                            attributes: ['id_resul','resul'],
+                            attributes: ['id_resul', 'resul'],
+                            where: { id_curso_sincrono: cursoId },
                         },
                         {
                             model: utilizador,

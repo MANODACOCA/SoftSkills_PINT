@@ -5,6 +5,7 @@ import { Card, Button } from 'react-bootstrap';
 import { FaFileAlt, FaInfoCircle, FaRegCheckCircle } from 'react-icons/fa';
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { MdDateRange } from "react-icons/md";
+import { parseDateWithoutTimezone } from '../shared_functions/FunctionsUtils';
 import { get_entrega_trabalhos } from '../../../api/entrega_trabalhos_axios';
 
 
@@ -67,7 +68,7 @@ const WorkCard = ({ trabalho, index }) => {
                         <FaRegCheckCircle />Entregue
                     </Button>
                 </div>
-            ) : !isSubmitted && new Date(trabalho.data_entrega_tr) < today ? (
+            ) : !isSubmitted && parseDateWithoutTimezone(trabalho.data_entrega_tr) < today ? (
                 <div>
                     <Button className='d-flex align-items-center justify-content-center gap-2 px-3 py-2 fw-semibold shadow-sm bg-danger border-0' onClick={onClick} variant="primary" style={{ width: "200px" }}>
                         <IoIosCloseCircleOutline />Não Entregue

@@ -20,7 +20,7 @@ const CourseRegistration = () => {
   const [loading, setLoading] = useState(true);
   const [inscrito, setInscrito] = useState(false);
   const nowDate = new Date();
-  const [dataFimInsc, setDataFimInsc] = useState(null);
+  const [dataInicioCurso, setDataInicioCurso] = useState(null);
 
   const handleInscrito = (valor) => {
     setInscrito(valor);
@@ -92,7 +92,7 @@ const CourseRegistration = () => {
 
   useEffect(() => {
     if (course) {
-      setDataFimInsc(parseDateWithoutTimezone(course?.data_fim_inscricao));
+      setDataInicioCurso(parseDateWithoutTimezone(course?.data_inicio_curso));
     }
   }, [course]);
 
@@ -125,7 +125,7 @@ const CourseRegistration = () => {
 
   return (
     <div className="px-3">
-      {inscrito && nowDate <= dataFimInsc && (
+      {inscrito && nowDate < dataInicioCurso && (
         <div className="alert alert-info text-center"><FaInfoCircle /> Este curso ainda não começou. Assim que for iniciado, você poderá acessá-lo <Link to="/my/cursos/inscritos">aqui</Link>!</div>
       )}
       {/* Header com fundo azul de largura completa */}
