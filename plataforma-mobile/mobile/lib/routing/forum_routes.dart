@@ -12,8 +12,9 @@ final List<GoRoute> forumRoutes = [
     final extra = state.extra as Map<String, dynamic>;
     final forumID = extra['forumID'] as String;
     final name = extra['name'] as String;
+    final description = extra['description'] as String;
     return NoTransitionPage(
-      child: ForumPage(forumID: forumID, name: name),
+      child: ForumPage(forumID: forumID, name: name, description: description,),
     );
   },
   ),

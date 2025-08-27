@@ -1,4 +1,3 @@
-import 'package:mobile/ui/core/shared/base_comp/text_expand.dart';
 import '../../../core/shared/export.dart';
 
 class CardForum extends StatelessWidget {
@@ -17,16 +16,13 @@ class CardForum extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
-        leading: Image.network(
-          imageUrl,
-          width: 50,
-          height: 50,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return CircleAvatar(
-              backgroundColor: Colors.grey[300],
-              child: Text(
+        leading:CircleAvatar(
+          radius: 25,
+          backgroundColor: Colors.grey[300],
+          backgroundImage: imageUrl.isNotEmpty ? NetworkImage(imageUrl) : null,
+          onBackgroundImageError: (_, __) {}, // evita crash se a imagem falhar
+          child: imageUrl.isEmpty
+            ? Text(
                 title.isNotEmpty
                     ? title
                         .trim()
@@ -36,36 +32,16 @@ class CardForum extends StatelessWidget {
                         .join()
                         .toUpperCase()
                     : '',
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
-              ),
-            );
-          },
-          errorBuilder:
-              (context, error, stackTrace) => CircleAvatar(
-                backgroundColor: Colors.grey[300],
-                child: Text(
-                  title.isNotEmpty
-                      ? title
-                          .trim()
-                          .split(' ')
-                          .map((e) => e[0])
-                          .take(2)
-                          .join()
-                          .toUpperCase()
-                      : '',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
+              )
+            : null,
         ),
         contentPadding: EdgeInsets.all(10),
         title: Text(title, overflow: TextOverflow.ellipsis,),
-        subtitle:TextExpand(text: description, maxLines: 2,),
+        subtitle: Text(description, maxLines: 2, overflow: TextOverflow.ellipsis,),
       ),
     );
   }
