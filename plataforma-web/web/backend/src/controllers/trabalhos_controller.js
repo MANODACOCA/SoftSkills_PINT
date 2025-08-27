@@ -52,7 +52,7 @@ controllers.create = async (req,res)=>{
       id_curso_tr:      Number(id_curso_tr),
       id_formato_tr:    Number(id_formato_tr),
       nome_tr,
-      caminho_tr:       ficheiroURL,
+      caminho_tr:       ficheiroURL || caminho_tr,
       descricao_tr,
       data_entrega_tr
     };

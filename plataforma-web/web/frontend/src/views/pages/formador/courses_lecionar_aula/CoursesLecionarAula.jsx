@@ -975,7 +975,7 @@ const CursoLecionarAula = () => {
                         }
                     })
                 );
-                
+
                 await fetchResultados(cursos.id_curso);
                 setNotasEditadas({});
                 Swal.fire({ icon: 'success', title: 'Notas guardadas!', timer: 3000, showConfirmButton: false });
@@ -1427,7 +1427,6 @@ const CursoLecionarAula = () => {
                                 fileWrapper.classList.add('d-none');
                                 urlWrapper.classList.remove('d-none');
                                 urlLabel.textContent = `URL (${formatoSelecionado.formato})`;
-                                urlInput.value = trabalho?.caminho_tr || '';
                             }
                         }
 
@@ -1465,8 +1464,7 @@ const CursoLecionarAula = () => {
                             descricao_tr: descricao,
                             data_entrega_tr,
                             id_formato_tr: id_formato,
-                            ficheiro: ficheiro || null,
-                            conteudo: url,
+                            ficheiro: ficheiro ? ficheiro : url,
                             id_curso_tr: cursos.id_curso
                         };
                     },
