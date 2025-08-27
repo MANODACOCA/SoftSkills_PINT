@@ -975,7 +975,7 @@ const CursoLecionarAula = () => {
                         }
                     })
                 );
-
+                
                 await fetchResultados(cursos.id_curso);
                 setNotasEditadas({});
                 Swal.fire({ icon: 'success', title: 'Notas guardadas!', timer: 3000, showConfirmButton: false });
