@@ -43,6 +43,31 @@ class _ForumState extends State<Forum> {
     }
   }
   
+  Widget _buttonAddForum() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+            ),
+            onPressed: () {},
+            icon: Icon(Icons.add, color: Colors.white,),
+            label: Text(
+              'Pedir novo Fórum',
+              style: TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+        ],
+      ) 
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -67,44 +92,52 @@ class _ForumState extends State<Forum> {
           ),
           centerTitle: true,
         ),
-        body:
-          loading
-            ? Center(child: CircularProgressIndicator())
-            : foruns.isEmpty
-            ? Center(child: Text('Nenhum fórum encontrado.'))
-            : SingleChildScrollView(
-              padding: EdgeInsets.all(20),
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: foruns.length,
-                itemBuilder: (context, index) {
-                  final forum = foruns[index];
-                  return GestureDetector(
-                    onTap: () {
-                      context.push(
-                        '/forumPage',
-                        extra: {
-                          'forumID':
-                              forum['id_conteudos_partilhado'].toString(),
-                          'name': forum['id_topico_topico']?['nome_topico'],
-                        },
-                      );
+       body: loading
+    ? const Center(child: CircularProgressIndicator())
+    : RefreshIndicator( 
+      onRefresh: () => carregarForuns(),
+      child: foruns.isEmpty
+        ? ListView(
+            padding: const EdgeInsets.all(10),
+            children: [
+              _buttonAddForum(),
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Text('Nenhum fórum encontrado.'),
+                )
+              ),
+            ],
+          )
+        : ListView.builder(
+            padding: const EdgeInsets.all(10),
+            itemCount: foruns.length + 1,
+            itemBuilder: (context, index) {
+              if (index == 0) {
+                return _buttonAddForum();
+              }
+              final forum = foruns[index - 1];
+              return GestureDetector(
+                onTap: () {
+                  context.push(
+                    '/forumPage',
+                    extra: {
+                      'forumID': forum['id_conteudos_partilhado'].toString(),
+                      'name': forum['id_topico_topico']?['nome_topico'],
+                      'description': forum['id_topico_topico']?['descricao_top'] ?? 'ola',
                     },
-                    child: CardForum(
-                      title:
-                          forum['id_topico_topico']?['nome_topico'] ??
-                          'Sem título',
-                      description:
-                          forum['id_topico_topico']?['descricao_top'] ?? '',
-                      imageUrl:
-                          forum['imagem'] ??
-                          'https://ui-avatars.com/api/?name=${Uri.encodeComponent(forum['id_topico_topico']?['nome_topico'] ?? 'Forum')}&background=random&bold=true',
-                    ),
                   );
                 },
-              ),
-            ),
+                child: CardForum(
+                  title: forum['id_topico_topico']?['nome_topico'] ?? 'Sem título',
+                  description: forum['id_topico_topico']?['descricao_top'] ?? '',
+                  imageUrl: forum['imagem'] ??
+                      'https://ui-avatars.com/api/?name=${Uri.encodeComponent(forum['id_topico_topico']?['nome_topico'] ?? 'Forum')}&background=random&bold=true',
+                ),
+              );
+            },
+          ),
+        ),
         bottomNavigationBar: Footer(),
       ),
     );

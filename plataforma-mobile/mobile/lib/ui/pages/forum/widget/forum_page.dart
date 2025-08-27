@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/core/shared/forum/card_post.dart';
+import 'package:mobile/ui/core/shared/forum/forum_header.dart';
 import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import '../../../../API/utilizadores_api.dart';
@@ -12,10 +13,11 @@ import '../../../core/shared/export.dart';
 
 // ignore: must_be_immutable
 class ForumPage extends StatefulWidget {
-  const ForumPage({super.key, required this.forumID, required this.name});
+  const ForumPage({super.key, required this.forumID, required this.description, required this.name});
 
   final String name;
   final String forumID;
+  final String description;
 
   @override
   State<ForumPage> createState() => _ForumPageState();
@@ -90,70 +92,88 @@ class _ForumPageState extends State<ForumPage> {
         backgroundColor: AppColors.primary,
         title: Text(widget.name, style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add_box_outlined, color: paint, size: 30),
-            onPressed: () {
-              setState(() {
-                addPost = !addPost;
-                paint = addPost ? AppColors.secondary : Colors.white;
-              });
-            },
-          ),
-        ],
+        actions: [],
       ),
       body:
           isLoading
               ? Center(child: CircularProgressIndicator())
-              : Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: GestureDetector(
-                        child: Padding(
-                          padding: EdgeInsets.all(20),
-                          child: Column(
-                            children: <Widget>[
-                              if (addPost)
-                                Container(
-                                  padding: EdgeInsets.all(16),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                      color: AppColors.primary,
-                                      width: 2,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: buildAddPostForm(),
+              : RefreshIndicator(
+                onRefresh: () => carregarDados(),
+                child:Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: GestureDetector(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(),
+                            child: Column(
+                              children: <Widget>[
+                                SizedBox(height: 8,),
+                                ForumHeader(
+                                  postCount: posts.length, 
+                                  title: widget.name, 
+                                  description: widget.description, 
+                                  initials: (widget.name.isNotEmpty && widget.name.trim().contains(' '))
+                                    ? widget.name.trim().split(' ').map((e) => e.isNotEmpty ? e[0] : '').take(2).join().toUpperCase()
+                                    : widget.name.isNotEmpty ? widget.name[0].toUpperCase() : 'F', 
+                                  onNewPost: () {
+                                    setState(() {
+                                      addPost = !addPost;
+                                      paint = AppColors.secondary;
+                                    });
+                                  },
+                                  addPost: addPost,
+                                  paint: paint,
                                 ),
-                              SizedBox(height: 20),
-                              if (posts.isNotEmpty)
-                                ...List.generate(posts.length, (index) {
-                                  final post = posts[index];
-                                  final user = post['id_utilizador_utilizador'];
-                                  print('====== Post: $post');
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                      bottom: 16.0,
-                                    ),
-                                    child: CardPost(
-                                      post: post,
-                                      onDelete: (postId) {
-                                        carregarDados();
-                                      },
-                                      currentPage: 'post',
-                                    ),
-                                  );
-                                }),
-                            ],
+                                Padding(
+                                  padding: EdgeInsets.all(15),
+                                  child: Column(
+                                    children: [
+                                      if (addPost)
+                                        Container(
+                                          padding: EdgeInsets.all(16),
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(
+                                              color: AppColors.primary,
+                                              width: 2,
+                                            ),
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: buildAddPostForm(),
+                                        ),
+                                      SizedBox(height: 10),
+                                      if (posts.isNotEmpty)
+                                        ...List.generate(posts.length, (index) {
+                                          final post = posts[index];
+                                          final user = post['id_utilizador_utilizador'];
+                                          print('====== Post: $post');
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                              bottom: 16.0,
+                                            ),
+                                            child: CardPost(
+                                              post: post,
+                                              onDelete: (postId) {
+                                                carregarDados();
+                                              },
+                                              currentPage: 'post',
+                                            ),
+                                          );
+                                        }
+                                      ),
+                                    ],
+                                  ), 
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ) ,
       bottomNavigationBar: Footer(),
     );
   }
@@ -163,7 +183,7 @@ class _ForumPageState extends State<ForumPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(
-          'Adicionar novo post',
+          'Criar novo post',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
