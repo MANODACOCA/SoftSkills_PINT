@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 import Table from '../../../components/table/Table';
 import { columnsAulas } from '../../../components/table/ColumnsAula';
 import { ColumnsMaterialApoio } from '../../../components/table/ColumnsMarterialApoio';
-import { FaVideo, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWord } from 'react-icons/fa';
+import { FaExternalLinkSquareAlt, FaFileAlt, FaFilePowerpoint, FaFileImage, FaFilePdf, FaFileWord } from 'react-icons/fa';
 import { create_conteudos, delete_conteudos, list_conteudos } from '../../../../api/conteudos_axios';
 import SpinnerBorder from '../../../components/spinner-border/spinner-border';
 import { IoIosArrowDropdown, IoIosArrowDropup } from 'react-icons/io';
@@ -54,7 +54,7 @@ const EditCourse = () => {
         4: <FaFileAlt className="text-success" />,
         5: <FaFileAlt className="text-success" />,
         6: <FaFileImage className="text-pink-500" />,
-        7: <FaVideo className="text-primary" />,
+        7: <FaExternalLinkSquareAlt className="text-primary" />,
     };
     const [horasCursoFormato, setHorasCursoFormato] = useState();
     const location = useLocation();
@@ -591,12 +591,12 @@ const EditCourse = () => {
                     <label for="nomeConteudo" class="form-label">Nome do Conteúdo</label>
                     <input id="nomeConteudo" class="form-control mb-3" placeholder= "Ex: Slides React">
                     <div id="file1InputWrapper" class="d-none">
-                    <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
-                    <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
+                    <label for="urlConteudo" id="ficheiro1Label" class="form-label">URL do Conteúdo</label>
+                    <input id="urlConteudo" class="form-control" placeholder="https://exemplo.com/conteudo.pdf">
                     </div>
                     <div id="file2InputWrapper" class="d-none">
                     <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Ficheiro</label>
-                    <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
+                    <input type="file" id="ficheiroConteudo" class="form-control" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                     </div>
                 `,
                 didOpen: () => {
@@ -605,7 +605,7 @@ const EditCourse = () => {
                     const file1Wrapper = document.getElementById('file1InputWrapper');
                     const label2 = document.getElementById('ficheiro2Label');
                     const label1 = document.getElementById('ficheiro1Label');
-                    const formatosComFicheiro = [1, 2, 3, 4, 5];
+                    const formatosComFicheiro = [1, 2, 3, 4, 5, 6];
 
                     select.addEventListener('change', () => {
                         const selectedId = parseInt(select.value);
@@ -839,10 +839,10 @@ const EditCourse = () => {
                             <label for="nome" class="form-label">Nome</label>
                             <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio" value="${material.nome_material || ''}" />
                             ${material.conteudo ? `
-                            <div class="mb-3">
+                            <div class="">
                                 <label class="form-label">Ficheiro atual</label>
-                                <div class="border rounded px-1 py-2 d-flex align-items-center justify-content-between">
-                                    <p class="mb-0">${material.conteudo.split('/').pop()}</p>
+                                <div class="border rounded px-1 py-2 d-flex align-items-center justify-content-between mb-3">
+                                    <p class="mb-0 text-truncate">${material.conteudo}</p>
                                     <a class="btn btn-outline-success" href="${material.conteudo}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
                                 </div>
                                
@@ -852,11 +852,12 @@ const EditCourse = () => {
                             </div>
                             `}
                             <div id="file1InputWrapper" class="d-none">
-                            <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
+                            <label for="urlConteudo" id="ficheiro1Label" class="form-label">URL do Conteúdo</label>
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
                             </div>
                             <div id="file2InputWrapper" class="d-none">
-                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label mt-3">Novo Ficheiro</label>
+                            <p id="ficheiroAtual" class="small mb-2"></p>
+                            <label for="ficheiroConteudo" id="ficheiro2Label" class="form-label">Novo Ficheiro(*opcional)</label>
                             <input type="file" id="ficheiroConteudo" class="form-control mb-3" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt">
                             </div>
                         `,
@@ -866,7 +867,7 @@ const EditCourse = () => {
                             const file1Wrapper = document.getElementById('file1InputWrapper');
                             const label2 = document.getElementById('ficheiro2Label');
                             const label1 = document.getElementById('ficheiro1Label');
-                            const formatosComFicheiro = [1, 2, 3, 4, 5];
+                            const formatosComFicheiro = [1, 2, 3, 4, 5, 6];
 
                             const atualizarCampos = () => {
                                 const selectedId = parseInt(select.value);
@@ -881,15 +882,14 @@ const EditCourse = () => {
                                 if (formatosComFicheiro.includes(selectedId)) {
                                     file2Wrapper.classList.remove('d-none');
                                     file1Wrapper.classList.add('d-none');
-                                    label2.textContent = `Novo ficheiro (${formatoSelecionado.formato})`;
+                                    label2.textContent = `Novo Ficheiro(*opcional) - (${formatoSelecionado.formato})`;
                                 } else {
                                     file2Wrapper.classList.add('d-none');
                                     file1Wrapper.classList.remove('d-none');
-                                    label1.textContent = `Novo URL (${formatoSelecionado.formato})`;
+                                    label1.textContent = `Novo Ficheiro(*opcional) - (${formatoSelecionado.formato})`;
                                 }
                             };
 
-                            select.addEventListener('change', atualizarCampos);
                             select.addEventListener('click', atualizarCampos);
                         },
                         preConfirm: () => {
@@ -955,7 +955,7 @@ const EditCourse = () => {
                             <label for="nome" class="form-label">Nome</label>
                             <input id="nome" class="form-control mb-3" placeholder="Nome material de apoio"/>
                             <div id="file1InputWrapper" class="d-none">
-                            <label for="urlConteudo" id="ficheiro1Label" class="form-label mb-3">URL do Conteúdo</label>
+                            <label for="urlConteudo" id="ficheiro1Label" class="form-label">URL do Conteúdo</label>
                             <input id="urlConteudo" class="form-control mb-3" placeholder="https://exemplo.com/conteudo.pdf">
                             </div>
                             <div id="file2InputWrapper" class="d-none">
@@ -969,7 +969,7 @@ const EditCourse = () => {
                             const file1Wrapper = document.getElementById('file1InputWrapper');
                             const label2 = document.getElementById('ficheiro2Label');
                             const label1 = document.getElementById('ficheiro1Label');
-                            const formatosComFicheiro = [1, 2, 3, 4, 5];
+                            const formatosComFicheiro = [1, 2, 3, 4, 5, 6];
 
                             select.addEventListener('change', () => {
                                 const selectedId = parseInt(select.value);

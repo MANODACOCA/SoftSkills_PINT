@@ -63,7 +63,6 @@ const WorkSubmit = ({ trabalho }) => {
     const [id_et, setid_et] = useState("");
     const [notaFinal, setNotaFinal] = useState("");
     const [loading, setLoading] = useState(true);
-    const [loadingNota, setLoadingNota] = useState(true);
     const fileInputRef = useRef(null);
 
     //vai verificar se sumteu algum ficheiro
@@ -205,13 +204,10 @@ const WorkSubmit = ({ trabalho }) => {
     //vai buscar a nota do formando
     const procurarAvaliacaoETdeForm = async () => {
         try {
-            setLoadingNota(true);
             const nota = await get_avaliacoes_et(id_et);
             setNotaFinal(nota.avaliacao);
         } catch (error) {
             console.error('Erro ao ir bucar nota de entrega de trabalho:', error);
-        } finally {
-            setLoadingNota(false);
         }
     }
 
@@ -224,7 +220,7 @@ const WorkSubmit = ({ trabalho }) => {
 
 
 
-    if (loading || loadingNota) {
+    if (loading) {
         return <SpinnerBorder />;
     }
 
