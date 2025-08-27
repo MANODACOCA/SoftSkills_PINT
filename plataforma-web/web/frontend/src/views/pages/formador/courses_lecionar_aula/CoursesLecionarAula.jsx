@@ -1244,7 +1244,6 @@ const CursoLecionarAula = () => {
                             const ficheiroAtual = document.getElementById('ficheiroAtual');
                             const fileLabel = document.getElementById('ficheiroLabel');
                             const urlLabel = document.getElementById('urlLabel');
-                            const urlInput = document.getElementById('urlTr');
 
                             function atualizarCampos() {
                                 const selectedId = parseInt(formatoEl.value);
@@ -1267,7 +1266,6 @@ const CursoLecionarAula = () => {
                                     fileWrapper.classList.add('d-none');
                                     urlWrapper.classList.remove('d-none');
                                     urlLabel.textContent = `URL (${formatoSelecionado.formato})`;
-                                    urlInput.value = trabalho?.caminho_tr || '';
                                 }
                             }
 
@@ -1281,16 +1279,19 @@ const CursoLecionarAula = () => {
                             const hora = document.getElementById('horaTr').value;
                             const id_formato = parseInt(document.getElementById('formatoTr').value);
                             const ficheiro = document.getElementById('ficheiroTr').files[0];
+                            const url = document.getElementById("urlTr").value;
 
-                            if (!nome || !descricao || !data || !hora || !id_formato) {
-                                Swal.showValidationMessage("Todos os campos são obrigatórios!");
+                            if (!nome || !descricao || !data || !hora) {
+                                Swal.showValidationMessage("Os campos de nome, descrição, data e hora são obrigatórios!");
                                 return false;
                             }
 
                             const selectedDateTime = new Date(`${data}T${hora}:00`);
+                            const fimCurso = new Date(cursos.data_fim_curso);
+                            fimCurso.setHours(23, 59, 59, 999);
                             const now = new Date();
 
-                            if (selectedDateTime <= now) {
+                            if (selectedDateTime <= now || selectedDateTime >= fimCurso) {
                                 Swal.showValidationMessage('A data e a hora têm de ser futuras!');
                                 return;
                             }
@@ -1302,7 +1303,8 @@ const CursoLecionarAula = () => {
                                 descricao_tr: descricao,
                                 data_entrega_tr,
                                 id_formato_tr: id_formato,
-                                ficheiro: ficheiro,
+                                ficheiro: ficheiro || null,
+                                caminho_tr: url || trabalho.caminho_tr,
                                 id_curso_tr: cursos.id_curso
                             };
                         },
@@ -1458,7 +1460,8 @@ const CursoLecionarAula = () => {
                         }
 
                         const data_entrega_tr = `${data}T${hora}:00`;
-
+                        console.log("awdwadaw", ficheiro);
+                        console.log("awdwadaw", url);
                         return {
                             nome_tr: nome,
                             descricao_tr: descricao,
@@ -1558,13 +1561,13 @@ const CursoLecionarAula = () => {
     const renderActionsTrabalhos = (item) => {
         return (
             <div className="d-flex">
-                <a href={item.caminho_tr} className="btn btn-outline-success me-2" target="_blank">
+                <a href={item.caminho_tr} className="btn btn-outline-success me-2" target="_blank" onClick={(e) => { e.stopPropagation(); }}>
                     <i className='bi bi-box-arrow-up-right'></i>
                 </a>
-                <button className="btn btn-outline-primary me-2" onClick={() => handleEditarTrabalho(item)}>
+                <button className="btn btn-outline-primary me-2" onClick={(e) => { e.stopPropagation(); handleEditarTrabalho(item) }}>
                     <i className="bi bi-pencil"></i>
                 </button>
-                <button className="btn btn-outline-danger" onClick={() => handleDeleteTrabalho(item)}>
+                <button className="btn btn-outline-danger" onClick={(e) => { e.stopPropagation(); handleDeleteTrabalho(item) }}>
                     <i className="bi bi-trash"></i>
                 </button>
             </div>

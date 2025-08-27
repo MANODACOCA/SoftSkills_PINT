@@ -99,7 +99,7 @@ controllers.update = async (req,res)=>{
 
     const {id_curso_tr, id_formato_tr, nome_tr, caminho_tr, descricao_tr, data_entrega_tr} = req.body;
 
-    if(ficheiroURL === null && id_formato_tr === undefined && id_curso_tr === undefined && nome_tr === undefined && caminho_tr === undefined && descricao_tr === undefined && data_entrega_tr === undefined) {
+     if (!ficheiroURL && !caminho_tr) {
       return res.status(400).json({
         erro: 'Corpo do pedido está vazio para update',
         desc: 'Envie pelo menos um campo para atualizar'});
