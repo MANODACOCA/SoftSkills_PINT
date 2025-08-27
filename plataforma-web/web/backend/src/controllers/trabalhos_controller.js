@@ -41,7 +41,7 @@ controllers.create = async (req,res)=>{
       ? `${req.protocol}://${req.get('host')}/uploads/${ficheiroRelativo}`
       : null;
 
-    if (!ficheiroURL) {
+    if (!ficheiroURL && !caminho_tr) {
       return res.status(400).json({
         erro: 'Falta ficheiro ou URL',
         desc: 'Envie um ficheiro (campo "ficheiro") ou link externo'
