@@ -1157,6 +1157,8 @@ const CursoLecionarAula = () => {
                                                         })
                                                     }
                                                 />
+                                            ) : !notas[entrega.id_entrega_trabalho] ? (
+                                                <strong>---</strong>
                                             ) : (
                                                 <div style={{ width: '35px' }}>{notas[entrega.id_entrega_trabalho]}</div>
                                             )}
@@ -1168,7 +1170,7 @@ const CursoLecionarAula = () => {
                             <div className="p-2">Nenhum trabalho entregue no momento</div>
                         )}
                     </div>
-                </div>
+                </div >
             );
         }
 
@@ -1226,15 +1228,27 @@ const CursoLecionarAula = () => {
                             `).join('')}
                         </select>
 
+                        ${trabalho.caminho_tr ? `
+                            <div class="mb-3">
+                                <label class="form-label">Ficheiro atual</label>
+                                <div class="border rounded px-1 py-2 d-flex align-items-center justify-content-between mb-3">
+                                    <p class="mb-0 text-truncate">${trabalho.caminho_tr}</p>
+                                    <a class="btn btn-outline-success" href="${trabalho.caminho_tr}" target="_blank"><i class="bi bi-box-arrow-up-right"></i></a>
+                                </div>
+                            ` : `
+                            <div class="mb-3 text-muted">
+                                <em>Nenhum ficheiro/URL associado atualmente</em>
+                            </div>
+                        `}
+
                         <div id="fileInputWrapper" class="d-none">
-                            <p id="ficheiroAtual" class="small mb-3"></p>
                             <label for="ficheiroTr" id="ficheiroLabel" class="form-label">Ficheiro</label>
                             <input type="file" id="ficheiroTr" class="form-control mb-3" value="${trabalho.caminho_tr}" />
                         </div>
 
                         <div id="urlInputWrapper" class="d-none">
                             <label for="urlTr" id="urlLabel" class="form-label">URL</label>
-                            <input type="text" id="urlTr" class="form-control mb-2" value="${trabalho.caminho_tr}" placeholder="https://exemplo.com/trabalho.pdf" />
+                            <input type="text" id="urlTr" class="form-control mb-2" placeholder="https://exemplo.com/trabalho.pdf" />
                         </div>
                         `,
                         didOpen: () => {
@@ -1246,7 +1260,9 @@ const CursoLecionarAula = () => {
                             const urlLabel = document.getElementById('urlLabel');
 
                             function atualizarCampos() {
+
                                 const selectedId = parseInt(formatoEl.value);
+
                                 if (isNaN(selectedId)) {
                                     fileWrapper.classList.add('d-none');
                                     urlWrapper.classList.add('d-none');
@@ -1258,19 +1274,15 @@ const CursoLecionarAula = () => {
                                 if (formatosComFicheiro.includes(selectedId)) {
                                     fileWrapper.classList.remove('d-none');
                                     urlWrapper.classList.add('d-none');
-                                    ficheiroAtual.textContent = trabalho?.caminho_tr
-                                        ? `Ficheiro atual: ${trabalho.caminho_tr.split('/').pop()}`
-                                        : 'Nenhum ficheiro carregado.';
-                                    fileLabel.textContent = `Ficheiro (${formatoSelecionado.formato})`;
+                                    fileLabel.textContent = `Novo Ficheiro(*opcional) - (${formatoSelecionado.formato})`;
                                 } else {
                                     fileWrapper.classList.add('d-none');
                                     urlWrapper.classList.remove('d-none');
-                                    urlLabel.textContent = `URL (${formatoSelecionado.formato})`;
+                                    urlLabel.textContent = `Novo Ficheiro(*opcional) - (${formatoSelecionado.formato})`;
                                 }
                             }
 
-                            atualizarCampos();
-                            formatoEl.addEventListener('change', atualizarCampos);
+                            formatoEl.addEventListener('click', atualizarCampos);
                         },
                         preConfirm: () => {
                             const nome = document.getElementById('nomeTr').value.trim();
