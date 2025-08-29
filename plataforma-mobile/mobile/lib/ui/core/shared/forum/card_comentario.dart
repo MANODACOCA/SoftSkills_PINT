@@ -212,8 +212,8 @@ class _CommentBoxState extends State<CommentBox> {
                   children: [
                     ClipOval(
                       child: SizedBox(
-                        height: 50,
-                        width: 50,
+                        height: 48,
+                        width: 48,
                         child: Image.network(
                           'https://softskills-api.onrender.com/$img',
                           fit: BoxFit.cover,
@@ -230,8 +230,21 @@ class _CommentBoxState extends State<CommentBox> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.comentario['id_utilizador_utilizador']?['nome_utilizador'], style: TextStyle(fontSize: 16),),
-                        Text(tempoDecorrido(widget.comentario['data_criacao_comentario']), style: TextStyle(fontSize: 12),),
+                        Text(
+                          widget.comentario['id_utilizador_utilizador']?['nome_utilizador'],
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF212121),
+                            ),
+                          ),
+                        Text(
+                          tempoDecorrido(widget.comentario['data_criacao_comentario']), 
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF757575),
+                          ),
+                        ),
                       ],
                     ),
                   ],

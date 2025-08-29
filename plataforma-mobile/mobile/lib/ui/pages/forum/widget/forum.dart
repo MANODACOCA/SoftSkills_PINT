@@ -31,7 +31,10 @@ class _ForumState extends State<Forum> {
     _ordem = ordem ?? _ordem;
 
     try {
-      final resultado = await ForumAPI.listConteudosPartilhado(ordenar: _ordem, search: _search);
+      final resultado = await ForumAPI.listConteudosPartilhado(
+        ordenar: _ordem,
+        search: _search,
+      );
       setState(() {
         foruns = resultado;
         loading = false;
@@ -42,7 +45,7 @@ class _ForumState extends State<Forum> {
       });
     }
   }
-  
+
   Widget _buttonAddForum() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -57,14 +60,14 @@ class _ForumState extends State<Forum> {
               ),
             ),
             onPressed: () {},
-            icon: Icon(Icons.add, color: Colors.white,),
+            icon: Icon(Icons.add, color: Colors.white),
             label: Text(
               'Pedir novo Fórum',
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
           ),
         ],
-      ) 
+      ),
     );
   }
 
@@ -82,9 +85,7 @@ class _ForumState extends State<Forum> {
             onFilterTap: () {
               DropdownFilterForum.show(context, ({String? ordem}) {
                 carregarForuns(ordem: ordem);
-              },
-              "Forum",
-              );
+              }, "Forum");
             },
             onSearchChanged: (value) {
               carregarForuns(search: value);
@@ -92,51 +93,68 @@ class _ForumState extends State<Forum> {
           ),
           centerTitle: true,
         ),
-       body: loading
-    ? const Center(child: CircularProgressIndicator())
-    : RefreshIndicator( 
-      onRefresh: () => carregarForuns(),
-      child: foruns.isEmpty
-        ? ListView(
-            padding: const EdgeInsets.all(10),
-            children: [
-              _buttonAddForum(),
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(20),
-                  child: Text('Nenhum fórum encontrado.'),
-                )
-              ),
-            ],
-          )
-        : ListView.builder(
-            padding: const EdgeInsets.all(10),
-            itemCount: foruns.length + 1,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return _buttonAddForum();
-              }
-              final forum = foruns[index - 1];
-              return GestureDetector(
-                onTap: () {
-                  context.push(
-                    '/forumPage',
-                    extra: {
-                      'forumID': forum['id_conteudos_partilhado'].toString(),
-                      'name': forum['id_topico_topico']?['nome_topico'],
-                      'description': forum['id_topico_topico']?['descricao_top'] ?? 'ola',
+        body: Stack(
+          children: [
+            loading
+            ? const Center(child: CircularProgressIndicator())
+            : RefreshIndicator(
+              onRefresh: () => carregarForuns(),
+              child:
+              foruns.isEmpty
+              ? ListView(
+                padding: const EdgeInsets.all(10),
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: Text('Nenhum fórum encontrado.'),
+                    ),
+                  ),
+                ],
+              )
+              : ListView.builder(
+                padding: const EdgeInsets.all(10),
+                itemCount: foruns.length,
+                itemBuilder: (context, index) {
+                  final forum = foruns[index];
+                  return GestureDetector(
+                    onTap: () {
+                      context.push(
+                        '/forumPage',
+                        extra: {
+                          'forumID': forum['id_conteudos_partilhado'].toString(),
+                          'name': forum['id_topico_topico']?['nome_topico'],
+                          'description': forum['id_topico_topico']?['descricao_top'] ??'',
+                        },
+                      );
                     },
+                    child: CardForum(
+                      title: forum['id_topico_topico']?['nome_topico'] ?? 'Sem título',
+                      description: forum['id_topico_topico']?['descricao_top'] ?? '',
+                      imageUrl: forum['imagem'] ?? 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(forum['id_topico_topico']?['nome_topico'] ?? 'Forum')}&background=random&bold=true',
+                    ),
                   );
                 },
-                child: CardForum(
-                  title: forum['id_topico_topico']?['nome_topico'] ?? 'Sem título',
-                  description: forum['id_topico_topico']?['descricao_top'] ?? '',
-                  imageUrl: forum['imagem'] ??
-                      'https://ui-avatars.com/api/?name=${Uri.encodeComponent(forum['id_topico_topico']?['nome_topico'] ?? 'Forum')}&background=random&bold=true',
+              ),
+            ),
+            Positioned(
+              right: 13,
+              bottom: 15,
+              height: 48,
+              child: FloatingActionButton.extended(
+                onPressed: () {},
+                icon: Icon(Icons.add, color: Colors.white),
+                label: Text(
+                  'Pedir novo Fórum',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
-              );
-            },
-          ),
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                elevation: 2,
+                shape: StadiumBorder(),
+              ),
+            ),
+          ],
         ),
         bottomNavigationBar: Footer(),
       ),

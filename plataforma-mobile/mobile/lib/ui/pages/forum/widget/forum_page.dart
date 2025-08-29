@@ -153,6 +153,7 @@ class _ForumPageState extends State<ForumPage> {
                                               bottom: 16.0,
                                             ),
                                             child: CardPost(
+                                              key: ValueKey(post['id_post']),
                                               post: post,
                                               onDelete: (postId) {
                                                 carregarDados();
@@ -162,6 +163,11 @@ class _ForumPageState extends State<ForumPage> {
                                           );
                                         }
                                       ),
+                                      if (posts.isEmpty)
+                                        Center(
+                                          child: Text('Este fórum ainda não contém posts'),
+                                        ),
+
                                     ],
                                   ), 
                                 ),

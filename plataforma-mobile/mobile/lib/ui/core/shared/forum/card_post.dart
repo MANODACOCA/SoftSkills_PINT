@@ -219,6 +219,21 @@ class _CardPostState extends State<CardPost> {
   }
 
   @override
+  void didUpdateWidget(covariant CardPost oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Se mudou o post (ex: após refresh) ou o contador no mapa,
+    // sincroniza o contador e volta a verificar se o user deu like.
+    if (oldWidget.post['id_post'] != widget.post['id_post'] ||
+        oldWidget.post['contador_likes_post'] != widget.post['contador_likes_post']) {
+      setState(() {
+        countLikes = widget.post['contador_likes_post'] ?? 0;
+      });
+      if (idUser != null) {
+        carregarEstadoLikePost();
+      }
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     final img = widget.post['id_utilizador_utilizador']?['img_perfil'];
     final imageUrl =
@@ -244,8 +259,8 @@ class _CardPostState extends State<CardPost> {
                   children: [
                     ClipOval(
                       child: SizedBox(
-                        height: 50,
-                        width: 50,
+                        height: 48,
+                        width: 48,
                         child: Image.network(
                           'https://softskills-api.onrender.com/$img',
                           fit: BoxFit.cover,
@@ -260,13 +275,19 @@ class _CardPostState extends State<CardPost> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget
-                              .post['id_utilizador_utilizador']?['nome_utilizador'],
-                          style: TextStyle(fontSize: 16),
+                          widget.post['id_utilizador_utilizador']?['nome_utilizador'],
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF212121),
+                          ),
                         ),
                         Text(
                           tempoDecorrido(widget.post['data_criacao_post']),
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF757575),
+                          ),
                         ),
                       ],
                     ),
@@ -285,7 +306,14 @@ class _CardPostState extends State<CardPost> {
             SizedBox(height: 10),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(widget.post['texto_post']),
+              child: Text(
+                widget.post['texto_post'],
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF212121),
+                  height: 1.4,
+                ),
+              ),
             ),
             SizedBox(height: 7),
             if (fileUrl != null) ...[
