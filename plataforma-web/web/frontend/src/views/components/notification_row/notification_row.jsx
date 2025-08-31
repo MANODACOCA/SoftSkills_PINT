@@ -32,10 +32,15 @@ const NotificationRow = ({ notification, onDelete, setShow }) => {
             data_atual.setHours(0, 0, 0, 0);
             const inicio_curso = new Date(notification.id_curso_curso.data_inicio_curso);
             inicio_curso.setHours(0, 0, 0, 0);
+            const fim_curso = new Date(notification.id_curso_curso.data_fim_curso);
+            fim_curso.setHours(23, 59, 59, 999);
+
             await delete_notificacoes_curso(notification.id_notificacao_cursos);
             fetchCount();
-            if (inicio_curso <= data_atual) {
-                navigate(`/my/cursos/inscritos/curso/${notification.id_curso_curso.id_curso}?tab=${tab}`)
+            if (inicio_curso <= data_atual && data_atual <= fim_curso) {
+                navigate(`/my/cursos/inscritos/curso/${notification.id_curso_curso.id_curso}?tab=${tab}`);
+            } else if (data_atual > fim_curso) {
+                navigate(`/my/cursos/terminados/curso/${notification.id_curso_curso.id_curso}?tab=${tab}`);
             } else {
                 navigate(`/cursos/${notification.id_curso_curso.id_curso}`);
             }

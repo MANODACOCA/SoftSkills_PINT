@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { list_formadores } from "../../../../api/formadores_axios";
 import { getCategoriaAreaTopico } from "../../../../api/topico_axios";
 import { create_cursos, getCourseAdminCursoTodoUm } from "../../../../api/cursos_axios";
+import { formatYearMonthDay } from '../../../components/shared_functions/FunctionsUtils';
 import ISO6391 from 'iso-639-1';
 import Select from 'react-select';
 import { useUser } from '../../../../utils/useUser';
@@ -115,7 +116,7 @@ const CreateCourse = () => {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
-                text: "A data de fim da inscrição deve ser posterior ao início",
+                text: "A data de fim da inscrição deve ser superior à de início.",
             });
             return;
         }
@@ -124,12 +125,12 @@ const CreateCourse = () => {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
-                text: "A data de fim do curso deve ser posterior ao início.",
+                text: "A data de fim do curso deve ser superior à de início",
             });
             return;
         }
 
-        if (dCursoFim <= dInscFim) {
+        if (dCursoFim < dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -138,7 +139,7 @@ const CreateCourse = () => {
             return;
         }
 
-        if (cursos.issincrono && dCursoIni < dInscFim) {
+        if (cursos.issincrono && dCursoIni <= dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -387,6 +388,19 @@ const CreateCourse = () => {
         }
     }, [cursoAnterior, user]);
 
+    //funcao para adiconar mais um dia à data de inscricao caso seja curso sincrono para fazer verificacao
+    let minCursoDate;
+    if (cursos.issincrono) {
+        if (cursos.data_fim_inscricao) {
+            const fim = new Date(cursos.data_fim_inscricao);
+            fim.setDate(fim.getDate() + 1);
+            minCursoDate = fim.toISOString().split("T")[0];
+        } else {
+            minCursoDate = todayStr;
+        }
+    } else {
+        minCursoDate = cursos.data_inicio_inscricao || todayStr;
+    }
 
     return (
         <>
@@ -417,7 +431,7 @@ const CreateCourse = () => {
                                                 ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean,
                                                 data_inicio_inscricao: "", data_fim_inscricao: "", data_inicio_curso: "", data_fim_curso: ""
                                             }));
-                                        }} disabled={isNovaOcorrencia}>
+                                        }} disabled={isNovaOcorrencia} required>
                                             <option value="">-- Escolher Tipologia --</option>
                                             <option value="true">Síncrono</option>
                                             <option value="false">Assíncrono</option>
@@ -444,7 +458,7 @@ const CreateCourse = () => {
                                             <div className='row mt-2'>
                                                 <div className='col'>
                                                     <label className='form-label fw-bold'>Início do Curso</label>
-                                                    <input type="date" name="data_curso_ini" className={`form-control ${cursos.isassincrono ? 'bg-light text-muted' : ''}`} min={cursos.issincrono ? cursos.data_fim_inscricao || todayStr : cursos.data_inicio_inscricao || todayStr} value={cursos.data_inicio_curso}
+                                                    <input type="date" name="data_curso_ini" className={`form-control ${cursos.isassincrono ? 'bg-light text-muted' : ''}`} min={minCursoDate} value={cursos.data_inicio_curso}
                                                         onChange={(e) => {
                                                             const value = e.target.value;
                                                             if (cursos.isassincrono && !cursos.data_inicio_inscricao) {
@@ -464,7 +478,7 @@ const CreateCourse = () => {
 
                                                 <div className='col'>
                                                     <label className='form-label fw-bold'>Fim do Curso</label>
-                                                    <input type="date" name="data_curso_fim" className='form-control' min={cursos.data_inicio_curso || todayStr} value={cursos.data_fim_curso} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_curso: e.target.value }))} required />
+                                                    <input type="date" name="data_curso_fim" className='form-control'  min={cursos.isassincrono ? formatYearMonthDay(cursos.data_fim_inscricao) :  formatYearMonthDay(cursos.data_inicio_curso)|| todayStr} value={cursos.data_fim_curso} onChange={(e) => setCursos(prev => ({ ...prev, data_fim_curso: e.target.value }))} required />
                                                 </div>
                                             </div>
                                         </>)}
@@ -478,6 +492,7 @@ const CreateCourse = () => {
                                             isClearable
                                             placeholder="--Escolha o idioma--"
                                             name="idioma"
+                                            required
                                         />
                                     </div>
 
@@ -491,7 +506,7 @@ const CreateCourse = () => {
                                     {cursos.isassincrono == false && (
                                         <div className='mt-2'>
                                             <label className='mt-2 fw-bold'>Formador</label>
-                                            <select name="id_formador" className='form-select' value={formadorSelecionado} onChange={(e) => { setFormadorSelecionado(parseInt(e.target.value)); setSincrono(prev => ({ ...prev, id_formador: parseInt(e.target.value) })) }}>
+                                            <select name="id_formador" className='form-select' value={formadorSelecionado} onChange={(e) => {const value = e.target.value; setFormadorSelecionado(value); setSincrono(prev => ({ ...prev, id_formador: value ? parseInt(value) : null })) }} required>
                                                 <option value="">-- Selecionar Formador --</option>
                                                 {formadores.map((f) => {
                                                     return (
@@ -499,16 +514,20 @@ const CreateCourse = () => {
                                                     );
                                                 })}
                                             </select>
-                                            <label className='mt-2 fw-bold'>Descrição Formador</label>
-                                            <textarea name="descricao_formador" value={formadores.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly />
+                                            {formadorSelecionado && (
+                                                <>
+                                                    <label className='mt-2 fw-bold'>Descrição Formador</label>
+                                                    <textarea name="descricao_formador" value={formadores.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly />
+                                                </>
+                                            )}
                                             <label className='mt-2 fw-bold'>Número Vagas</label>
-                                            <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas ?? ''} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} />
+                                            <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas ?? ''} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} required />
                                         </div>
                                     )}
 
                                     <div className='mt-2'>
                                         <label className='form-label fw-bold'>Categoria</label>
-                                        <select className="form-select" value={categoria.toString()} onChange={(e) => setCategoria(e.target.value)} disabled={isNovaOcorrencia}>
+                                        <select className="form-select" value={categoria.toString()} onChange={(e) => setCategoria(e.target.value)} disabled={isNovaOcorrencia} required>
                                             <option value="">--Escolher Categoria--</option>
                                             {catAreaTop.map((c) => {
                                                 return (
@@ -520,7 +539,7 @@ const CreateCourse = () => {
 
                                     <div className='mt-2'>
                                         <label className='form-label fw-bold'>Área</label>
-                                        <select className="form-select" value={area.toString()} onChange={(e) => setArea(e.target.value)} disabled={isNovaOcorrencia}>
+                                        <select className="form-select" value={area.toString()} onChange={(e) => setArea(e.target.value)} disabled={isNovaOcorrencia} required>
                                             <option value="">--Escolher Área--</option>
                                             {catAreaTop.find((cat) => cat.id_categoria.toString() == categoria)?.areas?.map((a) => {
                                                 return (
@@ -539,6 +558,7 @@ const CreateCourse = () => {
                                                 setCursos(prev => ({ ...prev, id_topico: value ? parseInt(value) : "" }));
                                             }}
                                             disabled={isNovaOcorrencia}
+                                            required
                                         >
                                             {/*  onChange={(e) => { setTopico(parseInt(e.target.value)); setCursos(prev => ({ ...prev, id_topico: parseInt(e.target.value) })); }}> */}
                                             <option value="">--Escolher Tópico--</option>

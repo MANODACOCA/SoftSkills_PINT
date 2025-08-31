@@ -40,6 +40,20 @@ const EditCourse = () => {
     const [selectedLanguage, setSelectedLanguage] = useState(null);
     const navigate = useNavigate();
     const todayStr = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Lisbon" });
+    const [cursoDataTouched, setCursoDataTouched] = useState(false);
+    //funcao para adiconar mais um dia à data de inscricao caso seja curso sincrono para fazer verificacao
+    let minCursoDate;
+    if (cursos.issincrono) {
+        if (cursos.data_fim_inscricao) {
+            const fim = new Date(cursos.data_fim_inscricao);
+            fim.setDate(fim.getDate() + 1);
+            minCursoDate = fim.toISOString().split("T")[0];
+        } else {
+            minCursoDate = todayStr;
+        }
+    } else {
+        minCursoDate = cursos.data_inicio_inscricao || todayStr;
+    }
     const [isSincrono, setIsSincrono] = useState(false);
     const [sincrono, setSincrono] = useState({
         id_formador: null,
@@ -223,7 +237,7 @@ const EditCourse = () => {
             return;
         }
 
-        if (dCursoFim <= dInscFim) {
+        if (dCursoFim < dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -232,7 +246,7 @@ const EditCourse = () => {
             return;
         }
 
-        if (cursos.issincrono && dCursoIni < dInscFim) {
+        if (cursos.issincrono && dCursoIni <= dInscFim) {
             Swal.fire({
                 icon: "error",
                 title: "Datas inválidas",
@@ -330,6 +344,7 @@ const EditCourse = () => {
             console.log('Erro encontrar as Aulas', error);
         }
     }
+
 
     const renderConteudos = (item, isExpanded, expandedContent = false) => {
         if (expandedContent) {
@@ -1185,22 +1200,37 @@ const EditCourse = () => {
                                     <div className='row mt-2'>
                                         <div className='col'>
                                             <label className='form-label fw-bold'>Início da Inscrição</label>
-                                            <input type="date" name="data_inicio_inscricao" className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={handleChange} required disabled={isViewMode} />
+                                            <input type="date" name="data_inicio_inscricao" className='form-control' value={cursos.data_inicio_inscricao ? formatYearMonthDay(cursos.data_inicio_inscricao) : ""} onChange={(e) => {
+                                                const value = e.target.value;
+                                                setCursos(prev => ({ ...prev, data_inicio_inscricao: value, ...(cursos.isassincrono && { data_inicio_curso: value }) }));
+                                                setCursoDataTouched(true);
+                                                handleChange(e);
+                                            }} required disabled={isViewMode} />
                                         </div>
                                         <div className='col'>
                                             <label className='form-label fw-bold'>Fim da Inscrição</label>
-                                            <input type="date" name="data_fim_inscricao" min={cursos.data_inicio_inscricao || todayStr} className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required disabled={isViewMode} />
+                                            <input type="date" name="data_fim_inscricao" min={formatYearMonthDay(cursos.data_inicio_inscricao) || todayStr} className='form-control' value={cursos.data_fim_inscricao ? formatYearMonthDay(cursos.data_fim_inscricao) : ""} onChange={handleChange} required disabled={isViewMode} />
                                         </div>
                                     </div>
 
                                     <div className='row mt-2'>
                                         <div className='col'>
                                             <label className='form-label fw-bold'>Início do Curso</label>
-                                            <input type="date" name="data_inicio_curso" min={cursos.data_fim_inscricao || todayStr} className='form-control' value={cursos.data_inicio_curso ? formatYearMonthDay(cursos.data_inicio_curso) : ""} onChange={handleChange} required disabled={isViewMode} />
+                                            <input type="date" name="data_curso_ini" className={`form-control ${cursos.isassincrono ? 'bg-light text-muted' : ''}`} min={minCursoDate} value={isSincrono ? formatYearMonthDay(cursos.data_inicio_curso) : formatYearMonthDay(cursos.data_inicio_inscricao)}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (cursos.isassincrono && !cursos.data_inicio_inscricao) {
+                                                        setCursoDataTouched(true);
+                                                    } else {
+                                                        setCursos(prev => ({ ...prev, data_inicio_curso: value }));
+                                                        setCursoDataTouched(false);
+                                                    }
+                                                }}
+                                                required readOnly={cursos.isassincrono} />
                                         </div>
                                         <div className='col'>
                                             <label className='form-label fw-bold'>Fim do Curso</label>
-                                            <input type="date" name="data_fim_curso" min={cursos.data_inicio_curso || todayStr} className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required disabled={isViewMode} />
+                                            <input type="date" name="data_fim_curso" min={cursos.isassincrono ? formatYearMonthDay(cursos.data_fim_inscricao) : formatYearMonthDay(cursos.data_inicio_curso) || todayStr} className='form-control' value={cursos.data_fim_curso ? formatYearMonthDay(cursos.data_fim_curso) : ""} onChange={handleChange} required disabled={isViewMode} />
                                         </div>
                                     </div>
 
@@ -1214,6 +1244,7 @@ const EditCourse = () => {
                                             placeholder="--Escolha o idioma--"
                                             name="idioma"
                                             isDisabled={isViewMode}
+                                            required
                                         />
                                     </div>
 
@@ -1225,7 +1256,7 @@ const EditCourse = () => {
                                     {/* Tipo */}
                                     <div className='mt-2'>
                                         <label className='form-label fw-bold'>Tipologia</label>
-                                        <select name="issincrono" value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(valorBoolean); setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean })); handleChange(e) }} className='form-select' disabled={isViewMode}>
+                                        <select name="issincrono" value={isSincrono} onChange={(e) => { const valorBoolean = e.target.value === "true"; setIsSincrono(valorBoolean); setCursos(prev => ({ ...prev, issincrono: valorBoolean, isassincrono: !valorBoolean })); handleChange(e) }} className='form-select' disabled={isViewMode} required>
                                             <option value="">-- Escolher Tipologia --</option>
                                             <option value="true">Síncrono</option>
                                             <option value="false">Assíncrono</option>
@@ -1243,7 +1274,7 @@ const EditCourse = () => {
                                                 setFormadorSelecionado(valor);
                                                 handleChange(e);
                                             }}
-                                                className='form-select' disabled={isViewMode}>
+                                                className='form-select' disabled={isViewMode} required>
                                                 <option value="">-- Selecionar Formador --</option>
                                                 {formadores.map((f) => {
                                                     return (
@@ -1252,7 +1283,7 @@ const EditCourse = () => {
                                                 })}
                                             </select>
                                             <label className='mt-2 fw-bold'>Descrição Formador</label>
-                                            <textarea name="descricao_formador" value={formadores?.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly disabled={isViewMode} />
+                                            <textarea name="descricao_formador" value={formadores?.find((f) => f.id_formador.toString() == formadorSelecionado)?.descricao_formador} className='form-control mt-2' placeholder="Descrição do Formador..." readOnly disabled={isViewMode} required />
                                             <label className='mt-2 fw-bold'>Número Vagas</label>
                                             <input type="number" name="numero_vagas" className='form-control mt-2' min="0" placeholder="Número de Vagas..." value={sincrono.numero_vagas} onChange={(e) => setSincrono(prev => ({ ...prev, numero_vagas: parseInt(e.target.value) }))} required
                                                 disabled={isViewMode || (cursos.data_fim_inscricao && new Date() > new Date(cursos.data_fim_inscricao))} />
@@ -1321,7 +1352,6 @@ const EditCourse = () => {
                                     <div className='d-flex flex-column align-items-center'>
                                         <h5 className='m-1 mb-3'>{cursos.nome_curso || 'Nome'}</h5>
                                         <small>Número de inscritos: {cursos.contador_formandos}</small>
-                                        <small>Horas de curso: {horasCursoFormato}</small>
                                     </div>
                                     {!isViewMode && (
                                         <button onClick={handleSubmitCursoImg} type="button" className='btn btn-color text-white w-100 mt-4'>Alterar Foto</button>
