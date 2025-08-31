@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
 import 'user.dart';
 
 class AuthProvider with ChangeNotifier {
@@ -8,11 +10,27 @@ class AuthProvider with ChangeNotifier {
   User? get user => _user;
   String? get token => _token;
 
-  void setUser(User user, {String? token}) {
+  void setUser(User user, {String? token}) async {
     _user = user;
     if (token != null) {
       _token = token;
     }
+
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    if (fcmToken != null) {
+      await http.post(
+        Uri.parse("https://softskills-api.onrender.com/firebase/save-token"),
+        body: {"userId": user.id.toString(), "token": fcmToken},
+      );
+    }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+      http.post(
+        Uri.parse("https://softskills-api.onrender.com/firebase/save-token"),
+        body: {"userId": user.id.toString(), "token": newToken},
+      );
+    });
+
     notifyListeners();
   }
 
@@ -21,7 +39,17 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void logout() {
+  void logout() async {
+    if (_user != null) {
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      if (fcmToken != null) {
+        await http.post(
+          Uri.parse("https://softskills-api.onrender.com/firebase/delete-token"),
+          body: {"userId": user!.id.toString(), "token": fcmToken},
+        );
+      }
+    }
+
     _user = null;
     _token = null;
     notifyListeners();
