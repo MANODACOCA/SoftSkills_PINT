@@ -1,20 +1,21 @@
 const SequelizeAuto = require('sequelize-auto');
 
-const auto = new SequelizeAuto('pint_2024_2025', 'pint_2024_2025_user', 'cssPYwDMn3hKmWlgMhl6UbiwQDRJSXkL', {
-  host: 'dpg-d1d83tmr433s73eve4d0-a.oregon-postgres.render.com',
-  dialect: 'postgres',
-  port: 5432,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
+const auto = new SequelizeAuto(
+  'postgres',
+  'postgres.edfeevrkapdtnecarkii',
+  'l7wrdrppr4CQ7ys1',
+  {
+    host: 'aws-0-eu-north-1.pooler.supabase.com',
+    dialect: 'postgres',
+    port: 5432,
+    dialectOptions: {
+      ssl: { require: true, rejectUnauthorized: false },
     },
-  },
-  directory: './src/models',
-  additional: {
-    timestamps: false,
-  },
-});
+    directory: './src/models',
+    additional: { timestamps: false },
+    schema: 'public',
+  }
+);
 
 auto.run(err => {
   if (err) {

@@ -10,6 +10,7 @@ var _conteudos = require("./conteudos");
 var _conteudos_partilhado = require("./conteudos_partilhado");
 var _cursos = require("./cursos");
 var _denuncia = require("./denuncia");
+var _devices_fcm = require("./devices_fcm");
 var _entrega_trabalhos = require("./entrega_trabalhos");
 var _favoritos = require("./favoritos");
 var _formadores = require("./formadores");
@@ -46,6 +47,7 @@ function initModels(sequelize) {
   var conteudos_partilhado = _conteudos_partilhado(sequelize, DataTypes);
   var cursos = _cursos(sequelize, DataTypes);
   var denuncia = _denuncia(sequelize, DataTypes);
+  var devices_fcm = _devices_fcm(sequelize, DataTypes);
   var entrega_trabalhos = _entrega_trabalhos(sequelize, DataTypes);
   var favoritos = _favoritos(sequelize, DataTypes);
   var formadores = _formadores(sequelize, DataTypes);
@@ -156,6 +158,8 @@ function initModels(sequelize) {
   utilizador.hasMany(comentario, { as: "comentarios", foreignKey: "id_utilizador"});
   denuncia.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
   utilizador.hasMany(denuncia, { as: "denuncia", foreignKey: "id_utilizador"});
+  devices_fcm.belongsTo(utilizador, { as: "id_utilizador_utilizador", foreignKey: "id_utilizador"});
+  utilizador.hasMany(devices_fcm, { as: "devices_fcms", foreignKey: "id_utilizador"});
   favoritos.belongsTo(utilizador, { as: "id_formando_utilizador", foreignKey: "id_formando"});
   utilizador.hasMany(favoritos, { as: "favoritos", foreignKey: "id_formando"});
   formadores.belongsTo(utilizador, { as: "id_formador_utilizador", foreignKey: "id_formador"});
@@ -187,6 +191,7 @@ function initModels(sequelize) {
     conteudos_partilhado,
     cursos,
     denuncia,
+    devices_fcm,
     entrega_trabalhos,
     favoritos,
     formadores,
