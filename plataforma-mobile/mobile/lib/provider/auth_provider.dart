@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'user.dart';
+import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
   User? _user;
   String? _token;
+  String? _fcmToken;
 
   User? get user => _user;
   String? get token => _token;
@@ -18,6 +20,7 @@ class AuthProvider with ChangeNotifier {
 
     final fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null) {
+      _fcmToken = fcmToken;
       await http.post(
         Uri.parse("https://softskills-api.onrender.com/devices_fcm/save-token"),
         body: {"id_utilizador": user.id.toString(), "token": fcmToken},
@@ -40,14 +43,17 @@ class AuthProvider with ChangeNotifier {
   }
 
   void logout() async {
-    if (_user != null) {
-      final fcmToken = await FirebaseMessaging.instance.getToken();
-      if (fcmToken != null) {
-        await http.post(
-          Uri.parse("https://softskills-api.onrender.com/devices_fcm/delete-token"),
-          body: {"id_utilizador": user!.id.toString(), "token": fcmToken},
-        );
-      }
+    if (_user != null && _fcmToken != null) {
+      await http.post(
+        Uri.parse(
+          "https://softskills-api.onrender.com/devices_fcm/delete-token",
+        ),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "id_utilizador": user!.id.toString(),
+          "token": _fcmToken,
+        }),
+      );
     }
 
     _user = null;
