@@ -186,6 +186,7 @@ class _CommentBoxState extends State<CommentBox> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     final img = widget.comentario['id_utilizador_utilizador']?['img_perfil'];
@@ -263,9 +264,18 @@ class _CommentBoxState extends State<CommentBox> {
             SizedBox(height: 10,),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(widget.comentario['texto_comentario']),
+              child: Text(
+                widget.comentario['texto_comentario'],
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF212121),
+                  height: 1.4,
+                ),
+              ),
             ),
-            //like
+            
+
+            SizedBox(height: 15),
             Row(
               children: [
                 AbsorbPointer(
