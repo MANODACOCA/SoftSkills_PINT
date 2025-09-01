@@ -19,15 +19,15 @@ class AuthProvider with ChangeNotifier {
     final fcmToken = await FirebaseMessaging.instance.getToken();
     if (fcmToken != null) {
       await http.post(
-        Uri.parse("https://softskills-api.onrender.com/firebase/save-token"),
-        body: {"userId": user.id.toString(), "token": fcmToken},
+        Uri.parse("https://softskills-api.onrender.com/devices_fcm/save-token"),
+        body: {"id_utilizador": user.id.toString(), "token": fcmToken},
       );
     }
 
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
       http.post(
-        Uri.parse("https://softskills-api.onrender.com/firebase/save-token"),
-        body: {"userId": user.id.toString(), "token": newToken},
+        Uri.parse("https://softskills-api.onrender.com/devices_fcm/save-token"),
+        body: {"id_utilizador": user.id.toString(), "token": newToken},
       );
     });
 
@@ -44,8 +44,8 @@ class AuthProvider with ChangeNotifier {
       final fcmToken = await FirebaseMessaging.instance.getToken();
       if (fcmToken != null) {
         await http.post(
-          Uri.parse("https://softskills-api.onrender.com/firebase/delete-token"),
-          body: {"userId": user!.id.toString(), "token": fcmToken},
+          Uri.parse("https://softskills-api.onrender.com/devices_fcm/delete-token"),
+          body: {"id_utilizador": user!.id.toString(), "token": fcmToken},
         );
       }
     }
