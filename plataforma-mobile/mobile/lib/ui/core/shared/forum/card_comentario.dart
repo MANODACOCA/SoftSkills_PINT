@@ -1,13 +1,18 @@
 // ignore_for_file: use_build_context_synchronously, avoid_print
-import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:mobile/API/comments_forum_api.dart';
 import 'package:mobile/API/forum_api.dart';
 import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/core/shared/forum/dropdown_report_delete.dart';
 import 'package:mobile/ui/core/shared/popup_check_generico/custom_dialogs.dart';
-import 'package:mobile/ui/core/themes/colors.dart';
 import 'package:mobile/utils/uteis.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
+import 'package:mobile/ui/core/shared/export.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
+
 
 class CommentBox extends StatefulWidget {
   const CommentBox({
@@ -186,12 +191,44 @@ class _CommentBoxState extends State<CommentBox> {
     }
   }
 
+  Future<void> abrirArquivo() async {
+    final url = widget.comentario['caminho_ficheiro'];
+    if (url == null) return;
+
+    try {
+      final filename = url.split('/').last;
+      final dir = await getApplicationDocumentsDirectory();
+      final filePath = '${dir.path}/$filename';
+
+      final localFile = File(filePath);
+      if (!await localFile.exists()) {
+        await Dio().download(url, filePath);
+      }
+
+      final result = await OpenFile.open(filePath);
+      if (result.type != ResultType.done) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.message),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Erro ao abrir arquivo: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Erro ao abrir arquivo')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final img = widget.comentario['id_utilizador_utilizador']?['img_perfil'];
     final imageUrl = 'https://ui-avatars.com/api/?name= ${Uri.encodeComponent(widget.comentario['id_utilizador_utilizador']?['nome_utilizador'])}&background=random&bold=true';            
+    final path_file = widget.comentario['caminho_ficheiro'];
     return Container(
-      
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -263,9 +300,52 @@ class _CommentBoxState extends State<CommentBox> {
             SizedBox(height: 10,),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text(widget.comentario['texto_comentario']),
+              child: Text(
+                widget.comentario['texto_comentario'],
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xFF212121),
+                  height: 1.4,
+                ),
+              ),
             ),
-            //like
+            if (path_file != null) ...[
+              SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: GestureDetector(
+                  onTap: abrirArquivo,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: AppColors.primary, width: 1),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.attach_file,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          p.basename(path_file),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.primary,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            SizedBox(height: 15),
             Row(
               children: [
                 AbsorbPointer(
