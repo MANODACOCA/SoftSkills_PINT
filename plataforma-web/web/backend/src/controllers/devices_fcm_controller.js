@@ -28,8 +28,6 @@ controllers.create = async (req, res) => {
 controllers.delete = async (req, res) => {
     try {
         const { id_utilizador, token } = req.body;
-        console.log("ADWDWADAWDAWDAWUJIASEFHUIHAWEFHJIOAWJIO-----",id_utilizador);
-        console.log("ADWDWADfgeaaikojdfkgrjspeUIHAWEFHJIOAWJIO-----",token);
         const deleted = await model.destroy({
             where: {
                 id_utilizador: id_utilizador, 
