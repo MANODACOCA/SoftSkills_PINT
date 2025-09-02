@@ -198,7 +198,7 @@ class ForumAPI {
     required String textoPost,
     required String userId,
     required String forumId,
-    File? ficheiro, // Apenas um ficheiro
+    File? ficheiro, 
   }) async {
     final dio = Dio();
     final url = 'https://softskills-api.onrender.com/posts/create';
@@ -207,7 +207,7 @@ class ForumAPI {
       'texto_post': textoPost,
       'id_utilizador': userId,
       'id_conteudos_partilhado': forumId,
-      'id_formato': '1', // Como já tens no backend fixo
+      'id_formato': '1',
       if (ficheiro != null)
         'ficheiro': await MultipartFile.fromFile(
           ficheiro.path,

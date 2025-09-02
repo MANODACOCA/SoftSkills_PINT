@@ -167,7 +167,6 @@ class _ForumPageState extends State<ForumPage> {
                                         Center(
                                           child: Text('Este fórum ainda não contém posts'),
                                         ),
-
                                     ],
                                   ), 
                                 ),
