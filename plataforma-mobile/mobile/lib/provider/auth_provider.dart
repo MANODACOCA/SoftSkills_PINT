@@ -27,12 +27,16 @@ class AuthProvider with ChangeNotifier {
 
     final jaRegistouDevice = await http.get(uri);
 
-    if (fcmToken != null && jaRegistouDevice.statusCode != 200) {
+    if (fcmToken != null) {
       _fcmToken = fcmToken;
-      await http.post(
-        Uri.parse("https://softskills-api.onrender.com/devices_fcm/save-token"),
-        body: {"id_utilizador": user.id.toString(), "token": fcmToken},
-      );
+      if (jaRegistouDevice.statusCode != 200) {
+        await http.post(
+          Uri.parse(
+            "https://softskills-api.onrender.com/devices_fcm/save-token",
+          ),
+          body: {"id_utilizador": user.id.toString(), "token": fcmToken},
+        );
+      }
     }
 
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
