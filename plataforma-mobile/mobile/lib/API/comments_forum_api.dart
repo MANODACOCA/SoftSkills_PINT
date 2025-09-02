@@ -1,7 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
 import 'dart:convert';
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
+import 'package:http_parser/http_parser.dart';
 
 class ComentarioAPI {
   static const String API_URL_COMENTARIOS =
@@ -42,7 +46,7 @@ class ComentarioAPI {
     }
   }
 
-  static Future<dynamic> createComentario(Map<String, dynamic> formData) async {
+  /* static Future<dynamic> createComentario(Map<String, dynamic> formData) async {
     try {
       final response = await http.post(
         Uri.parse('$API_URL_COMENTARIOS/create'),
@@ -59,7 +63,52 @@ class ComentarioAPI {
       print('Erro ao criar Comentário! $e');
       rethrow;
     }
+  } */
+
+  static Future<dynamic> createComentario({
+    required String textoComentario,
+    required int userId,
+    required int postId,
+    File? ficheiro,
+  }) async {
+    final dio = Dio();
+    final url = '$API_URL_COMENTARIOS/create';
+
+    final formData = FormData.fromMap({
+      'texto_comentario': textoComentario,
+      'id_utilizador': userId,
+      'id_post': postId,
+      'id_formato': '1',
+      if (ficheiro != null)
+        'ficheiro': await MultipartFile.fromFile(
+          ficheiro.path,
+          filename: p.basename(ficheiro.path),
+          contentType: _getMimeTypeFromExtension(ficheiro.path),
+        ),
+    });
+
+    try {
+      final response = await dio.post(
+        url,
+        data: formData,
+        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
+      );
+
+      print('STATUS: ${response.statusCode}');
+      print('BODY: ${response.data}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return response.data;
+      } else {
+        throw Exception('Erro ao criar Comentário! Código ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Erro ao criar Comentário! $e');
+      rethrow;
+    }
   }
+
+
 
   static Future<dynamic> updateComentario(
     String id,
@@ -170,6 +219,35 @@ class ComentarioAPI {
     } catch (e) {
       print('Erro inesperado ao verificar se deu like no Comentario! $e');
       rethrow;
+    }
+  }
+
+    static MediaType _getMimeTypeFromExtension(String filePath) {
+    final ext = p.extension(filePath).toLowerCase();
+    switch (ext) {
+      case '.pdf':
+        return MediaType('application', 'pdf');
+      case '.jpg':
+      case '.jpeg':
+        return MediaType('image', 'jpeg');
+      case '.png':
+        return MediaType('image', 'png');
+      case '.doc':
+        return MediaType('application', 'msword');
+      case '.docx':
+        return MediaType(
+          'application',
+          'vnd.openxmlformats-officedocument.wordprocessingml.document',
+        );
+      case '.xls':
+        return MediaType('application', 'vnd.ms-excel');
+      case '.xlsx':
+        return MediaType(
+          'application',
+          'vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        );
+      default:
+        return MediaType('application', 'octet-stream');
     }
   }
 }
