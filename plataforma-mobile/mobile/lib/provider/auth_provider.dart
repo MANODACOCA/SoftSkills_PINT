@@ -26,7 +26,6 @@ class AuthProvider with ChangeNotifier {
     });
 
     final jaRegistouDevice = await http.get(uri);
-    print("LALALA$jaRegistouDevice${jaRegistouDevice.statusCode}");
 
     if (fcmToken != null && jaRegistouDevice.statusCode != 200) {
       _fcmToken = fcmToken;
