@@ -250,7 +250,7 @@ class _LoginPage extends State<LoginPage> {
                             );
                             final user = User(id: userId);
                             if (!mounted) return;
-                            authProvider.setUser(user, token: token);
+                            await authProvider.setUser(user, token: token);
                             await authService.login(token, isSwitched);
                             context.go('/homepage');
                           } else if (response['jaAtivou'] == null) {

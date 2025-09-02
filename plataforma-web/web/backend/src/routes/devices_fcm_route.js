@@ -7,6 +7,7 @@ router.get('/',(req, res) => {
 });
 
 router.get('/list',controller.list);
+router.get('/get/:id_utilizador/:token',controller.get);
 router.post('/save-token',controller.create);
 router.delete('/delete-token',controller.delete);
 

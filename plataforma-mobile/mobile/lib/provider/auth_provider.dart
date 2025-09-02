@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'user.dart';
 import 'dart:convert';
 
@@ -12,14 +13,17 @@ class AuthProvider with ChangeNotifier {
   User? get user => _user;
   String? get token => _token;
 
-  void setUser(User user, {String? token}) async {
+  Future<void> setUser(User user, {String? token}) async {
     _user = user;
     if (token != null) {
       _token = token;
     }
 
+    final prefs = await SharedPreferences.getInstance();
+    final remeberMe = prefs.getBool("remember_me") ?? false;
+
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    if (fcmToken != null) {
+    if (fcmToken != null && !remeberMe) {
       _fcmToken = fcmToken;
       await http.post(
         Uri.parse("https://softskills-api.onrender.com/devices_fcm/save-token"),
@@ -42,9 +46,9 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void logout() async {
+  Future logout() async {
     if (_user != null && _fcmToken != null) {
-      await http.post(
+      await http.delete(
         Uri.parse(
           "https://softskills-api.onrender.com/devices_fcm/delete-token",
         ),
