@@ -12,19 +12,31 @@ class AuthProvider with ChangeNotifier {
   User? get user => _user;
   String? get token => _token;
 
-  void setUser(User user, {String? token}) async {
+  Future<void> setUser(User user, {String? token}) async {
     _user = user;
     if (token != null) {
       _token = token;
     }
 
     final fcmToken = await FirebaseMessaging.instance.getToken();
+
+    final uri = Uri.https('softskills-api.onrender.com', '/devices_fcm/get', {
+      'id_utilizador': user.id.toString(),
+      'token': fcmToken,
+    });
+
+    final jaRegistouDevice = await http.get(uri);
+
     if (fcmToken != null) {
       _fcmToken = fcmToken;
-      await http.post(
-        Uri.parse("https://softskills-api.onrender.com/devices_fcm/save-token"),
-        body: {"id_utilizador": user.id.toString(), "token": fcmToken},
-      );
+      if (jaRegistouDevice.statusCode != 200) {
+        await http.post(
+          Uri.parse(
+            "https://softskills-api.onrender.com/devices_fcm/save-token",
+          ),
+          body: {"id_utilizador": user.id.toString(), "token": fcmToken},
+        );
+      }
     }
 
     FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
@@ -42,9 +54,9 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void logout() async {
+  Future logout() async {
     if (_user != null && _fcmToken != null) {
-      await http.post(
+      await http.delete(
         Uri.parse(
           "https://softskills-api.onrender.com/devices_fcm/delete-token",
         ),

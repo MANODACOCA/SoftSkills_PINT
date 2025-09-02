@@ -20,7 +20,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
   UtilizadoresApi api = UtilizadoresApi();
-  bool isSwitched = false;
+  bool isSwitched = true;
   bool isRememberMe = false;
   bool? twoFactorEnabled;
   final TextEditingController _emailController = TextEditingController();
@@ -38,9 +38,9 @@ class _LoginPage extends State<LoginPage> {
     _loadSwitchState();
   }
 
-  Future<void> _saveRememberMe(bool value) async {
+  Future<void> _saveRememberMe(bool isSwitched) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('remember_me', value);
+    await prefs.setBool('remember_me', isSwitched);
   }
 
   Future<void> _loadSwitchState() async {
@@ -146,32 +146,6 @@ class _LoginPage extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          Switch(
-                            activeColor: AppColors.primary,
-                            value: isSwitched,
-                            onChanged: (value) async {
-                              setState(() {
-                                isSwitched = value;
-                              });
-                              await _saveRememberMe(value);
-                            },
-                          ),
-                          const SizedBox(width: 10),
-                          const Text(
-                            'Manter sessão iniciada',
-                            style: TextStyle(color: AppColors.primary),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   const SizedBox(height: 20.0),
                   Center(
                     child: Row(
@@ -250,7 +224,7 @@ class _LoginPage extends State<LoginPage> {
                             );
                             final user = User(id: userId);
                             if (!mounted) return;
-                            authProvider.setUser(user, token: token);
+                            await authProvider.setUser(user, token: token);
                             await authService.login(token, isSwitched);
                             context.go('/homepage');
                           } else if (response['jaAtivou'] == null) {

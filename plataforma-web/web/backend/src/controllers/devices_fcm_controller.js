@@ -1,5 +1,6 @@
 //const model = require('../models/s_s_o');;
 
+const { where } = require("sequelize");
 const sequelize = require("../models/database");
 const initModels = require("../models/init-models");
 const model = initModels(sequelize).devices_fcm;
@@ -10,6 +11,25 @@ const controllers = {};
 controllers.list = async (req, res) => {
     const data = await model.findAll();
     res.status(200).json(data);
+};
+
+controllers.get = async (req, res) => {
+    try {
+        const { id_utilizador, token } = req.query;
+        const data = await model.findOne({
+            where: {
+                id_utilizador: id_utilizador,
+                token: token,
+            }
+        });
+        if (data) {
+            res.status(200).json(data);
+        } else {
+            res.status(404).json({ erro: 'Modelo do devices fcm nao encontrado/a!' });
+        }
+    } catch (err) {
+        res.status(500).json({ erro: 'Erro ao procurar Modelo do devices fcm!', desc: err.message });
+    }
 };
 
 controllers.create = async (req, res) => {
@@ -32,8 +52,8 @@ controllers.delete = async (req, res) => {
 
         const deleted = await model.destroy({
             where: {
-                id_utilizador: id_utilizador, 
-                token: token
+                id_utilizador: id_utilizador,
+                token: token,
             }
         });
         if (deleted) {

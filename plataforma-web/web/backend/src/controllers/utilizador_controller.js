@@ -230,7 +230,7 @@ controllers.login = async (req, res) => {
       return res.status(403).json({ message: 'A sua conta foi bloqueada' });
     }
 
-    let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '120min' });
+    let token = jwt.sign({ email, id: user.id_utilizador }, config.jwtSecret, { expiresIn: '2min' });
     res.json({ success: true, message: 'Autenticação realizada com sucesso!', token: token, jaAtivou: user.data_ativ_utili, twoFa: user.auten2fat });
   } catch (error) {
     console.error(error);
