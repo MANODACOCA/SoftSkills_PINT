@@ -16,7 +16,7 @@ controllers.list = async (req, res) => {
 controllers.get = async (req, res) => {
     try {
         const { id_utilizador, token } = req.params;
-        const data = await model.findOne({
+        const data = await model.findAll({
             where: {
                 id_utilizador: id_utilizador,
                 token: token,
