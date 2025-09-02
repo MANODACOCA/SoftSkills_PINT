@@ -363,14 +363,9 @@ class _ProfileState extends State<Profile> {
                 style: TextStyle(color: Colors.white),
               ),
               onPressed: () async {
-                await Provider.of<AuthProvider>(context, listen: false).logout();
-                await authService.logout();
+                final authProvider = Provider.of<AuthProvider>(context, listen: false);
+                await authService.logout(authProvider:  authProvider);
               
-                if (mounted) {
-                  context.pop();
-                  await Future.delayed(const Duration(milliseconds: 500));
-                  context.go('/login');
-                }
                 print('LogOut!');
               },
             ),
