@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'user.dart';
 import 'dart:convert';
 
@@ -19,11 +18,15 @@ class AuthProvider with ChangeNotifier {
       _token = token;
     }
 
-    final prefs = await SharedPreferences.getInstance();
-    final remeberMe = prefs.getBool("remember_me") ?? false;
-
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    if (fcmToken != null && !remeberMe) {
+
+    final jaRegistouDevice = await http.post(
+      Uri.parse("https://softskills-api.onrender.com/devices_fcm/get"),
+      body: {"id_utilizador": user.id.toString(), "token": fcmToken},
+    );
+    print("LALALA$jaRegistouDevice${jaRegistouDevice.statusCode}");
+
+    if (fcmToken != null && jaRegistouDevice.statusCode != 200) {
       _fcmToken = fcmToken;
       await http.post(
         Uri.parse("https://softskills-api.onrender.com/devices_fcm/save-token"),
