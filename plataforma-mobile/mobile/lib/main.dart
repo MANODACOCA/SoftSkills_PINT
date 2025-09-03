@@ -9,6 +9,7 @@ import 'package:mobile/routing/route.dart';
 import 'package:mobile/services/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart'; // Gerado com `flutterfire configure`
+import 'dart:convert';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -45,6 +46,18 @@ Future<void> _initializeLocalNotifications() async {
 
   await flutterLocalNotificationsPlugin.initialize(
     const InitializationSettings(android: androidSettings, iOS: iosSettings),
+    onDidReceiveNotificationResponse: (NotificationResponse response) {
+      if (response.payload != null) {
+        final data = jsonDecode(response.payload!);
+
+        final route = data['route'];
+        final idCurso = int.tryParse(data['id_curso'] ?? '');
+
+        if (route != null && idCurso != null) {
+          rotas.push(route, extra: idCurso);
+        }
+      }
+    },
   );
 }
 
@@ -65,6 +78,7 @@ void showLocalNotification(RemoteMessage message) async {
     message.notification?.title ?? 'Notificação',
     message.notification?.body ?? '',
     platformDetails,
+    payload: message.data.isNotEmpty ? jsonEncode(message.data) : null,
   );
 }
 
@@ -94,35 +108,48 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void _setupFCM() async {
-    //FirebaseMessaging messaging = FirebaseMessaging.instance;
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    /*NotificationSettings settings = await messaging.requestPermission(
+    NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       badge: true,
       sound: true,
     );
-*/
-    //print('Permission: ${settings.authorizationStatus}');
 
-    // Foreground
+    //App Aberta(para lançar a notificacao)
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      //print('Foreground message: ${message.notification?.title}');
       if (message.notification != null) {
         showLocalNotification(message);
-        setState(() {
-          mensagem = message.notification!.body!;
-        });
       }
     });
 
-    // App aberta por notificação
+    //Background e app aberta (para abrir a notificacao)
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      //print('Notification opened: ${message.notification?.title}');
+      _handleMessage(message);
+    });
+
+    //Killed(App está morta)
+    FirebaseMessaging.instance.getInitialMessage().then((
+      RemoteMessage? message,
+    ) {
+      if (message != null) {
+        _handleMessage(message);
+      }
     });
 
     // Token
     //  String? token = await messaging.getToken();
     //print('FCM Token: $token');
+  }
+
+  void _handleMessage(RemoteMessage message) {
+    final data = message.data;
+    final idCurso = int.tryParse(data['id_curso'] ?? '');
+    final route = data['route'];
+
+    if (idCurso != null && route != null) {
+      rotas.push(route, extra: idCurso);
+    }
   }
 
   @override
