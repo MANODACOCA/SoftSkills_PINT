@@ -56,7 +56,7 @@ module.exports.criarNotifacoesGenerica = async (
                     const message = {
                         token: device.token,
                         notification: {
-                            title: `Nova Notificação de ${tipo}`,
+                            title: `Nova notificação de ${tipo}`,
                             body: mensagem,
                         },
                         data: {
