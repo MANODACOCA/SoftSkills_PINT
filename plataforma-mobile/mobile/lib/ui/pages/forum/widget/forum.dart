@@ -80,7 +80,7 @@ class _ForumState extends State<Forum> {
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => Navigator.of(ctx).pop(),
                   child: const Text('Cancelar'),
                 ),
                 ElevatedButton(
@@ -91,8 +91,8 @@ class _ForumState extends State<Forum> {
                           forumNovo: controller.text.trim(), 
                           formandoId: int.parse(Provider.of<AuthProvider>(context, listen: false).user!.id)
                         );
-                        if(!mounted) return;
-                        Navigator.of(context).pop();
+                        if(!ctx.mounted) return;
+                        Navigator.of(ctx).pop();
                       },
                   child: const Text('Submeter'),
                 ),
