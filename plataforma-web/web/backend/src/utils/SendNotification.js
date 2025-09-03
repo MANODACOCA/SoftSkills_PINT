@@ -1,4 +1,5 @@
 const { initModels } = require('../models/init-models');
+const admin = require('../config/fireBaseConf.js');
 
 module.exports.criarNotifacoesGenerica = async (
     tipo,
@@ -8,7 +9,7 @@ module.exports.criarNotifacoesGenerica = async (
     sequelize
 ) => {
     try {
-        const { inscricoes, formandos, notificacoes_curso } = initModels(sequelize);
+        const { inscricoes, formandos, notificacoes_curso, devices_fcm } = initModels(sequelize);
 
         const utilizadoresInscritos = await inscricoes.findAll({
             where: { id_curso },
@@ -44,6 +45,33 @@ module.exports.criarNotifacoesGenerica = async (
         }))
 
         await notificacoes_curso.bulkCreate(notificacao);
+
+        for (const ui of utilizadoresInscritos) {
+            const devices = await devices_fcm.findAll({
+                where: { id_utilizador: ui.id_formando, },
+
+            });
+            for (const device of devices) {
+                if (device.token) {
+                    const message = {
+                        token: device.token,
+                        notification: {
+                            title: `Nova notificação de ${tipo}`,
+                            body: mensagem,
+                        },
+                        data: {
+                            id_curso: id_curso.toString(),
+                            route: '/cursos-inscritos',
+                        }
+                    };
+
+                    admin.messaging().send(message)
+                        .then(response => console.log('Notificação enviada:', response))
+                        .catch(err => console.error('Erro ao enviar notificação:', err));
+                }
+            }
+
+        }
 
         console.log(`Notificação enviada para ${notificacao.length} utilizadores`);
     } catch (error) {
