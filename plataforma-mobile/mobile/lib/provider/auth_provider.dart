@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'user.dart';
-import 'dart:convert';
 
 class AuthProvider with ChangeNotifier {
   User? _user;
   String? _token;
-  String? _fcmToken;
+
 
   User? get user => _user;
   String? get token => _token;
@@ -28,7 +28,11 @@ class AuthProvider with ChangeNotifier {
     final jaRegistouDevice = await http.get(uri);
 
     if (fcmToken != null) {
-      _fcmToken = fcmToken;
+      //guarda na SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('fcmToken', fcmToken);
+      await prefs.setString('userId', user.id.toString());
+
       if (jaRegistouDevice.statusCode != 200) {
         await http.post(
           Uri.parse(
@@ -55,19 +59,6 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future logout() async {
-    if (_user != null && _fcmToken != null) {
-      await http.delete(
-        Uri.parse(
-          "https://softskills-api.onrender.com/devices_fcm/delete-token",
-        ),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({
-          "id_utilizador": user!.id.toString(),
-          "token": _fcmToken,
-        }),
-      );
-    }
-
     _user = null;
     _token = null;
     notifyListeners();
