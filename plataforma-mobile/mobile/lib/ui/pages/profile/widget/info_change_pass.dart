@@ -133,7 +133,7 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
           onPressed: () {
-            context.go('/seeinfoprofile', extra: widget.idUser);
+            context.go('/profile', extra: widget.idUser);
           },
         ),
       ),

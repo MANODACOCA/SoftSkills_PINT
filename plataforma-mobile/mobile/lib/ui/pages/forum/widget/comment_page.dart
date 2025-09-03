@@ -238,7 +238,6 @@ class _CommentPageState extends State<CommentPage> {
               },
             ),
           ),
-          const Divider(height: 1, color: Color(0xFFE0E0E0)),
         ],
         TextField(
           controller: commentController,
