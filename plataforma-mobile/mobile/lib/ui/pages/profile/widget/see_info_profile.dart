@@ -1,3 +1,5 @@
+// ------------------- FILE NAO USADO -------------------
+
 import '../../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';

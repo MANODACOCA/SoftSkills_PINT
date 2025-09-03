@@ -19,6 +19,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   Map<String, dynamic> utilizador = {};
   final UtilizadoresApi _api = UtilizadoresApi();
+  int? id;
 
   @override
   void initState() {
@@ -27,6 +28,9 @@ class _ProfileState extends State<Profile> {
       final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
       if (userId != null) {
         print('ID do utilizador: $userId');
+        setState(() {
+          id = int.tryParse(userId);
+        });
         fetchUtilizador(int.parse(userId));
       }
     });
@@ -187,14 +191,14 @@ class _ProfileState extends State<Profile> {
                               Icons.key,
                               color: Color.fromARGB(255, 88, 85, 85),
                             ),
-                            title: const Text('Informações de login'),
+                            title: const Text('Alterar password'),
                             trailing: const Icon(
                               Icons.arrow_forward_ios,
                               size: 15,
                             ),
                             dense: true,
                             onTap: () {
-                              context.go('/seeinfoprofile');
+                              context.go('/changeinfopass', extra: id.toString());
                             },
                           ),
                         ],
