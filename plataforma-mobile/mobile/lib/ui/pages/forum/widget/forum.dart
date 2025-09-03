@@ -1,8 +1,11 @@
 // ignore_for_file: avoid_print
 // ignore: unused_import
+import 'package:mobile/API/pedidosforum_api.dart';
+import 'package:mobile/provider/auth_provider.dart';
 import 'package:mobile/ui/core/shared/base_comp/dropdown_filter_forum.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/core/shared/forum/forum_card.dart';
+import 'package:provider/provider.dart';
 import '../../../../API/forum_api.dart';
 import '../../../core/shared/export.dart';
 
@@ -46,29 +49,65 @@ class _ForumState extends State<Forum> {
     }
   }
 
-  Widget _buttonAddForum() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20)),
+  Future<void> _pedidoForum() async {
+    final controller = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+    final PedidosforumApi pedidos_api = PedidosforumApi();
+
+    final String? texto = await showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setStateDialog) {
+            return AlertDialog(
+              title: const Text('Novo pedido de fórum'),
+              content: Form(
+                key: formKey,
+                child: TextFormField(
+                  controller: controller,
+                  autofocus: true,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    labelText: 'Mensagem',
+                    hintText: 'Escreve o teu pedido…',
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (_) => setStateDialog(() {}),
+                  validator: (v) =>
+                      (v == null || v.trim().isEmpty) ? 'Preenche o campo' : null,
+                ),
               ),
-            ),
-            onPressed: () {},
-            icon: Icon(Icons.add, color: Colors.white),
-            label: Text(
-              'Pedir novo Fórum',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ),
-        ],
-      ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: controller.text.trim().isEmpty
+                      ? null
+                      : () async {
+                        final data = await pedidos_api.createPedidoForum(
+                          forumNovo: controller.text.trim(), 
+                          formandoId: int.parse(Provider.of<AuthProvider>(context, listen: false).user!.id)
+                        );
+                        if(!mounted) return;
+                        Navigator.of(context).pop();
+                      },
+                  child: const Text('Submeter'),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
+    if (!mounted) return;
+    if (texto != null && texto.isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Pedido registado.')),
+      );
+    }
   }
 
   @override
@@ -142,7 +181,7 @@ class _ForumState extends State<Forum> {
               bottom: 15,
               height: 48,
               child: FloatingActionButton.extended(
-                onPressed: () {},
+                onPressed: _pedidoForum,
                 icon: Icon(Icons.add, color: Colors.white),
                 label: Text(
                   'Pedir novo Fórum',
