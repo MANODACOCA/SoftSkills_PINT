@@ -8,7 +8,6 @@ class Footer extends StatelessWidget {
   if(location.startsWith('/homepage')) return 0;
   if(location.startsWith('/forum')) return 1;
   if(location.startsWith('/cursos')) return 2;
-/*   if(location.startsWith('/notificacoes')) return 3; */
   if(location.startsWith('/profile')) return 3;
   return 0;
 }
@@ -24,9 +23,6 @@ class Footer extends StatelessWidget {
       case 2:
         context.go('/cursos');
         break;
-      /* case 3:
-        context.go("/notificacoes");
-        break; */
       case 3:
         context.go('/profile');
         break;
@@ -59,10 +55,6 @@ class Footer extends StatelessWidget {
           icon: Icon(Ionicons.school_outline),
           label: 'Cursos',
         ),
-        /* BottomNavigationBarItem(
-          icon: Icon(Ionicons.notifications_outline),
-          label: 'Notificações',
-        ), */
         BottomNavigationBarItem(
           icon: Icon(Ionicons.person_outline),
           label: 'Perfil',
