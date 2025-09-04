@@ -17,6 +17,7 @@ class _CreatePassword extends State<CreatePassword> {
   bool isPasswordVisible = false;
   final newpass = TextEditingController();
   final pass = TextEditingController();
+  bool isLoading = false;
   Icon passwordIcon = const Icon(
     Icons.visibility_off,
     color: AppColors.primary,
@@ -128,7 +129,7 @@ class _CreatePassword extends State<CreatePassword> {
                             color: Color.fromRGBO(211, 211, 211, 100),
                           ),
                         ),
-                        labelText: 'Repita Passowrd',
+                        labelText: 'Repita Password',
                       ),
                     ),
                   ),
@@ -141,13 +142,26 @@ class _CreatePassword extends State<CreatePassword> {
                       ),
                       fixedSize: const Size(310, 46),
                     ),
-                    onPressed: () {
-                      confirm();
-                    },
-                    child: const Text(
-                      'Confirmar',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                    onPressed:
+                        isLoading
+                            ? null
+                            : () {
+                              confirm();
+                            },
+                    child:
+                        isLoading
+                            ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                            : const Text(
+                              'Confirmar',
+                              style: TextStyle(color: Colors.white),
+                            ),
                   ),
                 ],
               ),
@@ -159,22 +173,70 @@ class _CreatePassword extends State<CreatePassword> {
   }
 
   Future<void> analisar() async {
-    if (newpass.text == pass.text) {
-      var success = await api.alterarPassword(widget.email, newpass.text);
-      if (success['success'] == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Password alterada com sucesso!')),
-        );
-        await Future.delayed(Duration(seconds: 2));
-       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao alterar password: ${success['message']}')),
-        );
-      }
-    } else {
+    final password = pass.text.trim();
+    final confirmPassword = newpass.text.trim();
+
+    // 1. Verifica se os campos estão preenchidos
+    if (password.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Por favor, preencha todos os campos.')),
+      );
+      return;
+    }
+
+    // 2. Verifica tamanho mínimo
+    if (password.length < 8) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('A password deve ter pelo menos 8 caracteres.'),
+        ),
+      );
+      return;
+    }
+
+    // 3. Verifica se são iguais
+    if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('As passwords não coincidem!')),
       );
+      return;
+    }
+
+    // 4. Se passou em todas as validações → chama API
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      var success = await api.alterarPassword(widget.email, password);
+
+      if (success['success'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password alterada com sucesso!')),
+        );
+
+        // pausa para o utilizador ver a mensagem
+        await Future.delayed(const Duration(seconds: 2));
+
+        if (!mounted) return;
+        context.go("/login");
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao alterar password: ${success['message']}'),
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro inesperado: $e')));
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -183,21 +245,22 @@ class _CreatePassword extends State<CreatePassword> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Confirmação'),
-          content: Text('Tem a certeza da password que escolheu?'),
+          title: const Text('Confirmação'),
+          content: const Text('Tem a certeza da password que escolheu?'),
           actions: <Widget>[
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.green),
-              child: Text('Sim', style: TextStyle(color: Colors.white)),
+              child: const Text('Sim', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                analisar();
+                Navigator.of(context).pop(); // fecha o diálogo 👈
+                analisar(); // chama a função
               },
             ),
             TextButton(
               style: TextButton.styleFrom(backgroundColor: Colors.red),
-              child: Text('Não', style: TextStyle(color: Colors.white)),
+              child: const Text('Não', style: TextStyle(color: Colors.white)),
               onPressed: () {
-                context.pop();
+                Navigator.of(context).pop(); // fecha só o diálogo
               },
             ),
           ],

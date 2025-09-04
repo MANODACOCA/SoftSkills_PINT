@@ -13,6 +13,7 @@ class ForgetPassword extends StatefulWidget {
 
 class _ForgetPassword extends State<ForgetPassword> {
   final _api = UtilizadoresApi();
+  bool isLoading = false;
   TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -81,48 +82,80 @@ class _ForgetPassword extends State<ForgetPassword> {
                       ),
                       fixedSize: Size(screenWidth, 46),
                     ),
-                    onPressed: () async {
-                      final email = emailController.text.trim();
-                      if (email.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Por favor, insira o seu email.'),
-                          ),
-                        );
-                        return;
-                      }
-                      try {
-                        final resposta = await _api.esqueceuPassword(email);
-                        print(resposta);
-                        await showDialog(
-                          context: context,
-                          builder:
-                              (context) => AlertDialog(
-                                title: const Text('Sucesso'),
-                                content: const Text(
-                                  'Email enviado com sucesso!',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      context.pop();
-                                    },
-                                    child: const Text('OK'),
+                    onPressed:
+                        isLoading
+                            ? null
+                            : () async {
+                              final email = emailController.text.trim();
+                              if (email.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Por favor, insira o seu email.',
+                                    ),
                                   ),
-                                ],
+                                );
+                                return;
+                              }
+                              try {
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                final resposta = await _api.esqueceuPassword(
+                                  email,
+                                );
+                                print(resposta);
+                                await showDialog(
+                                  context: context,
+                                  builder:
+                                      (context) => AlertDialog(
+                                        title: const Text('Sucesso'),
+                                        content: const Text(
+                                          'Email enviado com sucesso!',
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop();
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ],
+                                      ),
+                                );
+                                context.go(
+                                  "/confirmacao",
+                                  extra: {'email': email},
+                                );
+                              } catch (e) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Erro ao enviar email.'),
+                                  ),
+                                );
+                              } finally {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                            },
+                    child:
+                        isLoading
+                            ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
                               ),
-                        );
-                        context.go("/confirmacao", extra: {'email': email});
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Erro ao enviar email.')),
-                        );
-                      }
-                    },
-                    child: const Text(
-                      'Enviar Email',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                            )
+                            : const Text(
+                              'Enviar Email',
+                              style: TextStyle(color: Colors.white),
+                            ),
                   ),
                 ],
               ),

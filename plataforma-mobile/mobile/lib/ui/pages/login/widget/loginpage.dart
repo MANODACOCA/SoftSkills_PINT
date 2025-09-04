@@ -19,6 +19,7 @@ class _LoginPage extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isPasswordVisible = false;
+  bool isLoading = false;
   Icon passwordIcon = const Icon(
     Icons.visibility_off,
     color: AppColors.primary,
@@ -96,9 +97,16 @@ class _LoginPage extends State<LoginPage> {
                           onPressed: () {
                             setState(() {
                               isPasswordVisible = !isPasswordVisible;
-                              passwordIcon = isPasswordVisible
-                                  ? const Icon(Icons.visibility, color: AppColors.primary)
-                                  : const Icon(Icons.visibility_off, color: AppColors.primary);
+                              passwordIcon =
+                                  isPasswordVisible
+                                      ? const Icon(
+                                        Icons.visibility,
+                                        color: AppColors.primary,
+                                      )
+                                      : const Icon(
+                                        Icons.visibility_off,
+                                        color: AppColors.primary,
+                                      );
                             });
                           },
                         ),
@@ -138,61 +146,125 @@ class _LoginPage extends State<LoginPage> {
                       ),
                       minimumSize: const Size.fromHeight(46),
                     ),
-                    onPressed: () async {
-                      if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Por favor, preencha todos os campos.')),
-                        );
-                        return;
-                      }
-                      try {
-                        final response = await api.login(
-                          _emailController.text,
-                          _passwordController.text,
-                        );
-                        if (response['success'] == true) {
-                          final token = response['token'];
-                          final prefs = await SharedPreferences.getInstance();
-                          // ignore: await_only_futures
-                          var userId = await api.getUserIdFromToken(token);
+                    onPressed:
+                        isLoading
+                            ? null
+                            : () async {
+                              if (_emailController.text.isEmpty ||
+                                  _passwordController.text.isEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      'Por favor, preencha todos os campos.',
+                                    ),
+                                  ),
+                                );
+                                return;
+                              }
 
-                          if (userId == null) {
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Erro ao obter ID do utilizador.')),
-                            );
-                            return;
-                          }
+                              setState(() {
+                                isLoading = true;
+                              });
 
-                          if (response['twoFa'] == true && response['jaAtivou'] != null) {
-                            await prefs.setString('pending_token', token);
-                            await prefs.setString('pending_userId', userId.toString());
-                            if (!mounted) return;
-                            // ignore: use_build_context_synchronously
-                            context.go('/twofauten', extra: userId.toString());
-                          } else if ((response['twoFa'] == false || response['twoFa'] == null) &&
-                              response['jaAtivou'] != null) {
-                            // login normal
-                            await prefs.setString('token', token);
-                            // ignore: use_build_context_synchronously
-                            final authProvider = Provider.of<AuthProvider>(context, listen: false);
-                            await authProvider.setUser(User(id: userId), token: token);
-                            await authService.login(token, true); // auto login
-                            // ignore: use_build_context_synchronously
-                            context.go('/homepage');
-                          } else if (response['jaAtivou'] == null) {
-                            // ignore: use_build_context_synchronously
-                            context.go('/firstlogin', extra: {'email': _emailController.text});
-                          }
-                        }
-                      } catch (error) {
-                        // ignore: use_build_context_synchronously
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Erro: $error')),
-                        );
-                      }
-                    },
-                    child: const Text('Login', style: TextStyle(color: Colors.white)),
+                              try {
+                                final response = await api.login(
+                                  _emailController.text,
+                                  _passwordController.text,
+                                );
+                                if (response['success'] == true) {
+                                  final token = response['token'];
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  // ignore: await_only_futures
+                                  var userId = await api.getUserIdFromToken(
+                                    token,
+                                  );
+
+                                  if (userId == null) {
+                                    // ignore: use_build_context_synchronously
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Erro ao obter ID do utilizador.',
+                                        ),
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  if (response['twoFa'] == true &&
+                                      response['jaAtivou'] != null) {
+                                    await prefs.setString(
+                                      'pending_token',
+                                      token,
+                                    );
+                                    await prefs.setString(
+                                      'pending_userId',
+                                      userId.toString(),
+                                    );
+                                    if (!mounted) return;
+                                    // ignore: use_build_context_synchronously
+                                    context.go(
+                                      '/twofauten',
+                                      extra: userId.toString(),
+                                    );
+                                  } else if ((response['twoFa'] == false ||
+                                          response['twoFa'] == null) &&
+                                      response['jaAtivou'] != null) {
+                                    // login normal
+                                    await prefs.setString('token', token);
+                                    // ignore: use_build_context_synchronously
+                                    final authProvider =
+                                        Provider.of<AuthProvider>(
+                                          // ignore: use_build_context_synchronously
+                                          context,
+                                          listen: false,
+                                        );
+                                    await authProvider.setUser(
+                                      User(id: userId),
+                                      token: token,
+                                    );
+                                    await authService.login(
+                                      token,
+                                      true,
+                                    ); // auto login
+                                    // ignore: use_build_context_synchronously
+                                    context.go('/homepage');
+                                  } else if (response['jaAtivou'] == null) {
+                                    // ignore: use_build_context_synchronously
+                                    context.go(
+                                      '/firstlogin',
+                                      extra: {'email': _emailController.text},
+                                    );
+                                  }
+                                }
+                              } catch (error) {
+                                // ignore: use_build_context_synchronously
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Erro: $error')),
+                                );
+                              } finally {
+                                if (mounted) {
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                }
+                              }
+                            },
+                    child:
+                        isLoading
+                            ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                            : const Text(
+                              'Login',
+                              style: TextStyle(color: Colors.white),
+                            ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
@@ -203,8 +275,11 @@ class _LoginPage extends State<LoginPage> {
                       ),
                       minimumSize: const Size.fromHeight(46),
                     ),
-                    onPressed: () => context.go("/registo"),
-                    child: const Text('Criar conta', style: TextStyle(color: Colors.white)),
+                    onPressed: isLoading ? null : () => context.go("/registo"),
+                    child: const Text(
+                      'Criar conta',
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
