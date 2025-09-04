@@ -16,6 +16,7 @@ class CourseEnrolled extends StatefulWidget {
 class _CourseEnrolledState extends State<CourseEnrolled> {
   List<Map<String, dynamic>> cursos = [];
   final CursosApi _api = CursosApi();
+  bool _loading = true;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _CourseEnrolledState extends State<CourseEnrolled> {
       final response = await _api.listCursosInscritos(userId);
       setState(() {
         cursos = response;
+        _loading = false;
       });
     } catch(e) {
       print('Erro ao buscar os cursos: , $e');
@@ -47,7 +49,9 @@ class _CourseEnrolledState extends State<CourseEnrolled> {
         onBack: () => context.pop(),
         title: 'Cursos Inscritos'
       ),
-      body: SingleChildScrollView(
+      body: _loading 
+      ? Center(child: CircularProgressIndicator(),) 
+      : SingleChildScrollView(
         child: (cursos.isEmpty) 
           ? Container(
             padding: EdgeInsets.all(12),

@@ -19,6 +19,7 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
   List<Map<String, dynamic>> cursos = [];
   final CursosApi _api = CursosApi();
   int? formandoId;
+  bool _loading = true;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
       final response = await _api.listCursoscompleted(userId);
       setState(() {
         cursos = response;
+        _loading = false;
       });
     } catch(e) {
       print('Erro ao buscar os cursos: , $e');
@@ -72,7 +74,9 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
         onBack: () => context.pop(),
         title: 'Cursos terminados'
       ),
-      body: SingleChildScrollView(
+      body: _loading 
+      ? Center(child: CircularProgressIndicator(),) 
+      : SingleChildScrollView(
         child: (cursos.isEmpty) 
           ? Container(
             padding: EdgeInsets.all(12),
