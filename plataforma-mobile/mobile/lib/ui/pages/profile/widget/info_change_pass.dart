@@ -54,9 +54,12 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
   }
 
   Future<void> analisar() async {
-    if (newPasswordController.text.isEmpty || repeatPasswordController.text.isEmpty) {
+    if (newPasswordController.text.isEmpty ||
+        repeatPasswordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Por favor, preencha ambos os campos de password.')),
+        const SnackBar(
+          content: Text('Por favor, preencha ambos os campos de password.'),
+        ),
       );
       return;
     }
@@ -68,55 +71,32 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
     }
     try {
       await api.alterarPassword(email, newPasswordController.text);
-      await confirm();
+
+      // Mostra popup de confirmação de sucesso
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Sucesso'),
+            content: const Text('A sua password foi alterada com sucesso!'),
+            actions: [
+              TextButton(
+                style: TextButton.styleFrom(backgroundColor: Colors.green),
+                child: const Text('OK', style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+      context.go('/profile');
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erro ao alterar a password: $error')),
       );
     }
-  }
-
-  Future<void> confirm() async {
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Aviso'),
-          content: const Text('Quer guardar as alterações?'),
-          actions: <Widget>[
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.green),
-              child: const Text('Sim', style: TextStyle(color: Colors.white)),
-              onPressed: () async {
-                context.pop(); 
-                await Future.delayed(const Duration(milliseconds: 100)); 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: const [
-                        Icon(Icons.check_circle, color: Colors.green),
-                        SizedBox(width: 10),
-                        Text('Alterações guardadas!'),
-                      ],
-                    ),
-                    duration: const Duration(milliseconds: 1500),
-                  ),
-                );
-               
-                context.go('/seeinfoprofile', extra: widget.idUser); 
-              },
-            ),
-            TextButton(
-              style: TextButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Não', style: TextStyle(color: Colors.white)),
-              onPressed: () {
-                context.pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
@@ -162,7 +142,9 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
                             setState(() {
                               isPasswordVisible1 = !isPasswordVisible1;
                               passwordIcon1 = Icon(
-                                isPasswordVisible1 ? Icons.visibility : Icons.visibility_off,
+                                isPasswordVisible1
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 color: AppColors.primary,
                               );
                             });
@@ -192,7 +174,9 @@ class _ChangeInfoPasswordState extends State<ChangeInfoPassword> {
                             setState(() {
                               isPasswordVisible2 = !isPasswordVisible2;
                               passwordIcon2 = Icon(
-                                isPasswordVisible2 ? Icons.visibility : Icons.visibility_off,
+                                isPasswordVisible2
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
                                 color: AppColors.primary,
                               );
                             });
