@@ -19,9 +19,16 @@ final List<GoRoute> cursosRoutes = [
   GoRoute(
     name: 'cursos-inscritos',
     path: '/cursos-inscritos',
-    pageBuilder: (context, state) => NoTransitionPage(
-      child: CourseInscrito(idCurso: state.extra as int),
-    ),
+    pageBuilder: (context, state) {
+      final idCurso = state.extra as int?;
+      if (idCurso == null) {
+        // Se não há idCurso, redirecionar para a lista de cursos
+        return NoTransitionPage(child: Courses());
+      }
+      return NoTransitionPage(
+        child: CourseInscrito(idCurso: idCurso),
+      );
+    },
   ),
   GoRoute(
     name: 'cursos-completed',
@@ -40,31 +47,71 @@ final List<GoRoute> cursosRoutes = [
   GoRoute(
     name: 'Inscrever',
     path: '/inscrever',
-    pageBuilder: (context, state) => NoTransitionPage(
-      child: Inscrever(idCurso: state.extra as int),
-    ),
+    pageBuilder: (context, state) {
+      final idCurso = state.extra as int?;
+      if (idCurso == null) {
+        // Se não há idCurso, redirecionar para a lista de cursos
+        return NoTransitionPage(child: Courses());
+      }
+      return NoTransitionPage(
+        child: Inscrever(idCurso: idCurso),
+      );
+    },
   ),
 
   //aulas
   GoRoute(
     name: 'aulas-async',
     path: '/aulas-async',
-    pageBuilder: (context, state) => NoTransitionPage(
-      child: AulaAsyncPage(aulas: state.extra as Map<String,dynamic>),
-    ),
+    pageBuilder: (context, state) {
+      try {
+        final aulas = state.extra as Map<String, dynamic>?;
+        if (aulas == null) {
+          return NoTransitionPage(child: Courses());
+        }
+        return NoTransitionPage(
+          child: AulaAsyncPage(aulas: aulas),
+        );
+      } catch (e) {
+        print('Erro ao processar aulas-async: $e');
+        return NoTransitionPage(child: Courses());
+      }
+    },
   ),
   GoRoute(
     name: 'aulas-sync',
     path: '/aulas-sync',
-    pageBuilder: (context, state) => NoTransitionPage(
-      child: AulaSyncPage(aulas: state.extra as Map<String,dynamic>),
-    ),
+    pageBuilder: (context, state) {
+      try {
+        final aulas = state.extra as Map<String, dynamic>?;
+        if (aulas == null) {
+          return NoTransitionPage(child: Courses());
+        }
+        return NoTransitionPage(
+          child: AulaSyncPage(aulas: aulas),
+        );
+      } catch (e) {
+        print('Erro ao processar aulas-sync: $e');
+        return NoTransitionPage(child: Courses());
+      }
+    },
   ),
   GoRoute(
     name: 'inserir-trabalho',
     path: '/inserir-trabalho',
-    pageBuilder: (context, state) => NoTransitionPage(
-      child: EntregaTrabalho(trabalho: state.extra as Map<String, dynamic>,),
-    ),
+    pageBuilder: (context, state) {
+      try {
+        final trabalho = state.extra as Map<String, dynamic>?;
+        if (trabalho == null) {
+          return NoTransitionPage(child: Courses());
+        }
+        return NoTransitionPage(
+          child: EntregaTrabalho(trabalho: trabalho),
+        );
+      } catch (e) {
+        print('Erro ao processar inserir-trabalho: $e');
+        return NoTransitionPage(child: Courses());
+      }
+    },
   ),
 ];

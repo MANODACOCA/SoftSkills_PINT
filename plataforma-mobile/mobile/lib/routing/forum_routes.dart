@@ -9,23 +9,39 @@ final List<GoRoute> forumRoutes = [
     name: 'forumPage',
     path: '/forumPage',
     pageBuilder: (context, state) {
-    final extra = state.extra as Map<String, dynamic>;
-    final forumID = extra['forumID'] as String;
-    final name = extra['name'] as String;
-    final description = extra['description'] as String;
-    return NoTransitionPage(
-      child: ForumPage(forumID: forumID, name: name, description: description,),
-    );
-  },
+      try {
+        final extra = state.extra as Map<String, dynamic>?;
+        if (extra == null) {
+          return NoTransitionPage(child: Forum());
+        }
+        final forumID = extra['forumID']?.toString() ?? '';
+        final name = extra['name']?.toString() ?? '';
+        final description = extra['description']?.toString() ?? '';
+        return NoTransitionPage(
+          child: ForumPage(forumID: forumID, name: name, description: description),
+        );
+      } catch (e) {
+        print('Erro ao processar forumPage: $e');
+        return NoTransitionPage(child: Forum());
+      }
+    },
   ),
   GoRoute(
     name: 'commentPage',
     path: '/commentPage',
     pageBuilder: (context, state) {
-      final extra = state.extra as Map<String, dynamic>;
-      return NoTransitionPage(
-        child: CommentPage( post: state.extra as Map<String,dynamic> ),
-      );
+      try {
+        final extra = state.extra as Map<String, dynamic>?;
+        if (extra == null) {
+          return NoTransitionPage(child: Forum());
+        }
+        return NoTransitionPage(
+          child: CommentPage(post: extra),
+        );
+      } catch (e) {
+        print('Erro ao processar commentPage: $e');
+        return NoTransitionPage(child: Forum());
+      }
     },
   ),
 ];

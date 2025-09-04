@@ -33,9 +33,12 @@ final List<GoRoute> profileRoutes = [
   GoRoute(
     name: 'changeinfopass',
     path: '/changeinfopass',
-    pageBuilder: (context, state) => NoTransitionPage(
-      child: ChangeInfoPassword(idUser: state.extra as String),
-    ),
+    pageBuilder: (context, state) {
+      final idUser = state.extra as String? ?? '';
+      return NoTransitionPage(
+        child: ChangeInfoPassword(idUser: idUser),
+      );
+    },
   ),
   GoRoute(
     name: 'privacypolitics',

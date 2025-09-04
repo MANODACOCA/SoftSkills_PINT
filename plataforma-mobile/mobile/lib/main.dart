@@ -48,13 +48,22 @@ Future<void> _initializeLocalNotifications() async {
     const InitializationSettings(android: androidSettings, iOS: iosSettings),
     onDidReceiveNotificationResponse: (NotificationResponse response) {
       if (response.payload != null) {
-        final data = jsonDecode(response.payload!);
+        try {
+          final data = jsonDecode(response.payload!);
 
-        final route = data['route'];
-        final idCurso = int.tryParse(data['id_curso'] ?? '');
+          final route = data['route']?.toString();
+          final idCursoStr = data['id_curso']?.toString();
+          final idCurso = idCursoStr != null ? int.tryParse(idCursoStr) : null;
 
-        if (route != null && idCurso != null) {
-          rotas.push(route, extra: idCurso);
+          print('Notification response - Route: $route, IdCurso: $idCurso');
+
+          if (route != null && route.isNotEmpty && idCurso != null) {
+            rotas.push(route, extra: idCurso);
+          } else {
+            print('Erro: route ou idCurso inválidos - Route: $route, IdCurso: $idCurso');
+          }
+        } catch (e) {
+          print('Erro ao processar notificação: $e');
         }
       }
     },
@@ -62,24 +71,40 @@ Future<void> _initializeLocalNotifications() async {
 }
 
 void showLocalNotification(RemoteMessage message) async {
-  const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
-    'default_channel',
-    'Default',
-    importance: Importance.max,
-    priority: Priority.high,
-  );
+  try {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'default_channel',
+      'Default',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
 
-  const NotificationDetails platformDetails = NotificationDetails(
-    android: androidDetails,
-  );
+    const NotificationDetails platformDetails = NotificationDetails(
+      android: androidDetails,
+    );
 
-  await flutterLocalNotificationsPlugin.show(
-    message.hashCode,
-    message.notification?.title ?? 'Notificação',
-    message.notification?.body ?? '',
-    platformDetails,
-    payload: message.data.isNotEmpty ? jsonEncode(message.data) : null,
-  );
+    // Verificar se os dados da mensagem são válidos antes de codificar
+    String? payload;
+    if (message.data.isNotEmpty) {
+      try {
+        payload = jsonEncode(message.data);
+        print('Payload da notificação: $payload');
+      } catch (e) {
+        print('Erro ao codificar payload: $e');
+        payload = null;
+      }
+    }
+
+    await flutterLocalNotificationsPlugin.show(
+      message.hashCode,
+      message.notification?.title ?? 'Notificação',
+      message.notification?.body ?? '',
+      platformDetails,
+      payload: payload,
+    );
+  } catch (e) {
+    print('Erro ao mostrar notificação local: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -125,6 +150,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
     //Background e app aberta (para abrir a notificacao)
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('onMessageOpenedApp triggered with data: ${message.data}');
       _handleMessage(message);
     });
 
@@ -133,7 +159,11 @@ class _NotificationPageState extends State<NotificationPage> {
       RemoteMessage? message,
     ) {
       if (message != null) {
-        _handleMessage(message);
+        print('getInitialMessage triggered with data: ${message.data}');
+        // Adicionar um pequeno delay para garantir que a app está totalmente inicializada
+        Future.delayed(const Duration(milliseconds: 500), () {
+          _handleMessage(message);
+        });
       }
     });
 
@@ -143,12 +173,25 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   void _handleMessage(RemoteMessage message) {
-    final data = message.data;
-    final idCurso = int.tryParse(data['id_curso'] ?? '');
-    final route = data['route'];
+    try {
+      final data = message.data;
+      final idCursoStr = data['id_curso']?.toString();
+      final idCurso = idCursoStr != null ? int.tryParse(idCursoStr) : null;
+      final route = data['route']?.toString();
 
-    if (idCurso != null && route != null) {
-      rotas.push(route, extra: idCurso);
+      print('Handle message - Route: $route, IdCurso: $idCurso, Data: $data');
+
+      if (idCurso != null && route != null && route.isNotEmpty) {
+        rotas.push(route, extra: idCurso);
+      } else {
+        print('Erro: Dados da notificação inválidos - Route: $route, IdCurso: $idCurso');
+        // Fallback para página inicial se os dados estiverem incorretos
+        rotas.go('/');
+      }
+    } catch (e) {
+      print('Erro ao processar mensagem: $e');
+      // Em caso de erro, navegar para a página inicial
+      rotas.go('/');
     }
   }
 
