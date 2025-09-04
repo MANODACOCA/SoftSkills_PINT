@@ -1,7 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:mobile/ui/pages/aulas/aula_async_page.dart';
 import 'package:mobile/ui/pages/aulas/aula_sync_page.dart';
-import 'package:mobile/ui/pages/course/certificado.dart';
 import 'package:mobile/ui/pages/course/course_screen_inscrever.dart';
 import 'package:mobile/ui/pages/course/courses.dart';
 import 'package:mobile/ui/pages/course/course_screen_inscrito.dart';
@@ -56,23 +55,6 @@ final List<GoRoute> cursosRoutes = [
       }
       return NoTransitionPage(
         child: Inscrever(idCurso: idCurso),
-      );
-    },
-  ),
-  GoRoute(
-    name: 'cursosCertificado',
-    path: '/cursosCertificado',
-    pageBuilder: (context, state) {
-      final extra = state.extra as Map<String, int>?;
-      final idCurso = extra?['cursoId'];
-      final idFormando = extra?['formandoId'];
-      if (idCurso == null || idFormando == null) {
-        return NoTransitionPage(
-          child: CoursesCompleted(),
-        );
-      }
-      return NoTransitionPage(
-        child: CertificadoPage(formandoId: idFormando, cursoId: idCurso),
       );
     },
   ),

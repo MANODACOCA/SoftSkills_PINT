@@ -5,6 +5,8 @@ import 'package:mobile/ui/core/shared/cursos/card_cursos/course_ended_scroll.dar
 import 'package:provider/provider.dart';
 import '../../core/shared/export.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../API/certificado_api.dart';
 
 class CoursesCompleted extends StatefulWidget {
   const CoursesCompleted({super.key});
@@ -42,13 +44,25 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
     }
   }
 
+  Future<void> _abrirNoNavegador(BuildContext context, int cursoId, formandoId) async {
+    final uri = CertificadoApi().buildUri(cursoId, formandoId);
+
+    final ok = await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication, 
+    );
+
+    if (!ok && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Não foi possível abrir o certificado')),
+      );
+    }
+  }
+
   void rota(int cursoId) {
     final formando = formandoId;
     if (formando == null) return;
-    context.push(
-      '/cursosCertificado',
-      extra: {'cursoId': cursoId, 'formandoId': formando},
-    );
+     _abrirNoNavegador(context, cursoId, formando);
   }
 
   @override

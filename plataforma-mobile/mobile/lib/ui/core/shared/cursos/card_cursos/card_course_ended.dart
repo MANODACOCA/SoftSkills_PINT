@@ -14,9 +14,16 @@ class CardCourseEnded extends StatelessWidget {
     final dataInicio = DateTime.parse(curso['data_inicio_curso']);
     final dataFim = DateTime.parse(curso['data_fim_curso']);
     final dataForm = formatDateRange(dataInicio, dataFim);
+    final bool isSincrono = (curso['tipo'] == 'sincrono');
+    final bool elegivel = !isSincrono || (curso['nota_final'] != null && curso['nota_final'] >= 9.5);
+    final String statusMsg = !isSincrono
+      ? 'Certificado disponível'
+      : (curso['nota_final'] == null
+          ? 'Sem nota'
+          : (curso['nota_final'] >= 9.5 ? 'Aprovado' : 'Nota insuficiente'));
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {},
       child: Card(
         elevation: 2,
         shadowColor: Colors.black,
@@ -73,16 +80,27 @@ class CardCourseEnded extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      curso['nome_curso'] ?? '',
-                      style: AppTextStyles.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          curso['nome_curso'] ?? '',
+                          style: AppTextStyles.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(dataForm),    
+                      ],
                     ),
                     SizedBox(height: 4),
-                    Text(dataForm),
+                    if(curso['tipo'] == 'sincrono' && curso['nota_final'] != null) ...[
+                      Text('Nota: ${curso['nota_final']}', style: TextStyle(color: curso['nota_final'] >= 9.5 ? Colors.green : Colors.red, fontWeight: FontWeight.bold,),),
+                    ] else if(curso['tipo'] == 'sincrono' && curso['nota_final'] == null) ... [
+                      Text('Sem nota', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold,),),
+                    ],
                     SizedBox(height: 4),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -101,13 +119,32 @@ class CardCourseEnded extends StatelessWidget {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
-                          Text(
-                            'Concluído',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        FilledButton.icon(
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                           ),
+                          onPressed:  () {
+                            if(curso['tipo'] == 'assincrono') {
+                              onTap();
+                            } else if(curso['nota_final'] == null && curso['tipo'] == 'sincrono') {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Ainda não tem certificado'),
+                                ),
+                              );
+                            } else if(curso['nota_final'] >= 9.5 && curso['tipo'] == 'sincrono') {
+                              onTap();
+                            }  else if(curso['nota_final'] < 9.5 && curso['tipo'] == 'sincrono') {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Nota insuficiente'),
+                                ),
+                              );
+                            }
+                          },
+                          icon: Icon(elegivel ? Icons.verified : Icons.lock),
+                          label: Text(elegivel ? 'Ver certificado' : statusMsg),
+                        ),
                       ],
                     ),
                   ],
