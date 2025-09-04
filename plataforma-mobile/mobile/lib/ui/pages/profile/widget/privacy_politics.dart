@@ -119,6 +119,7 @@ class _PrivacyPoliticsState extends State<PrivacyPolitics> {
           ],
         ),
       ),
+      bottomNavigationBar: Footer(),
     );
   }
 }
