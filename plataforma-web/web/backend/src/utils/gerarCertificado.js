@@ -234,7 +234,7 @@ function gerarHtmlCertificado({
     </article>
   </div>
 
-  <div class="botao-container" id="btn-transferir">
+  <div class="botao-container">
     <button onclick="window.print()" class="botao-imprimir">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download"
         viewBox="0 0 16 16">
@@ -247,18 +247,6 @@ function gerarHtmlCertificado({
   </div>
 
 </body>
-
-<script>
-  document.getElementById('btn-transferir').addEventListener('click', function () {
-    // Se estiver dentro do Flutter WebView, chama o canal
-    if (window.CertChannel && typeof CertChannel.postMessage === 'function') {
-      CertChannel.postMessage('download');
-    } else {
-      // Fallback para browser normal
-      window.print();
-    }
-  });
-</script>
 
 </html>
   `;

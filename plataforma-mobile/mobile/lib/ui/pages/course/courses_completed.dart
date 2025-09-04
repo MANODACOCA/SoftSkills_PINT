@@ -45,7 +45,7 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
   void rota(int cursoId) {
     final formando = formandoId;
     if (formando == null) return;
-    context.go(
+    context.push(
       '/cursosCertificado',
       extra: {'cursoId': cursoId, 'formandoId': formando},
     );

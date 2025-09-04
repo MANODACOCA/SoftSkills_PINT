@@ -1,11 +1,10 @@
-import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:mobile/ui/core/shared/base_comp/app_bar_arrow.dart';
 import '../../core/shared/export.dart';
 import '../../../API/certificado_api.dart';
-import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
-class CertificadoPage extends StatefulWidget {
+class CertificadoPage extends StatelessWidget {
   final int cursoId;
   final int formandoId;
 
@@ -15,49 +14,39 @@ class CertificadoPage extends StatefulWidget {
     required this.formandoId,
   });
 
-  @override
-  State<CertificadoPage> createState() => _CertificadoPageState();
-}
+  Future<void> _abrirNoNavegador(BuildContext context) async {
+    final uri = CertificadoApi().buildUri(cursoId, formandoId);
 
-class _CertificadoPageState extends State<CertificadoPage> {
-  late final WebViewController _controller;
-  bool _loading = true;
+    final ok = await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication, // abre no browser
+    );
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.white);
-
-    _loadHtml();
-  }
-
-  Future<void> _loadHtml() async {
-    try {
-      final html = await CertificadoApi().geraCertificado(widget.cursoId, widget.formandoId);
-      await _controller.loadHtmlString(html);
-    } catch (e) {
-      if(!mounted) return;
+    if (!ok && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao carregar certificado: $e')),
+        const SnackBar(content: Text('Não foi possível abrir o certificado')),
       );
-    } finally {
-      if (mounted) setState(() => _loading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarArrow(title: 'Certificado', onBack: () => context.go('/cursos-completed')),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (_loading)
-            const Center(child: CircularProgressIndicator()),
-        ],
+      appBar: AppBarArrow(
+        title: 'Certificado',
+        onBack: () {
+          if (Navigator.of(context).canPop()) context.pop();
+          else context.go('/cursos-completed'); // fallback
+        },
       ),
+      body: Center(
+        child: FilledButton.icon(
+          onPressed: () => _abrirNoNavegador(context),
+          icon: const Icon(Icons.open_in_new),
+          label: const Text('Abrir no navegador'),
+        ),
+      ),
+      bottomNavigationBar: const Footer(),
     );
   }
 }
