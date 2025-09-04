@@ -4,9 +4,10 @@ import 'package:mobile/utils/verifica_internet.dart';
 import '../../export.dart';
 
 class CardCourseEnded extends StatelessWidget {
-  const CardCourseEnded({super.key, required this.curso});
+  const CardCourseEnded({super.key, required this.curso, required this.onTap});
 
   final Map<String, dynamic> curso;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class CardCourseEnded extends StatelessWidget {
     final dataForm = formatDateRange(dataInicio, dataFim);
 
     return GestureDetector(
-      onTap: () { },
+      onTap: onTap,
       child: Card(
         elevation: 2,
         shadowColor: Colors.black,
