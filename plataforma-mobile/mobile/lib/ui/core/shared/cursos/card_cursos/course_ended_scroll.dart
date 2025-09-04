@@ -3,9 +3,10 @@ import 'package:mobile/ui/core/shared/cursos/card_cursos/card_course_ended.dart'
 import '../../export.dart';
 
 class CourseEndedScroll extends StatefulWidget {
-  const CourseEndedScroll({super.key, required this.cursos});
+  const CourseEndedScroll({super.key, required this.cursos, required this.onTap});
 
   final List<Map<String, dynamic>> cursos;
+  final ValueChanged<int> onTap;
 
   @override
   State<CourseEndedScroll> createState() => _CourseEndedScrollState();
@@ -33,11 +34,12 @@ class _CourseEndedScrollState extends State<CourseEndedScroll> {
             itemCount: widget.cursos.length,
             itemBuilder: (context, index) {
               final curso = widget.cursos[index];
+              final id = curso['id_curso'] as int;
               return Container(
                 height: 155,
                 width: 200,
                 margin: EdgeInsets.symmetric(horizontal: 5),
-                child: CardCourseEnded(curso: curso)
+                child: CardCourseEnded(curso: curso, onTap: () => widget.onTap(id),)
               );
             },
           ),

@@ -16,6 +16,7 @@ class CoursesCompleted extends StatefulWidget {
 class _CoursesCompletedState extends State<CoursesCompleted> {
   List<Map<String, dynamic>> cursos = [];
   final CursosApi _api = CursosApi();
+  int? formandoId;
 
   @override
   void initState() {
@@ -23,6 +24,7 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final userId = Provider.of<AuthProvider>(context, listen: false).user?.id;
       if (userId != null) {
+        formandoId = int.tryParse(userId);
         print('ID do utilizador: $userId');
         fetchCursosCompleted(int.parse(userId));
       }
@@ -38,6 +40,15 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
     } catch(e) {
       print('Erro ao buscar os cursos: , $e');
     }
+  }
+
+  void rota(int cursoId) {
+    final formando = formandoId;
+    if (formando == null) return;
+    context.go(
+      '/cursosCertificado',
+      extra: {'cursoId': cursoId, 'formandoId': formando},
+    );
   }
 
   @override
@@ -65,7 +76,7 @@ class _CoursesCompletedState extends State<CoursesCompleted> {
           )
           : Column(
           children: [
-            CourseEndedScroll(cursos: cursos),
+            CourseEndedScroll(cursos: cursos, onTap: rota,),
           ],
         ),
       ),
