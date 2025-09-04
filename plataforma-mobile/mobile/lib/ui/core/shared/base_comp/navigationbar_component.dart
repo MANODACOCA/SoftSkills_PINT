@@ -4,13 +4,24 @@ import '../export.dart';
 class Footer extends StatelessWidget {
   const Footer({super.key});
 
-  int _locationToIndex(String location){
-  if(location.startsWith('/homepage')) return 0;
-  if(location.startsWith('/forum')) return 1;
-  if(location.startsWith('/cursos')) return 2;
-  if(location.startsWith('/profile')) return 3;
-  return 0;
-}
+  int _locationToIndex(String location) {
+    if (location.startsWith('/homepage')) return 0;
+    if (location.startsWith('/forum')) return 1;
+    if (location.startsWith('/cursos') ||
+        location.startsWith('/list-cursos-inscrito') ||
+        location.startsWith('/cursos-completed')) {
+      return 2;
+    }
+    if (location.startsWith('/profile') ||
+        location.startsWith('/alterarInformacoes') ||
+        location.startsWith('/seeinfoprofile') ||
+        location.startsWith('/changeinfopass') ||
+        location.startsWith('/privacypolitics') ||
+        location.startsWith('/support')) {
+      return 3;
+    }
+    return 0;
+  }
 
   void _onTap(BuildContext context, int index) {
     switch (index) {
