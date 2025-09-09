@@ -71,7 +71,7 @@ const HeaderAdmin = ({ toggleSidebar, collapsed }) => {
                 <button className="btn btn-outline-secondary mx-2 hide" onClick={toggleSidebar}>
                     <i className={`${collapsed ? 'bi bi-list fs-5' : 'bi bi-x-lg fs-5'}`}></i>
                 </button>
-                <Link to="/home"><img src={logo} alt="logo softskills" height={45} /></Link>
+                <Link to="/admin/home"><img src={logo} alt="logo softskills" height={45} /></Link>
             </div>
 
             {placeholder && (

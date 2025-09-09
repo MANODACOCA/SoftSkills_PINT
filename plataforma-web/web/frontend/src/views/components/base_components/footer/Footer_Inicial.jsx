@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../../../assets/images/logos/semfundo3.png';
+import qrcode from '../../../../assets/images/qrCode/qrcode.png';
 import './Footer.css'
 
 //icons
@@ -42,8 +43,8 @@ const FooterIncial = () => {
                             <div className="col-6 col-md-4 mx-auto text-center">
                                 <h6 className="text-uppercase fw-bold">DOWNLOAD DA NOSSA APP</h6>
                                 <div className="d-flex flex-column gap-3">
-                                    <img src='https://cdn-icons-png.flaticon.com/512/747/747470.png' alt="QRCODE" className="mx-auto" />
-                                    <a href="https://play.google.com/store/games?hl=pt_PT" className="btn btn-dark rounded-4 gap-2">
+                                    <img src={qrcode} alt="QRCODE" className="mx-auto" />
+                                    <a href="https://drive.google.com/file/d/1BiJZaXhTgL4EvI6Jj5cjgAVSsD19u6KC/view?usp=sharing" target='_blank' className="btn btn-dark rounded-4 gap-2">
                                         <BsDownload /> Clique para download
                                     </a>
                                 </div>

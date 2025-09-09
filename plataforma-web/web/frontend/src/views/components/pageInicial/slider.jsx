@@ -15,7 +15,7 @@ const Slider = () => {
 
 
     const [currentSlide, setCurrentSlide] = useState(0);
-    const tempos = [0, 30, 90];//tempos defenidos
+    const tempos = [0, 32, 62];//tempos defenidos
     const [videoStartTime, setVideoStartTime] = useState(0);
 
     const rotas = ["/home", "/cursos", "/forum"];//rotas defenidos
@@ -290,10 +290,10 @@ const Slider = () => {
                                 <div className="modal-body p-0">
                                     <div className="ratio ratio-16x9">
                                         <iframe
-                                            src={`https://www.youtube.com/embed/dQw4w9WgXcQ?start=${videoStartTime}`}
+                                            src={`https://www.youtube.com/embed/Fh0Z4M4o2ec?start=${videoStartTime}`}
                                             title="YouTube video"
-                                            allowFullScreen
-                                        ></iframe>
+                                            allowfullscreen>
+                                        </iframe>
                                     </div>
                                 </div>
                             </div>
