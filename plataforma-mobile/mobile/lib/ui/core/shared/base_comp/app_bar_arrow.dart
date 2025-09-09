@@ -14,15 +14,13 @@ class AppBarArrow extends StatelessWidget implements PreferredSizeWidget {
         color: Colors.white,
         onPressed: onBack,
       ),
-      title: Flexible(
-        child: Text(
+      title: Text(
           title,
           style: const TextStyle(color: Colors.white, fontSize: 18),
           maxLines: 2, 
           overflow: TextOverflow.ellipsis, 
           textAlign: TextAlign.center,
         ),
-      ),
       centerTitle: true,
       actions: const [
         SizedBox(width: kToolbarHeight),

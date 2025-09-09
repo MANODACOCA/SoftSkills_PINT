@@ -6,7 +6,10 @@ class Footer extends StatelessWidget {
 
   int _locationToIndex(String location) {
     if (location.startsWith('/homepage')) return 0;
-    if (location.startsWith('/forum')) return 1;
+    if (location.startsWith('/forum') || 
+        location.startsWith('/commentPage')) {
+          return 1;
+        }
     if (location.startsWith('/cursos') ||
         location.startsWith('/list-cursos-inscrito') ||
         location.startsWith('/cursos-completed')) {

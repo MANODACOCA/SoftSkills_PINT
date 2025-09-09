@@ -77,6 +77,7 @@ class CardCourseEnrolled extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       curso['id_curso_curso']?['nome_curso'] ?? '',
