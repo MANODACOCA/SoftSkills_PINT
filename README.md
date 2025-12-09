@@ -1,4 +1,4 @@
-# <img src="./docs/logos/logo.png" alt="Logo SoftSkills" width="200"> The SoftSkills – Plataforma de Formação Interna
+# 🎓 The SoftSkills – Plataforma de Formação Interna
 <br/>
 <br/>
 <p align="center"><img src="./docs/logos/semfundo1.png" alt="Logo LearningQuest" width="650"> </p>
