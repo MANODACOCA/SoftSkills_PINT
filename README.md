@@ -1,7 +1,7 @@
 # 🎓 The SoftSkills – Plataforma de Formação Interna
 <br/>
 <br/>
-<p align="center"><img src="./docs/logos/comfundo.png" alt="Logo LearningQuest" width="650"> </p>
+<p align="center"><img src="./docs/logos/comfundo.png" alt="Logo LearningQuest" style="border-radius: 20px;" width="650"> </p>
 <br/>
 <br/>
 A The SoftSkills é uma plataforma desenvolvida para centralizar toda a formação interna da Softinsa, permitindo que colaboradores, formadores e gestores tenham acesso a um espaço único para acompanhar, organizar e partilhar conhecimento.
